@@ -1,42 +1,100 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-        <meta charset="utf-8" />
-        <title>Shell shock : un obus dans les dents de bash</title>
-        <link rel="stylesheet" href="/theme/css/main.css" />
+<!doctype html>
+<html class="no-js" lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-        <!--[if IE]>
-            <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-        <![endif]-->
-</head>
+		<title>Blog bloquant</title>
+		<meta name="description" content="">
+		<meta name="author" content="Alban Dericbourg">
 
-<body id="index" class="home">
-        <header id="banner" class="body">
-                <h1><a href="/">Blog bloquant </a></h1>
-                <nav><ul>
-                    <li class="active"><a href="/category/blog.html">Blog</a></li>
-                </ul></nav>
-        </header><!-- /#banner -->
-<section id="content" class="body">
-  <article>
-    <header>
-      <h1 class="entry-title">
-        <a href="/shell-shock-un-obus-dans-les-dents-de-bash.html" rel="bookmark"
-           title="Permalink to Shell shock : un obus dans les dents de bash">Shell shock : un obus dans les dents de bash</a></h1>
-    </header>
+		<link rel="stylesheet" href="/theme/css/foundation.css" />
+		<link rel="stylesheet" href="/theme/css/pygment/monokai.css" />
+		<link rel="stylesheet" href="/theme/css/custom.css" />
 
-    <div class="entry-content">
-<footer class="post-info">
-        <abbr class="published" title="2014-09-26T00:00:00+02:00">
-                Published: ven. 26 septembre 2014
-        </abbr>
 
-        <address class="vcard author">
-                By                         <a class="url fn" href="/author/alban-dericbourg.html">Alban Dericbourg</a>
-        </address>
-<p>In <a href="/category/blog.html">Blog</a>. </p>
-<p>tags: <a href="/tag/bash.html">bash</a> <a href="/tag/securite.html">sécurité</a> <a href="/tag/cve.html">cve</a> </p>
-</footer><!-- /.post-info -->      <p>Vous avez probablement entendu parler de Shell shock qui, outre l'association de troubles psychiques et physiques observés chez http://fr.wikipedia.org/wiki/Obusite[certains soldats de la Première Guerre Mondiale], désigne également la vulnérabilité <a href="http://www.cert.ssi.gouv.fr/site/CERTFR-2014-ALE-006/index.html">CVE-2014-6271</a> touchant GNU bash. Elle permet à un attaquant de provoquer une exécution de code arbitraire à distance.</p>
+		<script src="/theme/js/modernizr.js"></script>
+
+		<!-- Feeds -->
+
+
+		<!-- mathjax config similar to math.stackexchange -->
+		<script type="text/x-mathjax-config">
+		MathJax.Hub.Config({
+			jax: ["input/TeX", "output/HTML-CSS"],
+			tex2jax: {
+				inlineMath: [ ['$', '$'] ],
+				displayMath: [ ['$$', '$$']],
+				processEscapes: true,
+				skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+			},
+			messageStyle: "none",
+			"HTML-CSS": { preferredFont: "TeX", availableFonts: ["STIX","TeX"] }
+		});
+		</script>
+		<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+	</head>
+	<body>
+		<div class="off-canvas-wrap">
+			<div class="inner-wrap">
+				<!-- mobile top bar to activate nav -->
+				<nav class="tab-bar show-for-small">
+					<section class="left-small">
+						<a class="left-off-canvas-toggle menu-icon" ><span></span></a>
+					</section>
+
+					<section class="middle tab-bar-section">
+						<h1 class="title">Blog&nbsp;bloquant</h1>
+					</section>
+				</nav>
+
+				<!-- mobile side bar nav -->
+				<aside class="left-off-canvas-menu">
+					<ul class="off-canvas-list">
+						<li><a href="">Home</a></li>
+						<li><label>Categories</label></li>
+							<li class="active"><a href="/category/blog.html">Blog</a></li>
+
+						<li><label>Links</label></li>
+							<li><a href="http://getpelican.com/">Pelican</a></li>
+							<li><a href="http://python.org/">Python.org</a></li>
+							<li><a href="http://jinja.pocoo.org/">Jinja2</a></li>
+							<li><a href="#">You can modify those links in your config file</a></li>
+
+
+
+						<li><label>Social</label></li>
+							<li><a href="https://github.xom/adericbourg">GitHub</a></li>
+							<li><a href="https://twitter.com/adericbourg">Twitter</a></li>
+					</ul>	
+				</aside>
+
+				<!-- top bar nav -->
+				<nav class="top-bar hide-for-small-only" data-topbar>
+					<ul class="title-area">
+						<li class="name">
+							<h1><a href="/">Blog bloquant</a></h1>
+						</li>
+					</ul>
+
+					<section class="top-bar-section">
+						<ul class="left">
+								<li class="active"><a href="/category/blog.html">Blog</a></li>
+						</ul>
+                        <ul class="right">                                                                                                                                           
+                                                                                                                                             
+                        </ul>  
+					</section>
+				</nav>
+
+				<!-- Main Page Content and Sidebar -->
+				<section class="main-section">
+					<div class="row">
+						<!-- Main Content -->
+						<div class="medium-9 small-12 columns" role="content">
+<article>
+	<h2>Shell shock : un obus dans les dents de bash</h2>
+	<p>Vous avez probablement entendu parler de Shell shock qui, outre l'association de troubles psychiques et physiques observés chez http://fr.wikipedia.org/wiki/Obusite[certains soldats de la Première Guerre Mondiale], désigne également la vulnérabilité <a href="http://www.cert.ssi.gouv.fr/site/CERTFR-2014-ALE-006/index.html">CVE-2014-6271</a> touchant GNU bash. Elle permet à un attaquant de provoquer une exécution de code arbitraire à distance.</p>
 <h2>Mon dieu, mais c'est horrible !</h2>
 <p>Il faut avouer que ça ne présage pas d'une franche partie de rigolade.</p>
 <p>Tout d'abord, de nombreux programmes interagissent avec le shell. Nous savons que ce n'est généralement pas une bonne idée mais cela nous simplifie parfois grandement la tâche (on dit souvent qu'un bon développeur est un développeur fainéant). La surface d'attaque est donc très étendue.</p>
@@ -96,37 +154,67 @@ Il ne peut plus rien nous arriver d'affreux maintenant</p>
 
 <p>Si vous obtenez la date, votre système est vulnérable.</p>
 <p>À suivre, donc.</p>
-    </div><!-- /.entry-content -->
+	<hr/>
+	<h6>Written by <a href="/author/alban-dericbourg.html">Alban Dericbourg</a> in <a href="/category/blog.html">Blog</a> on ven. 26 septembre 2014. Tags: <a href="/tag/bash.html">bash</a>, <a href="/tag/securite.html">sécurité</a>, <a href="/tag/cve.html">cve</a>, </h6>
+</article>
 
-  </article>
-</section>
-        <section id="extras" class="body">
-                <div class="blogroll">
-                        <h2>blogroll</h2>
-                        <ul>
-                            <li><a href="http://getpelican.com/">Pelican</a></li>
-                            <li><a href="http://python.org/">Python.org</a></li>
-                            <li><a href="http://jinja.pocoo.org/">Jinja2</a></li>
-                            <li><a href="#">You can modify those links in your config file</a></li>
-                        </ul>
-                </div><!-- /.blogroll -->
-                <div class="social">
-                        <h2>social</h2>
-                        <ul>
+<hr/>
+						</div>
+						<!-- End Main Content -->
+						<!-- Sidebar -->
+						<aside class="medium-3 hide-for-small-only columns">
+							<div class="panel">
+								<h5>Links</h5>
+								<ul class="side-nav">
+									<li><a href="http://getpelican.com/">Pelican</a></li>
+									<li><a href="http://python.org/">Python.org</a></li>
+									<li><a href="http://jinja.pocoo.org/">Jinja2</a></li>
+									<li><a href="#">You can modify those links in your config file</a></li>
+								</ul>
+							</div>
 
-                            <li><a href="https://twitter.com/adericbourg">Twitter</a></li>
-                            <li><a href="https://github.xom/adericbourg">GitHub</a></li>
-                        </ul>
-                </div><!-- /.social -->
-        </section><!-- /#extras -->
+							<div class="panel">
+								<h5>Tags</h5>
+								<ul class="tag-cloud">
+									<li><a href="/tag/quotidien.html" class="tag-4">quotidien</a></li>
+									<li><a href="/tag/bien-être.html" class="tag-4">bien-être</a></li>
+									<li><a href="/tag/vivre-ensemble.html" class="tag-4">vivre ensemble</a></li>
+									<li><a href="/tag/sécurité.html" class="tag-4">sécurité</a></li>
+									<li><a href="/tag/cve.html" class="tag-4">cve</a></li>
+									<li><a href="/tag/motivation.html" class="tag-4">motivation</a></li>
+									<li><a href="/tag/bash.html" class="tag-4">bash</a></li>
+								</ul>
+							</div>
 
-        <footer id="contentinfo" class="body">
-                <address id="about" class="vcard body">
-                Proudly powered by <a href="http://getpelican.com/">Pelican</a>, which takes great advantage of <a href="http://python.org">Python</a>.
-                </address><!-- /#about -->
 
-                <p>The theme is by <a href="http://coding.smashingmagazine.com/2009/08/04/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
-        </footer><!-- /#contentinfo -->
+							<div class="panel">
+								<h5>Social</h5>
+								<ul class="side-nav">
+									<li><a href="https://github.xom/adericbourg">GitHub</a></li>
+									<li><a href="https://twitter.com/adericbourg">Twitter</a></li>
+								</ul>
+							</div>
+						</aside>
+						<!-- End Sidebar -->
+					</div>
 
-</body>
+					<!-- Footer -->
+					<footer class="row">
+						<div class="medium-9 small-12">
+							<hr/>
+							<p class="text-center">Powered by <a href="http://getpelican.com">Pelican</a> and <a href="http://foundation.zurb.com/">Zurb Foundation</a>. Theme by <a href="http://hamaluik.com">Kenton Hamaluik</a>.</p>
+						</div>
+					</footer>
+					<!-- End Footer -->
+				</section>
+				<a class="exit-off-canvas"></a>
+			</div><!--off-canvas inner-->
+		</div><!--off-canvas wrap-->
+
+		<script src="/theme/js/jquery.js"></script>
+		<script src="/theme/js/foundation.min.js"></script>
+		<script>
+			$(document).foundation();
+		</script>
+	</body>
 </html>
