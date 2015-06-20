@@ -22,14 +22,14 @@ AUTHOR_FEED_ATOM = None
 AUTHOR_FEED_RSS = None
 
 # Blogroll
-LINKS = (('Pelican', 'http://getpelican.com/'),
-         ('Python.org', 'http://python.org/'),
-         ('Jinja2', 'http://jinja.pocoo.org/'),
-         ('You can modify those links in your config file', '#'),)
+LINKS = (('Mon CV', 'https://github.com/adericbourg/CV'),
+)
 
 # Social widget
 SOCIAL = (('Twitter', 'https://twitter.com/adericbourg'),
-          ('GitHub', 'https://github.xom/adericbourg'),)
+          ('GitHub', 'https://github.xom/adericbourg'),
+          ('LinkedIn', 'https://www.linkedin.com/in/adericbourg'),
+)
 
 DEFAULT_PAGINATION = 10
 
