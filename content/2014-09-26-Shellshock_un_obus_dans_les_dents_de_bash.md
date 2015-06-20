@@ -4,7 +4,7 @@ Category: Blog
 Tags: bash, sécurité, cve
 Summary: On a vu sortir aujourd'hui une faille de Bash. Comment est-elle exploitable et quels sont les risques ?
 
-Vous avez probablement entendu parler de Shell shock qui, outre l'association de troubles psychiques et physiques observés chez http://fr.wikipedia.org/wiki/Obusite[certains soldats de la Première Guerre Mondiale], désigne également la vulnérabilité [CVE-2014-6271](http://www.cert.ssi.gouv.fr/site/CERTFR-2014-ALE-006/index.html) touchant GNU bash. Elle permet à un attaquant de provoquer une exécution de code arbitraire à distance.
+Vous avez probablement entendu parler de Shell shock qui, outre l'association de troubles psychiques et physiques observés chez [certains soldats de la Première Guerre Mondiale](http://fr.wikipedia.org/wiki/Obusite), désigne également la vulnérabilité [CVE-2014-6271](http://www.cert.ssi.gouv.fr/site/CERTFR-2014-ALE-006/index.html) touchant GNU bash. Elle permet à un attaquant de provoquer une exécution de code arbitraire à distance.
 
 ## Mon dieu, mais c'est horrible !
 
@@ -16,7 +16,7 @@ Par ailleurs, si les systèmes « évidents » seront patchés (un serveur web p
 
 ## J'exige des explications
 
-Bash permet d'exporter des variables mais aussi des fonctions à destination d'autres instances de bash. L'export de fonction utilise une variable d'environnement portant le nom de la-dite fonction dont la valeur commence par () { :
+Bash permet d'exporter des variables mais aussi des fonctions à destination d'autres instances de bash. L'export de fonction utilise une variable d'environnement portant le nom de la-dite fonction dont la valeur commence par `() {` :
 
 ```bash
 foo=() {
