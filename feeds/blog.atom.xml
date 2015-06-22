@@ -89,7 +89,7 @@ try (InputStream storeStream = MyExample.class.getClassLoader().getResourceAsStr
         System.setProperty(&amp;quot;javax.net.ssl.trustStore&amp;quot;, myStore.getAbsolutePath());
         System.setProperty(&amp;quot;javax.net.ssl.trustStorePassword&amp;quot;, *******);
 } catch (IOException e) {
-        LoggerHelper.logger.error(&amp;quot;Cannot set trust store&amp;quot;, e);
+        logger.error(&amp;quot;Cannot set trust store&amp;quot;, e);
 }
 &lt;/pre&gt;&lt;/div&gt;
 
