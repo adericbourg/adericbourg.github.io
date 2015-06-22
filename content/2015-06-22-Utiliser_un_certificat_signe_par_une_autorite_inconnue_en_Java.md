@@ -109,7 +109,7 @@ La propriété `javax.net.ssl.trustStore` ne permet pas de déclarer de référe
             System.setProperty("javax.net.ssl.trustStore", myStore.getAbsolutePath());
             System.setProperty("javax.net.ssl.trustStorePassword", *******);
     } catch (IOException e) {
-            LoggerHelper.logger.error("Cannot set trust store", e);
+            logger.error("Cannot set trust store", e);
     }
 
 Voilà qui devrait vous permettre de communiquer avec le reste du monde.
