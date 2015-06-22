@@ -27,7 +27,7 @@ LINKS = (('Mon CV', 'https://github.com/adericbourg/CV'),
 
 # Social widget
 SOCIAL = (('Twitter', 'https://twitter.com/adericbourg'),
-          ('GitHub', 'https://github.xom/adericbourg'),
+          ('GitHub', 'https://github.com/adericbourg'),
           ('LinkedIn', 'https://www.linkedin.com/in/adericbourg'),
 )
 
