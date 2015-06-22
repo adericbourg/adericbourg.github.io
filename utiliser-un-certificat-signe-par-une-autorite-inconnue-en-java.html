@@ -1,0 +1,258 @@
+<!doctype html>
+<html class="no-js" lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+		<title>Blog bloquant</title>
+		<meta name="description" content="">
+		<meta name="author" content="Alban Dericbourg">
+
+		<link rel="stylesheet" href="http://www.dericbourg.net/theme/css/foundation.css" />
+		<link rel="stylesheet" href="http://www.dericbourg.net/theme/css/pygment/monokai.css" />
+		<link rel="stylesheet" href="http://www.dericbourg.net/theme/css/custom.css" />
+
+
+		<script src="http://www.dericbourg.net/theme/js/modernizr.js"></script>
+
+		<!-- Feeds -->
+		<link href="http://www.dericbourg.net/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Blog bloquant Atom Feed" />
+
+
+		<!-- mathjax config similar to math.stackexchange -->
+		<script type="text/x-mathjax-config">
+		MathJax.Hub.Config({
+			jax: ["input/TeX", "output/HTML-CSS"],
+			tex2jax: {
+				inlineMath: [ ['$', '$'] ],
+				displayMath: [ ['$$', '$$']],
+				processEscapes: true,
+				skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+			},
+			messageStyle: "none",
+			"HTML-CSS": { preferredFont: "TeX", availableFonts: ["STIX","TeX"] }
+		});
+		</script>
+		<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+	</head>
+	<body>
+		<div class="off-canvas-wrap">
+			<div class="inner-wrap">
+				<!-- mobile top bar to activate nav -->
+				<nav class="tab-bar show-for-small">
+					<section class="left-small">
+						<a class="left-off-canvas-toggle menu-icon" ><span></span></a>
+					</section>
+
+					<section class="middle tab-bar-section">
+						<h1 class="title">Blog&nbsp;bloquant</h1>
+					</section>
+				</nav>
+
+				<!-- mobile side bar nav -->
+				<aside class="left-off-canvas-menu">
+					<ul class="off-canvas-list">
+						<li><a href="http://www.dericbourg.net">Home</a></li>
+						<li><label>Categories</label></li>
+							<li class="active"><a href="http://www.dericbourg.net/category/blog.html">Blog</a></li>
+
+						<li><label>Links</label></li>
+							<li><a href="https://github.com/adericbourg/CV">Mon CV</a></li>
+
+
+
+						<li><label>Social</label></li>
+							<li><a href="https://github.xom/adericbourg">GitHub</a></li>
+							<li><a href="https://www.linkedin.com/in/adericbourg">LinkedIn</a></li>
+							<li><a href="https://twitter.com/adericbourg">Twitter</a></li>
+					</ul>	
+				</aside>
+
+				<!-- top bar nav -->
+				<nav class="top-bar hide-for-small-only" data-topbar>
+					<ul class="title-area">
+						<li class="name">
+							<h1><a href="http://www.dericbourg.net/">Blog bloquant</a></h1>
+						</li>
+					</ul>
+
+					<section class="top-bar-section">
+						<ul class="left">
+								<li class="active"><a href="http://www.dericbourg.net/category/blog.html">Blog</a></li>
+						</ul>
+                        <ul class="right">                                                                                                                                           
+                                                                                                                                             
+                        </ul>  
+					</section>
+				</nav>
+
+				<!-- Main Page Content and Sidebar -->
+				<section class="main-section">
+					<div class="row">
+						<!-- Main Content -->
+						<div class="medium-9 small-12 columns" role="content">
+<article>
+	<h2>Utiliser un certificat signé par une autorité inconnue en Java</h2>
+	<p>Lorsque vous vous connectez à un serveur en utilisant un certificat TLS (le grand frère de SSL depuis une quinzaine d'années), votre client en vérifie la signature. Celle-ci permet de vérifier que : </p>
+<ul>
+<li>celui-ci provient bien d'un émetteur connu ;</li>
+<li>qu'il n'a pas été modifié depuis son émission.</li>
+</ul>
+<h2>Le doute</h2>
+<p>Il arrive que le certificat soit signé en utilisant un certificat qui est lui-même signé par un autre certificat, lui-même encore signé par... bref : la signature peut remonter sur plusieurs niveaux hiérarchiques. Dans les faits, cela ne change pas grand chose : la vérification sera tout simplement récursive. Le tout est de rencontrer dans la chaîne, généralement « tout en haut » la signature issue d'un certificat faisant autorité. Ces autorités sont connues à l'avance et vous pouvez les vérifier dans les paramètres de votre natigateur ou, par exemple, dans le répertoire <code>/etc/ssl/certs</code> si vous êtes sous Linux.</p>
+<p>Il s'agit donc d'une liste fermée qui vous a été fournie par un biais ou un autre mais surtout par en biais en lequel vous avez confiance (ou en lequel on vous a obligé à avoir confiance). Mais rien n'oblige qui que ce soit à utiliser l'une de ces autorités racines : on peut également utiliser un certificat auto-signé. Dans ce cas, rien ne permet de garantir avec certitude l'émetteur : au même titre que vous ferez confiance en l'identité de quelqu'un s'il vous présente sa carte d'identité éditée par l'État, vous aurez probablement des doutes si l'on ne vous présente qu'un papier signé par la-dite personne affirmant sa bonne foi. </p>
+<p>Dans la « vraie vie », ce n'est pas parce qu'un individu n'est pas en mesure de vous présenter un document officiel d'identité qu'il est malhonnête. S'il vous présente son badge d'accès à l'entreprise dans laquelle vous travaillez, vous lui ferez confiance et saurez que c'est l'un de vos collègues. Dans ce cas, c'est votre entreprise qui fait autorité et vous faites confiance à son processus d'attribution des badges. De la même façon, un serveur qui utilise un certificat qui n'est pas signé par une autorité reconnue peut tout à fait venir en paix avec de bonnes intentions. </p>
+<p>Un certificat accepté et reconnu dans un environnement restreint est donc préférable à pas de certificat du tout.</p>
+<h2>L'arrivée des problèmes</h2>
+<p>Mais, généralement, lorsque votre client ne connaît pas l'autorité de certification racine, il refuse par défaut la connexion : </p>
+<div class="highlight"><pre><span class="nv">$ </span>curl -v https://www.exemple.com
+* Rebuilt URL to: https://www.example.com/
+* Hostname was NOT found in DNS cache
+*   Trying 1.2.3.4...
+* Connected to www.example.com <span class="o">(</span>1.2.3.4<span class="o">)</span> port <span class="m">443</span> <span class="o">(</span><span class="c">#0)</span>
+* successfully <span class="nb">set </span>certificate verify locations:
+*   CAfile: none
+    CApath: /etc/ssl/certs
+* SSLv3, TLS handshake, Client hello <span class="o">(</span>1<span class="o">)</span>:
+* SSLv3, TLS handshake, Server hello <span class="o">(</span>2<span class="o">)</span>:
+* SSLv3, TLS handshake, CERT <span class="o">(</span>11<span class="o">)</span>:
+* SSLv3, TLS alert, Server hello <span class="o">(</span>2<span class="o">)</span>:
+* SSL certificate problem: unable to get <span class="nb">local </span>issuer certificate
+* Closing connection 0
+</pre></div>
+
+
+<h2>Comment se connecter, alors ?</h2>
+<p>Face à cela (ignorons la <a href="https://fr.wikipedia.org/wiki/POODLE">référence à SSLv3</a> pour l'instant), deux options sont possible (la troisième, refiler le bébé à votre collègue, n'étant pas traitée ici) :</p>
+<ul>
+<li>ignorer les doutes quant au certificat et risquer de communiquer des informations sensibles à un tiers (c'est la porte ouvert à une <a href="https://fr.wikipedia.org/wiki/Attaque_de_l%27homme_du_milieu">attaque de l'homme du milieu</a> puisque vous ne vérifiez plus du tout avec qui vous échangez des données) ;</li>
+<li>indiquer que l'on connaît l'autorité racine ou l'une des autorités intermédiaires. </li>
+</ul>
+<p>Je ne peux que vous déconseiller avec toute la vigueur qui m'est donnée la première solution et vous apporter tout mon soutien pour la seconde. </p>
+<p>Pour reprendre l'exemple ci-dessus, l'appel avec <code>curl</code> est simplement complété avec l'option <code>--cacert</code> :</p>
+<div class="highlight"><pre><span class="nv">$ </span>curl -v https://www.example.com --cacert cert.pem
+</pre></div>
+
+
+<h2>Depuis une application Java</h2>
+<p>Le même mécanisme s'applique lorsque vous vous connectez à un service en utilisant une application Java. Si le certificat n'est pas sûr, vous vous verrez refuser la connexion : </p>
+<div class="highlight"><pre>sun.security.provider.certpath.SunCertPathBuilderException: unable to find valid certification path to requested target
+</pre></div>
+
+
+<p>Tout comme avec <code>curl</code>, il existe une option pour spécifier un certificat faisant autorité. Il faut avant tout le stocker dans un conteneur spéficique à la JVM puis de préciser son emplacement dans la propriété système <code>javax.net.ssl.trustStore</code>. </p>
+<p>Pour créer ce conteneur, on utilise l'outil <code>keytool</code> fourni avec le JDK. </p>
+<div class="highlight"><pre><span class="nv">$ </span>keytool -importcert -file cert.cer -keystore keystore.jks
+Entrez le mot de passe du fichier de clés :  
+Ressaisissez le nouveau mot de passe :  
+<span class="c"># Ici s&#39;affichent les détails du certificat que vous importez</span>
+Faire confiance à ce certificat ? <span class="o">[</span>non<span class="o">]</span> :  oui
+Certificat ajouté au fichier de clés
+</pre></div>
+
+
+<p>Reste à le déclarer dans votre application : </p>
+<div class="highlight"><pre>System.setProperty(&quot;javax.net.ssl.trustStore&quot;, &quot;/path/to/keystore.jks&quot;); 
+System.setProperty(&quot;javax.net.ssl.trustStorePassword&quot;, ******);
+</pre></div>
+
+
+<p>La propriété <code>javax.net.ssl.trustStorePassword</code> correspond au mot de passe que vous avez saisi à l'import du certificat en utilisant <code>keytool</code>. Dès lors, vous pouvez vous connecter aux services sécurisés utilisant un certificat propre à votre entreprise.</p>
+<h2>Solution globale</h2>
+<p>Il peut être pénible d'utiliser ce morceau de code dans chacune de vos applications, ou tout au moins fastidieux. Heureusement, il est également possible d'enregistrer un certificat au niveau de la JVM. On le déclare alors une bonne fois pour toutes.</p>
+<p>Si vous avez parcouru le répertoire <code>/etc/ssl/certs</code> évoqué au début de cet article, vous y aurez peut-être remarqué un répertoire <code>java</code>. Il s'agit du portefeuille de certificats dédié à la JVM.</p>
+<p>Pour y ajouter un certificat, lancez en tant qu'utilisateur privilégié (<em>root</em>) : </p>
+<div class="highlight"><pre><span class="n">keytool</span> <span class="o">-</span><span class="kn">import</span> <span class="o">-</span><span class="n">alias</span> <span class="n">CertificatDeMonEntreprise</span> \
+  <span class="o">-</span><span class="n">keypass</span> <span class="n">changeit</span> \
+  <span class="o">-</span><span class="n">keystore</span> <span class="err">$</span><span class="n">JAVA_HOME</span><span class="o">/</span><span class="n">jre</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">security</span><span class="o">/</span><span class="n">cacerts</span> \
+  <span class="o">-</span><span class="nb">file</span> <span class="n">cert</span><span class="o">.</span><span class="n">pem</span>
+</pre></div>
+
+
+<p>Notez le mot de passe par défaut du <em>keystore</em>: « changeit ». Il s'agit du mot de passe par défaut et je vous encourage, si ce n'est déjà fait, à le changer.</p>
+<p>Cette opération est à réaliser sur votre machine de développement mais également sur l'intégralité des serveurs susceptibles d'exécuter vos applications. C'est là qu'une solution de déploiement automatique devient pertinente.</p>
+<p>Vous êtes maintenant capable de vous connecter depuis une application Java à l'ensemble des services exposés le certificat TLS de votre entreprise et ce sans nécessiter d'adaptation du code. </p>
+<h2>Depuis une application Java (bis)</h2>
+<p>Si, par malheur, vous ne pouvez pas déposer de fichier sur la machine exécutant votre application (c'est le cas sur certains hébergement « cloud » que je n'aime pas utiliser), vous pouvez toujours « stocker » votre <em>keystore</em> dans votre livrable (jar, war...). Mais... vous ne pourrez pas l'utiliser directement. </p>
+<p>La propriété <code>javax.net.ssl.trustStore</code> ne permet pas de déclarer de référence à un fichier dans le <em>package</em>. On peut en revanche l'écrire « à la main » sur le disque. L'exemple qui suit utilise <a href="https://github.com/google/guava">Guava</a>.</p>
+<div class="highlight"><pre>File tempDir = Files.createTempDir();
+File myStore = new File(tempDir, &quot;keystore.jks&quot;);
+try (InputStream storeStream = MyExample.class.getClassLoader().getResourceAsStream(&quot;keystore.jks&quot;);
+        FileOutputStream outputStream = new FileOutputStream(myStore)) {
+        ByteStreams.copy(storeStream, outputStream);
+        System.setProperty(&quot;javax.net.ssl.trustStore&quot;, myStore.getAbsolutePath());
+        System.setProperty(&quot;javax.net.ssl.trustStorePassword&quot;, *******);
+} catch (IOException e) {
+        LoggerHelper.logger.error(&quot;Cannot set trust store&quot;, e);
+}
+</pre></div>
+
+
+<p>Voilà qui devrait vous permettre de communiquer avec le reste du monde.</p>
+	<hr/>
+	<h6>Written by <a href="http://www.dericbourg.net/author/alban-dericbourg.html">Alban Dericbourg</a> in <a href="http://www.dericbourg.net/category/blog.html">Blog</a> on lun. 22 juin 2015. Tags: <a href="http://www.dericbourg.net/tag/ssl.html">ssl</a>, <a href="http://www.dericbourg.net/tag/tls.html">tls</a>, <a href="http://www.dericbourg.net/tag/java.html">java</a>, <a href="http://www.dericbourg.net/tag/certificat.html">certificat</a>, <a href="http://www.dericbourg.net/tag/signature.html">signature</a>, </h6>
+</article>
+
+<hr/>
+						</div>
+						<!-- End Main Content -->
+						<!-- Sidebar -->
+						<aside class="medium-3 hide-for-small-only columns">
+							<div class="panel">
+								<h5>Links</h5>
+								<ul class="side-nav">
+									<li><a href="https://github.com/adericbourg/CV">Mon CV</a></li>
+								</ul>
+							</div>
+
+							<div class="panel">
+								<h5>Tags</h5>
+								<ul class="tag-cloud">
+									<li><a href="/tag/bash.html" class="tag-4">bash</a></li>
+									<li><a href="/tag/tls.html" class="tag-4">tls</a></li>
+									<li><a href="/tag/cve.html" class="tag-4">cve</a></li>
+									<li><a href="/tag/certificat.html" class="tag-4">certificat</a></li>
+									<li><a href="/tag/vivre-ensemble.html" class="tag-4">vivre ensemble</a></li>
+									<li><a href="/tag/java.html" class="tag-4">java</a></li>
+									<li><a href="/tag/ssl.html" class="tag-4">ssl</a></li>
+									<li><a href="/tag/signature.html" class="tag-4">signature</a></li>
+									<li><a href="/tag/sécurité.html" class="tag-4">sécurité</a></li>
+									<li><a href="/tag/motivation.html" class="tag-4">motivation</a></li>
+									<li><a href="/tag/quotidien.html" class="tag-4">quotidien</a></li>
+									<li><a href="/tag/bien-être.html" class="tag-4">bien-être</a></li>
+								</ul>
+							</div>
+
+
+							<div class="panel">
+								<h5>Social</h5>
+								<ul class="side-nav">
+									<li><a href="https://github.xom/adericbourg">GitHub</a></li>
+									<li><a href="https://www.linkedin.com/in/adericbourg">LinkedIn</a></li>
+									<li><a href="https://twitter.com/adericbourg">Twitter</a></li>
+								</ul>
+							</div>
+						</aside>
+						<!-- End Sidebar -->
+					</div>
+
+					<!-- Footer -->
+					<footer class="row">
+						<div class="medium-9 small-12">
+							<hr/>
+							<p class="text-center">Powered by <a href="http://getpelican.com">Pelican</a> and <a href="http://foundation.zurb.com/">Zurb Foundation</a>. Theme by <a href="http://hamaluik.com">Kenton Hamaluik</a>.</p>
+						</div>
+					</footer>
+					<!-- End Footer -->
+				</section>
+				<a class="exit-off-canvas"></a>
+			</div><!--off-canvas inner-->
+		</div><!--off-canvas wrap-->
+
+		<script src="http://www.dericbourg.net/theme/js/jquery.js"></script>
+		<script src="http://www.dericbourg.net/theme/js/foundation.min.js"></script>
+		<script>
+			$(document).foundation();
+		</script>
+	</body>
+</html>

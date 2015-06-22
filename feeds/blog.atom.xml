@@ -1,5 +1,100 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Blog bloquant</title><link href="http://www.dericbourg.net/" rel="alternate"></link><link href="http://www.dericbourg.net/feeds/blog.atom.xml" rel="self"></link><id>http://www.dericbourg.net/</id><updated>2015-02-16T00:00:00+01:00</updated><entry><title>Qu'est-ce qui me motive en tant que développeur ?</title><link href="http://www.dericbourg.net/quest-ce-qui-me-motive-en-tant-que-developpeur.html" rel="alternate"></link><updated>2015-02-16T00:00:00+01:00</updated><author><name>Alban Dericbourg</name></author><id>tag:www.dericbourg.net,2015-02-16:quest-ce-qui-me-motive-en-tant-que-developpeur.html</id><summary type="html">&lt;p&gt;Je suis développeur. Je travaille pour l'ESN MaBoite et suis en mission depuis plusieurs mois chez MonClient. Il est 9h40, j'arrive chez MonClient en retard, déjà fatigué. Sans avoir fait la fête la veille, j'ai pourtant eu du mal à me lever ce matin, je n'avais pas envie.&lt;/p&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Blog bloquant</title><link href="http://www.dericbourg.net/" rel="alternate"></link><link href="http://www.dericbourg.net/feeds/blog.atom.xml" rel="self"></link><id>http://www.dericbourg.net/</id><updated>2015-06-22T00:00:00+02:00</updated><entry><title>Utiliser un certificat signé par une autorité inconnue en Java</title><link href="http://www.dericbourg.net/utiliser-un-certificat-signe-par-une-autorite-inconnue-en-java.html" rel="alternate"></link><updated>2015-06-22T00:00:00+02:00</updated><author><name>Alban Dericbourg</name></author><id>tag:www.dericbourg.net,2015-06-22:utiliser-un-certificat-signe-par-une-autorite-inconnue-en-java.html</id><summary type="html">&lt;p&gt;Lorsque vous vous connectez à un serveur en utilisant un certificat TLS (le grand frère de SSL depuis une quinzaine d'années), votre client en vérifie la signature. Celle-ci permet de vérifier que : &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;celui-ci provient bien d'un émetteur connu ;&lt;/li&gt;
+&lt;li&gt;qu'il n'a pas été modifié depuis son émission.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;Le doute&lt;/h2&gt;
+&lt;p&gt;Il arrive que le certificat soit signé en utilisant un certificat qui est lui-même signé par un autre certificat, lui-même encore signé par... bref : la signature peut remonter sur plusieurs niveaux hiérarchiques. Dans les faits, cela ne change pas grand chose : la vérification sera tout simplement récursive. Le tout est de rencontrer dans la chaîne, généralement « tout en haut » la signature issue d'un certificat faisant autorité. Ces autorités sont connues à l'avance et vous pouvez les vérifier dans les paramètres de votre natigateur ou, par exemple, dans le répertoire &lt;code&gt;/etc/ssl/certs&lt;/code&gt; si vous êtes sous Linux.&lt;/p&gt;
+&lt;p&gt;Il s'agit donc d'une liste fermée qui vous a été fournie par un biais ou un autre mais surtout par en biais en lequel vous avez confiance (ou en lequel on vous a obligé à avoir confiance). Mais rien n'oblige qui que ce soit à utiliser l'une de ces autorités racines : on peut également utiliser un certificat auto-signé. Dans ce cas, rien ne permet de garantir avec certitude l'émetteur : au même titre que vous ferez confiance en l'identité de quelqu'un s'il vous présente sa carte d'identité éditée par l'État, vous aurez probablement des doutes si l'on ne vous présente qu'un papier signé par la-dite personne affirmant sa bonne foi. &lt;/p&gt;
+&lt;p&gt;Dans la « vraie vie », ce n'est pas parce qu'un individu n'est pas en mesure de vous présenter un document officiel d'identité qu'il est malhonnête. S'il vous présente son badge d'accès à l'entreprise dans laquelle vous travaillez, vous lui ferez confiance et saurez que c'est l'un de vos collègues. Dans ce cas, c'est votre entreprise qui fait autorité et vous faites confiance à son processus d'attribution des badges. De la même façon, un serveur qui utilise un certificat qui n'est pas signé par une autorité reconnue peut tout à fait venir en paix avec de bonnes intentions. &lt;/p&gt;
+&lt;p&gt;Un certificat accepté et reconnu dans un environnement restreint est donc préférable à pas de certificat du tout.&lt;/p&gt;
+&lt;h2&gt;L'arrivée des problèmes&lt;/h2&gt;
+&lt;p&gt;Mais, généralement, lorsque votre client ne connaît pas l'autorité de certification racine, il refuse par défaut la connexion : &lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;curl -v https://www.exemple.com
+* Rebuilt URL to: https://www.example.com/
+* Hostname was NOT found in DNS cache
+*   Trying 1.2.3.4...
+* Connected to www.example.com &lt;span class="o"&gt;(&lt;/span&gt;1.2.3.4&lt;span class="o"&gt;)&lt;/span&gt; port &lt;span class="m"&gt;443&lt;/span&gt; &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="c"&gt;#0)&lt;/span&gt;
+* successfully &lt;span class="nb"&gt;set &lt;/span&gt;certificate verify locations:
+*   CAfile: none
+    CApath: /etc/ssl/certs
+* SSLv3, TLS handshake, Client hello &lt;span class="o"&gt;(&lt;/span&gt;1&lt;span class="o"&gt;)&lt;/span&gt;:
+* SSLv3, TLS handshake, Server hello &lt;span class="o"&gt;(&lt;/span&gt;2&lt;span class="o"&gt;)&lt;/span&gt;:
+* SSLv3, TLS handshake, CERT &lt;span class="o"&gt;(&lt;/span&gt;11&lt;span class="o"&gt;)&lt;/span&gt;:
+* SSLv3, TLS alert, Server hello &lt;span class="o"&gt;(&lt;/span&gt;2&lt;span class="o"&gt;)&lt;/span&gt;:
+* SSL certificate problem: unable to get &lt;span class="nb"&gt;local &lt;/span&gt;issuer certificate
+* Closing connection 0
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;Comment se connecter, alors ?&lt;/h2&gt;
+&lt;p&gt;Face à cela (ignorons la &lt;a href="https://fr.wikipedia.org/wiki/POODLE"&gt;référence à SSLv3&lt;/a&gt; pour l'instant), deux options sont possible (la troisième, refiler le bébé à votre collègue, n'étant pas traitée ici) :&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;ignorer les doutes quant au certificat et risquer de communiquer des informations sensibles à un tiers (c'est la porte ouvert à une &lt;a href="https://fr.wikipedia.org/wiki/Attaque_de_l%27homme_du_milieu"&gt;attaque de l'homme du milieu&lt;/a&gt; puisque vous ne vérifiez plus du tout avec qui vous échangez des données) ;&lt;/li&gt;
+&lt;li&gt;indiquer que l'on connaît l'autorité racine ou l'une des autorités intermédiaires. &lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Je ne peux que vous déconseiller avec toute la vigueur qui m'est donnée la première solution et vous apporter tout mon soutien pour la seconde. &lt;/p&gt;
+&lt;p&gt;Pour reprendre l'exemple ci-dessus, l'appel avec &lt;code&gt;curl&lt;/code&gt; est simplement complété avec l'option &lt;code&gt;--cacert&lt;/code&gt; :&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;curl -v https://www.example.com --cacert cert.pem
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;Depuis une application Java&lt;/h2&gt;
+&lt;p&gt;Le même mécanisme s'applique lorsque vous vous connectez à un service en utilisant une application Java. Si le certificat n'est pas sûr, vous vous verrez refuser la connexion : &lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;sun.security.provider.certpath.SunCertPathBuilderException: unable to find valid certification path to requested target
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Tout comme avec &lt;code&gt;curl&lt;/code&gt;, il existe une option pour spécifier un certificat faisant autorité. Il faut avant tout le stocker dans un conteneur spéficique à la JVM puis de préciser son emplacement dans la propriété système &lt;code&gt;javax.net.ssl.trustStore&lt;/code&gt;. &lt;/p&gt;
+&lt;p&gt;Pour créer ce conteneur, on utilise l'outil &lt;code&gt;keytool&lt;/code&gt; fourni avec le JDK. &lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;keytool -importcert -file cert.cer -keystore keystore.jks
+Entrez le mot de passe du fichier de clés :  
+Ressaisissez le nouveau mot de passe :  
+&lt;span class="c"&gt;# Ici s&amp;#39;affichent les détails du certificat que vous importez&lt;/span&gt;
+Faire confiance à ce certificat ? &lt;span class="o"&gt;[&lt;/span&gt;non&lt;span class="o"&gt;]&lt;/span&gt; :  oui
+Certificat ajouté au fichier de clés
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Reste à le déclarer dans votre application : &lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;System.setProperty(&amp;quot;javax.net.ssl.trustStore&amp;quot;, &amp;quot;/path/to/keystore.jks&amp;quot;); 
+System.setProperty(&amp;quot;javax.net.ssl.trustStorePassword&amp;quot;, ******);
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;La propriété &lt;code&gt;javax.net.ssl.trustStorePassword&lt;/code&gt; correspond au mot de passe que vous avez saisi à l'import du certificat en utilisant &lt;code&gt;keytool&lt;/code&gt;. Dès lors, vous pouvez vous connecter aux services sécurisés utilisant un certificat propre à votre entreprise.&lt;/p&gt;
+&lt;h2&gt;Solution globale&lt;/h2&gt;
+&lt;p&gt;Il peut être pénible d'utiliser ce morceau de code dans chacune de vos applications, ou tout au moins fastidieux. Heureusement, il est également possible d'enregistrer un certificat au niveau de la JVM. On le déclare alors une bonne fois pour toutes.&lt;/p&gt;
+&lt;p&gt;Si vous avez parcouru le répertoire &lt;code&gt;/etc/ssl/certs&lt;/code&gt; évoqué au début de cet article, vous y aurez peut-être remarqué un répertoire &lt;code&gt;java&lt;/code&gt;. Il s'agit du portefeuille de certificats dédié à la JVM.&lt;/p&gt;
+&lt;p&gt;Pour y ajouter un certificat, lancez en tant qu'utilisateur privilégié (&lt;em&gt;root&lt;/em&gt;) : &lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;keytool&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;alias&lt;/span&gt; &lt;span class="n"&gt;CertificatDeMonEntreprise&lt;/span&gt; \
+  &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;keypass&lt;/span&gt; &lt;span class="n"&gt;changeit&lt;/span&gt; \
+  &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;keystore&lt;/span&gt; &lt;span class="err"&gt;$&lt;/span&gt;&lt;span class="n"&gt;JAVA_HOME&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;jre&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;lib&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;security&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;cacerts&lt;/span&gt; \
+  &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="nb"&gt;file&lt;/span&gt; &lt;span class="n"&gt;cert&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;pem&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Notez le mot de passe par défaut du &lt;em&gt;keystore&lt;/em&gt;: « changeit ». Il s'agit du mot de passe par défaut et je vous encourage, si ce n'est déjà fait, à le changer.&lt;/p&gt;
+&lt;p&gt;Cette opération est à réaliser sur votre machine de développement mais également sur l'intégralité des serveurs susceptibles d'exécuter vos applications. C'est là qu'une solution de déploiement automatique devient pertinente.&lt;/p&gt;
+&lt;p&gt;Vous êtes maintenant capable de vous connecter depuis une application Java à l'ensemble des services exposés le certificat TLS de votre entreprise et ce sans nécessiter d'adaptation du code. &lt;/p&gt;
+&lt;h2&gt;Depuis une application Java (bis)&lt;/h2&gt;
+&lt;p&gt;Si, par malheur, vous ne pouvez pas déposer de fichier sur la machine exécutant votre application (c'est le cas sur certains hébergement « cloud » que je n'aime pas utiliser), vous pouvez toujours « stocker » votre &lt;em&gt;keystore&lt;/em&gt; dans votre livrable (jar, war...). Mais... vous ne pourrez pas l'utiliser directement. &lt;/p&gt;
+&lt;p&gt;La propriété &lt;code&gt;javax.net.ssl.trustStore&lt;/code&gt; ne permet pas de déclarer de référence à un fichier dans le &lt;em&gt;package&lt;/em&gt;. On peut en revanche l'écrire « à la main » sur le disque. L'exemple qui suit utilise &lt;a href="https://github.com/google/guava"&gt;Guava&lt;/a&gt;.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;File tempDir = Files.createTempDir();
+File myStore = new File(tempDir, &amp;quot;keystore.jks&amp;quot;);
+try (InputStream storeStream = MyExample.class.getClassLoader().getResourceAsStream(&amp;quot;keystore.jks&amp;quot;);
+        FileOutputStream outputStream = new FileOutputStream(myStore)) {
+        ByteStreams.copy(storeStream, outputStream);
+        System.setProperty(&amp;quot;javax.net.ssl.trustStore&amp;quot;, myStore.getAbsolutePath());
+        System.setProperty(&amp;quot;javax.net.ssl.trustStorePassword&amp;quot;, *******);
+} catch (IOException e) {
+        LoggerHelper.logger.error(&amp;quot;Cannot set trust store&amp;quot;, e);
+}
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Voilà qui devrait vous permettre de communiquer avec le reste du monde.&lt;/p&gt;</summary><category term="ssl"></category><category term="tls"></category><category term="java"></category><category term="certificat"></category><category term="signature"></category></entry><entry><title>Qu'est-ce qui me motive en tant que développeur ?</title><link href="http://www.dericbourg.net/quest-ce-qui-me-motive-en-tant-que-developpeur.html" rel="alternate"></link><updated>2015-02-16T00:00:00+01:00</updated><author><name>Alban Dericbourg</name></author><id>tag:www.dericbourg.net,2015-02-16:quest-ce-qui-me-motive-en-tant-que-developpeur.html</id><summary type="html">&lt;p&gt;Je suis développeur. Je travaille pour l'ESN MaBoite et suis en mission depuis plusieurs mois chez MonClient. Il est 9h40, j'arrive chez MonClient en retard, déjà fatigué. Sans avoir fait la fête la veille, j'ai pourtant eu du mal à me lever ce matin, je n'avais pas envie.&lt;/p&gt;
 &lt;p&gt;Gérard passe à côté de moi sans même me regarder. Jérôme vient me demander d'implémenter une fonctionnalité en urgence. Je ne comprends pas l'objectif de sa demande et lui demande des précisions : « Ce n'est pas important, me répond-il, c'est pour les gogols du pôle métier qui ne comprennent rien à ce qu'ils font, comme d'habitude ». Lorsque j'envisage de leur demander directement les détails nécessaires, il me coupe : la fonctionnalité ne servira jamais, autant la réaliser comme ils l'imaginent, cela nous fera gagner du temps. S'il est sûr de lui, allons-y.&lt;/p&gt;
 &lt;p&gt;Avant de m'y mettre, je constate que les tests unitaires du module que j'ai réalisé la semaine dernière ne passent plus. Gérard étant à l'origine de la modification, je vais le voir. « Oui, j'ai repris des trucs, ça ne me plaisait pas et je voulais que ça marche », m'explique-t-il. Je repars avec l'injonction de remettre les tests d'aplomb en fonction de ce qu'il a écrit.&lt;/p&gt;
 &lt;p&gt;La journée passe, il est 18h. Au cours de la journée, je n'ai écrit que quelques lignes de code dont je ne suis pas satisfait. Je vois bien qu'il y a des choses à reprendre, que ça pourrait être plus « propre » mais j'ai du mal à identifier comment mieux faire. Je n'ai de toute façon pas l'énergie de m'y pencher. Qu'est-ce qui rend le travail si laborieux ? Pourquoi ma motivation est-elle si basse ?&lt;/p&gt;
