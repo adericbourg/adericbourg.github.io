@@ -199,3 +199,36 @@ a:focus { color: #34495E; }
 @media only screen and (max-width: 600px) {
   #banner h1 a {font-size:22px!important; line-height:24px;}
 }
+
+/* fork fixes 
+----------------------------------------------------------*/
+
+/* justify text in articles */
+.entry-content {
+  text-align: justify;
+}
+
+/* keep bullet points inside articles */
+.entry-content ul {
+  list-style: initial;
+  margin: initial;
+  padding: 0 0 0 40px;
+}
+
+.entry-content li {
+  display: list-item;
+}
+
+/* better image positionning */
+.entry-content img {
+  display: block;
+  margin: auto;
+  padding-top: 1em;
+  padding-bottom: 1em;
+}
+
+/* transform tag list into pseudo-tag cloud */
+#sidebar-tags li {
+  float: right;
+  padding-left: 0.75em;
+}
