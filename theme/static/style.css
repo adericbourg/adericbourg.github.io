@@ -199,3 +199,17 @@ a:focus { color: #34495E; }
 @media only screen and (max-width: 600px) {
   #banner h1 a {font-size:22px!important; line-height:24px;}
 }
+
+/* fork fixes 
+----------------------------------------------------------*/
+
+/* keep bullet points inside articles */
+.entry-content ul {
+  list-style: initial;
+  margin: initial;
+  padding: 0 0 0 40px;
+}
+
+.entry-content li {
+  display: list-item;
+}
