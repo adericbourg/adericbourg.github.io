@@ -203,6 +203,11 @@ a:focus { color: #34495E; }
 /* fork fixes 
 ----------------------------------------------------------*/
 
+/* justify text in articles */
+.entry-content {
+  text-align: justify;
+}
+
 /* keep bullet points inside articles */
 .entry-content ul {
   list-style: initial;
