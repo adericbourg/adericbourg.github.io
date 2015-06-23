@@ -48,29 +48,37 @@ Je ne peux que vous déconseiller avec toute la vigueur qui m'est donnée la pre
 
 Pour reprendre l'exemple ci-dessus, l'appel avec `curl` est simplement complété avec l'option `--cacert` :
 
-    $ curl -v https://www.example.com --cacert cert.pem
+```bash
+$ curl -v https://www.example.com --cacert cert.pem
+```
 
 ### Depuis une application Java
 
 Le même mécanisme s'applique lorsque vous vous connectez à un service en utilisant une application Java. Si le certificat n'est pas sûr, vous vous verrez refuser la connexion : 
 
-    sun.security.provider.certpath.SunCertPathBuilderException: unable to find valid certification path to requested target
+```
+sun.security.provider.certpath.SunCertPathBuilderException: unable to find valid certification path to requested target
+```
 
 Tout comme avec `curl`, il existe une option pour spécifier un certificat faisant autorité. Il faut avant tout le stocker dans un conteneur spéficique à la JVM puis de préciser son emplacement dans la propriété système `javax.net.ssl.trustStore`. 
 
 Pour créer ce conteneur, on utilise l'outil `keytool` fourni avec le JDK. 
 
-    $ keytool -importcert -file cert.cer -keystore keystore.jks
-    Entrez le mot de passe du fichier de clés :  
-    Ressaisissez le nouveau mot de passe :  
-    # Ici s'affichent les détails du certificat que vous importez
-    Faire confiance à ce certificat ? [non] :  oui
-    Certificat ajouté au fichier de clés
+```bash
+$ keytool -importcert -file cert.cer -keystore keystore.jks
+Entrez le mot de passe du fichier de clés :  
+Ressaisissez le nouveau mot de passe :  
+# Ici s'affichent les détails du certificat que vous importez
+Faire confiance à ce certificat ? [non] :  oui
+Certificat ajouté au fichier de clés
+```
 
 Reste à le déclarer dans votre application : 
 
-    System.setProperty("javax.net.ssl.trustStore", "/path/to/keystore.jks"); 
-    System.setProperty("javax.net.ssl.trustStorePassword", ******);
+```java
+System.setProperty("javax.net.ssl.trustStore", "/path/to/keystore.jks"); 
+System.setProperty("javax.net.ssl.trustStorePassword", ******); 
+```
 
 La propriété `javax.net.ssl.trustStorePassword` correspond au mot de passe que vous avez saisi à l'import du certificat en utilisant `keytool`. Dès lors, vous pouvez vous connecter aux services sécurisés utilisant un certificat propre à votre entreprise.
 
@@ -83,10 +91,12 @@ Si vous avez parcouru le répertoire `/etc/ssl/certs` évoqué au début de cet 
 
 Pour y ajouter un certificat, lancez en tant qu'utilisateur privilégié (*root*) : 
 
-    keytool -import -alias CertificatDeMonEntreprise \
-      -keypass changeit \
-      -keystore $JAVA_HOME/jre/lib/security/cacerts \
-      -file cert.pem
+```bash
+keytool -import -alias CertificatDeMonEntreprise \
+  -keypass changeit \
+  -keystore $JAVA_HOME/jre/lib/security/cacerts \
+  -file cert.pem
+```
 
 Notez le mot de passe par défaut du *keystore*: « changeit ». Il s'agit du mot de passe par défaut et je vous encourage, si ce n'est déjà fait, à le changer.
 
@@ -101,15 +111,17 @@ Si, par malheur, vous ne pouvez pas déposer de fichier sur la machine exécutan
 
 La propriété `javax.net.ssl.trustStore` ne permet pas de déclarer de référence à un fichier dans le *package*. On peut en revanche l'écrire « à la main » sur le disque. L'exemple qui suit utilise [Guava](https://github.com/google/guava).
 
-    File tempDir = Files.createTempDir();
-    File myStore = new File(tempDir, "keystore.jks");
-    try (InputStream storeStream = MyExample.class.getClassLoader().getResourceAsStream("keystore.jks");
-            FileOutputStream outputStream = new FileOutputStream(myStore)) {
-            ByteStreams.copy(storeStream, outputStream);
-            System.setProperty("javax.net.ssl.trustStore", myStore.getAbsolutePath());
-            System.setProperty("javax.net.ssl.trustStorePassword", *******);
-    } catch (IOException e) {
-            logger.error("Cannot set trust store", e);
-    }
+```java
+File tempDir = Files.createTempDir();
+File myStore = new File(tempDir, "keystore.jks");
+try (InputStream storeStream = MyExample.class.getClassLoader().getResourceAsStream("keystore.jks");
+        FileOutputStream outputStream = new FileOutputStream(myStore)) {
+        ByteStreams.copy(storeStream, outputStream);
+        System.setProperty("javax.net.ssl.trustStore", myStore.getAbsolutePath());
+        System.setProperty("javax.net.ssl.trustStorePassword", *******);
+} catch (IOException e) {
+        logger.error("Cannot set trust store", e);
+}
+```
 
 Voilà qui devrait vous permettre de communiquer avec le reste du monde.
