@@ -32,9 +32,8 @@
 
                                 <div class="row tag-row">
                                     {% if article.tags %}
-                                        <span>Tags&nbsp;: </span>
                                         {% for tag in article.tags %}
-                                            <a class="danger label" href="{{ SITEURL }}/{{ tag.url }}">{{ tag|e }}</a>
+                                            <a class="info label" href="{{ SITEURL }}/{{ tag.url }}">{{ tag|e }}</a>
                                         {% endfor %}
                                     {% endif %}
                                 </div>

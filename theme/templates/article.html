@@ -11,8 +11,16 @@
               <h2 class="entry-title">{{ article.title }}</h2>
            {% import 'translations.html' as translations with context %}
            {{ translations.translations_for(article) }}
+              <div>
+                {% if article.tags %}
+                  {% for tag in article.tags %}
+                    <a class="info label" href="{{ SITEURL }}/{{ tag.url }}">{{ tag|e }}</a>
+                  {% endfor %}
+                {% endif %}
+              </div>
             </header>
             <footer class="post-info">
+
               <abbr class="published" title="{{ article.date.isoformat() }}">
                 {{ article.locale_date }}
               </abbr>
@@ -25,6 +33,7 @@
               {% endfor %}
               </address>
               {% endif %}
+
             </footer><!-- /.post-info -->
             <div class="entry-content">
               {{ article.content }}
