@@ -1,7 +1,7 @@
 Title: Utiliser un certificat signé par une autorité inconnue en Java
 Date: 2015-06-22
 Category: Blog
-Tags: ssl, tls, java, certificat, signature
+Tags: ssl, tls, java, certificat, signature, sécurité
 
 Lorsque vous vous connectez à un serveur en utilisant un certificat TLS (le grand frère de SSL depuis une quinzaine d'années), votre client en vérifie la signature. Celle-ci permet de vérifier que : 
 
