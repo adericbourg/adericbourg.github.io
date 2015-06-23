@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Blog bloquant</title><link href="http://www.dericbourg.net/" rel="alternate"></link><link href="http://www.dericbourg.net/feeds/all.atom.xml" rel="self"></link><id>http://www.dericbourg.net/</id><updated>2015-06-22T00:00:00+02:00</updated><entry><title>Utiliser un certificat signé par une autorité inconnue en Java</title><link href="http://www.dericbourg.net/utiliser-un-certificat-signe-par-une-autorite-inconnue-en-java.html" rel="alternate"></link><updated>2015-06-22T00:00:00+02:00</updated><author><name>Alban Dericbourg</name></author><id>tag:www.dericbourg.net,2015-06-22:utiliser-un-certificat-signe-par-une-autorite-inconnue-en-java.html</id><summary type="html">&lt;p&gt;Lorsque vous vous connectez à un serveur en utilisant un certificat TLS (le grand frère de SSL depuis une quinzaine d'années), votre client en vérifie la signature. Celle-ci permet de vérifier que : &lt;/p&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Blog bloquant</title><link href="http://www.dericbourg.net/" rel="alternate"></link><link href="http://www.dericbourg.net/feeds/all.atom.xml" rel="self"></link><id>http://www.dericbourg.net/</id><updated>2015-06-22T00:00:00+02:00</updated><entry><title>Utiliser un certificat signé par une autorité inconnue en Java</title><link href="http://www.dericbourg.net/2015/06/22/utiliser-un-certificat-signe-par-une-autorite-inconnue-en-java/" rel="alternate"></link><updated>2015-06-22T00:00:00+02:00</updated><author><name>Alban Dericbourg</name></author><id>tag:www.dericbourg.net,2015-06-22:2015/06/22/utiliser-un-certificat-signe-par-une-autorite-inconnue-en-java/</id><summary type="html">&lt;p&gt;Lorsque vous vous connectez à un serveur en utilisant un certificat TLS (le grand frère de SSL depuis une quinzaine d'années), votre client en vérifie la signature. Celle-ci permet de vérifier que : &lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;celui-ci provient bien d'un émetteur connu ;&lt;/li&gt;
 &lt;li&gt;qu'il n'a pas été modifié depuis son émission.&lt;/li&gt;
 &lt;/ul&gt;
-&lt;h2&gt;Le doute&lt;/h2&gt;
+&lt;h3&gt;Le doute&lt;/h3&gt;
 &lt;p&gt;Il arrive que le certificat soit signé en utilisant un certificat qui est lui-même signé par un autre certificat, lui-même encore signé par... bref : la signature peut remonter sur plusieurs niveaux hiérarchiques. Dans les faits, cela ne change pas grand chose : la vérification sera tout simplement récursive. Le tout est de rencontrer dans la chaîne, généralement « tout en haut » la signature issue d'un certificat faisant autorité. Ces autorités sont connues à l'avance et vous pouvez les vérifier dans les paramètres de votre natigateur ou, par exemple, dans le répertoire &lt;code&gt;/etc/ssl/certs&lt;/code&gt; si vous êtes sous Linux.&lt;/p&gt;
 &lt;p&gt;Il s'agit donc d'une liste fermée qui vous a été fournie par un biais ou un autre mais surtout par en biais en lequel vous avez confiance (ou en lequel on vous a obligé à avoir confiance). Mais rien n'oblige qui que ce soit à utiliser l'une de ces autorités racines : on peut également utiliser un certificat auto-signé. Dans ce cas, rien ne permet de garantir avec certitude l'émetteur : au même titre que vous ferez confiance en l'identité de quelqu'un s'il vous présente sa carte d'identité éditée par l'État, vous aurez probablement des doutes si l'on ne vous présente qu'un papier signé par la-dite personne affirmant sa bonne foi. &lt;/p&gt;
 &lt;p&gt;Dans la « vraie vie », ce n'est pas parce qu'un individu n'est pas en mesure de vous présenter un document officiel d'identité qu'il est malhonnête. S'il vous présente son badge d'accès à l'entreprise dans laquelle vous travaillez, vous lui ferez confiance et saurez que c'est l'un de vos collègues. Dans ce cas, c'est votre entreprise qui fait autorité et vous faites confiance à son processus d'attribution des badges. De la même façon, un serveur qui utilise un certificat qui n'est pas signé par une autorité reconnue peut tout à fait venir en paix avec de bonnes intentions. &lt;/p&gt;
 &lt;p&gt;Un certificat accepté et reconnu dans un environnement restreint est donc préférable à pas de certificat du tout.&lt;/p&gt;
-&lt;h2&gt;L'arrivée des problèmes&lt;/h2&gt;
+&lt;h3&gt;L'arrivée des problèmes&lt;/h3&gt;
 &lt;p&gt;Mais, généralement, lorsque votre client ne connaît pas l'autorité de certification racine, il refuse par défaut la connexion : &lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;curl -v https://www.exemple.com
 * Rebuilt URL to: https://www.example.com/
@@ -28,7 +28,7 @@
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;h2&gt;Comment se connecter, alors ?&lt;/h2&gt;
+&lt;h3&gt;Comment se connecter, alors ?&lt;/h3&gt;
 &lt;p&gt;Face à cela (ignorons la &lt;a href="https://fr.wikipedia.org/wiki/POODLE"&gt;référence à SSLv3&lt;/a&gt; pour l'instant), deux options sont possible (la troisième, refiler le bébé à votre collègue, n'étant pas traitée ici) :&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;ignorer les doutes quant au certificat et risquer de communiquer des informations sensibles à un tiers (c'est la porte ouvert à une &lt;a href="https://fr.wikipedia.org/wiki/Attaque_de_l%27homme_du_milieu"&gt;attaque de l'homme du milieu&lt;/a&gt; puisque vous ne vérifiez plus du tout avec qui vous échangez des données) ;&lt;/li&gt;
@@ -40,7 +40,7 @@
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;h2&gt;Depuis une application Java&lt;/h2&gt;
+&lt;h3&gt;Depuis une application Java&lt;/h3&gt;
 &lt;p&gt;Le même mécanisme s'applique lorsque vous vous connectez à un service en utilisant une application Java. Si le certificat n'est pas sûr, vous vous verrez refuser la connexion : &lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;sun.security.provider.certpath.SunCertPathBuilderException: unable to find valid certification path to requested target
 &lt;/pre&gt;&lt;/div&gt;
@@ -58,47 +58,47 @@ Certificat ajouté au fichier de clés
 
 
 &lt;p&gt;Reste à le déclarer dans votre application : &lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;System.setProperty(&amp;quot;javax.net.ssl.trustStore&amp;quot;, &amp;quot;/path/to/keystore.jks&amp;quot;); 
-System.setProperty(&amp;quot;javax.net.ssl.trustStorePassword&amp;quot;, ******);
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;System&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;setProperty&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;javax.net.ssl.trustStore&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;/path/to/keystore.jks&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;);&lt;/span&gt; 
+&lt;span class="n"&gt;System&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;setProperty&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;javax.net.ssl.trustStorePassword&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="o"&gt;******);&lt;/span&gt; 
 &lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;p&gt;La propriété &lt;code&gt;javax.net.ssl.trustStorePassword&lt;/code&gt; correspond au mot de passe que vous avez saisi à l'import du certificat en utilisant &lt;code&gt;keytool&lt;/code&gt;. Dès lors, vous pouvez vous connecter aux services sécurisés utilisant un certificat propre à votre entreprise.&lt;/p&gt;
-&lt;h2&gt;Solution globale&lt;/h2&gt;
+&lt;h3&gt;Solution globale&lt;/h3&gt;
 &lt;p&gt;Il peut être pénible d'utiliser ce morceau de code dans chacune de vos applications, ou tout au moins fastidieux. Heureusement, il est également possible d'enregistrer un certificat au niveau de la JVM. On le déclare alors une bonne fois pour toutes.&lt;/p&gt;
 &lt;p&gt;Si vous avez parcouru le répertoire &lt;code&gt;/etc/ssl/certs&lt;/code&gt; évoqué au début de cet article, vous y aurez peut-être remarqué un répertoire &lt;code&gt;java&lt;/code&gt;. Il s'agit du portefeuille de certificats dédié à la JVM.&lt;/p&gt;
 &lt;p&gt;Pour y ajouter un certificat, lancez en tant qu'utilisateur privilégié (&lt;em&gt;root&lt;/em&gt;) : &lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;keytool&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;alias&lt;/span&gt; &lt;span class="n"&gt;CertificatDeMonEntreprise&lt;/span&gt; \
-  &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;keypass&lt;/span&gt; &lt;span class="n"&gt;changeit&lt;/span&gt; \
-  &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;keystore&lt;/span&gt; &lt;span class="err"&gt;$&lt;/span&gt;&lt;span class="n"&gt;JAVA_HOME&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;jre&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;lib&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;security&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;cacerts&lt;/span&gt; \
-  &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="nb"&gt;file&lt;/span&gt; &lt;span class="n"&gt;cert&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;pem&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;keytool -import -alias CertificatDeMonEntreprise &lt;span class="se"&gt;\&lt;/span&gt;
+  -keypass changeit &lt;span class="se"&gt;\&lt;/span&gt;
+  -keystore &lt;span class="nv"&gt;$JAVA_HOME&lt;/span&gt;/jre/lib/security/cacerts &lt;span class="se"&gt;\&lt;/span&gt;
+  -file cert.pem
 &lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;p&gt;Notez le mot de passe par défaut du &lt;em&gt;keystore&lt;/em&gt;: « changeit ». Il s'agit du mot de passe par défaut et je vous encourage, si ce n'est déjà fait, à le changer.&lt;/p&gt;
 &lt;p&gt;Cette opération est à réaliser sur votre machine de développement mais également sur l'intégralité des serveurs susceptibles d'exécuter vos applications. C'est là qu'une solution de déploiement automatique devient pertinente.&lt;/p&gt;
 &lt;p&gt;Vous êtes maintenant capable de vous connecter depuis une application Java à l'ensemble des services exposés le certificat TLS de votre entreprise et ce sans nécessiter d'adaptation du code. &lt;/p&gt;
-&lt;h2&gt;Depuis une application Java (bis)&lt;/h2&gt;
+&lt;h3&gt;Depuis une application Java (bis)&lt;/h3&gt;
 &lt;p&gt;Si, par malheur, vous ne pouvez pas déposer de fichier sur la machine exécutant votre application (c'est le cas sur certains hébergement « cloud » que je n'aime pas utiliser), vous pouvez toujours « stocker » votre &lt;em&gt;keystore&lt;/em&gt; dans votre livrable (jar, war...). Mais... vous ne pourrez pas l'utiliser directement. &lt;/p&gt;
 &lt;p&gt;La propriété &lt;code&gt;javax.net.ssl.trustStore&lt;/code&gt; ne permet pas de déclarer de référence à un fichier dans le &lt;em&gt;package&lt;/em&gt;. On peut en revanche l'écrire « à la main » sur le disque. L'exemple qui suit utilise &lt;a href="https://github.com/google/guava"&gt;Guava&lt;/a&gt;.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;File tempDir = Files.createTempDir();
-File myStore = new File(tempDir, &amp;quot;keystore.jks&amp;quot;);
-try (InputStream storeStream = MyExample.class.getClassLoader().getResourceAsStream(&amp;quot;keystore.jks&amp;quot;);
-        FileOutputStream outputStream = new FileOutputStream(myStore)) {
-        ByteStreams.copy(storeStream, outputStream);
-        System.setProperty(&amp;quot;javax.net.ssl.trustStore&amp;quot;, myStore.getAbsolutePath());
-        System.setProperty(&amp;quot;javax.net.ssl.trustStorePassword&amp;quot;, *******);
-} catch (IOException e) {
-        logger.error(&amp;quot;Cannot set trust store&amp;quot;, e);
-}
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;File&lt;/span&gt; &lt;span class="n"&gt;tempDir&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;Files&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;createTempDir&lt;/span&gt;&lt;span class="o"&gt;();&lt;/span&gt;
+&lt;span class="n"&gt;File&lt;/span&gt; &lt;span class="n"&gt;myStore&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="k"&gt;new&lt;/span&gt; &lt;span class="n"&gt;File&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;tempDir&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;keystore.jks&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;);&lt;/span&gt;
+&lt;span class="k"&gt;try&lt;/span&gt; &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;InputStream&lt;/span&gt; &lt;span class="n"&gt;storeStream&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;MyExample&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;class&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;getClassLoader&lt;/span&gt;&lt;span class="o"&gt;().&lt;/span&gt;&lt;span class="na"&gt;getResourceAsStream&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;keystore.jks&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;);&lt;/span&gt;
+        &lt;span class="n"&gt;FileOutputStream&lt;/span&gt; &lt;span class="n"&gt;outputStream&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="k"&gt;new&lt;/span&gt; &lt;span class="n"&gt;FileOutputStream&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;myStore&lt;/span&gt;&lt;span class="o"&gt;))&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+        &lt;span class="n"&gt;ByteStreams&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;copy&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;storeStream&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="n"&gt;outputStream&lt;/span&gt;&lt;span class="o"&gt;);&lt;/span&gt;
+        &lt;span class="n"&gt;System&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;setProperty&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;javax.net.ssl.trustStore&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="n"&gt;myStore&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;getAbsolutePath&lt;/span&gt;&lt;span class="o"&gt;());&lt;/span&gt;
+        &lt;span class="n"&gt;System&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;setProperty&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;javax.net.ssl.trustStorePassword&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="o"&gt;*******);&lt;/span&gt;
+&lt;span class="o"&gt;}&lt;/span&gt; &lt;span class="k"&gt;catch&lt;/span&gt; &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;IOException&lt;/span&gt; &lt;span class="n"&gt;e&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+        &lt;span class="n"&gt;logger&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;error&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;Cannot set trust store&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="n"&gt;e&lt;/span&gt;&lt;span class="o"&gt;);&lt;/span&gt;
+&lt;span class="o"&gt;}&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;p&gt;Voilà qui devrait vous permettre de communiquer avec le reste du monde.&lt;/p&gt;</summary><category term="ssl"></category><category term="tls"></category><category term="java"></category><category term="certificat"></category><category term="signature"></category><category term="sécurité"></category></entry><entry><title>Qu'est-ce qui me motive en tant que développeur ?</title><link href="http://www.dericbourg.net/quest-ce-qui-me-motive-en-tant-que-developpeur.html" rel="alternate"></link><updated>2015-02-16T00:00:00+01:00</updated><author><name>Alban Dericbourg</name></author><id>tag:www.dericbourg.net,2015-02-16:quest-ce-qui-me-motive-en-tant-que-developpeur.html</id><summary type="html">&lt;p&gt;Je suis développeur. Je travaille pour l'ESN MaBoite et suis en mission depuis plusieurs mois chez MonClient. Il est 9h40, j'arrive chez MonClient en retard, déjà fatigué. Sans avoir fait la fête la veille, j'ai pourtant eu du mal à me lever ce matin, je n'avais pas envie.&lt;/p&gt;
+&lt;p&gt;Voilà qui devrait vous permettre de communiquer avec le reste du monde.&lt;/p&gt;</summary><category term="ssl"></category><category term="tls"></category><category term="java"></category><category term="certificat"></category><category term="signature"></category><category term="sécurité"></category></entry><entry><title>Qu'est-ce qui me motive en tant que développeur ?</title><link href="http://www.dericbourg.net/2015/02/16/quest-ce-qui-me-motive-en-tant-que-developpeur/" rel="alternate"></link><updated>2015-02-16T00:00:00+01:00</updated><author><name>Alban Dericbourg</name></author><id>tag:www.dericbourg.net,2015-02-16:2015/02/16/quest-ce-qui-me-motive-en-tant-que-developpeur/</id><summary type="html">&lt;p&gt;Je suis développeur. Je travaille pour l'ESN MaBoite et suis en mission depuis plusieurs mois chez MonClient. Il est 9h40, j'arrive chez MonClient en retard, déjà fatigué. Sans avoir fait la fête la veille, j'ai pourtant eu du mal à me lever ce matin, je n'avais pas envie.&lt;/p&gt;
 &lt;p&gt;Gérard passe à côté de moi sans même me regarder. Jérôme vient me demander d'implémenter une fonctionnalité en urgence. Je ne comprends pas l'objectif de sa demande et lui demande des précisions : « Ce n'est pas important, me répond-il, c'est pour les gogols du pôle métier qui ne comprennent rien à ce qu'ils font, comme d'habitude ». Lorsque j'envisage de leur demander directement les détails nécessaires, il me coupe : la fonctionnalité ne servira jamais, autant la réaliser comme ils l'imaginent, cela nous fera gagner du temps. S'il est sûr de lui, allons-y.&lt;/p&gt;
 &lt;p&gt;Avant de m'y mettre, je constate que les tests unitaires du module que j'ai réalisé la semaine dernière ne passent plus. Gérard étant à l'origine de la modification, je vais le voir. « Oui, j'ai repris des trucs, ça ne me plaisait pas et je voulais que ça marche », m'explique-t-il. Je repars avec l'injonction de remettre les tests d'aplomb en fonction de ce qu'il a écrit.&lt;/p&gt;
 &lt;p&gt;La journée passe, il est 18h. Au cours de la journée, je n'ai écrit que quelques lignes de code dont je ne suis pas satisfait. Je vois bien qu'il y a des choses à reprendre, que ça pourrait être plus « propre » mais j'ai du mal à identifier comment mieux faire. Je n'ai de toute façon pas l'énergie de m'y pencher. Qu'est-ce qui rend le travail si laborieux ? Pourquoi ma motivation est-elle si basse ?&lt;/p&gt;
-&lt;h2&gt;Besoin de sens&lt;/h2&gt;
+&lt;h3&gt;Besoin de sens&lt;/h3&gt;
 &lt;p&gt;Le sens est un composant indispensable de la motivation. Pour quoi (en deux mots) suis-je ici ? Quel est mon objectif ? Quel est l'objectif de ma mission ? Le sens peut être vu suivant trois dimensions :&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;le sens-sensation, qui nous ancre dans le réel ;&lt;/li&gt;
@@ -131,7 +131,7 @@ try (InputStream storeStream = MyExample.class.getClassLoader().getResourceAsStr
 &lt;p&gt;Le sens va aussi être soutenu par la loi (ici synonyme de jalons ou de cadre) : la poursuite d'un objectif mène à se donner des règles de conduite mais surtout à adhérer à un cadre (au sein d'une entreprise, d'une équipe, d'un projet), de s'en sentir acteur et de ne pas le subir. Il est nécessaire de comprendre le cadre pour se l'approprier : comment se prennent les décisions ? Comment suis-je consulté ou informé lors de la reconduction ou non de ma mission ? C'est aussi de cette façon que la confiance et le sentiment de sécurité se construisent.&lt;/p&gt;
 &lt;p&gt;Quand la loi devient obsolète ou qu'un désaccord s'installe, quand il faut remettre la loi en question, le lien de qualité permet une plus grande liberté dans l'échange. Quand je suis en réunion avec Gérard, je suis très mal à l'aise pour le contredire ou pour remettre en question les idées que je n'approuve pas.&lt;/p&gt;
 &lt;p&gt;Si la loi est cohérente, si le lien est de qualité, l'environnement est serein et constructif.&lt;/p&gt;
-&lt;h2&gt;Besoin de paix&lt;/h2&gt;
+&lt;h3&gt;Besoin de paix&lt;/h3&gt;
 &lt;p&gt;MaBoite est à l'origine de la paix durable que je vis au quotidien chez MonClient ainsi que son garde fou : c'est elle qui cadre mon travail par l'intermédiaire du contrat établi avec MonClient ; c'est ce que je me dois de respecter, mais c'est aussi ce qui me protège.&lt;/p&gt;
 &lt;p&gt;Le chercheur Markus Weingardt a étudié les conditions nécessaires à l'instauration de la paix durable. Le « vivre ensemble » tel qu'il le décrit définit trois composantes qui permettent d'atteindre cette paix durable :&lt;/p&gt;
 &lt;ul&gt;
@@ -156,7 +156,7 @@ La réciproque est également applicable : je suis moi-même transparent pour ga
 &lt;li&gt;...&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;Mais encore faut-il qu'elles soient reconnues à leur juste place.&lt;/p&gt;
-&lt;h2&gt;Besoin d'autonomie et de reconnaissance&lt;/h2&gt;
+&lt;h3&gt;Besoin d'autonomie et de reconnaissance&lt;/h3&gt;
 &lt;p&gt;Pour que ses salariés se sentent reconnus, l'employeur a notamment la responsabilité de leur permettre d'être autonomes. On est autonome lorsque l'on est en mesure de se débrouiller seul sans craindre de perdre son identité lorsque l'on demande de l'aide.&lt;/p&gt;
 &lt;p&gt;Vincent Lenhardt structure l'autonomie autour de quatre niveaux décrits par le schéma qui suit.&lt;/p&gt;
 &lt;p&gt;&lt;img alt="Structure de l'autonomie en quatre niveaux selon Vincent Lenhardt" class="center" src="/images/2015-02-18-Quest_ce_qui_me_motive_en_tant_que_developpeur/autonomie.png" /&gt;&lt;/p&gt;
@@ -167,16 +167,16 @@ La réciproque est également applicable : je suis moi-même transparent pour ga
 &lt;li&gt;Enfin, on peut atteindre une situation d'équilibre dans laquelle on sait se débrouiller seul ou en groupe. On ne s'identifie pas à la relation : il y a « soi », « l'autre » et « la relation entre l'autre et soi ». On est alors en mesure d'accepter la contrainte et de prendre en charge une autre personne.&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;L'autonomie permet d'accéder au sens de son travail.&lt;/p&gt;
-&lt;h2&gt;Comme un humain&lt;/h2&gt;
+&lt;h3&gt;Comme un humain&lt;/h3&gt;
 &lt;p&gt;Si les composantes de la paix durable sont solides et équilibrées, le cadre est suffisamment sécurisant pour que, associé aux liens que je trouve en mission chez MonClient aussi bien que dans MaBoite, j'y trouve du sens.&lt;/p&gt;
 &lt;p&gt;Si mon employeur prend ses responsabilités pour créer un cadre sécurisant en tant que garant de la loi (cf. triangle de la résilience), associé au lien de qualité, je trouve le sens qui me donne envie de me lever le matin.&lt;/p&gt;
 &lt;p&gt;« Ce dont l'humain a besoin, ce n'est pas de vivre sans tension mais bien de tendre vers un but valable, de réaliser une mission librement choisie. Il a besoin non de se libérer de sa tension, mais plutôt de se sentir appelé à accomplir quelque chose » (Viktor E. Frankl, Découvrir un sens à sa vie avec la logothérapie, 1959, édition J'ai lu, p. 129).&lt;/p&gt;
-&lt;p&gt;Finalement, j'ai besoin de la même chose que tout être humain, ce n'est pas spécifique au métier de développeur : ce qui me motive en tant que développeur, c'est ce qui me motive tout court.&lt;/p&gt;</summary><category term="quotidien"></category><category term="vivre ensemble"></category><category term="motivation"></category><category term="bien-être"></category></entry><entry><title>Shell shock : un obus dans les dents de bash</title><link href="http://www.dericbourg.net/shell-shock-un-obus-dans-les-dents-de-bash.html" rel="alternate"></link><updated>2014-09-26T00:00:00+02:00</updated><author><name>Alban Dericbourg</name></author><id>tag:www.dericbourg.net,2014-09-26:shell-shock-un-obus-dans-les-dents-de-bash.html</id><summary type="html">&lt;p&gt;Vous avez probablement entendu parler de Shell shock qui, outre l'association de troubles psychiques et physiques observés chez &lt;a href="http://fr.wikipedia.org/wiki/Obusite"&gt;certains soldats de la Première Guerre Mondiale&lt;/a&gt;, désigne également la vulnérabilité &lt;a href="http://www.cert.ssi.gouv.fr/site/CERTFR-2014-ALE-006/index.html"&gt;CVE-2014-6271&lt;/a&gt; touchant GNU bash. Elle permet à un attaquant de provoquer une exécution de code arbitraire à distance.&lt;/p&gt;
-&lt;h2&gt;Mon dieu, mais c'est horrible !&lt;/h2&gt;
+&lt;p&gt;Finalement, j'ai besoin de la même chose que tout être humain, ce n'est pas spécifique au métier de développeur : ce qui me motive en tant que développeur, c'est ce qui me motive tout court.&lt;/p&gt;</summary><category term="quotidien"></category><category term="vivre ensemble"></category><category term="motivation"></category><category term="bien-être"></category></entry><entry><title>Shell shock : un obus dans les dents de bash</title><link href="http://www.dericbourg.net/2014/09/26/shell-shock-un-obus-dans-les-dents-de-bash/" rel="alternate"></link><updated>2014-09-26T00:00:00+02:00</updated><author><name>Alban Dericbourg</name></author><id>tag:www.dericbourg.net,2014-09-26:2014/09/26/shell-shock-un-obus-dans-les-dents-de-bash/</id><summary type="html">&lt;p&gt;Vous avez probablement entendu parler de Shell shock qui, outre l'association de troubles psychiques et physiques observés chez &lt;a href="http://fr.wikipedia.org/wiki/Obusite"&gt;certains soldats de la Première Guerre Mondiale&lt;/a&gt;, désigne également la vulnérabilité &lt;a href="http://www.cert.ssi.gouv.fr/site/CERTFR-2014-ALE-006/index.html"&gt;CVE-2014-6271&lt;/a&gt; touchant GNU bash. Elle permet à un attaquant de provoquer une exécution de code arbitraire à distance.&lt;/p&gt;
+&lt;h3&gt;Mon dieu, mais c'est horrible !&lt;/h3&gt;
 &lt;p&gt;Il faut avouer que ça ne présage pas d'une franche partie de rigolade.&lt;/p&gt;
 &lt;p&gt;Tout d'abord, de nombreux programmes interagissent avec le shell. Nous savons que ce n'est généralement pas une bonne idée mais cela nous simplifie parfois grandement la tâche (on dit souvent qu'un bon développeur est un développeur fainéant). La surface d'attaque est donc très étendue.&lt;/p&gt;
 &lt;p&gt;Par ailleurs, si les systèmes « évidents » seront patchés (un serveur web par exemple), certaines machines plus obscures ne le seront pas : pensez par exemple à des périphériques tels que les caméras connectées (ou plus largement tout ce que vous pouvez trouver sur l'Internet des objets). Rien n'exclut qu'elles exposent des services basés sur des scripts shell et si ce shell est bash, le périphérique devient vulnérable. Comme il y a fort à parier qu'aucune procédure de mise à jour de ces périphériques n'ait été définie, ces périphérques resteront vulnérables ad vitam aeternam.&lt;/p&gt;
-&lt;h2&gt;J'exige des explications&lt;/h2&gt;
+&lt;h3&gt;J'exige des explications&lt;/h3&gt;
 &lt;p&gt;Bash permet d'exporter des variables mais aussi des fonctions à destination d'autres instances de bash. L'export de fonction utilise une variable d'environnement portant le nom de la-dite fonction dont la valeur commence par &lt;code&gt;() {&lt;/code&gt; :&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;foo&lt;/span&gt;&lt;span class="o"&gt;=()&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
     du code
@@ -217,7 +217,7 @@ bonjour
 
 
 &lt;p&gt;À noter que Linux n'est pas le seul système touché. Tous les systèmes Unix (ce qui inclut Mac OS) sont concernés.&lt;/p&gt;
-&lt;h2&gt;M'enfin, qui serait assez bête pour exposer un machin bash sur Internet ?&lt;/h2&gt;
+&lt;h3&gt;M'enfin, qui serait assez bête pour exposer un machin bash sur Internet ?&lt;/h3&gt;
 &lt;p&gt;Moi – et probablement vous aussi – mais je ne pense pas que ce soit de la bêtise.&lt;/p&gt;
 &lt;p&gt;Pour l'instant, le vecteur de propagation semble être la requête HTTP à destination d'un script CGI. Le serveur web &lt;em&gt;Apache httpd&lt;/em&gt; utilise par exemple des scripts (donc potentiellement bash) pour certaines fonctions C, Python ou PHP (si ce dernier est lancé en mode CGI). C'est ainsi que quelques robots parcourent en ce moment même le web en positionnant leur en-tête &lt;em&gt;User-Agent&lt;/em&gt; comme suit afin de dresser leur annuaire des machines vulnérables : &lt;code&gt;User-Agent: () { :; } /bin/ping -c x.y.z.q&lt;/code&gt;. Si vous souhaitez vérifier vos logs HTTP, vous pouvez lancer &lt;code&gt;egrep '\(\ *\)\ *\{' /var/log/nginx/*&lt;/code&gt; par exemple.&lt;/p&gt;
 &lt;p&gt;Ce n'est donc pas si rare et c'est sans compter les applications largement déployées qui utilisent CGI (cPanel par exemple).&lt;/p&gt;
