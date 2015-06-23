@@ -108,6 +108,7 @@ github: publish
 	git push origin $(GITHUB_PAGES_BRANCH)
 
 themes:
-	git clone https://github.com/getpelican/pelican-themes themes
+	# FIXME Remplacer par un submodule Git.
+	git clone git@github.com:getpelican/pelican-themes.git themes
 
 .PHONY: html help clean regenerate serve devserver publish ssh_upload rsync_upload dropbox_upload ftp_upload s3_upload cf_upload github

@@ -3,6 +3,7 @@
 from __future__ import unicode_literals
 
 AUTHOR = u'Alban Dericbourg'
+AUTHOR_LINK = u'http://www.dericbourg.net'
 SITENAME = u'Blog bloquant'
 SITEURL = ''
 
@@ -12,7 +13,7 @@ TIMEZONE = 'Europe/Paris'
 
 DEFAULT_LANG = u'fr'
 
-THEME = 'themes/foundation-default-colours'
+THEME = 'themes/gum'
 
 # Feed generation is usually not desired when developing
 FEED_ALL_ATOM = None
