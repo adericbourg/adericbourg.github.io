@@ -29,5 +29,14 @@ TWITTER_URL = 'https://twitter.com/adericbourg'
 
 DEFAULT_PAGINATION = 10
 
+ARTICLE_URL = '{date:%Y}/{date:%m}/{date:%d}/{slug}/'
+ARTICLE_SAVE_AS = '{date:%Y}/{date:%m}/{date:%d}/{slug}/index.html'
+
+PAGE_URL = '{slug}/'
+PAGE_SAVE_AS = '{slug}/index.html'
+
+ARCHIVES_SAVE_AS = 'archives/index.html'
+ARCHIVES_URL = 'archives/'
+
 # Uncomment following line if you want document-relative URLs when developing
 #RELATIVE_URLS = True
