@@ -213,3 +213,11 @@ a:focus { color: #34495E; }
 .entry-content li {
   display: list-item;
 }
+
+/* better image positionning */
+.entry-content img {
+  display: block;
+  margin: auto;
+  padding-top: 1em;
+  padding-bottom: 1em;
+}
