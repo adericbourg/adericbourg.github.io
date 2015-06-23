@@ -104,8 +104,9 @@
                 {% endfor %}
               {% endif %}
             {% endif %}
-
               </ul>
+
+
             </div>
 
           {% block content %}
@@ -128,31 +129,6 @@
                     <br />
                     Based on the <a target="_blank" href="http://gumbyframework.com">Gumby Framework</a>
                     </address>
-          </div>
-
-
-          <div class="seven columns">
-            <div class="row">
-              <ul class="socbtns">
-
-                {% if GITHUB_URL %}
-                <li><div class="btn primary"><a href="{{ GITHUB_URL }}" target="_blank">Github</a></div></li>
-                {% endif %}
-
-                {% if TWITTER_URL %}
-                <li><div class="btn twitter"><a href="{{ TWITTER_URL }}" target="_blank">Twitter</a></div></li>
-                {% endif %}
-
-                {% if FACEBOOK_URL %}
-                <li><div class="btn facebook"><a href="{{ FACEBOOK_URL }}" target="_blank">Facebook</a></div></li>
-                {% endif %}
-
-                {% if GOOGLEPLUS_URL %}
-                <li><div class="btn danger"><a href="{{ GOOGLEPLUS_URL }}" target="_blank">Google+</a></div></li>
-                {% endif %}
-
-              </ul>
-            </div>
           </div>
         </footer>
 

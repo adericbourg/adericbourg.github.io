@@ -1,4 +1,21 @@
 <div class="three columns">
+
+    {% if GITHUB_URL %}
+      <div class="btn primary"><a href="{{ GITHUB_URL }}" target="_blank">Github</a></div>
+    {% endif %}
+
+    {% if TWITTER_URL %}
+      <div class="btn twitter"><a href="{{ TWITTER_URL }}" target="_blank">Twitter</a></div>
+    {% endif %}
+
+    {% if FACEBOOK_URL %}
+      <div class="btn facebook"><a href="{{ FACEBOOK_URL }}" target="_blank">Facebook</a></div>
+    {% endif %}
+
+    {% if GOOGLEPLUS_URL %}
+      <div class="btn danger"><a href="{{ GOOGLEPLUS_URL }}" target="_blank">Google+</a></div>
+    {% endif %}
+
 <!--
 <h4>Pages</h4>
 
