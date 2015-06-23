@@ -17,7 +17,7 @@
                                 <footer class="post-info">
                                     <abbr class="published" title="{{ article.date.isoformat() }}"> {{ article.locale_date }} </abbr>
                                     {% if article.authors %}
-                                    <address class="vcard author">By 
+                                    <address class="vcard author">Par 
                                     {% for author in article.authors|sort %}
                                     <a class="url fn" href="{{ SITEURL }}/{{ author.url }}"> {{ author }}</a>
                                     {% endfor %}
@@ -26,13 +26,13 @@
                                 </footer><!-- /.post-info -->
                                 <div class="entry-content"> {{ article.summary }} </div><!-- /.entry-content -->
 
-                                <div class="medium primary btn"><a href="{{ SITEURL }}/{{ article.url }}" rel="bookmark" title="Permalink to {{ article.title|striptags }}">Read more <i class="icon-arrow-right"></i></a></div>
+                                <div class="medium primary btn"><a href="{{ SITEURL }}/{{ article.url }}" rel="bookmark" title="Permalink to {{ article.title|striptags }}">Lire la suite <i class="icon-arrow-right"></i></a></div>
 
 
 
                                 <div class="row tag-row">
                                     {% if article.tags %}
-                                        <span>Tagged as : </span>
+                                        <span>Tags&nbsp;: </span>
                                         {% for tag in article.tags %}
                                             <a class="danger label" href="{{ SITEURL }}/{{ tag.url }}">{{ tag|e }}</a>
                                         {% endfor %}

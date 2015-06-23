@@ -19,7 +19,7 @@
                 {{ article.locale_date }}
               </abbr>
               {% if article.authors %}
-              <address class="vcard author">By 
+              <address class="vcard author">Par 
               {% for author in article.authors|sort %}
                 <a class="url fn" href="{{ SITEURL }}/{{ author.url }}"> {{ author }}</a>
               {% endfor %}
