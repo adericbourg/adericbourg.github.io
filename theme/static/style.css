@@ -221,3 +221,9 @@ a:focus { color: #34495E; }
   padding-top: 1em;
   padding-bottom: 1em;
 }
+
+/* transform tag list into pseudo-tag cloud */
+#sidebar-tags li {
+  float: right;
+  padding-left: 0.75em;
+}
