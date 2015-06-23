@@ -8,7 +8,7 @@ Lorsque vous vous connectez à un serveur en utilisant un certificat TLS (le gra
  * celui-ci provient bien d'un émetteur connu ;
  * qu'il n'a pas été modifié depuis son émission.
 
-## Le doute
+### Le doute
 
 Il arrive que le certificat soit signé en utilisant un certificat qui est lui-même signé par un autre certificat, lui-même encore signé par... bref : la signature peut remonter sur plusieurs niveaux hiérarchiques. Dans les faits, cela ne change pas grand chose : la vérification sera tout simplement récursive. Le tout est de rencontrer dans la chaîne, généralement « tout en haut » la signature issue d'un certificat faisant autorité. Ces autorités sont connues à l'avance et vous pouvez les vérifier dans les paramètres de votre natigateur ou, par exemple, dans le répertoire `/etc/ssl/certs` si vous êtes sous Linux.
 
@@ -18,7 +18,7 @@ Dans la « vraie vie », ce n'est pas parce qu'un individu n'est pas en mesure d
 
 Un certificat accepté et reconnu dans un environnement restreint est donc préférable à pas de certificat du tout.
 
-## L'arrivée des problèmes
+### L'arrivée des problèmes
 
 Mais, généralement, lorsque votre client ne connaît pas l'autorité de certification racine, il refuse par défaut la connexion : 
 
@@ -37,7 +37,7 @@ Mais, généralement, lorsque votre client ne connaît pas l'autorité de certif
     * SSL certificate problem: unable to get local issuer certificate
     * Closing connection 0
 
-## Comment se connecter, alors ?
+### Comment se connecter, alors ?
 
 Face à cela (ignorons la [référence à SSLv3](https://fr.wikipedia.org/wiki/POODLE) pour l'instant), deux options sont possible (la troisième, refiler le bébé à votre collègue, n'étant pas traitée ici) :
 
@@ -50,7 +50,7 @@ Pour reprendre l'exemple ci-dessus, l'appel avec `curl` est simplement complét�
 
     $ curl -v https://www.example.com --cacert cert.pem
 
-## Depuis une application Java
+### Depuis une application Java
 
 Le même mécanisme s'applique lorsque vous vous connectez à un service en utilisant une application Java. Si le certificat n'est pas sûr, vous vous verrez refuser la connexion : 
 
@@ -75,7 +75,7 @@ Reste à le déclarer dans votre application :
 La propriété `javax.net.ssl.trustStorePassword` correspond au mot de passe que vous avez saisi à l'import du certificat en utilisant `keytool`. Dès lors, vous pouvez vous connecter aux services sécurisés utilisant un certificat propre à votre entreprise.
 
 
-## Solution globale
+### Solution globale
 
 Il peut être pénible d'utiliser ce morceau de code dans chacune de vos applications, ou tout au moins fastidieux. Heureusement, il est également possible d'enregistrer un certificat au niveau de la JVM. On le déclare alors une bonne fois pour toutes.
 
@@ -95,7 +95,7 @@ Cette opération est à réaliser sur votre machine de développement mais égal
 Vous êtes maintenant capable de vous connecter depuis une application Java à l'ensemble des services exposés le certificat TLS de votre entreprise et ce sans nécessiter d'adaptation du code. 
 
 
-## Depuis une application Java (bis)
+### Depuis une application Java (bis)
 
 Si, par malheur, vous ne pouvez pas déposer de fichier sur la machine exécutant votre application (c'est le cas sur certains hébergement « cloud » que je n'aime pas utiliser), vous pouvez toujours « stocker » votre *keystore* dans votre livrable (jar, war...). Mais... vous ne pourrez pas l'utiliser directement. 
 
@@ -113,4 +113,3 @@ La propriété `javax.net.ssl.trustStore` ne permet pas de déclarer de référe
     }
 
 Voilà qui devrait vous permettre de communiquer avec le reste du monde.
-
