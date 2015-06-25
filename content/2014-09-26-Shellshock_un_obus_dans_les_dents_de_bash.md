@@ -2,7 +2,6 @@ Title: Shell shock : un obus dans les dents de bash
 Date: 2014-09-26
 Category: Blog
 Tags: bash, sécurité, cve
-Summary: On a vu sortir aujourd'hui une faille de Bash. Comment est-elle exploitable et quels sont les risques ?
 
 Vous avez probablement entendu parler de Shell shock qui, outre l'association de troubles psychiques et physiques observés chez [certains soldats de la Première Guerre Mondiale](http://fr.wikipedia.org/wiki/Obusite), désigne également la vulnérabilité [CVE-2014-6271](http://www.cert.ssi.gouv.fr/site/CERTFR-2014-ALE-006/index.html) touchant GNU bash. Elle permet à un attaquant de provoquer une exécution de code arbitraire à distance.
 
