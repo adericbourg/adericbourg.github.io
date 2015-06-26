@@ -77,7 +77,7 @@
               <p>Bien qu'il soit très simple, monter ce blog m'a demandé un certain temps. Quel moteur utiliser ? Où l'héberger ? La plus grande difficulté n'a, finalement, pas été le choix à proprement parler mais le choix parmi les <em>nombreux</em> choix possibles. Sans savoir si j'avais l'engagement, la motivation et l'assiduité nécessaire à l'alimenter tant qualitativement que quantitativement, je me suis posé la contrainte d'un coût nul ou minime et d'un investissement en temps minimal.</p>
 <h3>Première intuition</h3>
 <p>À force de parler d’auto-hébergement, pourquoi déléguer ça un autre quand je peux le faire chez moi et garder la main sur mes données ?, je ne pouvais pas ne pas ne serait-ce qu’essayer au moment d’ouvrir ce blog. Ayant un Raspberry Pi qui dormait dans un coin de mon bureau, j’ai décidé de le mettre à contribution.</p>
-<p>Spontanément, je me suis tourné vers le « classique » <a href="https://fr.wordpress.org/">Wordpress</a> que j'avais l'habitude d'utiliser. En estimant la charge à deux visiteurs par jour (en comptant les robots) en moyenne et dix si je tweete un aricle, autrement dit, en estimant que la machine ne ferait rien la plupart du temps et servirait une requête de temps en temps, elle tiendrait la charge. Je ne suis pas développeur PHP et j'ai une mauvaise intuition. </p>
+<p>Spontanément, je me suis tourné vers le « classique » <a href="https://fr.wordpress.org/">Wordpress</a> que j'avais l'habitude d'utiliser. En estimant la charge à deux visiteurs par jour (en comptant les robots) en moyenne et dix si je tweete un aricle, autrement dit, en estimant que la machine ne ferait rien la plupart du temps et servirait une requête de temps en temps, elle tiendrait la charge. Je ne suis pas développeur PHP et j'ai une mauvaise intuition.</p>
 <p>Si l'on résume l'ensemble :</p>
 <ul>
 <li><a href="https://www.raspbian.org/">Raspbian</a> (dérivé de Debian pour Raspberry Pi) ;</li>
@@ -86,7 +86,7 @@
 <li>WordPress.</li>
 </ul>
 <h3>Au démoulage</h3>
-<p>Si l'on mesure naïvement le temps de chargement d'une page, on obtient : </p>
+<p>Si l'on mesure naïvement le temps de chargement d'une page, on obtient :</p>
 <div class="highlight"><pre><span class="nv">$ </span><span class="k">for</span> i in <span class="k">$(</span>seq <span class="m">1</span> 10<span class="k">)</span><span class="p">;</span> <span class="k">do</span> curl -o /dev/null -s -w %<span class="o">{</span>time_total<span class="o">}</span><span class="se">\\</span>n http://blog.dericbourg.net<span class="p">;</span> <span class="k">done</span>
 1,661
 1,645
@@ -101,7 +101,7 @@
 </pre></div>
 
 
-<p>On ne peut pas dire que les performances soient satisfaisantes : servir une page demande plus d'une seconde et demie. </p>
+<p>On ne peut pas dire que les performances soient satisfaisantes : servir une page demande plus d'une seconde et demie.</p>
 <p>La mesure a été réalisée en local pour ne bien mesurer que les performances de la machine et éviter autant que possible les latences réseau (même si je suis derrière une box fibre).</p>
 <p>Détaillons la temporalité de la requête en affichant :</p>
 <ul>
@@ -125,10 +125,10 @@
 </pre></div>
 
 
-<p>C'est donc le calcul du résultat qui est le plus coûteux en temps. Cela inclut l'interprétation du PHP mais également l'ensemble des requêtes en base. </p>
+<p>C'est donc le calcul du résultat qui est le plus coûteux en temps. Cela inclut l'interprétation du PHP mais également l'ensemble des requêtes en base.</p>
 <h3>Nginx, par curiosité</h3>
-<p>Réalisons la même mesure sur <a href="http://nginx.org/">Nginx</a> utilisant <a href="http://php-fpm.org/">php5-fpm</a>. On obtient : </p>
-<div class="highlight"><pre><span class="nv">$ </span><span class="k">for</span> i in <span class="k">$(</span>seq <span class="m">1</span> 10<span class="k">)</span><span class="p">;</span> <span class="k">do</span> curl -o /dev/null -s -w %<span class="o">{</span>time_namelookup<span class="o">}</span><span class="se">\\</span>t%<span class="o">{</span>time_connect<span class="o">}</span><span class="se">\\</span>t%<span class="o">{</span>time_pretransfer<span class="o">}</span><span class="se">\\</span>t%<span class="o">{</span>time_starttransfer<span class="o">}</span><span class="se">\\</span>t<span class="se">\\</span>t%<span class="o">{</span>time_total<span class="o">}</span><span class="se">\\</span>n http://blog.dericbourg.net<span class="p">;</span> <span class="k">done</span>                   
+<p>Réalisons la même mesure sur <a href="http://nginx.org/">Nginx</a> utilisant <a href="http://php-fpm.org/">php5-fpm</a>. On obtient :</p>
+<div class="highlight"><pre><span class="nv">$ </span><span class="k">for</span> i in <span class="k">$(</span>seq <span class="m">1</span> 10<span class="k">)</span><span class="p">;</span> <span class="k">do</span> curl -o /dev/null -s -w %<span class="o">{</span>time_namelookup<span class="o">}</span><span class="se">\\</span>t%<span class="o">{</span>time_connect<span class="o">}</span><span class="se">\\</span>t%<span class="o">{</span>time_pretransfer<span class="o">}</span><span class="se">\\</span>t%<span class="o">{</span>time_starttransfer<span class="o">}</span><span class="se">\\</span>t<span class="se">\\</span>t%<span class="o">{</span>time_total<span class="o">}</span><span class="se">\\</span>n http://blog.dericbourg.net<span class="p">;</span> <span class="k">done</span>
 0,012   0,021   0,021   1,491           1,498
 0,004   0,017   0,017   1,467           1,468
 0,004   0,017   0,017   1,490           1,494
@@ -142,7 +142,7 @@
 </pre></div>
 
 
-<p>On reste sur le même ordre de grandeur en gagnant malgré tout 10% : rien de significatif. La durée de calcul de la page est toujours trop importante. À ce stade, on ne peut pas conclure grand chose pour autant : </p>
+<p>On reste sur le même ordre de grandeur en gagnant malgré tout 10% : rien de significatif. La durée de calcul de la page est toujours trop importante. À ce stade, on ne peut pas conclure grand chose pour autant :</p>
 <ul>
 <li>soit les modules d'interprétation de PHP ont des performances similaires ;</li>
 <li>soit l'essentiel du temps consommé est ailleurs.</li>
@@ -155,10 +155,12 @@
  4626   0:00  0.0 php5-fpm
  4627   0:10 10.6 php5-fpm
  4628   0:07  7.8 php5-fpm</p>
-<p>bsdtime     TIME      accumulated cpu time, user + system.  The display format is usually "MMM:SS", but can be shifted to the right if the process used more than 999 minutes of cpu time.</p>
-<p>comm        COMMAND   command name (only the executable name).</p>
-<p>cputime     TIME      cumulative CPU time, "[DD-]hh:mm:ss" format.  (alias time).</p>
-<p>pcpu        %CPU      see %cpu.  (alias %cpu).</p>
+<p>bsdtime     TIME      accumulated cpu time, user + system.  The display format is usually "MMM:SS", but can be shifted to the right if the process used more than 999 minutes of cpu time.
+ comm        COMMAND   command name (only the executable name).
+ cputime     TIME      cumulative CPU time, "[DD-]hh:mm:ss" format.  (alias time)
+ pcpu        %CPU      see %cpu.  (alias %cpu).</p>
+<p>Creuser aussi <code>pidstat -dl 1</code> (IO / process), plus <code>iotop</code>
+Attente des IO (nombre de ticks) : https://serverfault.com/questions/169676/howto-check-disk-i-o-utilisation-per-process</p>
             </div><!-- /.entry-content -->
             <div class="comments">
               <h3>Comments</h3>
@@ -198,18 +200,18 @@
 -->
 <h4>Tags</h4>
 	<ul id="sidebar-tags">
-	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/tls.html">tls</a></li>
-	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/java.html">java</a></li>
-	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/vivre-ensemble.html">vivre ensemble</a></li>
 	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/motivation.html">motivation</a></li>
-	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/bien-etre.html">bien-être</a></li>
-	    <li class="tag tag-1"><a href="http://www.dericbourg.net/tag/securite.html">sécurité</a></li>
-	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/bash.html">bash</a></li>
+	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/tls.html">tls</a></li>
 	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/signature.html">signature</a></li>
 	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/ssl.html">ssl</a></li>
-	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/quotidien.html">quotidien</a></li>
+	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/bien-etre.html">bien-être</a></li>
+	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/vivre-ensemble.html">vivre ensemble</a></li>
 	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/cve.html">cve</a></li>
 	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/certificat.html">certificat</a></li>
+	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/bash.html">bash</a></li>
+	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/java.html">java</a></li>
+	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/quotidien.html">quotidien</a></li>
+	    <li class="tag tag-1"><a href="http://www.dericbourg.net/tag/securite.html">sécurité</a></li>
 </ul>
 
 
