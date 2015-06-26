@@ -10,7 +10,7 @@ Bien qu'il soit très simple, monter ce blog m'a demandé un certain temps. Quel
 
 À force de parler d’auto-hébergement, pourquoi déléguer ça un autre quand je peux le faire chez moi et garder la main sur mes données ?, je ne pouvais pas ne pas ne serait-ce qu’essayer au moment d’ouvrir ce blog. Ayant un Raspberry Pi qui dormait dans un coin de mon bureau, j’ai décidé de le mettre à contribution.
 
-Spontanément, je me suis tourné vers le « classique » [Wordpress](https://fr.wordpress.org/) que j'avais l'habitude d'utiliser. En estimant la charge à deux visiteurs par jour (en comptant les robots) en moyenne et dix si je tweete un aricle, autrement dit, en estimant que la machine ne ferait rien la plupart du temps et servirait une requête de temps en temps, elle tiendrait la charge. Je ne suis pas développeur PHP et j'ai une mauvaise intuition. 
+Spontanément, je me suis tourné vers le « classique » [Wordpress](https://fr.wordpress.org/) que j'avais l'habitude d'utiliser. En estimant la charge à deux visiteurs par jour (en comptant les robots) en moyenne et dix si je tweete un aricle, autrement dit, en estimant que la machine ne ferait rien la plupart du temps et servirait une requête de temps en temps, elle tiendrait la charge. Je ne suis pas développeur PHP et j'ai une mauvaise intuition.
 
 Si l'on résume l'ensemble :
 
@@ -22,7 +22,7 @@ Si l'on résume l'ensemble :
 
 ### Au démoulage
 
-Si l'on mesure naïvement le temps de chargement d'une page, on obtient : 
+Si l'on mesure naïvement le temps de chargement d'une page, on obtient :
 
     $ for i in $(seq 1 10); do curl -o /dev/null -s -w %{time_total}\\n http://blog.dericbourg.net; done
     1,661
@@ -36,7 +36,7 @@ Si l'on mesure naïvement le temps de chargement d'une page, on obtient :
     1,671
     1,645
 
-On ne peut pas dire que les performances soient satisfaisantes : servir une page demande plus d'une seconde et demie. 
+On ne peut pas dire que les performances soient satisfaisantes : servir une page demande plus d'une seconde et demie.
 
 La mesure a été réalisée en local pour ne bien mesurer que les performances de la machine et éviter autant que possible les latences réseau (même si je suis derrière une box fibre).
 
@@ -46,7 +46,7 @@ Détaillons la temporalité de la requête en affichant :
  * la durée d'établissement de la connextion TCP `time_connect` ;
  * la durée d'attente avant que le transfert ne se lance effectivement `time_pretransfer` ;
  * la durée d'attente du premier octet, `time_starttransfer`, qui inclut la durée d'attente du lancement du transfert (valeur précédente) et le temps nécessaire au serveur à calculer le résultat.
- 
+
 On obtient, en ajoutant en dernière colonne le temps total :
 
     $ for i in $(seq 1 10); do curl -o /dev/null -s -w %{time_namelookup}\\t%{time_connect}\\t%{time_pretransfer}\\t%{time_starttransfer}\\t\\t%{time_total}\\n http://blog.dericbourg.net; done
@@ -60,15 +60,15 @@ On obtient, en ajoutant en dernière colonne le temps total :
     0,004   0,016   0,017   1,648           1,649
     0,004   0,013   0,013   1,636           1,639
     0,012   0,022   0,022   1,648           1,649
-    
-C'est donc le calcul du résultat qui est le plus coûteux en temps. Cela inclut l'interprétation du PHP mais également l'ensemble des requêtes en base. 
+
+C'est donc le calcul du résultat qui est le plus coûteux en temps. Cela inclut l'interprétation du PHP mais également l'ensemble des requêtes en base.
 
 
 ### Nginx, par curiosité
 
-Réalisons la même mesure sur [Nginx](http://nginx.org/) utilisant [php5-fpm](http://php-fpm.org/). On obtient : 
+Réalisons la même mesure sur [Nginx](http://nginx.org/) utilisant [php5-fpm](http://php-fpm.org/). On obtient :
 
-    $ for i in $(seq 1 10); do curl -o /dev/null -s -w %{time_namelookup}\\t%{time_connect}\\t%{time_pretransfer}\\t%{time_starttransfer}\\t\\t%{time_total}\\n http://blog.dericbourg.net; done                   
+    $ for i in $(seq 1 10); do curl -o /dev/null -s -w %{time_namelookup}\\t%{time_connect}\\t%{time_pretransfer}\\t%{time_starttransfer}\\t\\t%{time_total}\\n http://blog.dericbourg.net; done
     0,012   0,021   0,021   1,491           1,498
     0,004   0,017   0,017   1,467           1,468
     0,004   0,017   0,017   1,490           1,494
@@ -79,16 +79,16 @@ Réalisons la même mesure sur [Nginx](http://nginx.org/) utilisant [php5-fpm](h
     0,004   0,014   0,014   1,465           1,466
     0,004   0,018   0,018   1,489           1,492
     0,004   0,018   0,018   1,485           1,487
-    
-On reste sur le même ordre de grandeur en gagnant malgré tout 10% : rien de significatif. La durée de calcul de la page est toujours trop importante. À ce stade, on ne peut pas conclure grand chose pour autant : 
+
+On reste sur le même ordre de grandeur en gagnant malgré tout 10% : rien de significatif. La durée de calcul de la page est toujours trop importante. À ce stade, on ne peut pas conclure grand chose pour autant :
 
  * soit les modules d'interprétation de PHP ont des performances similaires ;
  * soit l'essentiel du temps consommé est ailleurs.
- 
- 
- 
- 
- 
+
+
+
+
+
  $ ps -eo pid,bsdtime,pcpu,comm|grep 'mysql\|php\|nginx'
  4058   0:00  0.1 mysqld_safe
  4397   0:02  1.8 mysqld
@@ -97,13 +97,14 @@ On reste sur le même ordre de grandeur en gagnant malgré tout 10% : rien de si
  4626   0:00  0.0 php5-fpm
  4627   0:10 10.6 php5-fpm
  4628   0:07  7.8 php5-fpm
- 
 
- 
+
+
  bsdtime     TIME      accumulated cpu time, user + system.  The display format is usually "MMM:SS", but can be shifted to the right if the process used more than 999 minutes of cpu time.
- 
  comm        COMMAND   command name (only the executable name).
- 
- cputime     TIME      cumulative CPU time, "[DD-]hh:mm:ss" format.  (alias time).
- 
+ cputime     TIME      cumulative CPU time, "[DD-]hh:mm:ss" format.  (alias time)
  pcpu        %CPU      see %cpu.  (alias %cpu).
+
+
+Creuser aussi `pidstat -dl 1` (IO / process), plus `iotop`
+Attente des IO (nombre de ticks) : https://serverfault.com/questions/169676/howto-check-disk-i-o-utilisation-per-process
