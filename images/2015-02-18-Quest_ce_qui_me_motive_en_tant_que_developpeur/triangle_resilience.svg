@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="210mm"
+   height="297mm"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.48.5 r10040"
+   viewBox="0 0 744.09447 1052.3622"
+   sodipodi:docname="triangle_resilience.svg"
+   inkscape:export-filename="/home/alban/workspace/blog.dericbourg.net/images/2015-02-18-Quest-ce-qui-me-motive-en-tant-que-developpeur/triangle_resilience.png"
+   inkscape:export-xdpi="90"
+   inkscape:export-ydpi="90">
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.98994949"
+     inkscape:cx="240.30292"
+     inkscape:cy="365.35108"
+     inkscape:document-units="px"
+     inkscape:current-layer="g5691"
+     showgrid="false"
+     inkscape:window-width="1027"
+     inkscape:window-height="817"
+     inkscape:window-x="173"
+     inkscape:window-y="130"
+     inkscape:window-maximized="0" />
+  <defs
+     id="defs4">
+    <marker
+       inkscape:stockid="Arrow1Mend"
+       orient="auto"
+       refY="0.0"
+       refX="0.0"
+       id="marker5047"
+       style="overflow:visible;"
+       inkscape:isstock="true">
+      <path
+         id="path5049"
+         d="M 0.0,0.0 L 5.0,-5.0 L -12.5,0.0 L 5.0,5.0 L 0.0,0.0 z "
+         style="fill-rule:evenodd;stroke:#ffffff;stroke-width:1pt;stroke-opacity:1;fill:#ffffff;fill-opacity:1"
+         transform="scale(0.4) rotate(180) translate(10,0)" />
+    </marker>
+    <marker
+       inkscape:isstock="true"
+       style="overflow:visible;"
+       id="Arrow2Lend"
+       refX="0.0"
+       refY="0.0"
+       orient="auto"
+       inkscape:stockid="Arrow2Lend">
+      <path
+         transform="scale(1.1) rotate(180) translate(1,0)"
+         d="M 8.7185878,4.0337352 L -2.2072895,0.016013256 L 8.7185884,-4.0017078 C 6.9730900,-1.6296469 6.9831476,1.6157441 8.7185878,4.0337352 z "
+         style="fill-rule:evenodd;stroke-width:0.625;stroke-linejoin:round;stroke:#ffffff;stroke-opacity:1;fill:#ffffff;fill-opacity:1"
+         id="path4176" />
+    </marker>
+    <marker
+       inkscape:collect="always"
+       inkscape:isstock="true"
+       style="overflow:visible;"
+       id="Arrow1Mendd"
+       refX="0.0"
+       refY="0.0"
+       orient="auto"
+       inkscape:stockid="Arrow1Mendd">
+      <path
+         transform="scale(0.4) rotate(180) translate(10,0)"
+         style="stroke-opacity:1;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1pt;fill:#000000"
+         d="M 0.0,0.0 L 5.0,-5.0 L -12.5,0.0 L 5.0,5.0 L 0.0,0.0 z "
+         id="path3796" />
+    </marker>
+    <marker
+       inkscape:stockid="marker5047K"
+       orient="auto"
+       refY="0.0"
+       refX="0.0"
+       id="marker5047K"
+       style="overflow:visible;"
+       inkscape:isstock="true">
+      <path
+         id="path3799"
+         d="M 0.0,0.0 L 5.0,-5.0 L -12.5,0.0 L 5.0,5.0 L 0.0,0.0 z "
+         style="stroke-opacity:1;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1pt;fill:#000000"
+         transform="scale(0.4) rotate(180) translate(10,0)" />
+    </marker>
+  </defs>
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     id="layer1"
+     inkscape:groupmode="layer"
+     inkscape:label="Calque 1">
+    <g
+       inkscape:export-filename="/home/alban/Téléchargements/triangle_resilience.png"
+       inkscape:export-ydpi="90"
+       inkscape:export-xdpi="90"
+       transform="matrix(0.41452945,0,0,0.41452945,44.125559,267.14209)"
+       id="g5740">
+      <g
+         id="g5700"
+         transform="translate(3.5815168,-6.0609154)">
+        <g
+           id="g5691">
+          <path
+             sodipodi:type="star"
+             style="fill:#c8beb7;fill-opacity:1;fill-rule:evenodd;stroke:#ffffff;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+             id="path3343"
+             sodipodi:sides="3"
+             sodipodi:cx="339.59387"
+             sodipodi:cy="748.77277"
+             sodipodi:r1="246.65932"
+             sodipodi:r2="123.32966"
+             sodipodi:arg1="0.52359878"
+             sodipodi:arg2="1.5707963"
+             inkscape:flatsided="false"
+             inkscape:rounded="0"
+             inkscape:randomized="0"
+             d="m 553.20711,872.10243 -213.61323,-10e-6 -213.61324,0 106.80661,-184.99448 106.80662,-184.99449 106.80662,184.99448 z"
+             inkscape:transform-center-x="0.020220726"
+             inkscape:transform-center-y="-61.545412" />
+          <path
+             style="stroke-linejoin:miter;marker-end:url(#Arrow1Mendd);stroke-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-width:5.57519483999999999;fill:none"
+             d="m 327.93271,552.34998 c 0,147.46996 -147.62769,274.52099 -147.62769,274.52099"
+             id="path4149"
+             inkscape:connector-curvature="0" />
+          <path
+             inkscape:connector-curvature="0"
+             id="path5045"
+             d="M 501.56607,844.77056 C 370.68523,776.81769 189.9008,849.29451 189.9008,849.29451"
+             style="stroke-linejoin:miter;marker-end:url(#marker5047K);stroke-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-width:5.57519483999999999;fill:none" />
+        </g>
+      </g>
+      <text
+         xml:space="preserve"
+         style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         x="301.25156"
+         y="486.67676"
+         id="text5696"
+         sodipodi:linespacing="125%"><tspan
+           sodipodi:role="line"
+           id="tspan5698"
+           x="301.25156"
+           y="486.67676">Lien</tspan></text>
+      <g
+         id="g5734"
+         transform="translate(0,-4)">
+        <text
+           sodipodi:linespacing="125%"
+           id="text5708"
+           y="909.5791"
+           x="72.730965"
+           style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+           xml:space="preserve"><tspan
+             y="909.5791"
+             x="72.730965"
+             id="tspan5710"
+             sodipodi:role="line">Sens</tspan></text>
+        <text
+           sodipodi:linespacing="125%"
+           id="text5712"
+           y="909.93066"
+           x="557.60419"
+           style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+           xml:space="preserve"><tspan
+             y="909.93066"
+             x="557.60419"
+             id="tspan5714"
+             sodipodi:role="line">Loi</tspan></text>
+      </g>
+    </g>
+  </g>
+</svg>
