@@ -113,7 +113,7 @@ Si, par malheur, vous ne pouvez pas déposer de fichier sur la machine exécutan
 File tempDir = Files.createTempDir();
 File myStore = new File(tempDir, "keystore.jks");
 try (InputStream storeStream = MyExample.class.getClassLoader().getResourceAsStream("keystore.jks");
-        FileOutputStream outputStream = new FileOutputStream(myStore)) {
+     FileOutputStream outputStream = new FileOutputStream(myStore)) {
         ByteStreams.copy(storeStream, outputStream);
         System.setProperty("javax.net.ssl.trustStore", myStore.getAbsolutePath());
         System.setProperty("javax.net.ssl.trustStorePassword", *******);
