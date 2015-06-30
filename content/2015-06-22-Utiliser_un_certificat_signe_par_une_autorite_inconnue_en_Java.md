@@ -107,9 +107,7 @@ Vous êtes maintenant capable de vous connecter depuis une application Java à l
 
 ### Depuis une application Java (bis)
 
-Si, par malheur, vous ne pouvez pas déposer de fichier sur la machine exécutant votre application (c'est le cas sur certains hébergement « cloud » que je n'aime pas utiliser), vous pouvez toujours « stocker » votre *keystore* dans votre livrable (jar, war...). Mais... vous ne pourrez pas l'utiliser directement.
-
-La propriété `javax.net.ssl.trustStore` ne permet pas de déclarer de référence à un fichier dans le *package*. On peut en revanche l'écrire « à la main » sur le disque. L'exemple qui suit utilise [Guava](https://github.com/google/guava).
+Si, par malheur, vous ne pouvez pas déposer de fichier sur la machine exécutant votre application (c'est le cas sur certains hébergement « cloud » que je n'aime pas utiliser), vous pouvez toujours « stocker » votre *keystore* dans votre livrable (jar, war...). Mais... vous ne pourrez pas l'utiliser directement : la propriété `javax.net.ssl.trustStore` ne permet pas de déclarer de référence à un fichier dans le *package*. On peut en revanche l'écrire « à la main » sur le disque. L'exemple qui suit utilise [Guava](https://github.com/google/guava).
 
 ```java
 File tempDir = Files.createTempDir();
