@@ -41,7 +41,7 @@ Mais, généralement, lorsque votre client ne connaît pas l'autorité de certif
 
 Face à cela (ignorons la [référence à SSLv3](https://fr.wikipedia.org/wiki/POODLE) pour l'instant), deux options sont possible (la troisième, refiler le bébé à votre collègue, n'étant pas traitée ici) :
 
- * ignorer les doutes quant au certificat et risquer de communiquer des informations sensibles à un tiers (c'est la porte ouvert à une [attaque de l'homme du milieu](https://fr.wikipedia.org/wiki/Attaque_de_l%27homme_du_milieu) puisque vous ne vérifiez plus du tout avec qui vous échangez des données) ;
+ * ignorer les doutes quant au certificat et risquer de communiquer des informations sensibles à un tiers (c'est la porte ouverte à une [attaque de l'homme du milieu](https://fr.wikipedia.org/wiki/Attaque_de_l%27homme_du_milieu) puisque vous ne vérifiez plus du tout avec qui vous échangez des données) ;
  * indiquer que l'on connaît l'autorité racine ou l'une des autorités intermédiaires.
 
 Je ne peux que vous déconseiller avec toute la vigueur qui m'est donnée la première solution et vous apporter tout mon soutien pour la seconde.
