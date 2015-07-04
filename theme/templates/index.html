@@ -13,11 +13,11 @@
                  <ol id="post-list">
                 {% for article in articles_page.object_list %}
                         <li><article class="hentry">
-                                <header> <h2 class="entry-title"><a href="{{ SITEURL }}/{{ article.url }}" rel="bookmark" title="Permalink to {{ article.title|striptags }}">{{ article.title }}</a></h2> </header>
+                                <header> <h2 class="index-title"><a href="{{ SITEURL }}/{{ article.url }}" rel="bookmark" title="Permalink to {{ article.title|striptags }}">{{ article.title }}</a></h2> </header>
                                 <footer class="post-info">
                                     <abbr class="published" title="{{ article.date.isoformat() }}"> {{ article.locale_date }} </abbr>
                                     {% if article.authors %}
-                                    <address class="vcard author">Par 
+                                    <address class="vcard author">Par
                                     {% for author in article.authors|sort %}
                                     <a class="url fn" href="{{ SITEURL }}/{{ author.url }}"> {{ author }}</a>
                                     {% endfor %}
@@ -27,9 +27,6 @@
                                 <div class="entry-content"> {{ article.summary }} </div><!-- /.entry-content -->
 
                                 <div class="medium primary btn"><a href="{{ SITEURL }}/{{ article.url }}" rel="bookmark" title="Permalink to {{ article.title|striptags }}">Lire la suite <i class="icon-arrow-right"></i></a></div>
-
-
-
                                 <div class="row tag-row">
                                     {% if article.tags %}
                                         {% for tag in article.tags %}
@@ -37,15 +34,12 @@
                                         {% endfor %}
                                     {% endif %}
                                 </div>
-
-
-
                         </article></li>
                 {% endfor %}
                 </ol><!-- /#posts-list -->
 
         </div><!-- /.eleven.columns -->
-        
+
      {% include 'sidebar.html' %}
  </div><!-- /.row -->
 
