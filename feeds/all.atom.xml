@@ -1,5 +1,171 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Blog bloquant</title><link href="http://www.dericbourg.net/" rel="alternate"></link><link href="http://www.dericbourg.net/feeds/all.atom.xml" rel="self"></link><id>http://www.dericbourg.net/</id><updated>2015-06-22T00:00:00+02:00</updated><entry><title>Utiliser un certificat signé par une autorité inconnue en Java</title><link href="http://www.dericbourg.net/2015/06/22/utiliser-un-certificat-signe-par-une-autorite-inconnue-en-java/" rel="alternate"></link><updated>2015-06-22T00:00:00+02:00</updated><author><name>Alban Dericbourg</name></author><id>tag:www.dericbourg.net,2015-06-22:2015/06/22/utiliser-un-certificat-signe-par-une-autorite-inconnue-en-java/</id><summary type="html">&lt;p&gt;Lorsque vous vous connectez à un serveur en utilisant un certificat TLS (le grand frère de SSL depuis une quinzaine d'années), votre client en vérifie la signature. Celle-ci permet de vérifier que :&lt;/p&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Blog bloquant</title><link href="http://www.dericbourg.net/" rel="alternate"></link><link href="http://www.dericbourg.net/feeds/all.atom.xml" rel="self"></link><id>http://www.dericbourg.net/</id><updated>2015-07-04T00:00:00+02:00</updated><entry><title>Utiliser un Raspberry Pi comme point d'accès Wifi</title><link href="http://www.dericbourg.net/2015/07/04/utiliser-un-raspberry-pi-comme-point-dacces-wifi/" rel="alternate"></link><updated>2015-07-04T00:00:00+02:00</updated><author><name>Alban Dericbourg</name></author><id>tag:www.dericbourg.net,2015-07-04:2015/07/04/utiliser-un-raspberry-pi-comme-point-dacces-wifi/</id><summary type="html">&lt;p&gt;Dans cet article, nous verrons comment configurer un Raspberry Pi en tant que
+point d'accès Wifi.&lt;/p&gt;
+&lt;h3&gt;Pré-requis&lt;/h3&gt;
+&lt;p&gt;Je supposerai que vous avez à disposition :&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://www.raspberrypi.org/"&gt;Un Raspberry Pi&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;La distribution &lt;a href="https://www.raspbian.org/"&gt;Raspbian&lt;/a&gt; ou toute autre
+   distribution Linux&lt;/li&gt;
+&lt;li&gt;Un &lt;em&gt;dongle&lt;/em&gt; Wifi (déjà installé et détecté)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Dans la suite, on considèrera que l'interface sans fil est nommée &lt;code&gt;wlan0&lt;/code&gt;.  &lt;/p&gt;
+&lt;h3&gt;Définition d'une adresse IP statique&lt;/h3&gt;
+&lt;p&gt;Dans le fichier &lt;code&gt;/etc/network/interfaces&lt;/code&gt;, supprimer les lignes suivantes :&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;iface wlan0 inet manual
+wpa-roam /etc/wpa_supplicant/wpa_supplicant.conf
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Les remplacer par :&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;allow-hotplug wlan0
+iface wlan0 inet static
+address 192.168.100.1
+netmask 255.255.255.0
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Redémarrez le réseau :&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;sudo service networking restart
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;Installation d'un serveur DHCP&lt;/h3&gt;
+&lt;p&gt;Le serveur DHCP permet d'attribuer automatiquement une adresse IP aux machines
+qui se connecteront à votre réseau Wifi.&lt;/p&gt;
+&lt;p&gt;Installez le paquet &lt;em&gt;&lt;a href="https://packages.debian.org/isc-dhcp-server"&gt;isc-dhcp-server&lt;/a&gt;&lt;/em&gt; :&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;sudo apt-get install isc-dhcp-server
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;À ce stade, le service ne devrait pas démarrer correctement :&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;Generating /etc/default/isc-dhcp-server...
+[FAIL] Starting ISC DHCP server: dhcpd[....] check syslog for diagnostics. ... failed!
+ failed!
+invoke-rc.d: initscript isc-dhcp-server, action &amp;quot;start&amp;quot; failed.
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Vous pouvez ignorer ces erreurs pour le moment.&lt;/p&gt;
+&lt;p&gt;Éditez le fichier de configuration du serveur : &lt;code&gt;/etc/dhcp/dhcpd.conf&lt;/code&gt; et
+commentez les options &lt;em&gt;domain-name&lt;/em&gt; et &lt;em&gt;domain-name-servers&lt;/em&gt; :&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;#option domain-name &amp;quot;example.org&amp;quot;;
+#option domain-name-servers ns1.example.org, ns2.example.org;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Décommentez la ligne &lt;em&gt;authoritative&lt;/em&gt; :&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;# If this DHCP server is the official DHCP server for the local
+# network, the authoritative directive should be uncommented.
+authoritative;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Enfin, configurez le comportement du serveur DHCP :&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;subnet 192.168.100.0 netmask 255.255.255.0 {
+  range 192.168.100.10 192.168.100.50;
+  option broadcast-address 192.168.100.255;
+  option routers 192.168.100.1;
+  default-lease-time 600;
+  max-lease-time 7200;
+  option domain-name &amp;quot;local&amp;quot;;
+  option domain-name-servers 80.67.169.12;
+}
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Cet exemple utilise le DNS de FDN (ligne &lt;em&gt;domain-name-servers&lt;/em&gt;). Vous pouvez
+bien évidemment en utiliser d'autres (certains préfèrent
+&lt;a href="https://developers.google.com/speed/public-dns/"&gt;ceux de Google&lt;/a&gt;...).&lt;/p&gt;
+&lt;p&gt;Déclarez enfin l'interface sans fil comme l'interface par défaut pour répondre
+aux requêtes DHCP dans le fichier &lt;code&gt;/etc/default/isc-dhcp-server&lt;/code&gt; :&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;# On what interfaces should the DHCP server (dhcpd) serve DHCP requests?
+#       Separate multiple interfaces with spaces, e.g. &amp;quot;eth0 eth1&amp;quot;.
+#INTERFACES=&amp;quot;&amp;quot;
+INTERFACES=&amp;quot;wlan0&amp;quot;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;Installation de &lt;em&gt;hostapd&lt;/em&gt;&lt;/h3&gt;
+&lt;p&gt;&lt;a href="https://w1.fi/hostapd/"&gt;Hostapd&lt;/a&gt; est un démon permettant de créer un point
+d'accès sans fil. Pour l'installer :&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;sudo apt-get install hostapd
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Créez son fichier de configuration, &lt;code&gt;/etc/hostapd/hostapd.conf&lt;/code&gt; :&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;interface=wlan0
+driver=nl80211
+ssid=&amp;lt;YOUR SSID&amp;gt;
+hw_mode=g
+channel=6
+macaddr_acl=0
+auth_algs=1
+ignore_broadcast_ssid=0
+wpa=2
+wpa_passphrase=&amp;lt;YOUR PASSPHRASE&amp;gt;
+wpa_key_mgmt=WPA-PSK
+wpa_pairwise=TKIP
+rsn_pairwise=CCMP
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Remplacez dans cet exemple :&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;&amp;lt;YOUR SSID&amp;gt;&lt;/code&gt; par le nom que vous souhaitez donner à votre réseau ;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;&amp;lt;YOUR PASSPHRASE&amp;gt;&lt;/code&gt; par le mot de passer permettant l'accès au réseau.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Déclarez enfin ce fichier afin qu'il soit utilisé par hostapd dans
+&lt;code&gt;/etc/default/hostapd&lt;/code&gt; en ajoutant la ligne :&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;DAEMON_CONF=&amp;quot;/etc/hostapd/hostapd.conf&amp;quot;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;Configuration du routage entre l'interface sans fil et l'interface filaire&lt;/h3&gt;
+&lt;p&gt;Activer le routage IP dans le fichier &lt;code&gt;/etc/sysctl.conf&lt;/code&gt; en décommentant la
+ligne suivante :&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;net.ipv4.ip_forward=1
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Pour activer ce routage immédiatement (sans avoir besoin de redémarrer), lancez
+la commande :&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;sudo sh -c &amp;quot;echo 1 &amp;gt; /proc/sys/net/ipv4/ip_forward&amp;quot;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Vous pouvez enfin configurer le routage en utilisant
+&lt;em&gt;&lt;a href="http://ipset.netfilter.org/iptables.man.html"&gt;iptables&lt;/a&gt;&lt;/em&gt; :&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;sudo iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
+sudo iptables -A FORWARD -i eth0 -o wlan0 -m state --state RELATED,ESTABLISHED -j ACCEPT
+sudo iptables -A FORWARD -i wlan0 -o eth0 -j ACCEPT
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;Persistence des règles &lt;em&gt;iptables&lt;/em&gt;&lt;/h3&gt;
+&lt;p&gt;Les règles &lt;em&gt;iptables&lt;/em&gt; définies précédemment sont perdues au au redémarrage. Pour
+les recharger à chaque lancement de la machine, vous pouvez utiliser le paquet
+&lt;em&gt;&lt;a href="https://packages.debian.org/iptables-persistent"&gt;iptables-persistent&lt;/a&gt;&lt;/em&gt;. Pour
+l'installer :&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;sudo apt-get install iptables-persistent
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Par défaut, il demandera si vous souhaitez enregistrer les règles actuellement
+définies. Choisissez « oui ». Si vous souhaitez les redéfinir ultérieurement,
+vous pourrez les enregistrer en invoquant la cible &lt;em&gt;save&lt;/em&gt; et les recharger avec
+&lt;em&gt;reload&lt;/em&gt; :&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;sudo /etc/init.d/iptables-persistent save
+sudo /etc/init.d/iptables-persistent reload
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;La voie est libre&lt;/h3&gt;
+&lt;p&gt;À ce stade, vous deviez être en mesure de vous connecter au point d'accès de
+façon transparente. Étant donnée la richesse des matériels et leurs
+spécificités, je ne garantis pas que ce « mode d'emploi » soit universel.
+J'espère néanmoins qu'il vous aura aidé en première approche à monter votre
+propre point d'accès Wifi.&lt;/p&gt;</summary><category term="wifi"></category><category term="raspberrypi"></category><category term="linux"></category><category term="iptables"></category></entry><entry><title>Utiliser un certificat signé par une autorité inconnue en Java</title><link href="http://www.dericbourg.net/2015/06/22/utiliser-un-certificat-signe-par-une-autorite-inconnue-en-java/" rel="alternate"></link><updated>2015-06-22T00:00:00+02:00</updated><author><name>Alban Dericbourg</name></author><id>tag:www.dericbourg.net,2015-06-22:2015/06/22/utiliser-un-certificat-signe-par-une-autorite-inconnue-en-java/</id><summary type="html">&lt;p&gt;Lorsque vous vous connectez à un serveur en utilisant un certificat TLS (le grand frère de SSL depuis une quinzaine d'années), votre client en vérifie la signature. Celle-ci permet de vérifier que :&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;celui-ci provient bien d'un émetteur connu ;&lt;/li&gt;
 &lt;li&gt;qu'il n'a pas été modifié depuis son émission.&lt;/li&gt;

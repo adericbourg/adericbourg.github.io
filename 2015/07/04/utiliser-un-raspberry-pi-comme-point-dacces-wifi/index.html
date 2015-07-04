@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+
+        <title>Utiliser un Raspberry Pi comme point d'accès Wifi - Blog bloquant</title>
+        <meta charset="utf-8" />
+        <link href="http://www.dericbourg.net/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Blog bloquant Full Atom Feed" />
+        <link href="http://www.dericbourg.net/feeds/blog.atom.xml" type="application/atom+xml" rel="alternate" title="Blog bloquant Categories Atom Feed" />
+
+
+        <!-- Mobile viewport optimized: j.mp/bplateviewport -->
+        <meta name="viewport" content="width=device-width,initial-scale=1, maximum-scale=1">
+
+        <link rel="stylesheet" type="text/css" href="http://www.dericbourg.net/theme/gumby.css" />
+        <link rel="stylesheet" type="text/css" href="http://www.dericbourg.net/theme/style.css" />
+        <link rel="stylesheet" type="text/css" href="http://www.dericbourg.net/theme/pygment.css" />
+
+        <script src="http://www.dericbourg.net/theme/js/libs/modernizr-2.6.2.min.js"></script>
+
+
+
+
+</head>
+
+<body id="index" class="home">
+
+
+    <div class="container">
+
+        <div class="row">
+
+          <header id="banner" class="body">
+                  <h1><a href="http://www.dericbourg.net/">Blog bloquant <strong></strong></a></h1>
+          </header><!-- /#banner -->
+
+            <div id="navigation" class="navbar row">
+              <a href="#" gumby-trigger="#navigation &gt; ul" class="toggle"><i class="icon-menu"></i></a>
+             
+              <ul class="columns">
+                <li><a href="http://www.dericbourg.net/">Accueil</a></li>
+
+              </ul>
+
+
+            </div>
+
+<section id="content" class="body">
+
+   <div class="row">
+        <div class="eleven columns">
+
+
+            <header>
+              <h2 class="entry-title">Utiliser un Raspberry Pi comme point d'accès Wifi</h2>
+           
+              <div>
+                    <a class="info label" href="http://www.dericbourg.net/tag/wifi.html">wifi</a>
+                    <a class="info label" href="http://www.dericbourg.net/tag/raspberrypi.html">raspberrypi</a>
+                    <a class="info label" href="http://www.dericbourg.net/tag/linux.html">linux</a>
+                    <a class="info label" href="http://www.dericbourg.net/tag/iptables.html">iptables</a>
+              </div>
+            </header>
+            <footer class="post-info">
+
+              <abbr class="published" title="2015-07-04T00:00:00+02:00">
+                sam. 04 juillet 2015
+              </abbr>
+              &ndash;
+              <a href="http://www.dericbourg.net/2015/07/04/utiliser-un-raspberry-pi-comme-point-dacces-wifi/" rel="bookmark" title="Lien permanent vers Utiliser un Raspberry Pi comme point d'accès Wifi">lien permanent</a>
+              <address class="vcard author">Par
+                <a class="url fn" href="http://www.dericbourg.net/author/alban-dericbourg.html"> Alban Dericbourg</a>
+              </address>
+
+            </footer><!-- /.post-info -->
+            <div class="entry-content">
+              <p>Dans cet article, nous verrons comment configurer un Raspberry Pi en tant que
+point d'accès Wifi.</p>
+<h3>Pré-requis</h3>
+<p>Je supposerai que vous avez à disposition :</p>
+<ul>
+<li><a href="https://www.raspberrypi.org/">Un Raspberry Pi</a></li>
+<li>La distribution <a href="https://www.raspbian.org/">Raspbian</a> ou toute autre
+   distribution Linux</li>
+<li>Un <em>dongle</em> Wifi (déjà installé et détecté)</li>
+</ul>
+<p>Dans la suite, on considèrera que l'interface sans fil est nommée <code>wlan0</code>.  </p>
+<h3>Définition d'une adresse IP statique</h3>
+<p>Dans le fichier <code>/etc/network/interfaces</code>, supprimer les lignes suivantes :</p>
+<div class="highlight"><pre>iface wlan0 inet manual
+wpa-roam /etc/wpa_supplicant/wpa_supplicant.conf
+</pre></div>
+
+
+<p>Les remplacer par :</p>
+<div class="highlight"><pre>allow-hotplug wlan0
+iface wlan0 inet static
+address 192.168.100.1
+netmask 255.255.255.0
+</pre></div>
+
+
+<p>Redémarrez le réseau :</p>
+<div class="highlight"><pre>sudo service networking restart
+</pre></div>
+
+
+<h3>Installation d'un serveur DHCP</h3>
+<p>Le serveur DHCP permet d'attribuer automatiquement une adresse IP aux machines
+qui se connecteront à votre réseau Wifi.</p>
+<p>Installez le paquet <em><a href="https://packages.debian.org/isc-dhcp-server">isc-dhcp-server</a></em> :</p>
+<div class="highlight"><pre>sudo apt-get install isc-dhcp-server
+</pre></div>
+
+
+<p>À ce stade, le service ne devrait pas démarrer correctement :</p>
+<div class="highlight"><pre>Generating /etc/default/isc-dhcp-server...
+[FAIL] Starting ISC DHCP server: dhcpd[....] check syslog for diagnostics. ... failed!
+ failed!
+invoke-rc.d: initscript isc-dhcp-server, action &quot;start&quot; failed.
+</pre></div>
+
+
+<p>Vous pouvez ignorer ces erreurs pour le moment.</p>
+<p>Éditez le fichier de configuration du serveur : <code>/etc/dhcp/dhcpd.conf</code> et
+commentez les options <em>domain-name</em> et <em>domain-name-servers</em> :</p>
+<div class="highlight"><pre>#option domain-name &quot;example.org&quot;;
+#option domain-name-servers ns1.example.org, ns2.example.org;
+</pre></div>
+
+
+<p>Décommentez la ligne <em>authoritative</em> :</p>
+<div class="highlight"><pre># If this DHCP server is the official DHCP server for the local
+# network, the authoritative directive should be uncommented.
+authoritative;
+</pre></div>
+
+
+<p>Enfin, configurez le comportement du serveur DHCP :</p>
+<div class="highlight"><pre>subnet 192.168.100.0 netmask 255.255.255.0 {
+  range 192.168.100.10 192.168.100.50;
+  option broadcast-address 192.168.100.255;
+  option routers 192.168.100.1;
+  default-lease-time 600;
+  max-lease-time 7200;
+  option domain-name &quot;local&quot;;
+  option domain-name-servers 80.67.169.12;
+}
+</pre></div>
+
+
+<p>Cet exemple utilise le DNS de FDN (ligne <em>domain-name-servers</em>). Vous pouvez
+bien évidemment en utiliser d'autres (certains préfèrent
+<a href="https://developers.google.com/speed/public-dns/">ceux de Google</a>...).</p>
+<p>Déclarez enfin l'interface sans fil comme l'interface par défaut pour répondre
+aux requêtes DHCP dans le fichier <code>/etc/default/isc-dhcp-server</code> :</p>
+<div class="highlight"><pre># On what interfaces should the DHCP server (dhcpd) serve DHCP requests?
+#       Separate multiple interfaces with spaces, e.g. &quot;eth0 eth1&quot;.
+#INTERFACES=&quot;&quot;
+INTERFACES=&quot;wlan0&quot;
+</pre></div>
+
+
+<h3>Installation de <em>hostapd</em></h3>
+<p><a href="https://w1.fi/hostapd/">Hostapd</a> est un démon permettant de créer un point
+d'accès sans fil. Pour l'installer :</p>
+<div class="highlight"><pre>sudo apt-get install hostapd
+</pre></div>
+
+
+<p>Créez son fichier de configuration, <code>/etc/hostapd/hostapd.conf</code> :</p>
+<div class="highlight"><pre>interface=wlan0
+driver=nl80211
+ssid=&lt;YOUR SSID&gt;
+hw_mode=g
+channel=6
+macaddr_acl=0
+auth_algs=1
+ignore_broadcast_ssid=0
+wpa=2
+wpa_passphrase=&lt;YOUR PASSPHRASE&gt;
+wpa_key_mgmt=WPA-PSK
+wpa_pairwise=TKIP
+rsn_pairwise=CCMP
+</pre></div>
+
+
+<p>Remplacez dans cet exemple :</p>
+<ul>
+<li><code>&lt;YOUR SSID&gt;</code> par le nom que vous souhaitez donner à votre réseau ;</li>
+<li><code>&lt;YOUR PASSPHRASE&gt;</code> par le mot de passer permettant l'accès au réseau.</li>
+</ul>
+<p>Déclarez enfin ce fichier afin qu'il soit utilisé par hostapd dans
+<code>/etc/default/hostapd</code> en ajoutant la ligne :</p>
+<div class="highlight"><pre>DAEMON_CONF=&quot;/etc/hostapd/hostapd.conf&quot;
+</pre></div>
+
+
+<h3>Configuration du routage entre l'interface sans fil et l'interface filaire</h3>
+<p>Activer le routage IP dans le fichier <code>/etc/sysctl.conf</code> en décommentant la
+ligne suivante :</p>
+<div class="highlight"><pre>net.ipv4.ip_forward=1
+</pre></div>
+
+
+<p>Pour activer ce routage immédiatement (sans avoir besoin de redémarrer), lancez
+la commande :</p>
+<div class="highlight"><pre>sudo sh -c &quot;echo 1 &gt; /proc/sys/net/ipv4/ip_forward&quot;
+</pre></div>
+
+
+<p>Vous pouvez enfin configurer le routage en utilisant
+<em><a href="http://ipset.netfilter.org/iptables.man.html">iptables</a></em> :</p>
+<div class="highlight"><pre>sudo iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
+sudo iptables -A FORWARD -i eth0 -o wlan0 -m state --state RELATED,ESTABLISHED -j ACCEPT
+sudo iptables -A FORWARD -i wlan0 -o eth0 -j ACCEPT
+</pre></div>
+
+
+<h3>Persistence des règles <em>iptables</em></h3>
+<p>Les règles <em>iptables</em> définies précédemment sont perdues au au redémarrage. Pour
+les recharger à chaque lancement de la machine, vous pouvez utiliser le paquet
+<em><a href="https://packages.debian.org/iptables-persistent">iptables-persistent</a></em>. Pour
+l'installer :</p>
+<div class="highlight"><pre>sudo apt-get install iptables-persistent
+</pre></div>
+
+
+<p>Par défaut, il demandera si vous souhaitez enregistrer les règles actuellement
+définies. Choisissez « oui ». Si vous souhaitez les redéfinir ultérieurement,
+vous pourrez les enregistrer en invoquant la cible <em>save</em> et les recharger avec
+<em>reload</em> :</p>
+<div class="highlight"><pre>sudo /etc/init.d/iptables-persistent save
+sudo /etc/init.d/iptables-persistent reload
+</pre></div>
+
+
+<h3>La voie est libre</h3>
+<p>À ce stade, vous deviez être en mesure de vous connecter au point d'accès de
+façon transparente. Étant donnée la richesse des matériels et leurs
+spécificités, je ne garantis pas que ce « mode d'emploi » soit universel.
+J'espère néanmoins qu'il vous aura aidé en première approche à monter votre
+propre point d'accès Wifi.</p>
+            </div><!-- /.entry-content -->
+            <div class="comments">
+              <h3>Comments</h3>
+              <div id="disqus_thread"></div>
+              <script type="text/javascript">
+                  var disqus_shortname = 'dericbourg';
+                  (function() {
+                      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                  })();
+              </script>
+              <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+            </div>
+
+
+        </div><!-- /.eleven.columns -->
+
+<div class="three columns">
+
+      <div class="btn primary"><a href="https://github.com/adericbourg" target="_blank">Github</a></div>
+
+      <div class="btn twitter"><a href="https://twitter.com/adericbourg" target="_blank">Twitter</a></div>
+
+
+
+<!--
+<h4>Pages</h4>
+
+ <ul>
+  </ul>
+
+<h4>Catégories</h4>
+<ul>
+		<li><a href="http://www.dericbourg.net/category/blog.html">Blog</a></li>
+</ul>
+
+-->
+<h4>Tags</h4>
+	<ul id="sidebar-tags">
+	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/linux.html">linux</a></li>
+	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/iptables.html">iptables</a></li>
+	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/bien-etre.html">bien-être</a></li>
+	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/certificat.html">certificat</a></li>
+	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/bash.html">bash</a></li>
+	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/motivation.html">motivation</a></li>
+	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/quotidien.html">quotidien</a></li>
+	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/java.html">java</a></li>
+	    <li class="tag tag-1"><a href="http://www.dericbourg.net/tag/securite.html">sécurité</a></li>
+	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/cve.html">cve</a></li>
+	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/signature.html">signature</a></li>
+	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/raspberrypi.html">raspberrypi</a></li>
+	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/ssl.html">ssl</a></li>
+	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/wifi.html">wifi</a></li>
+	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/vivre-ensemble.html">vivre ensemble</a></li>
+	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/tls.html">tls</a></li>
+</ul>
+
+
+
+</div> </div><!-- /.row -->
+
+
+</section>
+
+       </div><!-- /.row -->
+    </div><!-- /.container -->
+
+
+       <div class="container.nopad bg">
+
+    
+        <footer id="credits" class="row">
+          <div class="seven columns left-center">
+
+                   <address id="about" class="vcard body">
+                    Proudly powered by <a href="http://getpelican.com/">Pelican</a>,
+                    which takes great advantage of <a href="http://python.org">Python</a>.
+                    <br />
+                    Based on the <a target="_blank" href="http://gumbyframework.com">Gumby Framework</a>
+                    </address>
+          </div>
+        </footer>
+
+    </div>
+
+
+<script type="text/javascript">
+    var disqus_shortname = 'dericbourg';
+    (function () {
+        var s = document.createElement('script'); s.async = true;
+        s.type = 'text/javascript';
+        s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
+        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+    }());
+</script>
+  <script src="http://www.dericbourg.net/theme/js/libs/jquery-1.9.1.min.js"></script>
+  <script src="http://www.dericbourg.net/theme/js/libs/gumby.min.js"></script>
+  <script src="http://www.dericbourg.net/theme/js/plugins.js"></script>
+</body>
+</html>
