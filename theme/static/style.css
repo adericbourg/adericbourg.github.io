@@ -204,10 +204,17 @@ a:focus { color: #34495E; }
 ----------------------------------------------------------*/
 
 /* reduce article title size */
-
 h2.entry-title {
   font-size: 38px;
   font-size: 2.375rem;
+}
+
+/* more space around title */
+@media(min-width: 600px) {
+  h2.entry-title {
+    padding-top: 30px;
+    padding-bottom: 20px;
+  }
 }
 
 /* justify text in articles */
