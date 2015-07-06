@@ -195,7 +195,7 @@ propre point d'accès Wifi.&lt;/p&gt;</summary><category term="wifi"></category>
 
 
 &lt;h3&gt;Comment se connecter, alors ?&lt;/h3&gt;
-&lt;p&gt;Face à cela (ignorons la &lt;a href="https://fr.wikipedia.org/wiki/POODLE"&gt;référence à SSLv3&lt;/a&gt; pour l'instant), deux options sont possible (la troisième, refiler le bébé à votre collègue, n'étant pas traitée ici) :&lt;/p&gt;
+&lt;p&gt;Face à cela (ignorons la &lt;a href="https://fr.wikipedia.org/wiki/POODLE"&gt;référence à SSLv3&lt;/a&gt; pour l'instant), deux options sont possibles (la troisième, refiler le bébé à votre collègue, n'étant pas traitée ici) :&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;ignorer les doutes quant au certificat et risquer de communiquer des informations sensibles à un tiers (c'est la porte ouverte à une &lt;a href="https://fr.wikipedia.org/wiki/Attaque_de_l%27homme_du_milieu"&gt;attaque de l'homme du milieu&lt;/a&gt; puisque vous ne vérifiez plus du tout avec qui vous échangez des données) ;&lt;/li&gt;
 &lt;li&gt;indiquer que l'on connaît l'autorité racine ou l'une des autorités intermédiaires.&lt;/li&gt;
