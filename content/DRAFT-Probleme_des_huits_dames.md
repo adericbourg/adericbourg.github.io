@@ -1,7 +1,7 @@
 Title: Problème des huit dames
 Date: 2015-07-07
 Category: Blog
-Tags: algorithmique, java
+Tags: algorithmique, python
 Status: draft
 
 J'ai rencontré le [problème des huits dames](https://fr.wikipedia.org/wiki/Probl%C3%A8me_des_huit_dames) lors d'un entretien d'embauche et, ayant lamentablement (et honteusement) échoué, mon orgueil m'a incité à pousser l'exercice plus en avant.
@@ -20,9 +20,86 @@ Ce problème peut également être résolu par une approche récursive : une sol
 
 > TODO
 
-### Troisième approche : programmation par contrainte
+### Troisième approche : recherche en profondeur
 
 > TODO
+
+### Quatrième approche : programmation par contraintes
+
+Un problème de satisfaction de contraintes (ou CSP pour *Constraint Satisfaction Problem*) désigne l'ensemble des problèmes définis par... des contraintes. Sa résolution consiste à chercher une solution les respectant. Pour cela, on décrit un modèle définit par :
+
+ * un ensemble de variables ;
+ * un ensemble de contraintes régissant ces variables.
+
+À partir de ce modèle, le système cherchera une solution et la proposera si elle existe. En revanche, il ne proposera qu'une seule solution : la résolution d'un problème par contraintes n'a pas vocation à chercher l'ensemble exhaustif des solutions.
+
+En Python, la bibliothèque [Numberjack](http://numberjack.ucc.ie) facilite la programmation par contraintes. Ils fournissent d'ailleurs une [solution pour le problème des *n* dames](http://numberjack.ucc.ie/examples/nqueens).
+
+Dans le cas générique des *N* dames, on définit dans notre ensemble de variables les dames. Chacun d'elles est de type `Variable(N)`, soit une variable dans un domaine compris entre 0 et *N*. La contrainte `AllDiff` impose à toutes les expressions qui lui sont passées d'êtres différentes. On impose donc :
+
+ * que toutes les dames soient sur des lignes différentes (`AllDiff( queens )`) ;
+ * que toutes les dames soient sur des diagonales différentes (combinaison de `AllDiff( [queens[i] + i for i in range(N)] )` et `AllDiff( [queens[i] - i for i in range(N)] )`).
+
+La description du modèle devient :
+
+```python
+from Numberjack import *
+
+def model_queens(N):
+    queens = [Variable(N) for i in range(N)]
+    model  = Model(
+        AllDiff( queens ),
+        AllDiff( [queens[i] + i for i in range(N)] ),
+        AllDiff( [queens[i] - i for i in range(N)] )
+        )
+    return (queens, model)
+```
+
+La résolution du problème est alors immédiate :
+
+```python
+def solve_queens(param):
+    (queens,model) = model_queens(param['N'])
+    solver = model.load(param['solver'])
+    solver.solve()
+    print_chessboard(queens)
+    print 'Nodes:', solver.getNodes(), ' Time:', solver.getTime()
+
+def print_chessboard(queens):
+    separator = '+---'*len(queens)+'+'
+    for queen in queens:
+        print separator
+        print '|   '*queen.get_value()+'| Q |'+'   |'*(len(queens)-1-queen.get_value())
+    print separator
+
+solve_queens(input({'solver':'Mistral', 'N':10}))
+```
+
+La proposition d'une solution est également très rapide :
+
+```
++---+---+---+---+---+---+---+---+
+| Q |   |   |   |   |   |   |   |
++---+---+---+---+---+---+---+---+
+|   |   |   |   | Q |   |   |   |
++---+---+---+---+---+---+---+---+
+|   |   |   |   |   |   |   | Q |
++---+---+---+---+---+---+---+---+
+|   |   |   |   |   | Q |   |   |
++---+---+---+---+---+---+---+---+
+|   |   | Q |   |   |   |   |   |
++---+---+---+---+---+---+---+---+
+|   |   |   |   |   |   | Q |   |
++---+---+---+---+---+---+---+---+
+|   | Q |   |   |   |   |   |   |
++---+---+---+---+---+---+---+---+
+|   |   |   | Q |   |   |   |   |
++---+---+---+---+---+---+---+---+
+Nodes: 24  Time: 0.0
+```
+
+Une mesure plus fine du temps d'exécution indique qu'il a fallu environ 20 millisecondes pour proposer cette solution (qui inclut le temps d'exécution total du programme Python).
+
 
 ### Comparaison des approches
 
