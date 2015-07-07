@@ -37,8 +37,10 @@ En Python, la bibliothèque [Numberjack](http://numberjack.ucc.ie) facilite la p
 
 Dans le cas générique des *N* dames, on définit dans notre ensemble de variables les dames. Chacun d'elles est de type `Variable(N)`, soit une variable dans un domaine compris entre 0 et *N*. La contrainte `AllDiff` impose à toutes les expressions qui lui sont passées d'êtres différentes. On impose donc :
 
- * que toutes les dames soient sur des lignes différentes (`AllDiff( queens )`) ;
+ * que toutes les dames soient dans des colonnes différentes (`AllDiff( queens )`) ;
  * que toutes les dames soient sur des diagonales différentes (combinaison de `AllDiff( [queens[i] + i for i in range(N)] )` et `AllDiff( [queens[i] - i for i in range(N)] )`).
+
+On suppose donc que chaque dame est sur une ligne distincte : la dame 0 sera sur la ligne 0, la dame 1 sur la ligne 1, etc.
 
 La description du modèle devient :
 
