@@ -8,9 +8,72 @@ J'ai rencontré le [problème des huits dames](https://fr.wikipedia.org/wiki/Pro
 
 Le problème consiste à compter et identifier les différentes façons de placer sur un échiquier de 64 cases 8 dames de façon à ce que, relativement aux règles des échecs, elles ne se menacent pas mutuellement. Une dame peut se déplacer d'un nombre de cases arbitraire dans toutes les directions ; lorsqu'une dame est placée, la ligne, la colonne et les diagonales sur lesquelles elle se situe sont donc « condamnées ».
 
-### Approche naïve : examen de l'intégralité des combinaisons
+### Approche naïve : examen de l'intégralité des permutations
 
 Cette approche revient à essayer toutes les combinaisons de placement des reines et de retenir celles pour lesquelles toutes les reines sont en sécurité.
+
+> TODO
+
+#### Génération des permutations
+
+Il est possible de déterminer toutes les permutations possibles d'un tableau en utilisant — par exemple — l'[algorithme de Heap](https://en.wikipedia.org/wiki/Heap%27s_algorithm). J'en propose une implémentation récursive : compte tenu des dimensions des tableaux de notre problème, cela reste raisonnable (on ne risque pas le dépassement de capacité de pile d'exécution).
+
+```python
+def permutations(array):
+    def __permutations(array, size):
+        if size == 1:
+            yield array
+        else:
+            for i in range(size):
+                for p in  __permutations(array, size - 1):
+                    yield p
+                if size % 2 == 0:
+                    array[i], array[size - 1] = array[size - 1], array[i]
+                else:
+                    array[0], array[size - 1] = array[size - 1], array[0]
+
+    return __permutations(array, len(array))
+```
+
+Pour donner un exemple :
+
+```python
+>>> for perm in permutations(['a', 'b', 'c']): print perm
+...
+['a', 'b', 'c']
+['b', 'a', 'c']
+['c', 'a', 'b']
+['a', 'c', 'b']
+['b', 'c', 'a']
+['c', 'b', 'a']
+```
+
+En pratique, la bibliothèque standard Python propose dans le module [`itertools`](https://docs.python.org/2/library/itertools.html) une fonction générant ces permutations. Mesurons le temps d'exécution de ce code avec les deux implémentations :
+
+```python
+a = [0, 1, 2, 3, 4, 5, 6]
+for i in range(10000):
+    for perm in permutations(a):
+        perm
+```
+
+```
+# Heap
+$ time python heaps.py
+real    0m42.860s
+user    0m42.832s
+sys     0m0.008s
+
+# itertools
+$ time python itertools.py
+real    0m3.433s
+user    0m3.428s
+sys     0m0.000s
+```
+
+La fonction de la blbliothèque standard est bien plus performante que l'implémentation proposée ci-dessus (et heureusement). On utilisera donc celle-ci pour la résolution du problème : autant ne pas tendre le bâton pour se faire battre.
+
+#### Résolution
 
 > TODO
 
@@ -19,6 +82,8 @@ Cette approche revient à essayer toutes les combinaisons de placement des reine
 Ce problème peut également être résolu par une approche récursive : une solution au problème des *n* dames peut être obtenue à partir d'une solution des *n-1* dames. On initialise alors la récurrence avec le problème à l'étape « 0 », soit un échiquier vide.
 
 > TODO
+
+Pour mieux comprendre cet algorithme, il en existe une [version animée détaillant les étapes de la résolution](https://www.cs.usfca.edu/~galles/visualization/RecQueens.html).
 
 ### Troisième approche : recherche en profondeur
 
