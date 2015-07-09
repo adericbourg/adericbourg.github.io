@@ -8,6 +8,27 @@ J'ai rencontré le [problème des huits dames](https://fr.wikipedia.org/wiki/Pro
 
 Le problème consiste à compter et identifier les différentes façons de placer sur un échiquier de 64 cases 8 dames de façon à ce que, relativement aux règles des échecs, elles ne se menacent pas mutuellement. Une dame peut se déplacer d'un nombre de cases arbitraire dans toutes les directions ; lorsqu'une dame est placée, la ligne, la colonne et les diagonales sur lesquelles elle se situe sont donc « condamnées ».
 
+
+### Modélisation
+
+On ne peut pas placer plusieurs reines sur une même ligne. On peut donc simplifier la modélisation en ne travaillant que sur les colonnes. Ainsi, on cherchera à ne retourner qu'un tableau d'index de colonne, chacun de ces index correspondant à la ligne de son propre index dans le tableau. Pour illustrer, on produira en retour le tableau `[x, y, z]` qui correspond en pratique aux coordonnées `(0, x)`, `(1, y)` et `(2, z)`.
+
+![Représentation de la modélisation](/images/eight_queens/modelisation.png){.center}
+
+> **Note :** en Python, la fonction [`enumerate`](https://docs.python.org/2/library/functions.html#enumerate) permet d'obtenir de façon immédiate ce résultat.
+>
+>     >>> list(enumerate([3, 2, 1]))
+>     [(0, 3), (1, 2), (2, 1)]
+>
+
+Il est alors « facile » de déterminer si une dame est en sécurité connaîssant la position des autres :
+
+ * par construction, aucune dame ne peut être sur la même ligne ;
+ * deux dames sont sur la même colonne lorsque leur index de colonne est la même (`c[i] == c[j]`) ;
+ * deux dames sont sur la même diagonale lorsque leur différence d'index dans le tableau est égal à leur différence d'index de colonne (`abs(c[i] - c[j]) == abs(i - j)`).
+
+![Représentation de la modélisation](/images/eight_queens/diagonale.png){.center}
+
 ### Approche naïve : examen de l'intégralité des permutations
 
 Cette approche revient à essayer toutes les combinaisons de placement des reines et de retenir celles pour lesquelles toutes les reines sont en sécurité.
