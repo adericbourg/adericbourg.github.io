@@ -25,9 +25,9 @@ Représentons cette modélisation dans le cas de la résolution du problème ave
 
 Il est alors « facile » de déterminer si une dame est en sécurité connaîssant la position des autres :
 
- * par construction, aucune dame ne peut être sur la même ligne ;
- * deux dames sont sur la même colonne lorsque leur index de colonne est la même (`c[i] == c[j]`) ;
- * deux dames sont sur la même diagonale lorsque leur différence d'index dans le tableau est égal à leur différence d'index de colonne (`abs(c[i] - c[j]) == abs(i - j)`).
+ * Par construction, aucune dame ne peut être sur la même ligne.
+ * Deux dames sont sur la même colonne lorsque leur index de colonne est la même (`c[i] == c[j]`).
+ * Deux dames sont sur la même diagonale lorsque leur différence d'index dans le tableau est égal à leur différence d'index de colonne (`abs(c[i] - c[j]) == abs(i - j)`). La valeur absolue permet de traiter les diagonales « montantes » et les diagonales « descendantes ».
 
 ![Représentation de la modélisation](/images/eight_queens/diagonale.png){.center}
 
@@ -96,7 +96,7 @@ La fonction de la blbliothèque standard est bien plus performante que l'implém
 
 #### Résolution
 
-On a vu que l'ensemble des solutions était contenu dans l'ensemble des permutations de {1 ; 2 ; ... ; *n*-1}, soit l'ensemble des permutations de *n* entiers distincts. Par construction :
+On a vu que l'ensemble des solutions était contenu dans l'ensemble des permutations de {1 ; 2 ; ... ; *n* - 1}, soit l'ensemble des permutations de *n* entiers distincts. Par construction :
 
  * les dames ne peuvent pas être sur la même ligne (on ne peut pas mettre deux valeurs au même index d'un tableau) ;
  * les dames ne peuvent pas être sur la même colonne (par construction de l'ensemble sur lequel on initialise les permutations).
@@ -180,9 +180,17 @@ python brute-force.py  0,06s user 0,00s system 91% cpu 0,061 total
 
 Pour cette dimension, c'est tout à fait acceptable et on pourrait s'en contenter. On pourrait... mais ça ne serait pas satisfaisant pour la curiosité !
 
-### Seconde approche : résolution récursive
+### Seconde approche : algorithme de retour sur trace (*backtracking*)
 
-Ce problème peut également être résolu par une approche récursive : une solution au problème des *n* dames peut être obtenue à partir d'une solution des *n-1* dames. On initialise alors la récurrence avec le problème à l'étape « 0 », soit un échiquier vide.
+Cet algorithme parcourt toutes les possibilités en éliminant d'emblée toute solution partielle qui ne convient pas. Il permet donc d'éviter de nombreuses combinaisons : il est en ce sens plus économe que l'algorithme de force brute. La résolution du problème revient alors à un parcours de graphe.
+
+#### Exemple
+
+> TODO Exemple pour illustrer le fonctionnement de l'algo avec un graphe (quels nœuds sont visités, abandonnés, ignorés)
+
+#### Résolution
+
+On conserve la même modélisation : les *n* dames sont réparties sur les *n* lignes à raison d'une par ligne. On place les dames une par une tant que cela est possible. Si le placement d'une dame échoue — donc qu'il n'existe pas de position telle que la dame puisse être en sécurité, on remet en question les choix précédents afin de sortir du blocage. On revient alors à un point où des alternatives étaient possibles et on essaie la possibilité suivante.
 
 > TODO
 
