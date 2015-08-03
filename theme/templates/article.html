@@ -1,5 +1,24 @@
 {% extends "base.html" %}
 {% block title %}{{ article.title|striptags }} - {{ SITENAME }}{% endblock %}
+
+{% block twittercard %}
+        <!-- Twitter card -->
+        <meta name="twitter:card" content="summary" />
+        {% if TWITTER_HANDLE %}
+        <meta name="twitter:site" content="{{ TWITTER_HANDLE }}" />
+        {% endif %}
+        <meta name="twitter:title" content="{{ article.title|striptags }} - {{ SITENAME }}" />
+        <meta name="twitter:description" content="{{ article.summary | striptags }}" />
+{% endblock twittercard %}
+
+{% block facebookcard %}
+        <!-- Facebook Open Graph Meta Tags -->
+        <meta property="og:site_name" content="{{ SITENAME }}"/>
+        <meta property="og:title" content="{{ article.title|striptags }}"/>
+        <meta property="og:url" content="{{ SITEURL }}/{{ article.url }}"/>
+        <meta property="og:type" content="blog"/>
+{% endblock facebookcard %}
+
 {% block content %}
 <section id="content" class="body">
 

@@ -7,6 +7,8 @@ AUTHOR_LINK = u'http://www.dericbourg.net'
 SITENAME = u'Blog bloquant'
 SITEURL = ''
 
+TWITTER_HANDLE = u'@adericbourg'
+
 PATH = 'content'
 STATIC_PATHS = ['extra/CNAME', 'images']
 EXTRA_PATH_METADATA = {'extra/CNAME': {'path': 'CNAME'},}
