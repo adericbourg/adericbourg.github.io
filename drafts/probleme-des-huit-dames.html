@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+
+        <title>Problème des huit dames - Blog bloquant</title>
+        <meta charset="utf-8" />
+        <link href="http://www.dericbourg.net/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Blog bloquant Full Atom Feed" />
+        <link href="http://www.dericbourg.net/feeds/blog.atom.xml" type="application/atom+xml" rel="alternate" title="Blog bloquant Categories Atom Feed" />
+
+        <!-- Twitter card -->
+        <meta name="twitter:card" content="summary" />
+        <meta name="twitter:site" content="@adericbourg" />
+        <meta name="twitter:title" content="Problème des huit dames - Blog bloquant" />
+        <meta name="twitter:description" content="J'ai rencontré le problème des huits dames lors d'un entretien d'embauche et, ayant lamentablement (et honteusement) échoué, mon orgueil m'a incité à pousser l'exercice plus en avant. Le problème consiste à compter et identifier les différentes façons de placer sur un échiquier de 64 cases ..." />
+
+        <!-- Facebook Open Graph Meta Tags -->
+        <meta property="og:site_name" content="Blog bloquant"/>
+        <meta property="og:title" content="Problème des huit dames"/>
+        <meta property="og:url" content="http://www.dericbourg.net/drafts/probleme-des-huit-dames.htmlindex.html"/>
+        <meta property="og:description" content="J'ai rencontré le problème des huits dames lors d'un entretien d'embauche et, ayant lamentablement (et honteusement) échoué, mon orgueil m'a incité à pousser l'exercice plus en avant. Le problème consiste à compter et identifier les différentes façons de placer sur un échiquier de 64 cases ..."/>
+        <meta property="og:type" content="blog"/>
+
+        <!-- Mobile viewport optimized: j.mp/bplateviewport -->
+        <meta name="viewport" content="width=device-width,initial-scale=1, maximum-scale=1">
+
+        <link rel="stylesheet" type="text/css" href="http://www.dericbourg.net/theme/gumby.css" />
+        <link rel="stylesheet" type="text/css" href="http://www.dericbourg.net/theme/style.css" />
+        <link rel="stylesheet" type="text/css" href="http://www.dericbourg.net/theme/pygment.css" />
+
+        <script src="http://www.dericbourg.net/theme/js/libs/modernizr-2.6.2.min.js"></script>
+
+
+
+
+</head>
+
+<body id="index" class="home">
+
+
+    <div class="container">
+
+        <div class="row">
+
+          <header id="banner" class="body">
+                  <h1><a href="http://www.dericbourg.net/">Blog bloquant <strong></strong></a></h1>
+          </header><!-- /#banner -->
+
+            <div id="navigation" class="navbar row">
+              <a href="#" data-trigger="#navigation &gt; ul" class="toggle"><i class="icon-menu"></i></a>
+
+              <ul class="columns">
+                <li><a href="http://www.dericbourg.net/">Accueil</a></li>
+
+              </ul>
+
+
+            </div>
+
+<section id="content" class="body">
+
+   <div class="row">
+        <div class="eleven columns">
+
+
+            <header>
+              <h2 class="entry-title">Problème des huit dames</h2>
+           
+              <div>
+                    <a class="info label" href="http://www.dericbourg.net/tag/algorithmique.html">algorithmique</a>
+                    <a class="info label" href="http://www.dericbourg.net/tag/python.html">python</a>
+              </div>
+            </header>
+            <footer class="post-info">
+
+              <abbr class="published" title="2015-07-07T00:00:00+02:00">
+                mar. 07 juillet 2015
+              </abbr>
+              &ndash;
+              <a href="http://www.dericbourg.net/drafts/probleme-des-huit-dames.html" rel="bookmark" title="Lien permanent vers Problème des huit dames">lien permanent</a>
+              <address class="vcard author">Par
+                <a class="url fn" href="http://www.dericbourg.net/author/alban-dericbourg.html"> Alban Dericbourg</a>
+              </address>
+
+            </footer><!-- /.post-info -->
+            <div class="entry-content">
+              <p>J'ai rencontré le <a href="https://fr.wikipedia.org/wiki/Probl%C3%A8me_des_huit_dames">problème des huits dames</a> lors d'un entretien d'embauche et, ayant lamentablement (et honteusement) échoué, mon orgueil m'a incité à pousser l'exercice plus en avant.</p>
+<p>Le problème consiste à compter et identifier les différentes façons de placer sur un échiquier de 64 cases 8 dames de façon à ce que, relativement aux règles des échecs, elles ne se menacent pas mutuellement. Une dame peut se déplacer d'un nombre de cases arbitraire dans toutes les directions ; lorsqu'une dame est placée, la ligne, la colonne et les diagonales sur lesquelles elle se situe sont donc « condamnées ».</p>
+<h3>Modélisation</h3>
+<p>On ne peut pas placer plusieurs reines sur une même ligne. On peut donc simplifier la modélisation en ne travaillant que sur les colonnes. Ainsi, on cherchera à ne retourner qu'un tableau d'index de colonne, chacun de ces index correspondant à la ligne de son propre index dans le tableau. Pour illustrer, on produira en retour le tableau <code>[x, y, z]</code> qui correspond en pratique aux coordonnées <code>(0, x)</code>, <code>(1, y)</code> et <code>(2, z)</code>.</p>
+<p>Représentons cette modélisation dans le cas de la résolution du problème avec huit dames.</p>
+<p><img alt="Représentation de la modélisation" class="center" src="/images/eight_queens/modelisation.png" /></p>
+<blockquote>
+<p><strong>Note :</strong> en Python, la fonction <a href="https://docs.python.org/2/library/functions.html#enumerate"><code>enumerate</code></a> permet d'obtenir de façon immédiate ce résultat.</p>
+<div class="highlight"><pre>&gt;&gt;&gt; list(enumerate([3, 2, 1]))
+[(0, 3), (1, 2), (2, 1)]
+</pre></div>
+
+
+</blockquote>
+<p>Il est alors « facile » de déterminer si une dame est en sécurité connaîssant la position des autres :</p>
+<ul>
+<li>Par construction, aucune dame ne peut être sur la même ligne.</li>
+<li>Deux dames sont sur la même colonne lorsque leur index de colonne est la même (<code>c[i] == c[j]</code>).</li>
+<li>Deux dames sont sur la même diagonale lorsque leur différence d'index dans le tableau est égal à leur différence d'index de colonne (<code>abs(c[i] - c[j]) == abs(i - j)</code>). La valeur absolue permet de traiter les diagonales « montantes » et les diagonales « descendantes ».</li>
+</ul>
+<p><img alt="Représentation de la modélisation" class="center" src="/images/eight_queens/diagonale.png" /></p>
+<h3>Approche naïve : examen de l'intégralité des permutations</h3>
+<p>Cette approche revient à essayer toutes les combinaisons de placement des reines et de retenir celles pour lesquelles toutes les reines sont en sécurité. Compte tenu du fait que deux dames ne peuvent être sur la même colonne, la solution est une permutation de la suite d'entiers de 0 à <em>n</em>-1 (où <em>n</em> est le nombre de dames et la dimension de l'échiquier).</p>
+<h4>Génération des permutations</h4>
+<p>Il est possible de déterminer toutes les permutations possibles d'un tableau en utilisant — par exemple — l'<a href="https://en.wikipedia.org/wiki/Heap%27s_algorithm">algorithme de Heap</a>. J'en propose une implémentation récursive : compte tenu des dimensions des tableaux de notre problème, cela reste raisonnable ; on ne risque pas le dépassement de la capacité de la pile d'exécution.</p>
+<div class="highlight"><pre><span class="k">def</span> <span class="nf">permutations</span><span class="p">(</span><span class="n">array</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__permutations</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">size</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">size</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">yield</span> <span class="n">array</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">size</span><span class="p">):</span>
+                <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span>  <span class="n">__permutations</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">size</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+                    <span class="k">yield</span> <span class="n">p</span>
+                <span class="k">if</span> <span class="n">size</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">array</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">array</span><span class="p">[</span><span class="n">size</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">array</span><span class="p">[</span><span class="n">size</span> <span class="o">-</span> <span class="mi">1</span><span class="p">],</span> <span class="n">array</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">array</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">array</span><span class="p">[</span><span class="n">size</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">array</span><span class="p">[</span><span class="n">size</span> <span class="o">-</span> <span class="mi">1</span><span class="p">],</span> <span class="n">array</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">__permutations</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">array</span><span class="p">))</span>
+</pre></div>
+
+
+<p>Pour donner un exemple :</p>
+<div class="highlight"><pre><span class="o">&gt;&gt;&gt;</span> <span class="k">for</span> <span class="n">perm</span> <span class="ow">in</span> <span class="n">permutations</span><span class="p">([</span><span class="s">&#39;a&#39;</span><span class="p">,</span> <span class="s">&#39;b&#39;</span><span class="p">,</span> <span class="s">&#39;c&#39;</span><span class="p">]):</span> <span class="k">print</span> <span class="n">perm</span>
+<span class="o">...</span>
+<span class="p">[</span><span class="s">&#39;a&#39;</span><span class="p">,</span> <span class="s">&#39;b&#39;</span><span class="p">,</span> <span class="s">&#39;c&#39;</span><span class="p">]</span>
+<span class="p">[</span><span class="s">&#39;b&#39;</span><span class="p">,</span> <span class="s">&#39;a&#39;</span><span class="p">,</span> <span class="s">&#39;c&#39;</span><span class="p">]</span>
+<span class="p">[</span><span class="s">&#39;c&#39;</span><span class="p">,</span> <span class="s">&#39;a&#39;</span><span class="p">,</span> <span class="s">&#39;b&#39;</span><span class="p">]</span>
+<span class="p">[</span><span class="s">&#39;a&#39;</span><span class="p">,</span> <span class="s">&#39;c&#39;</span><span class="p">,</span> <span class="s">&#39;b&#39;</span><span class="p">]</span>
+<span class="p">[</span><span class="s">&#39;b&#39;</span><span class="p">,</span> <span class="s">&#39;c&#39;</span><span class="p">,</span> <span class="s">&#39;a&#39;</span><span class="p">]</span>
+<span class="p">[</span><span class="s">&#39;c&#39;</span><span class="p">,</span> <span class="s">&#39;b&#39;</span><span class="p">,</span> <span class="s">&#39;a&#39;</span><span class="p">]</span>
+</pre></div>
+
+
+<p>En pratique, la bibliothèque standard Python propose dans le module <a href="https://docs.python.org/2/library/itertools.html"><code>itertools</code></a> une fonction générant ces permutations. Mesurons le temps d'exécution de ce code avec les deux implémentations :</p>
+<div class="highlight"><pre><span class="n">a</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">]</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10000</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">perm</span> <span class="ow">in</span> <span class="n">permutations</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>
+        <span class="n">perm</span>
+</pre></div>
+
+
+<div class="highlight"><pre># Heap
+$ time python heaps.py
+real    0m42.860s
+user    0m42.832s
+sys     0m0.008s
+
+# itertools
+$ time python itertools.py
+real    0m3.433s
+user    0m3.428s
+sys     0m0.000s
+</pre></div>
+
+
+<p>La fonction de la blbliothèque standard est bien plus performante que l'implémentation proposée ci-dessus (et heureusement). On utilisera donc celle-ci pour la résolution du problème : autant ne pas tendre le bâton pour se faire battre.</p>
+<h4>Résolution</h4>
+<p>On a vu que l'ensemble des solutions était contenu dans l'ensemble des permutations de {1 ; 2 ; ... ; <em>n</em> - 1}, soit l'ensemble des permutations de <em>n</em> entiers distincts. Par construction :</p>
+<ul>
+<li>les dames ne peuvent pas être sur la même ligne (on ne peut pas mettre deux valeurs au même index d'un tableau) ;</li>
+<li>les dames ne peuvent pas être sur la même colonne (par construction de l'ensemble sur lequel on initialise les permutations).</li>
+</ul>
+<p>On applique directement la formule de vérification des diagonales proposée dans le paragraphe <em>Modélisation</em>.</p>
+<div class="highlight"><pre><span class="k">def</span> <span class="nf">is_safe</span><span class="p">(</span><span class="n">permutation</span><span class="p">):</span>
+    <span class="n">size</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">permutation</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">size</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">size</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">permutation</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">permutation</span><span class="p">[</span><span class="n">j</span><span class="p">])</span> <span class="o">==</span> <span class="nb">abs</span><span class="p">(</span><span class="n">i</span> <span class="o">-</span> <span class="n">j</span><span class="p">):</span>
+                <span class="k">return</span> <span class="bp">False</span>
+    <span class="k">return</span> <span class="bp">True</span>
+</pre></div>
+
+
+<p>On initialise la première permutation à <code>[0, 1, 2, ..., n - 1]</code> avec <code>range(n)</code>. Une fois les permutations calculées, le câblage de l'ensemble est immédiat.</p>
+<div class="highlight"><pre><span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">permutations</span>
+
+<span class="k">def</span> <span class="nf">solve</span><span class="p">(</span><span class="n">board_size</span><span class="p">):</span>
+    <span class="n">solutions</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">permutation</span> <span class="ow">in</span> <span class="n">permutations</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">board_size</span><span class="p">)):</span>
+        <span class="k">if</span> <span class="n">is_safe</span><span class="p">(</span><span class="n">permutation</span><span class="p">):</span>
+            <span class="n">solutions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">permutation</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">solutions</span>
+</pre></div>
+
+
+<h4>Représentation des solutions</h4>
+<p>Il est toujours plus simple de vérifier les solutions en les visualisant. <a href="https://en.wikipedia.org/wiki/Eight_queens_puzzle#Counting_solutions">Le nombre de solutions en fonction du nombre de dames étant connu</a>, on ajoute le nombre de solutions trouvées pour faciliter la validation de l'algorithme.</p>
+<div class="highlight"><pre><span class="k">def</span> <span class="nf">print_solutions</span><span class="p">(</span><span class="n">solutions</span><span class="p">,</span> <span class="n">board_size</span><span class="p">):</span>
+    <span class="n">separator</span> <span class="o">=</span> <span class="s">&#39;+---&#39;</span> <span class="o">*</span> <span class="n">board_size</span> <span class="o">+</span> <span class="s">&#39;+&#39;</span>
+    <span class="k">for</span> <span class="n">solution</span> <span class="ow">in</span> <span class="n">solutions</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">column</span> <span class="ow">in</span> <span class="n">solution</span><span class="p">:</span>
+            <span class="k">print</span> <span class="n">separator</span>
+            <span class="k">print</span> <span class="s">&#39;|   &#39;</span> <span class="o">*</span> <span class="n">column</span> <span class="o">+</span> <span class="s">&#39;| ♛ |&#39;</span> <span class="o">+</span> <span class="s">&#39;   |&#39;</span> <span class="o">*</span> <span class="p">(</span><span class="n">board_size</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">column</span><span class="p">)</span>
+        <span class="k">print</span> <span class="n">separator</span>
+        <span class="k">print</span>
+    <span class="k">print</span> <span class="s">&quot;Found&quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">solutions</span><span class="p">),</span> <span class="s">&quot;solutions&quot;</span>
+
+<span class="n">size</span> <span class="o">=</span> <span class="mi">8</span>
+<span class="n">solutions</span> <span class="o">=</span> <span class="n">solve</span><span class="p">(</span><span class="n">size</span><span class="p">)</span>
+<span class="n">print_solutions</span><span class="p">(</span><span class="n">solutions</span><span class="p">,</span> <span class="n">size</span><span class="p">)</span>
+</pre></div>
+
+
+<div class="highlight"><pre># 91 autres solutions
+# [...]
+
++---+---+---+---+---+---+---+---+
+|   |   |   |   |   |   |   | ♛ |
++---+---+---+---+---+---+---+---+
+|   |   |   | ♛ |   |   |   |   |
++---+---+---+---+---+---+---+---+
+| ♛ |   |   |   |   |   |   |   |
++---+---+---+---+---+---+---+---+
+|   |   | ♛ |   |   |   |   |   |
++---+---+---+---+---+---+---+---+
+|   |   |   |   |   | ♛ |   |   |
++---+---+---+---+---+---+---+---+
+|   | ♛ |   |   |   |   |   |   |
++---+---+---+---+---+---+---+---+
+|   |   |   |   |   |   | ♛ |   |
++---+---+---+---+---+---+---+---+
+|   |   |   |   | ♛ |   |   |   |
++---+---+---+---+---+---+---+---+
+
+Found 92 solutions
+</pre></div>
+
+
+<p>Il faut environ 60 ms pour obtenir l'intégralité des solutions et les représenter.</p>
+<div class="highlight"><pre><span class="nv">$ </span><span class="nb">time </span>python brute-force.py
+python brute-force.py  0,06s user 0,00s system 91% cpu 0,061 total
+</pre></div>
+
+
+<p>Pour cette dimension, c'est tout à fait acceptable et on pourrait s'en contenter. On pourrait... mais ça ne serait pas satisfaisant pour la curiosité !</p>
+<h3>Seconde approche : algorithme de retour sur trace (<em>backtracking</em>)</h3>
+<p>Cet algorithme parcourt toutes les possibilités en éliminant d'emblée toute solution partielle qui ne convient pas. Il permet donc d'éviter de nombreuses combinaisons : il est en ce sens plus économe que l'algorithme de force brute. La résolution du problème revient alors à un parcours de graphe.</p>
+<h4>Exemple</h4>
+<blockquote>
+<p>TODO Exemple pour illustrer le fonctionnement de l'algo avec un graphe (quels nœuds sont visités, abandonnés, ignorés)</p>
+</blockquote>
+<h4>Résolution</h4>
+<p>On conserve la même modélisation : les <em>n</em> dames sont réparties sur les <em>n</em> lignes à raison d'une par ligne. On place les dames une par une tant que cela est possible. Si le placement d'une dame échoue — donc qu'il n'existe pas de position telle que la dame puisse être en sécurité, on remet en question les choix précédents afin de sortir du blocage. On revient alors à un point où des alternatives étaient possibles et on essaie la possibilité suivante.</p>
+<blockquote>
+<p>TODO</p>
+</blockquote>
+<p>Pour mieux comprendre cet algorithme, il en existe une <a href="https://www.cs.usfca.edu/~galles/visualization/RecQueens.html">version animée détaillant les étapes de la résolution</a>.</p>
+<h3>Troisième approche : recherche en profondeur</h3>
+<blockquote>
+<p>TODO</p>
+</blockquote>
+<h3>Quatrième approche : programmation par contraintes</h3>
+<p>Un problème de satisfaction de contraintes (ou CSP pour <em>Constraint Satisfaction Problem</em>) désigne l'ensemble des problèmes définis par... des contraintes. Sa résolution consiste à chercher une solution les respectant. Pour cela, on décrit un modèle définit par :</p>
+<ul>
+<li>un ensemble de variables ;</li>
+<li>un ensemble de contraintes régissant ces variables.</li>
+</ul>
+<p>À partir de ce modèle, le système cherchera une solution et la proposera si elle existe. En revanche, il ne proposera qu'une seule solution : la résolution d'un problème par contraintes n'a pas vocation à chercher l'ensemble exhaustif des solutions.</p>
+<p>En Python, la bibliothèque <a href="http://numberjack.ucc.ie">Numberjack</a> facilite la programmation par contraintes. Ils fournissent d'ailleurs une <a href="http://numberjack.ucc.ie/examples/nqueens">solution pour le problème des <em>n</em> dames</a>.</p>
+<p>Dans le cas générique des <em>N</em> dames, on définit dans notre ensemble de variables les dames. Chacun d'elles est de type <code>Variable(N)</code>, soit une variable dans un domaine compris entre 0 et <em>N</em>. La contrainte <code>AllDiff</code> impose à toutes les expressions qui lui sont passées d'êtres différentes. On impose donc :</p>
+<ul>
+<li>que toutes les dames soient dans des colonnes différentes (<code>AllDiff( queens )</code>) ;</li>
+<li>que toutes les dames soient sur des diagonales différentes (combinaison de <code>AllDiff( [queens[i] + i for i in range(N)] )</code> et <code>AllDiff( [queens[i] - i for i in range(N)] )</code>).</li>
+</ul>
+<p>On suppose donc que chaque dame est sur une ligne distincte : la dame 0 sera sur la ligne 0, la dame 1 sur la ligne 1, etc.</p>
+<p>La description du modèle devient :</p>
+<div class="highlight"><pre><span class="kn">from</span> <span class="nn">Numberjack</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="k">def</span> <span class="nf">model_queens</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
+    <span class="n">queens</span> <span class="o">=</span> <span class="p">[</span><span class="n">Variable</span><span class="p">(</span><span class="n">N</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">)]</span>
+    <span class="n">model</span>  <span class="o">=</span> <span class="n">Model</span><span class="p">(</span>
+        <span class="n">AllDiff</span><span class="p">(</span> <span class="n">queens</span> <span class="p">),</span>
+        <span class="n">AllDiff</span><span class="p">(</span> <span class="p">[</span><span class="n">queens</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">)]</span> <span class="p">),</span>
+        <span class="n">AllDiff</span><span class="p">(</span> <span class="p">[</span><span class="n">queens</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">)]</span> <span class="p">)</span>
+        <span class="p">)</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">queens</span><span class="p">,</span> <span class="n">model</span><span class="p">)</span>
+</pre></div>
+
+
+<p>La résolution du problème est alors immédiate :</p>
+<div class="highlight"><pre><span class="k">def</span> <span class="nf">solve_queens</span><span class="p">(</span><span class="n">param</span><span class="p">):</span>
+    <span class="p">(</span><span class="n">queens</span><span class="p">,</span><span class="n">model</span><span class="p">)</span> <span class="o">=</span> <span class="n">model_queens</span><span class="p">(</span><span class="n">param</span><span class="p">[</span><span class="s">&#39;N&#39;</span><span class="p">])</span>
+    <span class="n">solver</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">param</span><span class="p">[</span><span class="s">&#39;solver&#39;</span><span class="p">])</span>
+    <span class="n">solver</span><span class="o">.</span><span class="n">solve</span><span class="p">()</span>
+    <span class="n">print_chessboard</span><span class="p">(</span><span class="n">queens</span><span class="p">)</span>
+    <span class="k">print</span> <span class="s">&#39;Nodes:&#39;</span><span class="p">,</span> <span class="n">solver</span><span class="o">.</span><span class="n">getNodes</span><span class="p">(),</span> <span class="s">&#39; Time:&#39;</span><span class="p">,</span> <span class="n">solver</span><span class="o">.</span><span class="n">getTime</span><span class="p">()</span>
+
+<span class="k">def</span> <span class="nf">print_chessboard</span><span class="p">(</span><span class="n">queens</span><span class="p">):</span>
+    <span class="n">separator</span> <span class="o">=</span> <span class="s">&#39;+---&#39;</span><span class="o">*</span><span class="nb">len</span><span class="p">(</span><span class="n">queens</span><span class="p">)</span><span class="o">+</span><span class="s">&#39;+&#39;</span>
+    <span class="k">for</span> <span class="n">queen</span> <span class="ow">in</span> <span class="n">queens</span><span class="p">:</span>
+        <span class="k">print</span> <span class="n">separator</span>
+        <span class="k">print</span> <span class="s">&#39;|   &#39;</span><span class="o">*</span><span class="n">queen</span><span class="o">.</span><span class="n">get_value</span><span class="p">()</span><span class="o">+</span><span class="s">&#39;| Q |&#39;</span><span class="o">+</span><span class="s">&#39;   |&#39;</span><span class="o">*</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">queens</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="o">-</span><span class="n">queen</span><span class="o">.</span><span class="n">get_value</span><span class="p">())</span>
+    <span class="k">print</span> <span class="n">separator</span>
+
+<span class="n">solve_queens</span><span class="p">(</span><span class="nb">input</span><span class="p">({</span><span class="s">&#39;solver&#39;</span><span class="p">:</span><span class="s">&#39;Mistral&#39;</span><span class="p">,</span> <span class="s">&#39;N&#39;</span><span class="p">:</span><span class="mi">10</span><span class="p">}))</span>
+</pre></div>
+
+
+<p>La proposition d'une solution est également très rapide :</p>
+<div class="highlight"><pre>+---+---+---+---+---+---+---+---+
+| Q |   |   |   |   |   |   |   |
++---+---+---+---+---+---+---+---+
+|   |   |   |   | Q |   |   |   |
++---+---+---+---+---+---+---+---+
+|   |   |   |   |   |   |   | Q |
++---+---+---+---+---+---+---+---+
+|   |   |   |   |   | Q |   |   |
++---+---+---+---+---+---+---+---+
+|   |   | Q |   |   |   |   |   |
++---+---+---+---+---+---+---+---+
+|   |   |   |   |   |   | Q |   |
++---+---+---+---+---+---+---+---+
+|   | Q |   |   |   |   |   |   |
++---+---+---+---+---+---+---+---+
+|   |   |   | Q |   |   |   |   |
++---+---+---+---+---+---+---+---+
+Nodes: 24  Time: 0.0
+</pre></div>
+
+
+<p>Une mesure plus fine du temps d'exécution indique qu'il a fallu environ 20 millisecondes pour proposer cette solution (qui inclut le temps d'exécution total du programme Python).</p>
+<h3>Comparaison des approches</h3>
+<blockquote>
+<p>TODO</p>
+</blockquote>
+            </div><!-- /.entry-content -->
+            <div class="comments">
+              <h3>Comments</h3>
+              <div id="disqus_thread"></div>
+              <script type="text/javascript">
+                  var disqus_shortname = 'dericbourg';
+                  (function() {
+                      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                  })();
+              </script>
+              <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+            </div>
+
+
+        </div><!-- /.eleven.columns -->
+
+<div class="three columns">
+
+      <div class="btn primary"><a href="https://github.com/adericbourg" target="_blank">Github</a></div>
+
+      <div class="btn twitter"><a href="https://twitter.com/adericbourg" target="_blank">Twitter</a></div>
+
+
+
+<!--
+<h4>Pages</h4>
+
+ <ul>
+  </ul>
+
+<h4>Catégories</h4>
+<ul>
+		<li><a href="http://www.dericbourg.net/category/blog.html">Blog</a></li>
+</ul>
+
+-->
+<h4>Tags</h4>
+	<ul id="sidebar-tags">
+	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/java.html">java</a></li>
+	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/bash.html">bash</a></li>
+	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/iptables.html">iptables</a></li>
+	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/vivre-ensemble.html">vivre ensemble</a></li>
+	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/tls.html">tls</a></li>
+	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/motivation.html">motivation</a></li>
+	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/raspberrypi.html">raspberrypi</a></li>
+	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/linux.html">linux</a></li>
+	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/bien-etre.html">bien-être</a></li>
+	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/signature.html">signature</a></li>
+	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/ssl.html">ssl</a></li>
+	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/certificat.html">certificat</a></li>
+	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/wifi.html">wifi</a></li>
+	    <li class="tag tag-1"><a href="http://www.dericbourg.net/tag/securite.html">sécurité</a></li>
+	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/cve.html">cve</a></li>
+	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/quotidien.html">quotidien</a></li>
+</ul>
+
+
+
+</div> </div><!-- /.row -->
+
+
+</section>
+
+       </div><!-- /.row -->
+    </div><!-- /.container -->
+
+
+       <div class="container.nopad bg">
+
+
+        <footer id="credits" class="row">
+          <div class="seven columns left-center">
+
+                   <address id="about" class="vcard body">
+                    Proudly powered by <a href="http://getpelican.com/">Pelican</a>,
+                    which takes great advantage of <a href="http://python.org">Python</a>.
+                    <br />
+                    Based on the <a target="_blank" href="http://gumbyframework.com">Gumby Framework</a>
+                    </address>
+          </div>
+        </footer>
+
+    </div>
+
+
+<script type="text/javascript">
+    var disqus_shortname = 'dericbourg';
+    (function () {
+        var s = document.createElement('script'); s.async = true;
+        s.type = 'text/javascript';
+        s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
+        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+    }());
+</script>
+  <script src="http://www.dericbourg.net/theme/js/libs/jquery-1.9.1.min.js"></script>
+  <script src="http://www.dericbourg.net/theme/js/libs/gumby.min.js"></script>
+  <script src="http://www.dericbourg.net/theme/js/plugins.js"></script>
+</body>
+</html>
