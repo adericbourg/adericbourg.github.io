@@ -59,7 +59,10 @@ commentez les options *domain-name* et *domain-name-servers* :
     #option domain-name "example.org";
     #option domain-name-servers ns1.example.org, ns2.example.org;
 
-Décommentez la ligne *authoritative* :
+Décommentez la ligne *authoritative*. Cela permet d'indiquer à votre serveur
+DHCP qu'il est le seul à fournir des adresses IP sur ce réseau et donc possède
+la pleine connaissance des
+[baux accordés](http://www.linux-france.org/prj/edu/archinet/systeme/ch27s03.html).
 
     # If this DHCP server is the official DHCP server for the local
     # network, the authoritative directive should be uncommented.
@@ -77,8 +80,27 @@ Enfin, configurez le comportement du serveur DHCP :
       option domain-name-servers 80.67.169.12;
     }
 
-Cet exemple utilise le DNS de FDN (ligne *domain-name-servers*). Vous pouvez
-bien évidemment en utiliser d'autres (certains préfèrent
+Le paramètre *range* limite la place d'adresses IP qui seront alouées. On en
+permet ici 51 : c'est probablement beaucoup (trop) s'il s'agit de votre réseau
+personnel.
+
+L'option *broadcast-address* spécifie l'adresse IP telle que les paquets qui
+seront envoyés sur cette adresse seront interceptés par toutes les machines
+présentes sur ce réseau (ayant donc une IP entre 192.166.100.1 et
+192.168.100.254 car le masque de sous réseau est 255.255.255.0).
+
+Quant à elle, l'option *routers* indique l'adresse de la passerelle, c'est à
+dire la machine par laquelle passent tous les paquets sortants du réseau (en
+direction ou en provenance d'Internet par exemple). 
+
+On attribue ici un bail pour une durée de 600 secondes avec le paramètre
+*default-lease-time*. C'est cette durée qui sera utilisée si le client ne
+précise rien. S'il demande un bail en précisant une durée, celle-ci lui sera
+accordée si elle ne dépasse pas 7200 secondes, comme défini avec le paramètre
+*max-lease-time*.
+
+Cet exemple utilise le DNS de [FDN](https://www.fdn.fr) (ligne *domain-name-servers*).
+Vous pouvez bien évidemment en utiliser d'autres (certains préfèrent
 [ceux de Google](https://developers.google.com/speed/public-dns/)...).
 
 Déclarez enfin l'interface sans fil comme l'interface par défaut pour répondre
