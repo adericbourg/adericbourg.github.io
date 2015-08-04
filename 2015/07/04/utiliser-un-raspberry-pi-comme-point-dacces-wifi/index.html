@@ -140,7 +140,10 @@ commentez les options <em>domain-name</em> et <em>domain-name-servers</em> :</p>
 </pre></div>
 
 
-<p>Décommentez la ligne <em>authoritative</em> :</p>
+<p>Décommentez la ligne <em>authoritative</em>. Cela permet d'indiquer à votre serveur
+DHCP qu'il est le seul à fournir des adresses IP sur ce réseau et donc possède
+la pleine connaissance des
+<a href="http://www.linux-france.org/prj/edu/archinet/systeme/ch27s03.html">baux accordés</a>.</p>
 <div class="highlight"><pre># If this DHCP server is the official DHCP server for the local
 # network, the authoritative directive should be uncommented.
 authoritative;
@@ -160,8 +163,23 @@ authoritative;
 </pre></div>
 
 
-<p>Cet exemple utilise le DNS de FDN (ligne <em>domain-name-servers</em>). Vous pouvez
-bien évidemment en utiliser d'autres (certains préfèrent
+<p>Le paramètre <em>range</em> limite la place d'adresses IP qui seront alouées. On en
+permet ici 51 : c'est probablement beaucoup (trop) s'il s'agit de votre réseau
+personnel.</p>
+<p>L'option <em>broadcast-address</em> spécifie l'adresse IP telle que les paquets qui
+seront envoyés sur cette adresse seront interceptés par toutes les machines
+présentes sur ce réseau (ayant donc une IP entre 192.166.100.1 et
+192.168.100.254 car le masque de sous réseau est 255.255.255.0).</p>
+<p>Quant à elle, l'option <em>routers</em> indique l'adresse de la passerelle, c'est à
+dire la machine par laquelle passent tous les paquets sortants du réseau (en
+direction ou en provenance d'Internet par exemple). </p>
+<p>On attribue ici un bail pour une durée de 600 secondes avec le paramètre
+<em>default-lease-time</em>. C'est cette durée qui sera utilisée si le client ne
+précise rien. S'il demande un bail en précisant une durée, celle-ci lui sera
+accordée si elle ne dépasse pas 7200 secondes, comme défini avec le paramètre
+<em>max-lease-time</em>.</p>
+<p>Cet exemple utilise le DNS de <a href="https://www.fdn.fr">FDN</a> (ligne <em>domain-name-servers</em>).
+Vous pouvez bien évidemment en utiliser d'autres (certains préfèrent
 <a href="https://developers.google.com/speed/public-dns/">ceux de Google</a>...).</p>
 <p>Déclarez enfin l'interface sans fil comme l'interface par défaut pour répondre
 aux requêtes DHCP dans le fichier <code>/etc/default/isc-dhcp-server</code> :</p>
@@ -292,22 +310,22 @@ propre point d'accès Wifi.</p>
 -->
 <h4>Tags</h4>
 	<ul id="sidebar-tags">
-	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/java.html">java</a></li>
-	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/bash.html">bash</a></li>
-	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/iptables.html">iptables</a></li>
-	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/vivre-ensemble.html">vivre ensemble</a></li>
-	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/tls.html">tls</a></li>
-	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/motivation.html">motivation</a></li>
-	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/raspberrypi.html">raspberrypi</a></li>
-	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/linux.html">linux</a></li>
-	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/bien-etre.html">bien-être</a></li>
-	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/signature.html">signature</a></li>
-	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/ssl.html">ssl</a></li>
-	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/certificat.html">certificat</a></li>
 	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/wifi.html">wifi</a></li>
+	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/iptables.html">iptables</a></li>
+	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/bash.html">bash</a></li>
 	    <li class="tag tag-1"><a href="http://www.dericbourg.net/tag/securite.html">sécurité</a></li>
-	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/cve.html">cve</a></li>
+	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/certificat.html">certificat</a></li>
+	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/motivation.html">motivation</a></li>
 	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/quotidien.html">quotidien</a></li>
+	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/linux.html">linux</a></li>
+	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/java.html">java</a></li>
+	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/raspberrypi.html">raspberrypi</a></li>
+	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/signature.html">signature</a></li>
+	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/tls.html">tls</a></li>
+	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/vivre-ensemble.html">vivre ensemble</a></li>
+	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/bien-etre.html">bien-être</a></li>
+	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/cve.html">cve</a></li>
+	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/ssl.html">ssl</a></li>
 </ul>
 
 

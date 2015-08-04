@@ -54,7 +54,10 @@ commentez les options &lt;em&gt;domain-name&lt;/em&gt; et &lt;em&gt;domain-name-
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;p&gt;Décommentez la ligne &lt;em&gt;authoritative&lt;/em&gt; :&lt;/p&gt;
+&lt;p&gt;Décommentez la ligne &lt;em&gt;authoritative&lt;/em&gt;. Cela permet d'indiquer à votre serveur
+DHCP qu'il est le seul à fournir des adresses IP sur ce réseau et donc possède
+la pleine connaissance des
+&lt;a href="http://www.linux-france.org/prj/edu/archinet/systeme/ch27s03.html"&gt;baux accordés&lt;/a&gt;.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;# If this DHCP server is the official DHCP server for the local
 # network, the authoritative directive should be uncommented.
 authoritative;
@@ -74,8 +77,23 @@ authoritative;
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;p&gt;Cet exemple utilise le DNS de FDN (ligne &lt;em&gt;domain-name-servers&lt;/em&gt;). Vous pouvez
-bien évidemment en utiliser d'autres (certains préfèrent
+&lt;p&gt;Le paramètre &lt;em&gt;range&lt;/em&gt; limite la place d'adresses IP qui seront alouées. On en
+permet ici 51 : c'est probablement beaucoup (trop) s'il s'agit de votre réseau
+personnel.&lt;/p&gt;
+&lt;p&gt;L'option &lt;em&gt;broadcast-address&lt;/em&gt; spécifie l'adresse IP telle que les paquets qui
+seront envoyés sur cette adresse seront interceptés par toutes les machines
+présentes sur ce réseau (ayant donc une IP entre 192.166.100.1 et
+192.168.100.254 car le masque de sous réseau est 255.255.255.0).&lt;/p&gt;
+&lt;p&gt;Quant à elle, l'option &lt;em&gt;routers&lt;/em&gt; indique l'adresse de la passerelle, c'est à
+dire la machine par laquelle passent tous les paquets sortants du réseau (en
+direction ou en provenance d'Internet par exemple). &lt;/p&gt;
+&lt;p&gt;On attribue ici un bail pour une durée de 600 secondes avec le paramètre
+&lt;em&gt;default-lease-time&lt;/em&gt;. C'est cette durée qui sera utilisée si le client ne
+précise rien. S'il demande un bail en précisant une durée, celle-ci lui sera
+accordée si elle ne dépasse pas 7200 secondes, comme défini avec le paramètre
+&lt;em&gt;max-lease-time&lt;/em&gt;.&lt;/p&gt;
+&lt;p&gt;Cet exemple utilise le DNS de &lt;a href="https://www.fdn.fr"&gt;FDN&lt;/a&gt; (ligne &lt;em&gt;domain-name-servers&lt;/em&gt;).
+Vous pouvez bien évidemment en utiliser d'autres (certains préfèrent
 &lt;a href="https://developers.google.com/speed/public-dns/"&gt;ceux de Google&lt;/a&gt;...).&lt;/p&gt;
 &lt;p&gt;Déclarez enfin l'interface sans fil comme l'interface par défaut pour répondre
 aux requêtes DHCP dans le fichier &lt;code&gt;/etc/default/isc-dhcp-server&lt;/code&gt; :&lt;/p&gt;
