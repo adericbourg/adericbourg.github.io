@@ -185,7 +185,7 @@ Pour cette dimension, c'est tout à fait acceptable et on pourrait s'en contente
 
 ### Seconde approche : algorithme de retour sur trace (*backtracking*)
 
-Cet algorithme parcourt toutes les possibilités en éliminant d'emblée toute solution partielle qui ne convient pas. Il permet donc d'éviter de nombreuses combinaisons : il est en ce sens plus économe que l'algorithme de force brute. La résolution du problème revient alors à un parcours de graphe.
+Cet algorithme parcourt toutes les possibilités en éliminant d'emblée toute solution partielle qui ne convient pas. Il permet donc d'éviter de nombreuses combinaisons : il est en ce sens plus économe que l'algorithme de force brute. La résolution du problème revient alors à un parcours de graphe (sans cycle).
 
 #### Exemple
 
@@ -198,6 +198,37 @@ Dans cet exemple, on n'obtient qu'une solution mais rien n'empêche d'en avoir p
 #### Résolution
 
 On conserve la même modélisation : les *n* dames sont réparties sur les *n* lignes à raison d'une par ligne. On place les dames une par une tant que cela est possible. Si le placement d'une dame échoue — donc qu'il n'existe pas de position telle que la dame puisse être en sécurité, on remet en question les choix précédents afin de sortir du blocage. On revient alors à un point où des alternatives étaient possibles et on essaie la possibilité suivante.
+
+L'arbre qui sera parcouru contient toutes les positions des dames, valides ou non. On a donc un arbre de la forme de la figure ci-dessous.
+
+![Application du backtracking au problème](/images/eight_queens/backtracking_queens.png){.center}
+
+Commençons par nous pencher sur la fonction indiquant si une dame est en sécurité. Nous ne fonctionnons plus avec des permutations contenant toutes les positions des dames mais sur des positions partielles valides par rapport auxquelles on vérifie si l'on peut ajouter une dame à une position donnée. Plutôt que de vérifier à nouveau la validité de l'intégralité de la solution, on vérifie que l'ajout d'une dame à la position donnée produit une solution valide.
+
+On teste donc :
+
+ * que la colonne que laquelle la dame a été placée n'est pas déjà attribuée à une autre dame en vérifiant que le tableau de solutions ne contient pas la colonne que l'on cherche à attribuer ;
+ * qu'aucune dame ne se trouve sur les mêmes diagonales que la nouvelle.
+
+```python
+def is_safe(col, queens):
+    line = len(queens)
+    return (not col in queens and
+            not any(abs(col - x) == line - i for i,x in enumerate(queens)))
+```
+
+Passons à la résolution en elle-même.
+
+```python
+def solve(n):
+    # Initialisation des solutions pour une taille 0 (tableau contenant un tableau vide)
+    solutions = [ [] ]
+    for row in range(n):
+        solutions = [solution + [i] for solution in solutions
+                                    for i in range(n)
+                                    if is_safe(i, solution)]
+    return solutions
+```
 
 > TODO
 
