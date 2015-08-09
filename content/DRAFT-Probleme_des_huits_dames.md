@@ -11,7 +11,7 @@ Le problème consiste à compter et identifier les différentes façons de place
 
 ### Modélisation
 
-On ne peut pas placer plusieurs reines sur une même ligne. On peut donc simplifier la modélisation en ne travaillant que sur les colonnes. Ainsi, on cherchera à ne retourner qu'un tableau d'index de colonne, chacun de ces index correspondant à la ligne de son propre index dans le tableau. Pour illustrer, on produira en retour le tableau `[x, y, z]` qui correspond en pratique aux coordonnées `(0, x)`, `(1, y)` et `(2, z)`.
+On ne peut pas placer plusieurs reines sur une même ligne. On peut donc simplifier la modélisation en ne travaillant que sur les colonnes. Ainsi, on cherchera à ne retourner qu'un tableau d'index de colonne, chacun de ces index correspondant à la ligne de son propre index dans le tableau. Pour illustrer, on produira en retour un tableau de la forme `[x, y, z]` qui correspond en pratique aux coordonnées `(0, x)`, `(1, y)` et `(2, z)`.
 
 Représentons cette modélisation dans le cas de la résolution du problème avec huit dames.
 
@@ -27,17 +27,21 @@ Il est alors « facile » de déterminer si une dame est en sécurité connaîss
 
  * Par construction, aucune dame ne peut être sur la même ligne.
  * Deux dames sont sur la même colonne lorsque leur index de colonne est la même (`c[i] == c[j]`).
- * Deux dames sont sur la même diagonale lorsque leur différence d'index dans le tableau est égal à leur différence d'index de colonne (`abs(c[i] - c[j]) == abs(i - j)`). La valeur absolue permet de traiter les diagonales « montantes » et les diagonales « descendantes ».
+ * Deux dames sont sur la même diagonale lorsque leur différence d'index dans le tableau (donc leur différence d'index de ligne) est égal à leur différence d'index de colonne (`abs(c[i] - c[j]) == abs(i - j)`). La valeur absolue permet de traiter indifféremment les diagonales « montantes » et les diagonales « descendantes ».
+
+Ainsi, les solutions, lorsqu'elles existent, forment un sous-ensemble des permutations de {1 ; 2 ; ... ; *n* - 1} (où *n* est le nombre de dames et la dimension de l'échiquier).
 
 ![Représentation de la modélisation](/images/eight_queens/diagonale.png){.center}
 
 ### Approche naïve : examen de l'intégralité des permutations
 
-Cette approche revient à essayer toutes les combinaisons de placement des reines et de retenir celles pour lesquelles toutes les reines sont en sécurité. Compte tenu du fait que deux dames ne peuvent être sur la même colonne, la solution est une permutation de la suite d'entiers de 0 à *n*-1 (où *n* est le nombre de dames et la dimension de l'échiquier).
+Cette approche revient à essayer toutes les combinaisons de placement des reines et de retenir celles pour lesquelles toutes les reines sont en sécurité. Compte tenu du fait que deux dames ne peuvent être sur la même colonne, la solution est une permutation de la suite d'entiers de 0 à *n* - 1.
 
 #### Génération des permutations
 
-Il est possible de déterminer toutes les permutations possibles d'un tableau en utilisant — par exemple — l'[algorithme de Heap](https://en.wikipedia.org/wiki/Heap%27s_algorithm). J'en propose une implémentation récursive : compte tenu des dimensions des tableaux de notre problème, cela reste raisonnable ; on ne risque pas le dépassement de la capacité de la pile d'exécution.
+Il est possible de déterminer toutes les permutations possibles d'un tableau en utilisant — par exemple — l'[algorithme de Heap](https://en.wikipedia.org/wiki/Heap%27s_algorithm) qui minimise le nombre de mouvements nécessaires à l'obtention de l'intégralité des permutations. Une permutation est obtenue de la précédente en interchangeant la position de deux éléments (et seulement deux).
+
+J'en propose une implémentation récursive : compte tenu des dimensions des tableaux de notre problème, cela reste raisonnable ; on ne risque pas le dépassement de la capacité de la pile d'exécution.
 
 ```python
 def permutations(array):
@@ -69,7 +73,7 @@ Pour donner un exemple :
 ['c', 'b', 'a']
 ```
 
-En pratique, la bibliothèque standard Python propose dans le module [`itertools`](https://docs.python.org/2/library/itertools.html) une fonction générant ces permutations. Mesurons le temps d'exécution de ce code avec les deux implémentations :
+En pratique, la bibliothèque standard Python propose dans le module [`itertools`](https://docs.python.org/2/library/itertools.html) une fonction générant ces permutations. Mesurons grossièrement le temps d'exécution de ce code avec les deux implémentations :
 
 ```python
 a = [0, 1, 2, 3, 4, 5, 6]
@@ -96,12 +100,12 @@ La fonction de la blbliothèque standard est bien plus performante que l'implém
 
 #### Résolution
 
-On a vu que l'ensemble des solutions était contenu dans l'ensemble des permutations de {1 ; 2 ; ... ; *n* - 1}, soit l'ensemble des permutations de *n* entiers distincts. Par construction :
+On a vu que l'ensemble des solutions était contenu dans l'ensemble des permutations de {1 ; 2 ; ... ; *n* - 1}, soit l'ensemble des permutations de *n* entiers distincts. De par cette modélisation :
 
- * les dames ne peuvent pas être sur la même ligne (on ne peut pas mettre deux valeurs au même index d'un tableau) ;
- * les dames ne peuvent pas être sur la même colonne (par construction de l'ensemble sur lequel on initialise les permutations).
+ * puisqu'on ne peut pas mettre deux valeurs au même index d'un tableau, les dames ne peuvent pas être sur la même ligne ;
+ * par construction de l'ensemble sur lequel on initialise les permutations, aucune dame ne peut être sur la même colonne qu'un autre.
 
- On applique directement la formule de vérification des diagonales proposée dans le paragraphe *Modélisation*.
+ Il reste alors à appliquer directement la formule de vérification des diagonales proposée dans le paragraphe *Modélisation*.
 
 ```python
 def is_safe(permutation):
@@ -116,9 +120,8 @@ def is_safe(permutation):
 On initialise la première permutation à `[0, 1, 2, ..., n - 1]` avec `range(n)`. Une fois les permutations calculées, le câblage de l'ensemble est immédiat.
 
 ```python
-from itertools import permutations
-
 def solve(board_size):
+    from itertools import permutations
     solutions = []
     for permutation in permutations(range(board_size)):
         if is_safe(permutation):
@@ -186,7 +189,11 @@ Cet algorithme parcourt toutes les possibilités en éliminant d'emblée toute s
 
 #### Exemple
 
-> TODO Exemple pour illustrer le fonctionnement de l'algo avec un graphe (quels nœuds sont visités, abandonnés, ignorés)
+Commençons par un exemple simple. On souhaite obtenir les combinaisons de nœuds permettant de former le mot « BLOG » en parcourant l'arbre. On continue de descendre dans l'arbre tant que la combinaison permet d'obtenir une solution (nœuds bleus). Dès que celle-ci ne le permet plus (nœud rouge), on ignore les branches suivantes (nœud gris).
+
+Dans cet exemple, on n'obtient qu'une solution mais rien n'empêche d'en avoir plusieurs.
+
+![Exemple de backtracking](/images/eight_queens/backtracking.png){.center}
 
 #### Résolution
 
