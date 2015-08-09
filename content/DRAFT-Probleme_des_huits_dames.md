@@ -217,7 +217,7 @@ def is_safe(col, queens):
             not any(abs(col - x) == line - i for i,x in enumerate(queens)))
 ```
 
-Passons à la résolution en elle-même.
+Passons à la résolution en elle-même. Pour chaque nouvelle ligne, on va tester l'intégralité des colonnes au regard des solutions obtenues jusqu'à la ligne précédente. Cela donne :
 
 ```python
 def solve(n):
@@ -229,8 +229,6 @@ def solve(n):
                                     if is_safe(i, solution)]
     return solutions
 ```
-
-> TODO
 
 Pour mieux comprendre cet algorithme, il en existe une [version animée détaillant les étapes de la résolution](https://www.cs.usfca.edu/~galles/visualization/RecQueens.html).
 
