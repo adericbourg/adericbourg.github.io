@@ -240,6 +240,11 @@ h2.entry-title, h2.index-title {
   padding-bottom: 1em;
 }
 
+.table caption {
+  font-style: italic;
+  text-align: center;
+}
+
 /* transform tag list into pseudo-tag cloud */
 #sidebar-tags li {
   float: right;
