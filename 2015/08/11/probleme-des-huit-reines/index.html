@@ -23,12 +23,12 @@
         <meta name="twitter:creator" content="@adericbourg" />
         <meta name="twitter:title" content="Problème des huit reines - Blog bloquant" />
         <meta name="twitter:description" content="J'ai rencontré le problème des huits reines lors d'un entretien d'embauche et, ayant lamentablement (et honteusement) échoué, mon orgueil m'a incité à pousser l'exercice plus en avant. Le problème consiste à compter et identifier les différentes façons de placer sur un échiquier de 64 cases ..." />
-        <meta name="twitter:domain" content="http://www.dericbourg.net/drafts/probleme-des-huit-reines.html" />
+        <meta name="twitter:domain" content="http://www.dericbourg.net/2015/08/11/probleme-des-huit-reines/" />
 
         <!-- Facebook Open Graph Meta Tags -->
         <meta property="og:site_name" content="Blog bloquant"/>
         <meta property="og:title" content="Problème des huit reines"/>
-        <meta property="og:url" content="http://www.dericbourg.net/drafts/probleme-des-huit-reines.htmlindex.html"/>
+        <meta property="og:url" content="http://www.dericbourg.net/2015/08/11/probleme-des-huit-reines/index.html"/>
         <meta property="og:description" content="J'ai rencontré le problème des huits reines lors d'un entretien d'embauche et, ayant lamentablement (et honteusement) échoué, mon orgueil m'a incité à pousser l'exercice plus en avant. Le problème consiste à compter et identifier les différentes façons de placer sur un échiquier de 64 cases ..."/>
         <meta property="og:type" content="blog"/>
 
@@ -80,15 +80,16 @@
               <div>
                     <a class="info label" href="http://www.dericbourg.net/tag/algorithmique.html">algorithmique</a>
                     <a class="info label" href="http://www.dericbourg.net/tag/python.html">python</a>
+                    <a class="info label" href="http://www.dericbourg.net/tag/jeu.html">jeu</a>
               </div>
             </header>
             <footer class="post-info">
 
-              <abbr class="published" title="2015-07-07T00:00:00+02:00">
-                mar. 07 juillet 2015
+              <abbr class="published" title="2015-08-11T00:00:00+02:00">
+                mar. 11 août 2015
               </abbr>
               &ndash;
-              <a href="http://www.dericbourg.net/drafts/probleme-des-huit-reines.html" rel="bookmark" title="Lien permanent vers Problème des huit reines">lien permanent</a>
+              <a href="http://www.dericbourg.net/2015/08/11/probleme-des-huit-reines/" rel="bookmark" title="Lien permanent vers Problème des huit reines">lien permanent</a>
               <address class="vcard author">Par
                 <a class="url fn" href="http://www.dericbourg.net/author/alban-dericbourg.html"> Alban Dericbourg</a>
               </address>
@@ -96,9 +97,9 @@
             </footer><!-- /.post-info -->
             <div class="entry-content">
               <p>J'ai rencontré le <a href="https://fr.wikipedia.org/wiki/Probl%C3%A8me_des_huit_dames">problème des huits reines</a> lors d'un entretien d'embauche et, ayant lamentablement (et honteusement) échoué, mon orgueil m'a incité à pousser l'exercice plus en avant.</p>
-<p>Le problème consiste à compter et identifier les différentes façons de placer sur un échiquier de 64 cases 8 reines de façon à ce que, relativement aux règles des échecs, elles ne se menacent pas mutuellement. Une reine peut se déplacer d'un nombre de cases arbitraire dans toutes les directions ; lorsqu'une reine est placée, la ligne, la colonne et les diagonales sur lesquelles elle se situe sont donc « condamnées ».</p>
+<p>Le problème consiste à compter et identifier les différentes façons de placer sur un échiquier de 64 cases 8 reines de façon à ce que, relativement aux règles des échecs, elles ne se menacent pas mutuellement. Une reine peut se déplacer de façon rectiligne d'un nombre de cases arbitraire dans toutes les directions ; lorsqu'une reine est placée, la ligne, la colonne et les diagonales sur lesquelles elle se situe sont donc « condamnées ».</p>
 <h3>Modélisation</h3>
-<p>On ne peut pas placer plusieurs reines sur une même ligne. On peut donc simplifier la modélisation en ne travaillant que sur les colonnes. Ainsi, on cherchera à ne retourner qu'un tableau d'index de colonne, chacun de ces index correspondant à la ligne de son propre index dans le tableau. Pour illustrer, on produira en retour un tableau de la forme <code>[x, y, z]</code> qui correspond en pratique aux coordonnées <code>(0, x)</code>, <code>(1, y)</code> et <code>(2, z)</code>.</p>
+<p>On ne peut pas placer plusieurs reines sur une même ligne. On peut donc simplifier la modélisation en ne travaillant que sur les colonnes. Ainsi, on cherchera à ne retourner qu'un tableau d'index de colonne, chacun de ces index correspondant à la ligne de son propre index dans le tableau. Pour illustrer, on produira en retour un tableau de la forme <code>[x, y, z]</code> qui correspond en pratique aux coordonnées <code>(0, x)</code>, <code>(1, y)</code> et <code>(2, z)</code> sur l'échiquier.</p>
 <p>Représentons cette modélisation dans le cas de la résolution du problème avec huit reines.</p>
 <p><img alt="Représentation de la modélisation" class="center" src="/images/eight_queens/modelisation.png" /></p>
 <blockquote>
@@ -109,7 +110,7 @@
 
 
 </blockquote>
-<p>Il est alors « facile » de déterminer si une reine est en sécurité connaîssant la position des autres :</p>
+<p>Il est alors « facile » de déterminer si une reine est en sécurité connaissant la position des autres :</p>
 <ul>
 <li>Par construction, aucune reine ne peut être sur la même ligne.</li>
 <li>Deux reines sont sur la même colonne lorsque leur index de colonne est la même (<code>c[i] == c[j]</code>).</li>
@@ -151,7 +152,7 @@
 </pre></div>
 
 
-<p>En pratique, la bibliothèque standard Python propose dans le module <a href="https://docs.python.org/2/library/itertools.html"><code>itertools</code></a> une fonction générant ces permutations. Mesurons grossièrement le temps d'exécution de ce code avec les deux implémentations :</p>
+<p>En pratique, la bibliothèque standard Python propose dans le module <a href="https://docs.python.org/3/library/itertools.html"><code>itertools</code></a> une fonction générant ces permutations. Mesurons grossièrement le temps d'exécution de ce code avec les deux implémentations :</p>
 <div class="highlight"><pre><span class="n">a</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">]</span>
 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10000</span><span class="p">):</span>
     <span class="k">for</span> <span class="n">perm</span> <span class="ow">in</span> <span class="n">permutations</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>
@@ -180,7 +181,7 @@ sys     0m0.000s
 <li>puisqu'on ne peut pas mettre deux valeurs au même index d'un tableau, les reines ne peuvent pas être sur la même ligne ;</li>
 <li>par construction de l'ensemble sur lequel on initialise les permutations, aucune reine ne peut être sur la même colonne qu'un autre.</li>
 </ul>
-<p>Il reste alors à appliquer directement la formule de vérification des diagonales proposée dans le paragraphe <em>Modélisation</em>.</p>
+<p>Il reste alors à appliquer directement la formule de vérification des diagonales proposée dans le paragraphe <em>Modélisation</em>. Le code qui suit n'est volontairement pas l'écriture « idéale » en Python par souci de lisibilité pour ceux qui n'y sont pas familiers.</p>
 <div class="highlight"><pre><span class="k">def</span> <span class="nf">is_safe</span><span class="p">(</span><span class="n">permutation</span><span class="p">):</span>
     <span class="n">size</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">permutation</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">size</span><span class="p">):</span>
@@ -209,10 +210,11 @@ sys     0m0.000s
     <span class="k">for</span> <span class="n">solution</span> <span class="ow">in</span> <span class="n">solutions</span><span class="p">:</span>
         <span class="k">for</span> <span class="n">column</span> <span class="ow">in</span> <span class="n">solution</span><span class="p">:</span>
             <span class="k">print</span> <span class="n">separator</span>
-            <span class="k">print</span> <span class="s">&#39;|   &#39;</span> <span class="o">*</span> <span class="n">column</span> <span class="o">+</span> <span class="s">&#39;| ♛ |&#39;</span> <span class="o">+</span> <span class="s">&#39;   |&#39;</span> <span class="o">*</span> <span class="p">(</span><span class="n">board_size</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">column</span><span class="p">)</span>
+            <span class="k">print</span> <span class="s">&#39;|   &#39;</span> <span class="o">*</span> <span class="n">column</span> <span class="o">+</span> <span class="s">&#39;| Q |&#39;</span> <span class="o">+</span> <span class="s">&#39;   |&#39;</span> <span class="o">*</span> <span class="p">(</span><span class="n">board_size</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">column</span><span class="p">)</span>
         <span class="k">print</span> <span class="n">separator</span>
         <span class="k">print</span>
     <span class="k">print</span> <span class="s">&quot;Found&quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">solutions</span><span class="p">),</span> <span class="s">&quot;solutions&quot;</span>
+
 
 <span class="n">size</span> <span class="o">=</span> <span class="mi">8</span>
 <span class="n">solutions</span> <span class="o">=</span> <span class="n">solve</span><span class="p">(</span><span class="n">size</span><span class="p">)</span>
@@ -224,21 +226,21 @@ sys     0m0.000s
 # [...]
 
 +---+---+---+---+---+---+---+---+
-|   |   |   |   |   |   |   | ♛ |
+|   |   |   |   |   |   |   | Q |
 +---+---+---+---+---+---+---+---+
-|   |   |   | ♛ |   |   |   |   |
+|   |   |   | Q |   |   |   |   |
 +---+---+---+---+---+---+---+---+
-| ♛ |   |   |   |   |   |   |   |
+| Q |   |   |   |   |   |   |   |
 +---+---+---+---+---+---+---+---+
-|   |   | ♛ |   |   |   |   |   |
+|   |   | Q |   |   |   |   |   |
 +---+---+---+---+---+---+---+---+
-|   |   |   |   |   | ♛ |   |   |
+|   |   |   |   |   | Q |   |   |
 +---+---+---+---+---+---+---+---+
-|   | ♛ |   |   |   |   |   |   |
+|   | Q |   |   |   |   |   |   |
 +---+---+---+---+---+---+---+---+
-|   |   |   |   |   |   | ♛ |   |
+|   |   |   |   |   |   | Q |   |
 +---+---+---+---+---+---+---+---+
-|   |   |   |   | ♛ |   |   |   |
+|   |   |   |   | Q |   |   |   |
 +---+---+---+---+---+---+---+---+
 
 Found 92 solutions
@@ -253,19 +255,19 @@ python brute-force.py  0,06s user 0,00s system 91% cpu 0,061 total
 
 <p>Pour cette dimension, c'est tout à fait acceptable et on pourrait s'en contenter. On pourrait... mais ça ne serait pas satisfaisant pour la curiosité !</p>
 <h3>Seconde approche : algorithme de retour sur trace (<em>backtracking</em>)</h3>
-<p>Cet algorithme parcourt toutes les possibilités en éliminant d'emblée toute solution partielle qui ne convient pas. Il permet donc d'éviter de nombreuses combinaisons : il est en ce sens plus économe que l'algorithme de force brute. La résolution du problème revient alors à un parcours de graphe (sans cycle).</p>
+<p>Cette classe d'algorithmes parcourt toutes les possibilités en éliminant d'emblée toute solution partielle qui ne convient pas. Il permet donc d'éviter de n'avoir ne serait-ce qu'à considérer de nombreuses combinaisons : il est en ce sens plus économe que l'algorithme de force brute. La résolution du problème revient alors à un parcours de graphe.</p>
 <h4>Exemple</h4>
-<p>Commençons par un exemple simple. On souhaite obtenir les combinaisons de nœuds permettant de former le mot « BLOG » en parcourant l'arbre. On continue de descendre dans l'arbre tant que la combinaison permet d'obtenir une solution (nœuds bleus). Dès que celle-ci ne le permet plus (nœud rouge), on ignore les branches suivantes (nœud gris).</p>
+<p>Pour y voir plus clair, commençons par un exemple simple. On souhaite obtenir les combinaisons de nœuds permettant de former le mot « BLOG » en parcourant l'arbre. On continue de descendre dans l'arbre tant que la combinaison permet d'obtenir une solution (nœuds bleus). Dès que celle-ci ne le permet plus (nœud rouge), on ignore les branches suivantes (nœud gris).</p>
 <p>Dans cet exemple, on n'obtient qu'une solution mais rien n'empêche d'en avoir plusieurs.</p>
 <p><img alt="Exemple de backtracking" class="center" src="/images/eight_queens/backtracking.png" /></p>
 <h4>Résolution</h4>
 <p>On conserve la même modélisation : les <em>n</em> reines sont réparties sur les <em>n</em> lignes à raison d'une par ligne. On place les reines une par une tant que cela est possible. Si le placement d'une reine échoue — donc qu'il n'existe pas de position telle que la reine puisse être en sécurité, on remet en question les choix précédents afin de sortir du blocage. On revient alors à un point où des alternatives étaient possibles et on essaie la possibilité suivante.</p>
-<p>L'arbre qui sera parcouru contient toutes les positions des reines, valides ou non. On a donc un arbre de la forme de la figure ci-dessous.</p>
+<p>L'arbre qui sera parcouru contient toutes les positions des reines, valides ou non. On a donc un arbre de la forme de la figure ci-dessous (tronqué, dans l'exemple de 4 reines et d'un échiquier de 16 cases).</p>
 <p><img alt="Application du backtracking au problème" class="center" src="/images/eight_queens/backtracking_queens.png" /></p>
-<p>Commençons par nous pencher sur la fonction indiquant si une reine est en sécurité. Nous ne fonctionnons plus avec des permutations contenant toutes les positions des reines mais sur des positions partielles valides par rapport auxquelles on vérifie si l'on peut ajouter une reine à une position donnée. Plutôt que de vérifier à nouveau la validité de l'intégralité de la solution, on vérifie que l'ajout d'une reine à la position donnée produit une solution valide.</p>
+<p>Commençons par nous pencher sur la fonction indiquant si une reine est en sécurité. Nous ne fonctionnons plus avec des permutations contenant toutes les positions des reines mais sur des positions partielles — avec un nombre de reines inférieur au nombre de reines total attendu — valides par rapport auxquelles on vérifie si l'on peut ajouter une reine à une position donnée. Plutôt que de vérifier systématiquement la validité de l'intégralité de la solution, on vérifie que l'ajout d'une reine à la solution partielle précédente donnée produit une solution valide.</p>
 <p>On teste donc :</p>
 <ul>
-<li>que la colonne que laquelle la reine a été placée n'est pas déjà attribuée à une autre reine en vérifiant que le tableau de solutions ne contient pas la colonne que l'on cherche à attribuer ;</li>
+<li>que la colonne que laquelle la reine a été placée n'est pas déjà attribuée à une autre reine en vérifiant que le tableau de solutions ne contient pas la colonne que l'on cherche à attribuer (<code>not col in queens</code>);</li>
 <li>qu'aucune reine ne se trouve sur les mêmes diagonales que la nouvelle.</li>
 </ul>
 <div class="highlight"><pre><span class="k">def</span> <span class="nf">is_safe</span><span class="p">(</span><span class="n">col</span><span class="p">,</span> <span class="n">queens</span><span class="p">):</span>
@@ -275,7 +277,7 @@ python brute-force.py  0,06s user 0,00s system 91% cpu 0,061 total
 </pre></div>
 
 
-<p>Passons à la résolution en elle-même. Pour chaque nouvelle ligne, on va tester l'intégralité des colonnes au regard des solutions obtenues jusqu'à la ligne précédente. Cela donne :</p>
+<p>Passons à la résolution en elle-même. Pour chaque nouvelle ligne, nous allons tester l'intégralité des colonnes au regard des solutions obtenues jusqu'à la ligne précédente. Cela donne :</p>
 <div class="highlight"><pre><span class="k">def</span> <span class="nf">solve</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
     <span class="c"># Initialisation des solutions pour une taille 0 (tableau contenant un tableau vide)</span>
     <span class="n">solutions</span> <span class="o">=</span> <span class="p">[</span> <span class="p">[]</span> <span class="p">]</span>
@@ -289,28 +291,30 @@ python brute-force.py  0,06s user 0,00s system 91% cpu 0,061 total
 
 <p>Pour mieux comprendre cet algorithme, il en existe une <a href="https://www.cs.usfca.edu/~galles/visualization/RecQueens.html">version animée détaillant les étapes de la résolution</a>.</p>
 <h3>Troisième approche : programmation par contraintes</h3>
-<p>Un problème de satisfaction de contraintes (ou CSP pour <em>Constraint Satisfaction Problem</em>) désigne l'ensemble des problèmes définis par... des contraintes. Sa résolution consiste à chercher une solution les respectant. Pour cela, on décrit un modèle définit par :</p>
+<h4>Principe</h4>
+<p>Un problème de satisfaction de contraintes (ou CSP pour <em>Constraint Satisfaction Problem</em>) désigne l'ensemble des problèmes définis par... des contraintes. La résolution consiste à chercher <em>une</em> solution les respectant. Pour cela, on décrit un modèle définit par :</p>
 <ul>
 <li>un ensemble de variables ;</li>
 <li>un ensemble de contraintes régissant ces variables.</li>
 </ul>
 <p>À partir de ce modèle, le système cherchera une solution et la proposera si elle existe. En revanche, il ne proposera qu'une seule solution : la résolution d'un problème par contraintes n'a pas vocation à chercher l'ensemble exhaustif des solutions.</p>
-<p>En Python, la bibliothèque <a href="http://numberjack.ucc.ie">Numberjack</a> facilite la programmation par contraintes. Ils fournissent d'ailleurs une <a href="http://numberjack.ucc.ie/examples/nqueens">solution pour le problème des <em>n</em> reines</a>.</p>
-<p>Dans le cas générique des <em>N</em> reines, on définit dans notre ensemble de variables les reines. Chacun d'elles est de type <code>Variable(N)</code>, soit une variable dans un domaine compris entre 0 et <em>N</em>. La contrainte <code>AllDiff</code> impose à toutes les expressions qui lui sont passées d'êtres différentes. On impose donc :</p>
+<h4>Implémentation</h4>
+<p>En Python, la bibliothèque <a href="http://numberjack.ucc.ie">Numberjack</a> facilite la programmation par contraintes. Les auteurs fournissent d'ailleurs à titre d'exemple une <a href="http://numberjack.ucc.ie/examples/nqueens">solution pour le problème des <em>n</em> reines</a>.</p>
+<p>Dans le cas générique des <em>n</em> reines, on définit dans notre ensemble de variables les reines. Chacun d'elles est de type <code>Variable(n)</code>, soit une variable dans un domaine compris entre 0 et <em>n</em>. La contrainte <code>AllDiff</code> impose à toutes les expressions qui lui sont passées d'êtres différentes. On impose donc :</p>
 <ul>
 <li>que toutes les reines soient dans des colonnes différentes (<code>AllDiff( queens )</code>) ;</li>
-<li>que toutes les reines soient sur des diagonales différentes (combinaison de <code>AllDiff( [queens[i] + i for i in range(N)] )</code> et <code>AllDiff( [queens[i] - i for i in range(N)] )</code>).</li>
+<li>que toutes les reines soient sur des diagonales différentes (combinaison de <code>AllDiff( [queens[i] + i for i in range(n)] )</code> et <code>AllDiff( [queens[i] - i for i in range(n)] )</code>).</li>
 </ul>
-<p>On suppose donc que chaque reine est sur une ligne distincte : la reine 0 sera sur la ligne 0, la reine 1 sur la ligne 1, etc.</p>
+<p>On suppose donc ici aussi que chaque reine est sur une ligne distincte : la reine 0 sera sur la ligne 0, la reine 1 sur la ligne 1, etc.</p>
 <p>La description du modèle devient :</p>
 <div class="highlight"><pre><span class="kn">from</span> <span class="nn">Numberjack</span> <span class="kn">import</span> <span class="o">*</span>
 
-<span class="k">def</span> <span class="nf">model_queens</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
-    <span class="n">queens</span> <span class="o">=</span> <span class="p">[</span><span class="n">Variable</span><span class="p">(</span><span class="n">N</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">)]</span>
+<span class="k">def</span> <span class="nf">model_queens</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+    <span class="n">queens</span> <span class="o">=</span> <span class="p">[</span><span class="n">Variable</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">)]</span>
     <span class="n">model</span>  <span class="o">=</span> <span class="n">Model</span><span class="p">(</span>
         <span class="n">AllDiff</span><span class="p">(</span> <span class="n">queens</span> <span class="p">),</span>
-        <span class="n">AllDiff</span><span class="p">(</span> <span class="p">[</span><span class="n">queens</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">)]</span> <span class="p">),</span>
-        <span class="n">AllDiff</span><span class="p">(</span> <span class="p">[</span><span class="n">queens</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">)]</span> <span class="p">)</span>
+        <span class="n">AllDiff</span><span class="p">(</span> <span class="p">[</span><span class="n">queens</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">)]</span> <span class="p">),</span>
+        <span class="n">AllDiff</span><span class="p">(</span> <span class="p">[</span><span class="n">queens</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">)]</span> <span class="p">)</span>
         <span class="p">)</span>
     <span class="k">return</span> <span class="p">(</span><span class="n">queens</span><span class="p">,</span> <span class="n">model</span><span class="p">)</span>
 </pre></div>
@@ -318,7 +322,8 @@ python brute-force.py  0,06s user 0,00s system 91% cpu 0,061 total
 
 <p>La résolution du problème est alors immédiate :</p>
 <div class="highlight"><pre><span class="k">def</span> <span class="nf">solve_queens</span><span class="p">(</span><span class="n">param</span><span class="p">):</span>
-    <span class="p">(</span><span class="n">queens</span><span class="p">,</span><span class="n">model</span><span class="p">)</span> <span class="o">=</span> <span class="n">model_queens</span><span class="p">(</span><span class="n">param</span><span class="p">[</span><span class="s">&#39;N&#39;</span><span class="p">])</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="n">param</span><span class="p">[</span><span class="s">&#39;n&#39;</span><span class="p">]</span>
+    <span class="p">(</span><span class="n">queens</span><span class="p">,</span> <span class="n">model</span><span class="p">)</span> <span class="o">=</span> <span class="n">model_queens</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
     <span class="n">solver</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">param</span><span class="p">[</span><span class="s">&#39;solver&#39;</span><span class="p">])</span>
     <span class="n">solver</span><span class="o">.</span><span class="n">solve</span><span class="p">()</span>
     <span class="n">print_chessboard</span><span class="p">(</span><span class="n">queens</span><span class="p">)</span>
@@ -331,7 +336,7 @@ python brute-force.py  0,06s user 0,00s system 91% cpu 0,061 total
         <span class="k">print</span> <span class="s">&#39;|   &#39;</span><span class="o">*</span><span class="n">queen</span><span class="o">.</span><span class="n">get_value</span><span class="p">()</span><span class="o">+</span><span class="s">&#39;| Q |&#39;</span><span class="o">+</span><span class="s">&#39;   |&#39;</span><span class="o">*</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">queens</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="o">-</span><span class="n">queen</span><span class="o">.</span><span class="n">get_value</span><span class="p">())</span>
     <span class="k">print</span> <span class="n">separator</span>
 
-<span class="n">solve_queens</span><span class="p">(</span><span class="nb">input</span><span class="p">({</span><span class="s">&#39;solver&#39;</span><span class="p">:</span><span class="s">&#39;Mistral&#39;</span><span class="p">,</span> <span class="s">&#39;N&#39;</span><span class="p">:</span><span class="mi">10</span><span class="p">}))</span>
+<span class="n">solve_queens</span><span class="p">(</span><span class="nb">input</span><span class="p">({</span> <span class="s">&#39;solver&#39;</span><span class="p">:</span><span class="s">&#39;Mistral&#39;</span><span class="p">,</span> <span class="s">&#39;n&#39;</span><span class="p">:</span><span class="mi">8</span> <span class="p">}))</span>
 </pre></div>
 
 
@@ -376,7 +381,7 @@ Nodes: 24  Time: 0.0
       <td>92</td>
     </tr>
     <tr>
-      <td>Backtracking</td>
+      <td>Retour sur trace</td>
       <td>55 ms</td>
       <td>92</td>
     </tr>
@@ -390,8 +395,8 @@ Nodes: 24  Time: 0.0
 
 <p>Comme le montre le tableau ci-dessus, le choix de la méthode de résolution dépendra surtout du besoin : faut-il <em>une</em> solution ou <em>toutes</em> les solutions ? Lorsqu'il les faut toutes, les quelques dizaines de millisecondes d'écart entre les deux algorithmes ne font pas la différence pour huit reines. En revanche, l'augmentation de la taille de l'échiquier induit une augmentation exponentielle du temps de résolution. Le graphique ci-dessous montre la flagrance de différence de temps d'exécution entre les deux algorithmes lorsque le nombre de permutations augmente.</p>
 <p><img alt="Comparaison des durées d'obtention de toutes les solutions en fonction de l'algorithme" class="center" src="/images/eight_queens/comparaison.png" /></p>
-<p>Dès 10 reines et un échiquer de 100 cases, l'algorithme de force brute n'est plus utilisable : il lui faut plusieurs dizaines de minutes pour fournir les solutions. La solution implémentant l'algorithme de <em>backtracking</em>, elle, retourne les 14&nbsp;200 solutions en moins de 10 secondes.</p>
-<p>La résolution par contraintes, bien qu'elle ne propose qu'une et une seule solution reste très performante lorsque le problème de complexifie : elle permet d'obtenir une solution en moins de 150&nbsp;ms pour 200 reines et un échiquier de 40&nbsp;000 cases. L'implémentation présentée ici monte ses limites en dépassant les 500 reines et les 250 000 cases.</p>
+<p>Dès 10 reines et un échiquier de 100 cases, l'algorithme de force brute n'est plus utilisable : il lui faut plusieurs dizaines de minutes pour fournir les solutions. La solution implémentant l'algorithme de <em>backtracking</em>, elle, retourne les 14&nbsp;200 solutions en moins de 10 secondes.</p>
+<p>La résolution par contraintes, reste très performante lorsque le problème de complexifie : elle permet d'obtenir une solution en moins de 150&nbsp;ms pour 200 reines et un échiquier de 40&nbsp;000 cases. Bien qu'elle ne propose qu'une et une seule solution, elle peut s'avérer pertinente lorsqu'on ne cherche pas un résultat particulier. L'implémentation présentée ici monte ses limites en dépassant les 500 reines et les 250 000 cases.</p>
             </div><!-- /.entry-content -->
             <div class="comments">
               <h3>Comments</h3>
@@ -432,22 +437,25 @@ Nodes: 24  Time: 0.0
 -->
 <h4>Tags</h4>
 	<ul id="sidebar-tags">
+	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/iptables.html">iptables</a></li>
 	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/cve.html">cve</a></li>
 	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/motivation.html">motivation</a></li>
-	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/wifi.html">wifi</a></li>
-	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/bash.html">bash</a></li>
-	    <li class="tag tag-1"><a href="http://www.dericbourg.net/tag/securite.html">sécurité</a></li>
-	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/tls.html">tls</a></li>
-	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/quotidien.html">quotidien</a></li>
-	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/raspberrypi.html">raspberrypi</a></li>
-	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/vivre-ensemble.html">vivre ensemble</a></li>
-	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/java.html">java</a></li>
-	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/ssl.html">ssl</a></li>
-	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/iptables.html">iptables</a></li>
-	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/linux.html">linux</a></li>
-	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/certificat.html">certificat</a></li>
-	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/signature.html">signature</a></li>
 	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/bien-etre.html">bien-être</a></li>
+	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/quotidien.html">quotidien</a></li>
+	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/jeu.html">jeu</a></li>
+	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/tls.html">tls</a></li>
+	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/algorithmique.html">algorithmique</a></li>
+	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/raspberrypi.html">raspberrypi</a></li>
+	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/python.html">python</a></li>
+	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/vivre-ensemble.html">vivre ensemble</a></li>
+	    <li class="tag tag-1"><a href="http://www.dericbourg.net/tag/securite.html">sécurité</a></li>
+	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/bash.html">bash</a></li>
+	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/wifi.html">wifi</a></li>
+	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/ssl.html">ssl</a></li>
+	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/linux.html">linux</a></li>
+	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/signature.html">signature</a></li>
+	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/certificat.html">certificat</a></li>
+	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/java.html">java</a></li>
 </ul>
 
 

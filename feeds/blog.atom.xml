@@ -1,5 +1,305 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Blog bloquant</title><link href="http://www.dericbourg.net/" rel="alternate"></link><link href="http://www.dericbourg.net/feeds/blog.atom.xml" rel="self"></link><id>http://www.dericbourg.net/</id><updated>2015-07-04T00:00:00+02:00</updated><entry><title>Utiliser un Raspberry Pi comme point d'accès Wifi</title><link href="http://www.dericbourg.net/2015/07/04/utiliser-un-raspberry-pi-comme-point-dacces-wifi/" rel="alternate"></link><updated>2015-07-04T00:00:00+02:00</updated><author><name>Alban Dericbourg</name></author><id>tag:www.dericbourg.net,2015-07-04:2015/07/04/utiliser-un-raspberry-pi-comme-point-dacces-wifi/</id><summary type="html">&lt;p&gt;Dans cet article, nous verrons comment configurer un Raspberry Pi en tant que
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Blog bloquant</title><link href="http://www.dericbourg.net/" rel="alternate"></link><link href="http://www.dericbourg.net/feeds/blog.atom.xml" rel="self"></link><id>http://www.dericbourg.net/</id><updated>2015-08-11T00:00:00+02:00</updated><entry><title>Problème des huit reines</title><link href="http://www.dericbourg.net/2015/08/11/probleme-des-huit-reines/" rel="alternate"></link><updated>2015-08-11T00:00:00+02:00</updated><author><name>Alban Dericbourg</name></author><id>tag:www.dericbourg.net,2015-08-11:2015/08/11/probleme-des-huit-reines/</id><summary type="html">&lt;p&gt;J'ai rencontré le &lt;a href="https://fr.wikipedia.org/wiki/Probl%C3%A8me_des_huit_dames"&gt;problème des huits reines&lt;/a&gt; lors d'un entretien d'embauche et, ayant lamentablement (et honteusement) échoué, mon orgueil m'a incité à pousser l'exercice plus en avant.&lt;/p&gt;
+&lt;p&gt;Le problème consiste à compter et identifier les différentes façons de placer sur un échiquier de 64 cases 8 reines de façon à ce que, relativement aux règles des échecs, elles ne se menacent pas mutuellement. Une reine peut se déplacer de façon rectiligne d'un nombre de cases arbitraire dans toutes les directions ; lorsqu'une reine est placée, la ligne, la colonne et les diagonales sur lesquelles elle se situe sont donc « condamnées ».&lt;/p&gt;
+&lt;h3&gt;Modélisation&lt;/h3&gt;
+&lt;p&gt;On ne peut pas placer plusieurs reines sur une même ligne. On peut donc simplifier la modélisation en ne travaillant que sur les colonnes. Ainsi, on cherchera à ne retourner qu'un tableau d'index de colonne, chacun de ces index correspondant à la ligne de son propre index dans le tableau. Pour illustrer, on produira en retour un tableau de la forme &lt;code&gt;[x, y, z]&lt;/code&gt; qui correspond en pratique aux coordonnées &lt;code&gt;(0, x)&lt;/code&gt;, &lt;code&gt;(1, y)&lt;/code&gt; et &lt;code&gt;(2, z)&lt;/code&gt; sur l'échiquier.&lt;/p&gt;
+&lt;p&gt;Représentons cette modélisation dans le cas de la résolution du problème avec huit reines.&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Représentation de la modélisation" class="center" src="/images/eight_queens/modelisation.png" /&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;Note :&lt;/strong&gt; en Python, la fonction &lt;a href="https://docs.python.org/2/library/functions.html#enumerate"&gt;&lt;code&gt;enumerate&lt;/code&gt;&lt;/a&gt; permet d'obtenir de façon immédiate ce résultat.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&amp;gt;&amp;gt;&amp;gt; list(enumerate([3, 2, 1]))
+[(0, 3), (1, 2), (2, 1)]
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;/blockquote&gt;
+&lt;p&gt;Il est alors « facile » de déterminer si une reine est en sécurité connaissant la position des autres :&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Par construction, aucune reine ne peut être sur la même ligne.&lt;/li&gt;
+&lt;li&gt;Deux reines sont sur la même colonne lorsque leur index de colonne est la même (&lt;code&gt;c[i] == c[j]&lt;/code&gt;).&lt;/li&gt;
+&lt;li&gt;Deux reines sont sur la même diagonale lorsque leur différence d'index dans le tableau (donc leur différence d'index de ligne) est égal à leur différence d'index de colonne (&lt;code&gt;abs(c[i] - c[j]) == abs(i - j)&lt;/code&gt;). La valeur absolue permet de traiter indifféremment les diagonales « montantes » et les diagonales « descendantes ».&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Ainsi, les solutions, lorsqu'elles existent, forment un sous-ensemble des permutations de {1 ; 2 ; ... ; &lt;em&gt;n&lt;/em&gt; - 1} (où &lt;em&gt;n&lt;/em&gt; est le nombre de reines et la dimension de l'échiquier).&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Représentation de la modélisation" class="center" src="/images/eight_queens/diagonale.png" /&gt;&lt;/p&gt;
+&lt;h3&gt;Approche naïve : examen de l'intégralité des permutations&lt;/h3&gt;
+&lt;p&gt;Cette approche revient à essayer toutes les combinaisons de placement des reines et de retenir celles pour lesquelles toutes les reines sont en sécurité. Compte tenu du fait que deux reines ne peuvent être sur la même colonne, la solution est une permutation de la suite d'entiers de 0 à &lt;em&gt;n&lt;/em&gt; - 1.&lt;/p&gt;
+&lt;h4&gt;Génération des permutations&lt;/h4&gt;
+&lt;p&gt;Il est possible de déterminer toutes les permutations possibles d'un tableau en utilisant — par exemple — l'&lt;a href="https://en.wikipedia.org/wiki/Heap%27s_algorithm"&gt;algorithme de Heap&lt;/a&gt; qui minimise le nombre de mouvements nécessaires à l'obtention de l'intégralité des permutations. Une permutation est obtenue de la précédente en interchangeant la position de deux éléments (et seulement deux).&lt;/p&gt;
+&lt;p&gt;J'en propose une implémentation récursive : compte tenu des dimensions des tableaux de notre problème, cela reste raisonnable ; on ne risque pas le dépassement de la capacité de la pile d'exécution.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;permutations&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;array&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;__permutations&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;array&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;size&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+        &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;size&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+            &lt;span class="k"&gt;yield&lt;/span&gt; &lt;span class="n"&gt;array&lt;/span&gt;
+        &lt;span class="k"&gt;else&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+            &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="nb"&gt;range&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;size&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+                &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;p&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt;  &lt;span class="n"&gt;__permutations&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;array&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;size&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+                    &lt;span class="k"&gt;yield&lt;/span&gt; &lt;span class="n"&gt;p&lt;/span&gt;
+                &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;size&lt;/span&gt; &lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="mi"&gt;2&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+                    &lt;span class="n"&gt;array&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="n"&gt;array&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;size&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;array&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;size&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="n"&gt;array&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+                &lt;span class="k"&gt;else&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+                    &lt;span class="n"&gt;array&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="n"&gt;array&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;size&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;array&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;size&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="n"&gt;array&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;__permutations&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;array&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nb"&gt;len&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;array&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Pour donner un exemple :&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="o"&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;perm&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;permutations&lt;/span&gt;&lt;span class="p"&gt;([&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;a&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;b&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;c&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]):&lt;/span&gt; &lt;span class="k"&gt;print&lt;/span&gt; &lt;span class="n"&gt;perm&lt;/span&gt;
+&lt;span class="o"&gt;...&lt;/span&gt;
+&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;a&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;b&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;c&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;b&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;a&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;c&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;c&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;a&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;b&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;a&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;c&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;b&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;b&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;c&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;a&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;c&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;b&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;a&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;En pratique, la bibliothèque standard Python propose dans le module &lt;a href="https://docs.python.org/3/library/itertools.html"&gt;&lt;code&gt;itertools&lt;/code&gt;&lt;/a&gt; une fonction générant ces permutations. Mesurons grossièrement le temps d'exécution de ce code avec les deux implémentations :&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;a&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;4&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;5&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;6&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+&lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="nb"&gt;range&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;10000&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;perm&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;permutations&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;a&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+        &lt;span class="n"&gt;perm&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div class="highlight"&gt;&lt;pre&gt;# Heap
+$ time python heaps.py
+real    0m42.860s
+user    0m42.832s
+sys     0m0.008s
+
+# itertools
+$ time python itertools.py
+real    0m3.433s
+user    0m3.428s
+sys     0m0.000s
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;La fonction de la blbliothèque standard est bien plus performante que l'implémentation proposée ci-dessus (et heureusement). On utilisera donc celle-ci pour la résolution du problème : autant ne pas tendre le bâton pour se faire battre.&lt;/p&gt;
+&lt;h4&gt;Résolution&lt;/h4&gt;
+&lt;p&gt;On a vu que l'ensemble des solutions était contenu dans l'ensemble des permutations de {1 ; 2 ; ... ; &lt;em&gt;n&lt;/em&gt; - 1}, soit l'ensemble des permutations de &lt;em&gt;n&lt;/em&gt; entiers distincts. De par cette modélisation :&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;puisqu'on ne peut pas mettre deux valeurs au même index d'un tableau, les reines ne peuvent pas être sur la même ligne ;&lt;/li&gt;
+&lt;li&gt;par construction de l'ensemble sur lequel on initialise les permutations, aucune reine ne peut être sur la même colonne qu'un autre.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Il reste alors à appliquer directement la formule de vérification des diagonales proposée dans le paragraphe &lt;em&gt;Modélisation&lt;/em&gt;. Le code qui suit n'est volontairement pas l'écriture « idéale » en Python par souci de lisibilité pour ceux qui n'y sont pas familiers.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;is_safe&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;permutation&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="n"&gt;size&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;len&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;permutation&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="nb"&gt;range&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;size&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+        &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;j&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="nb"&gt;range&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;size&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+            &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="nb"&gt;abs&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;permutation&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="n"&gt;permutation&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;j&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="nb"&gt;abs&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="n"&gt;j&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+                &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="bp"&gt;False&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="bp"&gt;True&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;On initialise la première permutation à &lt;code&gt;[0, 1, 2, ..., n - 1]&lt;/code&gt; avec &lt;code&gt;range(n)&lt;/code&gt;. Une fois les permutations calculées, le câblage de l'ensemble est immédiat.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;solve&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;board_size&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;itertools&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;permutations&lt;/span&gt;
+    &lt;span class="n"&gt;solutions&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[]&lt;/span&gt;
+    &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;permutation&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;permutations&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;range&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;board_size&lt;/span&gt;&lt;span class="p"&gt;)):&lt;/span&gt;
+        &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;is_safe&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;permutation&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+            &lt;span class="n"&gt;solutions&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;append&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;permutation&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;solutions&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h4&gt;Représentation des solutions&lt;/h4&gt;
+&lt;p&gt;Il est toujours plus simple de vérifier les solutions en les visualisant. &lt;a href="https://en.wikipedia.org/wiki/Eight_queens_puzzle#Counting_solutions"&gt;Le nombre de solutions en fonction du nombre de reines étant connu&lt;/a&gt;, on ajoute le nombre de solutions trouvées pour faciliter la validation de l'algorithme.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;print_solutions&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;solutions&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;board_size&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="n"&gt;separator&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;+---&amp;#39;&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="n"&gt;board_size&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;+&amp;#39;&lt;/span&gt;
+    &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;solution&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;solutions&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+        &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;column&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;solution&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+            &lt;span class="k"&gt;print&lt;/span&gt; &lt;span class="n"&gt;separator&lt;/span&gt;
+            &lt;span class="k"&gt;print&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;|   &amp;#39;&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="n"&gt;column&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;| Q |&amp;#39;&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;   |&amp;#39;&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;board_size&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="n"&gt;column&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+        &lt;span class="k"&gt;print&lt;/span&gt; &lt;span class="n"&gt;separator&lt;/span&gt;
+        &lt;span class="k"&gt;print&lt;/span&gt;
+    &lt;span class="k"&gt;print&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;Found&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nb"&gt;len&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;solutions&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;solutions&amp;quot;&lt;/span&gt;
+
+
+&lt;span class="n"&gt;size&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;8&lt;/span&gt;
+&lt;span class="n"&gt;solutions&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;solve&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;size&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;print_solutions&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;solutions&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;size&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div class="highlight"&gt;&lt;pre&gt;# 91 autres solutions
+# [...]
+
++---+---+---+---+---+---+---+---+
+|   |   |   |   |   |   |   | Q |
++---+---+---+---+---+---+---+---+
+|   |   |   | Q |   |   |   |   |
++---+---+---+---+---+---+---+---+
+| Q |   |   |   |   |   |   |   |
++---+---+---+---+---+---+---+---+
+|   |   | Q |   |   |   |   |   |
++---+---+---+---+---+---+---+---+
+|   |   |   |   |   | Q |   |   |
++---+---+---+---+---+---+---+---+
+|   | Q |   |   |   |   |   |   |
++---+---+---+---+---+---+---+---+
+|   |   |   |   |   |   | Q |   |
++---+---+---+---+---+---+---+---+
+|   |   |   |   | Q |   |   |   |
++---+---+---+---+---+---+---+---+
+
+Found 92 solutions
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Il faut environ 60 ms pour obtenir l'intégralité des solutions et les représenter.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;&lt;span class="nb"&gt;time &lt;/span&gt;python brute-force.py
+python brute-force.py  0,06s user 0,00s system 91% cpu 0,061 total
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Pour cette dimension, c'est tout à fait acceptable et on pourrait s'en contenter. On pourrait... mais ça ne serait pas satisfaisant pour la curiosité !&lt;/p&gt;
+&lt;h3&gt;Seconde approche : algorithme de retour sur trace (&lt;em&gt;backtracking&lt;/em&gt;)&lt;/h3&gt;
+&lt;p&gt;Cette classe d'algorithmes parcourt toutes les possibilités en éliminant d'emblée toute solution partielle qui ne convient pas. Il permet donc d'éviter de n'avoir ne serait-ce qu'à considérer de nombreuses combinaisons : il est en ce sens plus économe que l'algorithme de force brute. La résolution du problème revient alors à un parcours de graphe.&lt;/p&gt;
+&lt;h4&gt;Exemple&lt;/h4&gt;
+&lt;p&gt;Pour y voir plus clair, commençons par un exemple simple. On souhaite obtenir les combinaisons de nœuds permettant de former le mot « BLOG » en parcourant l'arbre. On continue de descendre dans l'arbre tant que la combinaison permet d'obtenir une solution (nœuds bleus). Dès que celle-ci ne le permet plus (nœud rouge), on ignore les branches suivantes (nœud gris).&lt;/p&gt;
+&lt;p&gt;Dans cet exemple, on n'obtient qu'une solution mais rien n'empêche d'en avoir plusieurs.&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Exemple de backtracking" class="center" src="/images/eight_queens/backtracking.png" /&gt;&lt;/p&gt;
+&lt;h4&gt;Résolution&lt;/h4&gt;
+&lt;p&gt;On conserve la même modélisation : les &lt;em&gt;n&lt;/em&gt; reines sont réparties sur les &lt;em&gt;n&lt;/em&gt; lignes à raison d'une par ligne. On place les reines une par une tant que cela est possible. Si le placement d'une reine échoue — donc qu'il n'existe pas de position telle que la reine puisse être en sécurité, on remet en question les choix précédents afin de sortir du blocage. On revient alors à un point où des alternatives étaient possibles et on essaie la possibilité suivante.&lt;/p&gt;
+&lt;p&gt;L'arbre qui sera parcouru contient toutes les positions des reines, valides ou non. On a donc un arbre de la forme de la figure ci-dessous (tronqué, dans l'exemple de 4 reines et d'un échiquier de 16 cases).&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Application du backtracking au problème" class="center" src="/images/eight_queens/backtracking_queens.png" /&gt;&lt;/p&gt;
+&lt;p&gt;Commençons par nous pencher sur la fonction indiquant si une reine est en sécurité. Nous ne fonctionnons plus avec des permutations contenant toutes les positions des reines mais sur des positions partielles — avec un nombre de reines inférieur au nombre de reines total attendu — valides par rapport auxquelles on vérifie si l'on peut ajouter une reine à une position donnée. Plutôt que de vérifier systématiquement la validité de l'intégralité de la solution, on vérifie que l'ajout d'une reine à la solution partielle précédente donnée produit une solution valide.&lt;/p&gt;
+&lt;p&gt;On teste donc :&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;que la colonne que laquelle la reine a été placée n'est pas déjà attribuée à une autre reine en vérifiant que le tableau de solutions ne contient pas la colonne que l'on cherche à attribuer (&lt;code&gt;not col in queens&lt;/code&gt;);&lt;/li&gt;
+&lt;li&gt;qu'aucune reine ne se trouve sur les mêmes diagonales que la nouvelle.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;is_safe&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;col&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;queens&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="n"&gt;line&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;len&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;queens&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="ow"&gt;not&lt;/span&gt; &lt;span class="n"&gt;col&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;queens&lt;/span&gt; &lt;span class="ow"&gt;and&lt;/span&gt;
+            &lt;span class="ow"&gt;not&lt;/span&gt; &lt;span class="nb"&gt;any&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;abs&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;col&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="n"&gt;line&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="nb"&gt;enumerate&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;queens&lt;/span&gt;&lt;span class="p"&gt;)))&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Passons à la résolution en elle-même. Pour chaque nouvelle ligne, nous allons tester l'intégralité des colonnes au regard des solutions obtenues jusqu'à la ligne précédente. Cela donne :&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;solve&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;n&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="c"&gt;# Initialisation des solutions pour une taille 0 (tableau contenant un tableau vide)&lt;/span&gt;
+    &lt;span class="n"&gt;solutions&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt; &lt;span class="p"&gt;[]&lt;/span&gt; &lt;span class="p"&gt;]&lt;/span&gt;
+    &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;row&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="nb"&gt;range&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;n&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+        &lt;span class="n"&gt;solutions&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;solution&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;solution&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;solutions&lt;/span&gt;
+                                    &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="nb"&gt;range&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;n&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+                                    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;is_safe&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;solution&lt;/span&gt;&lt;span class="p"&gt;)]&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;solutions&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Pour mieux comprendre cet algorithme, il en existe une &lt;a href="https://www.cs.usfca.edu/~galles/visualization/RecQueens.html"&gt;version animée détaillant les étapes de la résolution&lt;/a&gt;.&lt;/p&gt;
+&lt;h3&gt;Troisième approche : programmation par contraintes&lt;/h3&gt;
+&lt;h4&gt;Principe&lt;/h4&gt;
+&lt;p&gt;Un problème de satisfaction de contraintes (ou CSP pour &lt;em&gt;Constraint Satisfaction Problem&lt;/em&gt;) désigne l'ensemble des problèmes définis par... des contraintes. La résolution consiste à chercher &lt;em&gt;une&lt;/em&gt; solution les respectant. Pour cela, on décrit un modèle définit par :&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;un ensemble de variables ;&lt;/li&gt;
+&lt;li&gt;un ensemble de contraintes régissant ces variables.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;À partir de ce modèle, le système cherchera une solution et la proposera si elle existe. En revanche, il ne proposera qu'une seule solution : la résolution d'un problème par contraintes n'a pas vocation à chercher l'ensemble exhaustif des solutions.&lt;/p&gt;
+&lt;h4&gt;Implémentation&lt;/h4&gt;
+&lt;p&gt;En Python, la bibliothèque &lt;a href="http://numberjack.ucc.ie"&gt;Numberjack&lt;/a&gt; facilite la programmation par contraintes. Les auteurs fournissent d'ailleurs à titre d'exemple une &lt;a href="http://numberjack.ucc.ie/examples/nqueens"&gt;solution pour le problème des &lt;em&gt;n&lt;/em&gt; reines&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Dans le cas générique des &lt;em&gt;n&lt;/em&gt; reines, on définit dans notre ensemble de variables les reines. Chacun d'elles est de type &lt;code&gt;Variable(n)&lt;/code&gt;, soit une variable dans un domaine compris entre 0 et &lt;em&gt;n&lt;/em&gt;. La contrainte &lt;code&gt;AllDiff&lt;/code&gt; impose à toutes les expressions qui lui sont passées d'êtres différentes. On impose donc :&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;que toutes les reines soient dans des colonnes différentes (&lt;code&gt;AllDiff( queens )&lt;/code&gt;) ;&lt;/li&gt;
+&lt;li&gt;que toutes les reines soient sur des diagonales différentes (combinaison de &lt;code&gt;AllDiff( [queens[i] + i for i in range(n)] )&lt;/code&gt; et &lt;code&gt;AllDiff( [queens[i] - i for i in range(n)] )&lt;/code&gt;).&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;On suppose donc ici aussi que chaque reine est sur une ligne distincte : la reine 0 sera sur la ligne 0, la reine 1 sur la ligne 1, etc.&lt;/p&gt;
+&lt;p&gt;La description du modèle devient :&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;Numberjack&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;
+
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;model_queens&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;n&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="n"&gt;queens&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;Variable&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;n&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="nb"&gt;range&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;n&lt;/span&gt;&lt;span class="p"&gt;)]&lt;/span&gt;
+    &lt;span class="n"&gt;model&lt;/span&gt;  &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;Model&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;
+        &lt;span class="n"&gt;AllDiff&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt; &lt;span class="n"&gt;queens&lt;/span&gt; &lt;span class="p"&gt;),&lt;/span&gt;
+        &lt;span class="n"&gt;AllDiff&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;queens&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="nb"&gt;range&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;n&lt;/span&gt;&lt;span class="p"&gt;)]&lt;/span&gt; &lt;span class="p"&gt;),&lt;/span&gt;
+        &lt;span class="n"&gt;AllDiff&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;queens&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="nb"&gt;range&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;n&lt;/span&gt;&lt;span class="p"&gt;)]&lt;/span&gt; &lt;span class="p"&gt;)&lt;/span&gt;
+        &lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;queens&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;model&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;La résolution du problème est alors immédiate :&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;solve_queens&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;param&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="n"&gt;n&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;param&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;n&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+    &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;queens&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;model&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;model_queens&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;n&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="n"&gt;solver&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;model&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;load&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;param&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;solver&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;
+    &lt;span class="n"&gt;solver&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;solve&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+    &lt;span class="n"&gt;print_chessboard&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;queens&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="k"&gt;print&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;Nodes:&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;solver&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;getNodes&lt;/span&gt;&lt;span class="p"&gt;(),&lt;/span&gt; &lt;span class="s"&gt;&amp;#39; Time:&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;solver&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;getTime&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;print_chessboard&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;queens&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="n"&gt;separator&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;+---&amp;#39;&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="nb"&gt;len&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;queens&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;+&amp;#39;&lt;/span&gt;
+    &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;queen&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;queens&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+        &lt;span class="k"&gt;print&lt;/span&gt; &lt;span class="n"&gt;separator&lt;/span&gt;
+        &lt;span class="k"&gt;print&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;|   &amp;#39;&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;queen&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get_value&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;| Q |&amp;#39;&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;   |&amp;#39;&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;len&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;queens&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;queen&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get_value&lt;/span&gt;&lt;span class="p"&gt;())&lt;/span&gt;
+    &lt;span class="k"&gt;print&lt;/span&gt; &lt;span class="n"&gt;separator&lt;/span&gt;
+
+&lt;span class="n"&gt;solve_queens&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;input&lt;/span&gt;&lt;span class="p"&gt;({&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;solver&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;Mistral&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;n&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="mi"&gt;8&lt;/span&gt; &lt;span class="p"&gt;}))&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;La proposition d'une solution est également très rapide :&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;+---+---+---+---+---+---+---+---+
+| Q |   |   |   |   |   |   |   |
++---+---+---+---+---+---+---+---+
+|   |   |   |   | Q |   |   |   |
++---+---+---+---+---+---+---+---+
+|   |   |   |   |   |   |   | Q |
++---+---+---+---+---+---+---+---+
+|   |   |   |   |   | Q |   |   |
++---+---+---+---+---+---+---+---+
+|   |   | Q |   |   |   |   |   |
++---+---+---+---+---+---+---+---+
+|   |   |   |   |   |   | Q |   |
++---+---+---+---+---+---+---+---+
+|   | Q |   |   |   |   |   |   |
++---+---+---+---+---+---+---+---+
+|   |   |   | Q |   |   |   |   |
++---+---+---+---+---+---+---+---+
+Nodes: 24  Time: 0.0
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Une mesure plus fine du temps d'exécution indique qu'il a fallu environ 20 millisecondes pour proposer cette solution (qui inclut le temps d'exécution total du programme Python).&lt;/p&gt;
+&lt;h3&gt;Comparaison des approches&lt;/h3&gt;
+&lt;p&gt;On a vu trois méthodes différentes de résolution du problème. Parmi elles, seules deux fournissent l'intégralité des solutions et donc répondent réellement au problème. La résolution par force brute est probablement la plus lisible mais égalment la moins efficace. La solution par retour arrière est légèrement plus complexe mais sa durée de résolution, bien plus faible, la rend nettement plus avantageuse pour un « grand » échiquier.&lt;/p&gt;
+&lt;table class="table"&gt;
+  &lt;caption&gt;Comparaison des algorithmes pour une résolution avec 8 reines sur un échiquier de 64 cases&lt;/caption&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;Algorithme&lt;/th&gt;
+      &lt;th&gt;Durée d'exécution&lt;/th&gt;
+      &lt;th&gt;Nombre de solutions&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Force brute&lt;/td&gt;
+      &lt;td&gt;83 ms&lt;/td&gt;
+      &lt;td&gt;92&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Retour sur trace&lt;/td&gt;
+      &lt;td&gt;55 ms&lt;/td&gt;
+      &lt;td&gt;92&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Programmation par contraintes&lt;/td&gt;
+      &lt;td&gt;18 ms&lt;/td&gt;
+      &lt;td&gt;1&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;Comme le montre le tableau ci-dessus, le choix de la méthode de résolution dépendra surtout du besoin : faut-il &lt;em&gt;une&lt;/em&gt; solution ou &lt;em&gt;toutes&lt;/em&gt; les solutions ? Lorsqu'il les faut toutes, les quelques dizaines de millisecondes d'écart entre les deux algorithmes ne font pas la différence pour huit reines. En revanche, l'augmentation de la taille de l'échiquier induit une augmentation exponentielle du temps de résolution. Le graphique ci-dessous montre la flagrance de différence de temps d'exécution entre les deux algorithmes lorsque le nombre de permutations augmente.&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Comparaison des durées d'obtention de toutes les solutions en fonction de l'algorithme" class="center" src="/images/eight_queens/comparaison.png" /&gt;&lt;/p&gt;
+&lt;p&gt;Dès 10 reines et un échiquier de 100 cases, l'algorithme de force brute n'est plus utilisable : il lui faut plusieurs dizaines de minutes pour fournir les solutions. La solution implémentant l'algorithme de &lt;em&gt;backtracking&lt;/em&gt;, elle, retourne les 14&amp;nbsp;200 solutions en moins de 10 secondes.&lt;/p&gt;
+&lt;p&gt;La résolution par contraintes, reste très performante lorsque le problème de complexifie : elle permet d'obtenir une solution en moins de 150&amp;nbsp;ms pour 200 reines et un échiquier de 40&amp;nbsp;000 cases. Bien qu'elle ne propose qu'une et une seule solution, elle peut s'avérer pertinente lorsqu'on ne cherche pas un résultat particulier. L'implémentation présentée ici monte ses limites en dépassant les 500 reines et les 250 000 cases.&lt;/p&gt;</summary><category term="algorithmique"></category><category term="python"></category><category term="jeu"></category></entry><entry><title>Utiliser un Raspberry Pi comme point d'accès Wifi</title><link href="http://www.dericbourg.net/2015/07/04/utiliser-un-raspberry-pi-comme-point-dacces-wifi/" rel="alternate"></link><updated>2015-07-04T00:00:00+02:00</updated><author><name>Alban Dericbourg</name></author><id>tag:www.dericbourg.net,2015-07-04:2015/07/04/utiliser-un-raspberry-pi-comme-point-dacces-wifi/</id><summary type="html">&lt;p&gt;Dans cet article, nous verrons comment configurer un Raspberry Pi en tant que
 point d'accès Wifi.&lt;/p&gt;
 &lt;h3&gt;Pré-requis&lt;/h3&gt;
 &lt;p&gt;Je supposerai que vous avez à disposition :&lt;/p&gt;
