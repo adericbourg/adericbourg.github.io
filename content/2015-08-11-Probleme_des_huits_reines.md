@@ -2,7 +2,6 @@ Title: Problème des huit reines
 Date: 2015-08-11
 Category: Blog
 Tags: algorithmique, python, jeu
-Status: draft
 
 J'ai rencontré le [problème des huits reines](https://fr.wikipedia.org/wiki/Probl%C3%A8me_des_huit_dames) lors d'un entretien d'embauche et, ayant lamentablement (et honteusement) échoué, mon orgueil m'a incité à pousser l'exercice plus en avant.
 
