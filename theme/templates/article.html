@@ -6,9 +6,11 @@
         <meta name="twitter:card" content="summary" />
         {% if TWITTER_HANDLE %}
         <meta name="twitter:site" content="{{ TWITTER_HANDLE }}" />
+        <meta name="twitter:creator" content="{{ TWITTER_HANDLE }}" />
         {% endif %}
         <meta name="twitter:title" content="{{ article.title|striptags }} - {{ SITENAME }}" />
         <meta name="twitter:description" content="{{ article.summary | striptags }}" />
+        <meta name="twitter:domain" content="{{ SITEURL }}/{{ article.url }}" />
 {% endblock twittercard %}
 
 {% block facebookcard %}
