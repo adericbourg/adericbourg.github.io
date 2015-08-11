@@ -1,17 +1,17 @@
 Title: Problème des huit reines
-Date: 2015-07-07
+Date: 2015-08-11
 Category: Blog
-Tags: algorithmique, python
+Tags: algorithmique, python, jeu
 Status: draft
 
 J'ai rencontré le [problème des huits reines](https://fr.wikipedia.org/wiki/Probl%C3%A8me_des_huit_dames) lors d'un entretien d'embauche et, ayant lamentablement (et honteusement) échoué, mon orgueil m'a incité à pousser l'exercice plus en avant.
 
-Le problème consiste à compter et identifier les différentes façons de placer sur un échiquier de 64 cases 8 reines de façon à ce que, relativement aux règles des échecs, elles ne se menacent pas mutuellement. Une reine peut se déplacer d'un nombre de cases arbitraire dans toutes les directions ; lorsqu'une reine est placée, la ligne, la colonne et les diagonales sur lesquelles elle se situe sont donc « condamnées ».
+Le problème consiste à compter et identifier les différentes façons de placer sur un échiquier de 64 cases 8 reines de façon à ce que, relativement aux règles des échecs, elles ne se menacent pas mutuellement. Une reine peut se déplacer de façon rectiligne d'un nombre de cases arbitraire dans toutes les directions ; lorsqu'une reine est placée, la ligne, la colonne et les diagonales sur lesquelles elle se situe sont donc « condamnées ».
 
 
 ### Modélisation
 
-On ne peut pas placer plusieurs reines sur une même ligne. On peut donc simplifier la modélisation en ne travaillant que sur les colonnes. Ainsi, on cherchera à ne retourner qu'un tableau d'index de colonne, chacun de ces index correspondant à la ligne de son propre index dans le tableau. Pour illustrer, on produira en retour un tableau de la forme `[x, y, z]` qui correspond en pratique aux coordonnées `(0, x)`, `(1, y)` et `(2, z)`.
+On ne peut pas placer plusieurs reines sur une même ligne. On peut donc simplifier la modélisation en ne travaillant que sur les colonnes. Ainsi, on cherchera à ne retourner qu'un tableau d'index de colonne, chacun de ces index correspondant à la ligne de son propre index dans le tableau. Pour illustrer, on produira en retour un tableau de la forme `[x, y, z]` qui correspond en pratique aux coordonnées `(0, x)`, `(1, y)` et `(2, z)` sur l'échiquier.
 
 Représentons cette modélisation dans le cas de la résolution du problème avec huit reines.
 
@@ -23,7 +23,7 @@ Représentons cette modélisation dans le cas de la résolution du problème ave
 >     [(0, 3), (1, 2), (2, 1)]
 >
 
-Il est alors « facile » de déterminer si une reine est en sécurité connaîssant la position des autres :
+Il est alors « facile » de déterminer si une reine est en sécurité connaissant la position des autres :
 
  * Par construction, aucune reine ne peut être sur la même ligne.
  * Deux reines sont sur la même colonne lorsque leur index de colonne est la même (`c[i] == c[j]`).
@@ -73,7 +73,7 @@ Pour donner un exemple :
 ['c', 'b', 'a']
 ```
 
-En pratique, la bibliothèque standard Python propose dans le module [`itertools`](https://docs.python.org/2/library/itertools.html) une fonction générant ces permutations. Mesurons grossièrement le temps d'exécution de ce code avec les deux implémentations :
+En pratique, la bibliothèque standard Python propose dans le module [`itertools`](https://docs.python.org/3/library/itertools.html) une fonction générant ces permutations. Mesurons grossièrement le temps d'exécution de ce code avec les deux implémentations :
 
 ```python
 a = [0, 1, 2, 3, 4, 5, 6]
@@ -105,7 +105,7 @@ On a vu que l'ensemble des solutions était contenu dans l'ensemble des permutat
  * puisqu'on ne peut pas mettre deux valeurs au même index d'un tableau, les reines ne peuvent pas être sur la même ligne ;
  * par construction de l'ensemble sur lequel on initialise les permutations, aucune reine ne peut être sur la même colonne qu'un autre.
 
- Il reste alors à appliquer directement la formule de vérification des diagonales proposée dans le paragraphe *Modélisation*.
+ Il reste alors à appliquer directement la formule de vérification des diagonales proposée dans le paragraphe *Modélisation*. Le code qui suit n'est volontairement pas l'écriture « idéale » en Python par souci de lisibilité pour ceux qui n'y sont pas familiers.
 
 ```python
 def is_safe(permutation):
@@ -139,10 +139,11 @@ def print_solutions(solutions, board_size):
     for solution in solutions:
         for column in solution:
             print separator
-            print '|   ' * column + '| ♛ |' + '   |' * (board_size - 1 - column)
+            print '|   ' * column + '| Q |' + '   |' * (board_size - 1 - column)
         print separator
         print
     print "Found", len(solutions), "solutions"
+
 
 size = 8
 solutions = solve(size)
@@ -154,21 +155,21 @@ print_solutions(solutions, size)
 # [...]
 
 +---+---+---+---+---+---+---+---+
-|   |   |   |   |   |   |   | ♛ |
+|   |   |   |   |   |   |   | Q |
 +---+---+---+---+---+---+---+---+
-|   |   |   | ♛ |   |   |   |   |
+|   |   |   | Q |   |   |   |   |
 +---+---+---+---+---+---+---+---+
-| ♛ |   |   |   |   |   |   |   |
+| Q |   |   |   |   |   |   |   |
 +---+---+---+---+---+---+---+---+
-|   |   | ♛ |   |   |   |   |   |
+|   |   | Q |   |   |   |   |   |
 +---+---+---+---+---+---+---+---+
-|   |   |   |   |   | ♛ |   |   |
+|   |   |   |   |   | Q |   |   |
 +---+---+---+---+---+---+---+---+
-|   | ♛ |   |   |   |   |   |   |
+|   | Q |   |   |   |   |   |   |
 +---+---+---+---+---+---+---+---+
-|   |   |   |   |   |   | ♛ |   |
+|   |   |   |   |   |   | Q |   |
 +---+---+---+---+---+---+---+---+
-|   |   |   |   | ♛ |   |   |   |
+|   |   |   |   | Q |   |   |   |
 +---+---+---+---+---+---+---+---+
 
 Found 92 solutions
@@ -185,11 +186,11 @@ Pour cette dimension, c'est tout à fait acceptable et on pourrait s'en contente
 
 ### Seconde approche : algorithme de retour sur trace (*backtracking*)
 
-Cet algorithme parcourt toutes les possibilités en éliminant d'emblée toute solution partielle qui ne convient pas. Il permet donc d'éviter de nombreuses combinaisons : il est en ce sens plus économe que l'algorithme de force brute. La résolution du problème revient alors à un parcours de graphe (sans cycle).
+Cette classe d'algorithmes parcourt toutes les possibilités en éliminant d'emblée toute solution partielle qui ne convient pas. Il permet donc d'éviter de n'avoir ne serait-ce qu'à considérer de nombreuses combinaisons : il est en ce sens plus économe que l'algorithme de force brute. La résolution du problème revient alors à un parcours de graphe.
 
 #### Exemple
 
-Commençons par un exemple simple. On souhaite obtenir les combinaisons de nœuds permettant de former le mot « BLOG » en parcourant l'arbre. On continue de descendre dans l'arbre tant que la combinaison permet d'obtenir une solution (nœuds bleus). Dès que celle-ci ne le permet plus (nœud rouge), on ignore les branches suivantes (nœud gris).
+Pour y voir plus clair, commençons par un exemple simple. On souhaite obtenir les combinaisons de nœuds permettant de former le mot « BLOG » en parcourant l'arbre. On continue de descendre dans l'arbre tant que la combinaison permet d'obtenir une solution (nœuds bleus). Dès que celle-ci ne le permet plus (nœud rouge), on ignore les branches suivantes (nœud gris).
 
 Dans cet exemple, on n'obtient qu'une solution mais rien n'empêche d'en avoir plusieurs.
 
@@ -199,15 +200,15 @@ Dans cet exemple, on n'obtient qu'une solution mais rien n'empêche d'en avoir p
 
 On conserve la même modélisation : les *n* reines sont réparties sur les *n* lignes à raison d'une par ligne. On place les reines une par une tant que cela est possible. Si le placement d'une reine échoue — donc qu'il n'existe pas de position telle que la reine puisse être en sécurité, on remet en question les choix précédents afin de sortir du blocage. On revient alors à un point où des alternatives étaient possibles et on essaie la possibilité suivante.
 
-L'arbre qui sera parcouru contient toutes les positions des reines, valides ou non. On a donc un arbre de la forme de la figure ci-dessous.
+L'arbre qui sera parcouru contient toutes les positions des reines, valides ou non. On a donc un arbre de la forme de la figure ci-dessous (tronqué, dans l'exemple de 4 reines et d'un échiquier de 16 cases).
 
 ![Application du backtracking au problème](/images/eight_queens/backtracking_queens.png){.center}
 
-Commençons par nous pencher sur la fonction indiquant si une reine est en sécurité. Nous ne fonctionnons plus avec des permutations contenant toutes les positions des reines mais sur des positions partielles valides par rapport auxquelles on vérifie si l'on peut ajouter une reine à une position donnée. Plutôt que de vérifier à nouveau la validité de l'intégralité de la solution, on vérifie que l'ajout d'une reine à la position donnée produit une solution valide.
+Commençons par nous pencher sur la fonction indiquant si une reine est en sécurité. Nous ne fonctionnons plus avec des permutations contenant toutes les positions des reines mais sur des positions partielles — avec un nombre de reines inférieur au nombre de reines total attendu — valides par rapport auxquelles on vérifie si l'on peut ajouter une reine à une position donnée. Plutôt que de vérifier systématiquement la validité de l'intégralité de la solution, on vérifie que l'ajout d'une reine à la solution partielle précédente donnée produit une solution valide.
 
 On teste donc :
 
- * que la colonne que laquelle la reine a été placée n'est pas déjà attribuée à une autre reine en vérifiant que le tableau de solutions ne contient pas la colonne que l'on cherche à attribuer ;
+ * que la colonne que laquelle la reine a été placée n'est pas déjà attribuée à une autre reine en vérifiant que le tableau de solutions ne contient pas la colonne que l'on cherche à attribuer (`not col in queens`);
  * qu'aucune reine ne se trouve sur les mêmes diagonales que la nouvelle.
 
 ```python
@@ -217,7 +218,7 @@ def is_safe(col, queens):
             not any(abs(col - x) == line - i for i,x in enumerate(queens)))
 ```
 
-Passons à la résolution en elle-même. Pour chaque nouvelle ligne, on va tester l'intégralité des colonnes au regard des solutions obtenues jusqu'à la ligne précédente. Cela donne :
+Passons à la résolution en elle-même. Pour chaque nouvelle ligne, nous allons tester l'intégralité des colonnes au regard des solutions obtenues jusqu'à la ligne précédente. Cela donne :
 
 ```python
 def solve(n):
@@ -235,33 +236,37 @@ Pour mieux comprendre cet algorithme, il en existe une [version animée détaill
 
 ### Troisième approche : programmation par contraintes
 
-Un problème de satisfaction de contraintes (ou CSP pour *Constraint Satisfaction Problem*) désigne l'ensemble des problèmes définis par... des contraintes. Sa résolution consiste à chercher une solution les respectant. Pour cela, on décrit un modèle définit par :
+#### Principe
+
+Un problème de satisfaction de contraintes (ou CSP pour *Constraint Satisfaction Problem*) désigne l'ensemble des problèmes définis par... des contraintes. La résolution consiste à chercher *une* solution les respectant. Pour cela, on décrit un modèle définit par :
 
  * un ensemble de variables ;
  * un ensemble de contraintes régissant ces variables.
 
 À partir de ce modèle, le système cherchera une solution et la proposera si elle existe. En revanche, il ne proposera qu'une seule solution : la résolution d'un problème par contraintes n'a pas vocation à chercher l'ensemble exhaustif des solutions.
 
-En Python, la bibliothèque [Numberjack](http://numberjack.ucc.ie) facilite la programmation par contraintes. Ils fournissent d'ailleurs une [solution pour le problème des *n* reines](http://numberjack.ucc.ie/examples/nqueens).
+#### Implémentation
 
-Dans le cas générique des *N* reines, on définit dans notre ensemble de variables les reines. Chacun d'elles est de type `Variable(N)`, soit une variable dans un domaine compris entre 0 et *N*. La contrainte `AllDiff` impose à toutes les expressions qui lui sont passées d'êtres différentes. On impose donc :
+En Python, la bibliothèque [Numberjack](http://numberjack.ucc.ie) facilite la programmation par contraintes. Les auteurs fournissent d'ailleurs à titre d'exemple une [solution pour le problème des *n* reines](http://numberjack.ucc.ie/examples/nqueens).
+
+Dans le cas générique des *n* reines, on définit dans notre ensemble de variables les reines. Chacun d'elles est de type `Variable(n)`, soit une variable dans un domaine compris entre 0 et *n*. La contrainte `AllDiff` impose à toutes les expressions qui lui sont passées d'êtres différentes. On impose donc :
 
  * que toutes les reines soient dans des colonnes différentes (`AllDiff( queens )`) ;
- * que toutes les reines soient sur des diagonales différentes (combinaison de `AllDiff( [queens[i] + i for i in range(N)] )` et `AllDiff( [queens[i] - i for i in range(N)] )`).
+ * que toutes les reines soient sur des diagonales différentes (combinaison de `AllDiff( [queens[i] + i for i in range(n)] )` et `AllDiff( [queens[i] - i for i in range(n)] )`).
 
-On suppose donc que chaque reine est sur une ligne distincte : la reine 0 sera sur la ligne 0, la reine 1 sur la ligne 1, etc.
+On suppose donc ici aussi que chaque reine est sur une ligne distincte : la reine 0 sera sur la ligne 0, la reine 1 sur la ligne 1, etc.
 
 La description du modèle devient :
 
 ```python
 from Numberjack import *
 
-def model_queens(N):
-    queens = [Variable(N) for i in range(N)]
+def model_queens(n):
+    queens = [Variable(n) for i in range(n)]
     model  = Model(
         AllDiff( queens ),
-        AllDiff( [queens[i] + i for i in range(N)] ),
-        AllDiff( [queens[i] - i for i in range(N)] )
+        AllDiff( [queens[i] + i for i in range(n)] ),
+        AllDiff( [queens[i] - i for i in range(n)] )
         )
     return (queens, model)
 ```
@@ -270,7 +275,8 @@ La résolution du problème est alors immédiate :
 
 ```python
 def solve_queens(param):
-    (queens,model) = model_queens(param['N'])
+    n = param['n']
+    (queens, model) = model_queens(n)
     solver = model.load(param['solver'])
     solver.solve()
     print_chessboard(queens)
@@ -283,7 +289,7 @@ def print_chessboard(queens):
         print '|   '*queen.get_value()+'| Q |'+'   |'*(len(queens)-1-queen.get_value())
     print separator
 
-solve_queens(input({'solver':'Mistral', 'N':10}))
+solve_queens(input({ 'solver':'Mistral', 'n':8 }))
 ```
 
 La proposition d'une solution est également très rapide :
@@ -332,7 +338,7 @@ On a vu trois méthodes différentes de résolution du problème. Parmi elles, s
       <td>92</td>
     </tr>
     <tr>
-      <td>Backtracking</td>
+      <td>Retour sur trace</td>
       <td>55 ms</td>
       <td>92</td>
     </tr>
@@ -348,6 +354,6 @@ Comme le montre le tableau ci-dessus, le choix de la méthode de résolution dé
 
 ![Comparaison des durées d'obtention de toutes les solutions en fonction de l'algorithme](/images/eight_queens/comparaison.png){.center}
 
-Dès 10 reines et un échiquer de 100 cases, l'algorithme de force brute n'est plus utilisable : il lui faut plusieurs dizaines de minutes pour fournir les solutions. La solution implémentant l'algorithme de *backtracking*, elle, retourne les 14&nbsp;200 solutions en moins de 10 secondes.
+Dès 10 reines et un échiquier de 100 cases, l'algorithme de force brute n'est plus utilisable : il lui faut plusieurs dizaines de minutes pour fournir les solutions. La solution implémentant l'algorithme de *backtracking*, elle, retourne les 14&nbsp;200 solutions en moins de 10 secondes.
 
-La résolution par contraintes, bien qu'elle ne propose qu'une et une seule solution reste très performante lorsque le problème de complexifie : elle permet d'obtenir une solution en moins de 150&nbsp;ms pour 200 reines et un échiquier de 40&nbsp;000 cases. L'implémentation présentée ici monte ses limites en dépassant les 500 reines et les 250 000 cases.
+La résolution par contraintes, reste très performante lorsque le problème de complexifie : elle permet d'obtenir une solution en moins de 150&nbsp;ms pour 200 reines et un échiquier de 40&nbsp;000 cases. Bien qu'elle ne propose qu'une et une seule solution, elle peut s'avérer pertinente lorsqu'on ne cherche pas un résultat particulier. L'implémentation présentée ici monte ses limites en dépassant les 500 reines et les 250 000 cases.
