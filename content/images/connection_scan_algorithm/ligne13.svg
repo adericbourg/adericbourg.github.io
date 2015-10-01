@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="730"
+   height="250"
+   viewBox="0 0 730.00001 250"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.91 r13725"
+   sodipodi:docname="ligne13.svg"
+   inkscape:export-filename="/home/alban/workspace/adericbourg.github.io/content/images/connection_scan_algorithm/ligne13.png"
+   inkscape:export-xdpi="90"
+   inkscape:export-ydpi="90">
+  <defs
+     id="defs4" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="2.8"
+     inkscape:cx="275.27549"
+     inkscape:cy="125.82793"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     inkscape:window-width="3840"
+     inkscape:window-height="2041"
+     inkscape:window-x="-8"
+     inkscape:window-y="1080"
+     inkscape:window-maximized="1"
+     units="px" />
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Calque 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(0,-802.36216)">
+    <g
+       id="g4226"
+       transform="translate(-8,800)">
+      <g
+         transform="matrix(1.5566748,0,0,1.5566748,-134.43342,-231.39518)"
+         id="g4175">
+        <path
+           style="fill:none;fill-rule:evenodd;stroke:#89c7d6;stroke-width:5;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           d="m 301.50552,278.83789 c 198.29846,0 198.03993,0 198.03993,0"
+           id="path4136"
+           inkscape:connector-curvature="0" />
+        <path
+           inkscape:connector-curvature="0"
+           id="path4138"
+           d="m 107.77837,303.18571 c 145.22468,0 145.03534,0 145.03534,0"
+           style="fill:none;fill-rule:evenodd;stroke:#89c7d6;stroke-width:5.73764324;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+        <path
+           style="fill:none;fill-rule:evenodd;stroke:#89c7d6;stroke-width:5;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           d="m 170.32154,254.59423 c 83.0122,0 82.90398,0 82.90398,0"
+           id="path4140"
+           inkscape:connector-curvature="0" />
+        <path
+           inkscape:connector-curvature="0"
+           id="path4142"
+           d="m 254.1361,254.5665 c 47.8568,24.22224 47.79441,24.19065 47.79441,24.19065"
+           style="fill:none;fill-rule:evenodd;stroke:#89c7d6;stroke-width:5;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+        <path
+           inkscape:connector-curvature="0"
+           id="path4142-9"
+           d="m 254.31,302.86425 c 47.8568,-24.22224 47.79441,-24.19065 47.79441,-24.19065"
+           style="fill:none;fill-rule:evenodd;stroke:#89c7d6;stroke-width:5;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+        <circle
+           style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:2;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           id="path4159"
+           cx="169.41963"
+           cy="254.59422"
+           r="3.7053571" />
+        <circle
+           r="3.7053571"
+           cy="303.1857"
+           cx="107.31958"
+           id="circle4161"
+           style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:2;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+        <circle
+           style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:2;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           id="circle4163"
+           cx="298.88391"
+           cy="278.29971"
+           r="3.7053571" />
+        <circle
+           r="3.7053571"
+           cy="278.83789"
+           cx="501.41949"
+           id="circle4165"
+           style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:2;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+      </g>
+      <text
+         transform="matrix(0.5,-0.8660254,0.8660254,0.5,0,0)"
+         sodipodi:linespacing="125%"
+         id="text4167"
+         y="113.91502"
+         x="-129.12483"
+         style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         xml:space="preserve"><tspan
+           style="font-size:15px;text-align:center;text-anchor:middle"
+           y="113.91502"
+           x="-129.12483"
+           id="tspan4169"
+           sodipodi:role="line">Asnières</tspan><tspan
+           style="font-size:15px;text-align:center;text-anchor:middle"
+           id="tspan4171"
+           y="132.66502"
+           x="-129.12483"
+           sodipodi:role="line">Gennevilliers</tspan><tspan
+           style="font-size:15px;text-align:center;text-anchor:middle"
+           id="tspan4173"
+           y="151.41502"
+           x="-129.12483"
+           sodipodi:role="line">Les Courtilles</tspan></text>
+      <text
+         xml:space="preserve"
+         style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         x="18.80946"
+         y="197.36829"
+         id="text4186"
+         sodipodi:linespacing="125%"
+         transform="matrix(0.5,-0.8660254,0.8660254,0.5,0,0)"><tspan
+           sodipodi:role="line"
+           x="18.80946"
+           y="197.36829"
+           id="tspan4192"
+           style="font-size:15px;text-align:center;text-anchor:middle">Saint-Denis Université</tspan></text>
+      <text
+         transform="matrix(0.5,-0.8660254,0.8660254,0.5,0,0)"
+         sodipodi:linespacing="125%"
+         id="text4199"
+         y="392.80865"
+         x="44.456837"
+         style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         xml:space="preserve"><tspan
+           style="font-size:15px;text-align:center;text-anchor:middle"
+           id="tspan4201"
+           y="392.80865"
+           x="44.456837"
+           sodipodi:role="line">La Fourche</tspan></text>
+      <text
+         xml:space="preserve"
+         style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         x="239.74861"
+         y="664.39362"
+         id="text4203"
+         sodipodi:linespacing="125%"
+         transform="matrix(0.5,-0.8660254,0.8660254,0.5,0,0)"><tspan
+           sodipodi:role="line"
+           x="239.74861"
+           y="664.39362"
+           id="tspan4205"
+           style="font-size:15px;text-align:center;text-anchor:middle">Châtillon - Montrouge</tspan></text>
+    </g>
+  </g>
+</svg>
