@@ -250,3 +250,15 @@ h2.entry-title, h2.index-title {
   float: right;
   padding-left: 0.75em;
 }
+
+/* Content titles */
+
+h3 {
+  font-size: 1.875rem;
+  font-weight: bold;
+}
+
+h4 {
+  font-size: 1.35rem;
+  font-weight: bold;
+}

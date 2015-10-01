@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<!--[if IE 6]>
+<html class="ie6" lang="fr" prefix="og: http://ogp.me/ns#">
+<![endif]-->
+<!--[if IE 7]>
+<html class="ie7" lang="fr" prefix="og: http://ogp.me/ns#">
+<![endif]-->
+<!--[if IE 8]>
+<html class="ie8" lang="fr" prefix="og: http://ogp.me/ns#">
+<![endif]-->
+<!--[if !(IE 6) | !(IE 7) | !(IE 8)  ]><!-->
+<html lang="fr" prefix="og: http://ogp.me/ns#" itemscope itemtype="http://schema.org/Blog">
+<!--<![endif]-->
+<head>
+        <meta charset="utf-8" />
+        <title>Calcul d'itinéraire à partir des données RATP - Blog bloquant</title>
+        <link href="http://www.dericbourg.net/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Blog bloquant Full Atom Feed" />
+        <link href="http://www.dericbourg.net/feeds/blog.atom.xml" type="application/atom+xml" rel="alternate" title="Blog bloquant Categories Atom Feed" />
+
+        <!-- Twitter card -->
+        <meta name="twitter:card" content="summary" />
+        <meta name="twitter:site" content="@adericbourg" />
+        <meta name="twitter:creator" content="@adericbourg" />
+        <meta name="twitter:title" content="Calcul d'itinéraire à partir des données RATP - Blog bloquant" />
+        <meta name="twitter:description" content="La RATP progresse dans l'ouverture de ses données et même si elle ne propose pas encore un accès à son système SIEL, elle propose néanmoins les données de son offre de transport au format GTFS. Une bonne occasion de s'initier au calcul d'itinéraire ! Format des données Le ..." />
+        <meta name="twitter:domain" content="http://www.dericbourg.net/drafts/calcul-ditineraire-a-partir-des-donnees-ratp.html" />
+
+        <!-- Facebook Open Graph Meta Tags -->
+        <meta property="og:site_name" content="Blog bloquant"/>
+        <meta property="og:title" content="Calcul d'itinéraire à partir des données RATP"/>
+        <meta property="og:url" content="http://www.dericbourg.net/drafts/calcul-ditineraire-a-partir-des-donnees-ratp.htmlindex.html"/>
+        <meta property="og:description" content="La RATP progresse dans l'ouverture de ses données et même si elle ne propose pas encore un accès à son système SIEL, elle propose néanmoins les données de son offre de transport au format GTFS. Une bonne occasion de s'initier au calcul d'itinéraire ! Format des données Le ..."/>
+        <meta property="og:type" content="blog"/>
+
+        <!-- Mobile viewport optimized: j.mp/bplateviewport -->
+        <meta name="viewport" content="width=device-width,initial-scale=1, maximum-scale=1">
+
+        <link rel="stylesheet" type="text/css" href="http://www.dericbourg.net/theme/gumby.css" />
+        <link rel="stylesheet" type="text/css" href="http://www.dericbourg.net/theme/style.css" />
+        <link rel="stylesheet" type="text/css" href="http://www.dericbourg.net/theme/pygment.css" />
+
+        <script src="http://www.dericbourg.net/theme/js/libs/modernizr-2.6.2.min.js"></script>
+
+
+
+
+</head>
+
+<body id="index" class="home">
+
+
+    <div class="container">
+
+        <div class="row">
+
+          <header id="banner" class="body">
+                  <h1><a href="http://www.dericbourg.net/">Blog bloquant <strong></strong></a></h1>
+          </header><!-- /#banner -->
+
+            <div id="navigation" class="navbar row">
+              <a href="#" data-trigger="#navigation &gt; ul" class="toggle"><i class="icon-menu"></i></a>
+
+              <ul class="columns">
+                <li><a href="http://www.dericbourg.net/">Accueil</a></li>
+
+              </ul>
+
+
+            </div>
+
+<section id="content" class="body">
+
+   <div class="row">
+        <div class="eleven columns">
+
+
+            <header>
+              <h2 class="entry-title">Calcul d'itinéraire à partir des données RATP</h2>
+           
+              <div>
+                    <a class="info label" href="http://www.dericbourg.net/tag/opendata.html">opendata</a>
+                    <a class="info label" href="http://www.dericbourg.net/tag/ratp.html">ratp</a>
+              </div>
+            </header>
+            <footer class="post-info">
+
+              <abbr class="published" title="2015-09-12T00:00:00+02:00">
+                sam. 12 septembre 2015
+              </abbr>
+              &ndash;
+              <a href="http://www.dericbourg.net/drafts/calcul-ditineraire-a-partir-des-donnees-ratp.html" rel="bookmark" title="Lien permanent vers Calcul d'itinéraire à partir des données RATP">lien permanent</a>
+              <address class="vcard author">Par
+                <a class="url fn" href="http://www.dericbourg.net/author/alban-dericbourg.html"> Alban Dericbourg</a>
+              </address>
+
+            </footer><!-- /.post-info -->
+            <div class="entry-content">
+              <p>La RATP progresse dans l'<a href="http://data.ratp.fr">ouverture de ses données</a> et même si elle ne propose pas encore un accès à son <a href="https://fr.wikipedia.org/wiki/Syst%C3%A8me_d'information_en_ligne">système SIEL</a>, elle propose néanmoins les données de son offre de transport au <a href="https://developers.google.com/transit/gtfs/">format GTFS</a>. Une bonne occasion de s'initier au calcul d'itinéraire !</p>
+<h3>Format des données</h3>
+<p>Le format GTFS est un standard et la RATP se conforme à ce standard, simple et bien documenté. Nous n'en retiendrons que certains en première approche.</p>
+<h4>routes.txt</h4>
+<p>Le fichier décrit le nom et la direction des routes. Une route est assimilable à un trajet (origine - destination).</p>
+<p>Prenons l'exemple de la ligne 13 du métro parsien dont le plan simplifié est représenté sur la figure ci-dessous. Cette ligne est parcourue par quatre routes :</p>
+<ul>
+<li>Châtillon - Montrouge en direction de Saint-Denis Université ;</li>
+<li>Châtillon - Montrouge en direction de Gennevilliers Les Courtilles ;</li>
+<li>Saint-Denis Université en direction de Châtillon - Montrouge ;</li>
+<li>Gennevilliers Les Courtilles en direction de Châtillon - Montrouge.</li>
+</ul>
+<p><img alt="Plan simplifié de la ligne 13 du métro parisien" class="center" src="/images/connection_scan_algorithm/ligne13.png" /></p>
+<p>Le fichier <code>routes.txt</code> contient pour cette ligne :</p>
+<div class="highlight"><pre>route_id<span class="p">,</span>agency_id<span class="p">,</span>route_short_name<span class="p">,</span>route_long_name<span class="p">,</span>route_desc<span class="p">,</span>route_type<span class="p">,</span>route_url<span class="p">,</span>route_color<span class="p">,</span>route_text_color
+<span class="m">1197620</span><span class="p">,</span><span class="m">100</span><span class="p">,</span><span class="s">&quot;13&quot;</span><span class="p">,</span><span class="s">&quot;(CHATILLON - MONTROUGE &lt;-&gt; ST-DENIS-UNIVERSITE/LES COURTILLES) - Aller&quot;</span><span class="p">,,</span><span class="m">1</span><span class="p">,,</span>FFFFFF<span class="p">,</span><span class="m">000000</span>
+<span class="m">1197621</span><span class="p">,</span><span class="m">100</span><span class="p">,</span><span class="s">&quot;13&quot;</span><span class="p">,</span><span class="s">&quot;(CHATILLON - MONTROUGE &lt;-&gt; ST-DENIS-UNIVERSITE/LES COURTILLES) - Aller&quot;</span><span class="p">,,</span><span class="m">1</span><span class="p">,,</span>FFFFFF<span class="p">,</span><span class="m">000000</span>
+<span class="m">1197622</span><span class="p">,</span><span class="m">100</span><span class="p">,</span><span class="s">&quot;13&quot;</span><span class="p">,</span><span class="s">&quot;(CHATILLON - MONTROUGE &lt;-&gt; ST-DENIS-UNIVERSITE/LES COURTILLES) - Retour&quot;</span><span class="p">,,</span><span class="m">1</span><span class="p">,,</span>FFFFFF<span class="p">,</span><span class="m">000000</span>
+<span class="m">1197623</span><span class="p">,</span><span class="m">100</span><span class="p">,</span><span class="s">&quot;13&quot;</span><span class="p">,</span><span class="s">&quot;(CHATILLON - MONTROUGE &lt;-&gt; ST-DENIS-UNIVERSITE/LES COURTILLES) - Retour&quot;</span><span class="p">,,</span><span class="m">1</span><span class="p">,,</span>FFFFFF<span class="p">,</span><span class="m">000000</span>
+</pre></div>
+
+
+<h4>stops.txt</h4>
+<p>Ce fichier liste les arrêts avec, éventuellement, quelques informations complémentaires. La RATP fournit l'adresse la plus proche de l'arrêt ainsi que les coordonnées GPS de son centre (dans le cas d'une station qui dispose de plusieurs sorties). À noter que ce fichier n'est pas ordonné selon le sens de parcours des missions sur la ligne.</p>
+<p>Exemple des quatre premières stations de la ligne 13 :</p>
+<div class="highlight"><pre>stop_id,stop_code,stop_name,stop_desc,stop_lat,stop_lon,location_type,parent_station
+2397,,&quot;Pernety&quot;,&quot;Raymond Losserand (72 rue) - 75114&quot;,48.833933819810916,2.31790897216328,0,
+1969,,&quot;Châtillon Montrouge&quot;,&quot;République (220 avenue de la) - 92020&quot;,48.810283363510756,2.3012888709759522,0,
+2406,,&quot;Place de Clichy&quot;,&quot;Clichy (terre-plein face au 7 place de) - 75109&quot;,48.883203999876585,2.3272660246411383,0,
+...
+</pre></div>
+
+
+<h4>trips.txt</h4>
+<p>Ce fichier liste les courses et les associe à une route. Nous reviendrons sur son utilité en observant les horaires d'arrêt.</p>
+<p>Exemple sur la ligne 13 :</p>
+<div class="highlight"><pre>route_id,service_id,trip_id,trip_headsign,trip_short_name,direction_id,shape_id
+1197620,1762288,10017622880912413,101,101,0,
+1197620,1762289,10017622890912413,101,101,0,
+1197620,1762292,10017622920912413,101,101,0,
+...
+</pre></div>
+
+
+<h4>stops_times.txt</h4>
+<p>Ce fichier présente les horaires des courses aux stations (points d'arrêt). Ce fichier est trié par course et par heure d'arrêt en station.</p>
+<p>Un détail est à noter quant aux horaires : ceux-ci sont fournis pour la journée qui peut se terminer... le lendemain. Un métro circulant le dimanche à 1h du matin sera en réalité rattaché à la journée du samedi. Ainsi, son horaire ne sera pas « à 1h le dimanche» mais « à 25h le samedi ». Bien que cette astuce puisse sembler tordue, elle simplifie en pratique beaucoup de choses, notamment pour maintenir la continuité des missions : il serait absurde de scinder la mission d'un train sous prétexte qu'il roule à cheval sur deux jours calendaires.</p>
+<p>Exemple pour la ligne 13 :</p>
+<div class="highlight"><pre>trip_id,arrival_time,departure_time,stop_id,stop_sequence,stop_headsign,shape_dist_traveled
+10017622880912413,19:38:00,19:38:00,1969,1,,
+10017622880912413,19:40:00,19:40:00,1880,2,,
+10017622880912413,19:41:00,19:41:00,1879,3,,
+</pre></div>
+
+
+<p>Dans cet exemple, pour la course présentée, le véhicule s'arrête à 19:38:00 à l'arrêt 1969 (Châtillon - Montrouge) et en repart à la même heure. On en déduira qu'on ne prend vraisemblabement pas en compte le temps d'arrêt en station. Il arrive ensuite à la station 1880 (Malakoff - Rue Etienne Dolet) à 19:40:00, puis à la station 1879 (Malakoff - Plateau de Vanves) à 19:41:00, etc.</p>
+<h3>Calcul d'itinéraire</h3>
+<p>L'histoire et le contexte des calculs d'itinéraires est très bien synthétisé par <a href="https://twitter.com/tristramg">Tristram Gräbener</a> dans son <a href="http://blog.tristramg.eu/petit-historique-du-calcul-ditineraire.html">Petit historique du calcul d'itinéraire</a>. Probablement plus hipster que je ne veux bien l'admettre, j'ai choisi d'utiliser le plus récent : le <em><a href="http://i11www.iti.uni-karlsruhe.de/extra/publications/dpsw-isftr-13.pdf">Connection Scan Algorithm</a></em>.</p>
+<p>Cet algorithme, tenant en quelques lignes, se « contente » de parcourir une table horaire précalculée des connexions entre les stations et de retenir la solution optimale en temps de trajet. Une connexion représente une possibilité de trajet entre deux stations. On la modélise donc par un quadruplet contenant la station de départ, la station d'arrivée, l'heure de départ et l'heure d'arrivée. La table horaire devient alors simplement une liste de ces connexions triées par heure de départ croissante.</p>
+            </div><!-- /.entry-content -->
+            <div class="comments">
+              <h3>Comments</h3>
+              <div id="disqus_thread"></div>
+              <script type="text/javascript">
+                  var disqus_shortname = 'dericbourg';
+                  (function() {
+                      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                  })();
+              </script>
+              <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+            </div>
+
+
+        </div><!-- /.eleven.columns -->
+
+<div class="three columns">
+
+      <div class="btn primary"><a href="https://github.com/adericbourg" target="_blank">Github</a></div>
+
+      <div class="btn twitter"><a href="https://twitter.com/adericbourg" target="_blank">Twitter</a></div>
+
+
+
+<!--
+<h4>Pages</h4>
+
+ <ul>
+  </ul>
+
+<h4>Catégories</h4>
+<ul>
+		<li><a href="http://www.dericbourg.net/category/blog.html">Blog</a></li>
+</ul>
+
+-->
+<h4>Tags</h4>
+	<ul id="sidebar-tags">
+	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/cve.html">cve</a></li>
+	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/ssl.html">ssl</a></li>
+	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/quotidien.html">quotidien</a></li>
+	    <li class="tag tag-1"><a href="http://www.dericbourg.net/tag/securite.html">sécurité</a></li>
+	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/wifi.html">wifi</a></li>
+	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/certificat.html">certificat</a></li>
+	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/jeu.html">jeu</a></li>
+	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/bien-etre.html">bien-être</a></li>
+	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/java.html">java</a></li>
+	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/linux.html">linux</a></li>
+	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/python.html">python</a></li>
+	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/raspberrypi.html">raspberrypi</a></li>
+	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/tls.html">tls</a></li>
+	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/signature.html">signature</a></li>
+	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/algorithmique.html">algorithmique</a></li>
+	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/motivation.html">motivation</a></li>
+	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/vivre-ensemble.html">vivre ensemble</a></li>
+	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/iptables.html">iptables</a></li>
+	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/bash.html">bash</a></li>
+</ul>
+
+
+
+</div> </div><!-- /.row -->
+
+
+</section>
+
+       </div><!-- /.row -->
+    </div><!-- /.container -->
+
+
+       <div class="container.nopad bg">
+
+
+        <footer id="credits" class="row">
+          <div class="seven columns left-center">
+
+                   <address id="about" class="vcard body">
+                    Proudly powered by <a href="http://getpelican.com/">Pelican</a>,
+                    which takes great advantage of <a href="http://python.org">Python</a>.
+                    <br />
+                    Based on the <a target="_blank" href="http://gumbyframework.com">Gumby Framework</a>
+                    </address>
+          </div>
+        </footer>
+
+    </div>
+
+
+<script type="text/javascript">
+    var disqus_shortname = 'dericbourg';
+    (function () {
+        var s = document.createElement('script'); s.async = true;
+        s.type = 'text/javascript';
+        s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
+        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+    }());
+</script>
+  <script src="http://www.dericbourg.net/theme/js/libs/jquery-1.9.1.min.js"></script>
+  <script src="http://www.dericbourg.net/theme/js/libs/gumby.min.js"></script>
+  <script src="http://www.dericbourg.net/theme/js/plugins.js"></script>
+</body>
+</html>
