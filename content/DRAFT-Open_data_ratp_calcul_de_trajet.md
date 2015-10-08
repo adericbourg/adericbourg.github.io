@@ -134,58 +134,9 @@ Cet algorithme, tenant en quelques lignes, se « contente » de parcourir une ta
 
 #### Alimentation des données : parsing des fichiers GTFS
 
-Dans la suite, on utilisera ces structures qui sont (presque) calquées sur la structure des fichiers GTFS.
+Les fichiers GTFS, bien que portant l'extension `.txt` sont manipulables commes des fichiers CSV. Dans la suite, on utilisera des structures qui sont (presque) calquées sur le format de ces fichiers.
 
-```scala
-case class Route(
-  routeId: Long,
-  routeShortName: String,
-  routeLongName: String,
-  routeDesc: String
-)
-```
-
-```scala
-case class Stop(
-  stopId: Long,
-  stopName: String,
-  stopDesc: String,
-  stopLat: Double,
-  stopLon: Double,
-  locationType: Int,
-  parentStation: String
-)
-```
-
-```scala
-case class Trip(
-  routeId: Long,
-  serviceId: Long,
-  tripId: Long,
-  tripShortName: String,
-  directionId: Long
-)
-```
-
-```scala
-case class StopTime(
-  tripId: Long,
-  arrivalTime: Duration,
-  departureTime: Duration,
-  stopId: Long
-)
-```
-
-```scala
-case class Transfer(
-  fromStopId: Long,
-  toStopId: Long,
-  transferType: String,
-  minTransferTime: Int
-)
-```
-
-Les fichiers GTFS, bien que portant l'extension `.txt` sont manipulables commes des fichiers CSV. Leur parsing est donc immédiat (on utilise dans cet exemple [scala-csv](https://github.com/tototoshi/scala-csv)) :
+Leur parsing est immédiat. Prenons par exemple le cas des routes (on utilise ici [scala-csv](https://github.com/tototoshi/scala-csv)) :
 
 ```scala
 import com.github.tototoshi.csv._
@@ -193,6 +144,9 @@ val routes: List[Route] = CSVReader.
   open(new File("routes.txt")).
   allWithHeaders().
   map(Route.parse)
+
+
+case class Route(routeId: Long, routeShortName: String, routeLongName: String, routeDesc: String)
 
 object Route {
   def parse(fields: Map[String, String]) = {
