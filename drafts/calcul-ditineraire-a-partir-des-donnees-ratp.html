@@ -194,6 +194,102 @@
 <h3>Calcul d'itinéraire</h3>
 <p>L'histoire et le contexte des calculs d'itinéraires est très bien synthétisé par <a href="https://twitter.com/tristramg">Tristram Gräbener</a> dans son <a href="http://blog.tristramg.eu/petit-historique-du-calcul-ditineraire.html">Petit historique du calcul d'itinéraire</a>. Probablement plus hipster que je ne veux bien l'admettre, j'ai choisi d'utiliser le plus récent : le <em><a href="http://i11www.iti.uni-karlsruhe.de/extra/publications/dpsw-isftr-13.pdf">Connection Scan Algorithm</a></em>.</p>
 <p>Cet algorithme, tenant en quelques lignes, se « contente » de parcourir une table horaire précalculée des connexions entre les stations et de retenir la solution optimale en temps de trajet. Une connexion représente une possibilité de trajet entre deux stations. On la modélise donc par un quadruplet contenant la station de départ, la station d'arrivée, l'heure de départ et l'heure d'arrivée. La table horaire devient alors simplement une liste de ces connexions triées par heure de départ croissante.</p>
+<h4>Alimentation des données : parsing des fichiers GTFS</h4>
+<p>Dans la suite, on utilisera ces structures qui sont (presque) calquées sur la structure des fichiers GTFS.</p>
+<div class="highlight"><pre><span class="k">case</span> <span class="k">class</span> <span class="nc">Route</span><span class="o">(</span>
+  <span class="n">routeId</span><span class="k">:</span> <span class="kt">Long</span><span class="o">,</span>
+  <span class="n">routeShortName</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span>
+  <span class="n">routeLongName</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span>
+  <span class="n">routeDesc</span><span class="k">:</span> <span class="kt">String</span>
+<span class="o">)</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span class="k">case</span> <span class="k">class</span> <span class="nc">Stop</span><span class="o">(</span>
+  <span class="n">stopId</span><span class="k">:</span> <span class="kt">Long</span><span class="o">,</span>
+  <span class="n">stopName</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span>
+  <span class="n">stopDesc</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span>
+  <span class="n">stopLat</span><span class="k">:</span> <span class="kt">Double</span><span class="o">,</span>
+  <span class="n">stopLon</span><span class="k">:</span> <span class="kt">Double</span><span class="o">,</span>
+  <span class="n">locationType</span><span class="k">:</span> <span class="kt">Int</span><span class="o">,</span>
+  <span class="n">parentStation</span><span class="k">:</span> <span class="kt">String</span>
+<span class="o">)</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span class="k">case</span> <span class="k">class</span> <span class="nc">Trip</span><span class="o">(</span>
+  <span class="n">routeId</span><span class="k">:</span> <span class="kt">Long</span><span class="o">,</span>
+  <span class="n">serviceId</span><span class="k">:</span> <span class="kt">Long</span><span class="o">,</span>
+  <span class="n">tripId</span><span class="k">:</span> <span class="kt">Long</span><span class="o">,</span>
+  <span class="n">tripShortName</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span>
+  <span class="n">directionId</span><span class="k">:</span> <span class="kt">Long</span>
+<span class="o">)</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span class="k">case</span> <span class="k">class</span> <span class="nc">StopTime</span><span class="o">(</span>
+  <span class="n">tripId</span><span class="k">:</span> <span class="kt">Long</span><span class="o">,</span>
+  <span class="n">arrivalTime</span><span class="k">:</span> <span class="kt">Duration</span><span class="o">,</span>
+  <span class="n">departureTime</span><span class="k">:</span> <span class="kt">Duration</span><span class="o">,</span>
+  <span class="n">stopId</span><span class="k">:</span> <span class="kt">Long</span>
+<span class="o">)</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span class="k">case</span> <span class="k">class</span> <span class="nc">Transfer</span><span class="o">(</span>
+  <span class="n">fromStopId</span><span class="k">:</span> <span class="kt">Long</span><span class="o">,</span>
+  <span class="n">toStopId</span><span class="k">:</span> <span class="kt">Long</span><span class="o">,</span>
+  <span class="n">transferType</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span>
+  <span class="n">minTransferTime</span><span class="k">:</span> <span class="kt">Int</span>
+<span class="o">)</span>
+</pre></div>
+
+
+<p>Les fichiers GTFS, bien que portant l'extension <code>.txt</code> sont manipulables commes des fichiers CSV. Leur parsing est donc immédiat (on utilise dans cet exemple <a href="https://github.com/tototoshi/scala-csv">scala-csv</a>) :</p>
+<div class="highlight"><pre><span class="k">import</span> <span class="nn">com.github.tototoshi.csv._</span>
+<span class="k">val</span> <span class="n">routes</span><span class="k">:</span> <span class="kt">List</span><span class="o">[</span><span class="kt">Route</span><span class="o">]</span> <span class="k">=</span> <span class="nc">CSVReader</span><span class="o">.</span>
+  <span class="n">open</span><span class="o">(</span><span class="k">new</span> <span class="nc">File</span><span class="o">(</span><span class="s">&quot;routes.txt&quot;</span><span class="o">)).</span>
+  <span class="n">allWithHeaders</span><span class="o">().</span>
+  <span class="n">map</span><span class="o">(</span><span class="nc">Route</span><span class="o">.</span><span class="n">parse</span><span class="o">)</span>
+
+<span class="k">object</span> <span class="nc">Route</span> <span class="o">{</span>
+  <span class="k">def</span> <span class="n">parse</span><span class="o">(</span><span class="n">fields</span><span class="k">:</span> <span class="kt">Map</span><span class="o">[</span><span class="kt">String</span>, <span class="kt">String</span><span class="o">])</span> <span class="k">=</span> <span class="o">{</span>
+    <span class="nc">Route</span><span class="o">(</span>
+      <span class="n">fields</span><span class="o">(</span><span class="s">&quot;route_id&quot;</span><span class="o">).</span><span class="n">toLong</span><span class="o">,</span>
+      <span class="n">fields</span><span class="o">(</span><span class="s">&quot;route_short_name&quot;</span><span class="o">),</span>
+      <span class="n">fields</span><span class="o">(</span><span class="s">&quot;route_long_name&quot;</span><span class="o">),</span>
+      <span class="n">fields</span><span class="o">(</span><span class="s">&quot;route_desc&quot;</span><span class="o">)</span>
+    <span class="o">)</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<h4>Construction de la table horaire</h4>
+<p>La table horaire est, comme nous l'avons vu, une séquence de connexions modélisées par des quadruplets contenants chacun la station de départ, la station d'arrivée, l'heure de départ et l'heure d'arrivée.</p>
+<div class="highlight"><pre><span class="k">case</span> <span class="k">class</span> <span class="nc">Timetable</span><span class="o">(</span><span class="n">connections</span><span class="k">:</span> <span class="kt">Seq</span><span class="o">[</span><span class="kt">Connection</span><span class="o">])</span>
+<span class="k">case</span> <span class="k">class</span> <span class="nc">Connection</span><span class="o">(</span>
+  <span class="n">departureStation</span><span class="k">:</span> <span class="kt">Int</span><span class="o">,</span>
+  <span class="n">arrivalStation</span><span class="k">:</span> <span class="kt">Int</span><span class="o">,</span>
+  <span class="n">departureTimestamp</span><span class="k">:</span> <span class="kt">Int</span><span class="o">,</span>
+  <span class="n">arrivalTimestamp</span><span class="k">:</span> <span class="kt">Int</span>
+<span class="o">)</span>
+</pre></div>
+
+
+<p>Sa construction se fait en deux étapes :</p>
+<ol>
+<li>en ingérant les connexions issues des courses (successions de points d'arrêts sur une même ligne) ;</li>
+<li>en ingérant les connexions issues des correspondances (« ponts » entre les courses).</li>
+</ol>
+<h5>Connexions issues des courses</h5>
+<blockquote>
+<p>TODO</p>
+</blockquote>
+<h5>COnnexions issues des transferts</h5>
+<blockquote>
+<p>TODO</p>
+</blockquote>
             </div><!-- /.entry-content -->
             <div class="comments">
               <h3>Comments</h3>
@@ -234,24 +330,24 @@
 -->
 <h4>Tags</h4>
 	<ul id="sidebar-tags">
-	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/bash.html">bash</a></li>
-	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/python.html">python</a></li>
-	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/algorithmique.html">algorithmique</a></li>
-	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/bien-etre.html">bien-être</a></li>
 	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/raspberrypi.html">raspberrypi</a></li>
-	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/motivation.html">motivation</a></li>
-	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/jeu.html">jeu</a></li>
-	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/vivre-ensemble.html">vivre ensemble</a></li>
-	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/cve.html">cve</a></li>
-	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/ssl.html">ssl</a></li>
-	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/tls.html">tls</a></li>
-	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/java.html">java</a></li>
-	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/linux.html">linux</a></li>
+	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/certificat.html">certificat</a></li>
 	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/wifi.html">wifi</a></li>
-	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/iptables.html">iptables</a></li>
+	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/bash.html">bash</a></li>
+	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/vivre-ensemble.html">vivre ensemble</a></li>
+	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/java.html">java</a></li>
+	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/jeu.html">jeu</a></li>
+	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/ssl.html">ssl</a></li>
 	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/signature.html">signature</a></li>
 	    <li class="tag tag-1"><a href="http://www.dericbourg.net/tag/securite.html">sécurité</a></li>
-	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/certificat.html">certificat</a></li>
+	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/iptables.html">iptables</a></li>
+	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/tls.html">tls</a></li>
+	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/linux.html">linux</a></li>
+	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/python.html">python</a></li>
+	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/bien-etre.html">bien-être</a></li>
+	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/cve.html">cve</a></li>
+	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/motivation.html">motivation</a></li>
+	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/algorithmique.html">algorithmique</a></li>
 	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/quotidien.html">quotidien</a></li>
 </ul>
 
