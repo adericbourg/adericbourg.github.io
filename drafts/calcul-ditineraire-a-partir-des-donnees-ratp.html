@@ -151,6 +151,46 @@
 
 
 <p>Dans cet exemple, pour la course présentée, le véhicule s'arrête à 19:38:00 à l'arrêt 1969 (Châtillon - Montrouge) et en repart à la même heure. On en déduira qu'on ne prend vraisemblabement pas en compte le temps d'arrêt en station. Il arrive ensuite à la station 1880 (Malakoff - Rue Etienne Dolet) à 19:40:00, puis à la station 1879 (Malakoff - Plateau de Vanves) à 19:41:00, etc.</p>
+<h4>transfers.txt</h4>
+<p><code>transfers.txt</code> regroupe les correspondances entre plusieurs points d'arrêt.</p>
+<p>Pour prendre un exemple :</p>
+<div class="highlight"><pre>from_stop_id,to_stop_id,transfer_type,min_transfer_time
+4211780,2270,2,212
+4472773,1724,2,228
+3619167,2276,2,252
+</pre></div>
+
+
+<p>Prenons la première ligne : la correspondance se fait entre l'arrêt « 4211780 » et l'arrêt « 2270 ». Un recherche dans le fichier <code>stops.txt</code> permet de donner un nom humainement compréhensible à ces identifiants : ils correspondent ici tous les deux au point d'arrêt « Mairie de Saint-Ouen ».</p>
+<p>À partir du l'identifiant d'un point d'arrêt, on peut également ressortir les identifiants de course (<code>trip_id</code>). Prenons-en un au hasard :</p>
+<div class="highlight"><pre><span class="nv">$ </span>grep <span class="m">2270</span> stop_times.txt <span class="p">|</span> cut -d, -f1 <span class="p">|</span> head -n1
+10017622880912417
+</pre></div>
+
+
+<p>À partir de cet identifiant, on peut retrouver la route associée (<code>route_id</code>) :</p>
+<div class="highlight"><pre><span class="nv">$ </span>grep <span class="m">10017622880912417</span> trips.txt <span class="p">|</span> cut -d, -f1
+1197623
+</pre></div>
+
+
+<p>On trouve donc qu'il s'agissait (encore...) de la ligne 13 dans le sens « retour » :</p>
+<div class="highlight"><pre><span class="nv">$ </span>grep ^1197623, routes.txt
+1197623,100,<span class="s2">&quot;13&quot;</span>,<span class="s2">&quot;(CHATILLON - MONTROUGE &lt;-&gt; ST-DENIS-UNIVERSITE/LES COURTILLES) - Retour&quot;</span>,,1,,FFFFFF,000000
+</pre></div>
+
+
+<p>Vérifions par acquit de conscience l'autre identifiant de point d'arrêt :</p>
+<div class="highlight"><pre><span class="nv">$ </span>grep <span class="m">4211780</span> stop_times.txt <span class="p">|</span> cut -d, -f1 <span class="p">|</span> head -n1
+119841521246955
+<span class="nv">$ </span>grep <span class="m">119841521246955</span> trips.txt
+1364288,1984152,119841521246955,,1,1,
+<span class="nv">$ </span>grep <span class="m">1364288</span> routes.txt
+1364288,100,<span class="s2">&quot;N44&quot;</span>,<span class="s2">&quot;(GARGES-SARCELLES RER &lt;-&gt; GARE DE L&#39;EST) - Retour&quot;</span>,,3,,FFFFFF,000000
+</pre></div>
+
+
+<p>Il s'agit donc du <a href="http://www.ratp.fr/informer/pdf/orienter/f_horaire.php?fm=gif&amp;loc=noctilien&amp;nompdf=n44">Noctilien N44</a> qui passe effectivement par « Mairie de Saint-Ouen ». La boucle est bouclée.</p>
 <h3>Calcul d'itinéraire</h3>
 <p>L'histoire et le contexte des calculs d'itinéraires est très bien synthétisé par <a href="https://twitter.com/tristramg">Tristram Gräbener</a> dans son <a href="http://blog.tristramg.eu/petit-historique-du-calcul-ditineraire.html">Petit historique du calcul d'itinéraire</a>. Probablement plus hipster que je ne veux bien l'admettre, j'ai choisi d'utiliser le plus récent : le <em><a href="http://i11www.iti.uni-karlsruhe.de/extra/publications/dpsw-isftr-13.pdf">Connection Scan Algorithm</a></em>.</p>
 <p>Cet algorithme, tenant en quelques lignes, se « contente » de parcourir une table horaire précalculée des connexions entre les stations et de retenir la solution optimale en temps de trajet. Une connexion représente une possibilité de trajet entre deux stations. On la modélise donc par un quadruplet contenant la station de départ, la station d'arrivée, l'heure de départ et l'heure d'arrivée. La table horaire devient alors simplement une liste de ces connexions triées par heure de départ croissante.</p>
@@ -194,25 +234,25 @@
 -->
 <h4>Tags</h4>
 	<ul id="sidebar-tags">
-	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/python.html">python</a></li>
-	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/vivre-ensemble.html">vivre ensemble</a></li>
-	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/wifi.html">wifi</a></li>
-	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/algorithmique.html">algorithmique</a></li>
-	    <li class="tag tag-1"><a href="http://www.dericbourg.net/tag/securite.html">sécurité</a></li>
-	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/java.html">java</a></li>
-	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/ssl.html">ssl</a></li>
-	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/signature.html">signature</a></li>
-	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/iptables.html">iptables</a></li>
-	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/motivation.html">motivation</a></li>
-	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/linux.html">linux</a></li>
-	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/tls.html">tls</a></li>
-	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/certificat.html">certificat</a></li>
-	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/cve.html">cve</a></li>
-	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/raspberrypi.html">raspberrypi</a></li>
-	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/bien-etre.html">bien-être</a></li>
-	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/quotidien.html">quotidien</a></li>
 	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/bash.html">bash</a></li>
+	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/python.html">python</a></li>
+	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/algorithmique.html">algorithmique</a></li>
+	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/bien-etre.html">bien-être</a></li>
+	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/raspberrypi.html">raspberrypi</a></li>
+	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/motivation.html">motivation</a></li>
 	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/jeu.html">jeu</a></li>
+	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/vivre-ensemble.html">vivre ensemble</a></li>
+	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/cve.html">cve</a></li>
+	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/ssl.html">ssl</a></li>
+	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/tls.html">tls</a></li>
+	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/java.html">java</a></li>
+	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/linux.html">linux</a></li>
+	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/wifi.html">wifi</a></li>
+	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/iptables.html">iptables</a></li>
+	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/signature.html">signature</a></li>
+	    <li class="tag tag-1"><a href="http://www.dericbourg.net/tag/securite.html">sécurité</a></li>
+	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/certificat.html">certificat</a></li>
+	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/quotidien.html">quotidien</a></li>
 </ul>
 
 
