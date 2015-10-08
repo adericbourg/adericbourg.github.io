@@ -77,7 +77,53 @@ trip_id,arrival_time,departure_time,stop_id,stop_sequence,stop_headsign,shape_di
 
 Dans cet exemple, pour la course présentée, le véhicule s'arrête à 19:38:00 à l'arrêt 1969 (Châtillon - Montrouge) et en repart à la même heure. On en déduira qu'on ne prend vraisemblabement pas en compte le temps d'arrêt en station. Il arrive ensuite à la station 1880 (Malakoff - Rue Etienne Dolet) à 19:40:00, puis à la station 1879 (Malakoff - Plateau de Vanves) à 19:41:00, etc.
 
-> TODO transfers
+#### transfers.txt
+
+`transfers.txt` regroupe les correspondances entre plusieurs points d'arrêt.
+
+Pour prendre un exemple :
+```
+from_stop_id,to_stop_id,transfer_type,min_transfer_time
+4211780,2270,2,212
+4472773,1724,2,228
+3619167,2276,2,252
+```
+
+Prenons la première ligne : la correspondance se fait entre l'arrêt « 4211780 » et l'arrêt « 2270 ». Un recherche dans le fichier `stops.txt` permet de donner un nom humainement compréhensible à ces identifiants : ils correspondent ici tous les deux au point d'arrêt « Mairie de Saint-Ouen ».
+
+À partir du l'identifiant d'un point d'arrêt, on peut également ressortir les identifiants de course (`trip_id`). Prenons-en un au hasard :
+
+```
+$ grep 2270 stop_times.txt | cut -d, -f1 | head -n1
+10017622880912417
+```
+
+À partir de cet identifiant, on peut retrouver la route associée (`route_id`) :
+
+```
+$ grep 10017622880912417 trips.txt | cut -d, -f1
+1197623
+```
+
+On trouve donc qu'il s'agissait (encore...) de la ligne 13 dans le sens « retour » :
+
+```
+$ grep ^1197623, routes.txt
+1197623,100,"13","(CHATILLON - MONTROUGE <-> ST-DENIS-UNIVERSITE/LES COURTILLES) - Retour",,1,,FFFFFF,000000
+```
+
+Vérifions par acquit de conscience l'autre identifiant de point d'arrêt :
+
+```
+$ grep 4211780 stop_times.txt | cut -d, -f1 | head -n1
+119841521246955
+$ grep 119841521246955 trips.txt
+1364288,1984152,119841521246955,,1,1,
+$ grep 1364288 routes.txt
+1364288,100,"N44","(GARGES-SARCELLES RER <-> GARE DE L'EST) - Retour",,3,,FFFFFF,000000
+```
+
+Il s'agit donc du [Noctilien N44](http://www.ratp.fr/informer/pdf/orienter/f_horaire.php?fm=gif&loc=noctilien&nompdf=n44) qui passe effectivement par « Mairie de Saint-Ouen ». La boucle est bouclée.
 
 ### Calcul d'itinéraire
 
