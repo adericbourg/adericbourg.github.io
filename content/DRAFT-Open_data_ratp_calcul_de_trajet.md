@@ -130,3 +130,105 @@ Il s'agit donc du [Noctilien N44](http://www.ratp.fr/informer/pdf/orienter/f_hor
 L'histoire et le contexte des calculs d'itinéraires est très bien synthétisé par [Tristram Gräbener](https://twitter.com/tristramg) dans son [Petit historique du calcul d'itinéraire](http://blog.tristramg.eu/petit-historique-du-calcul-ditineraire.html). Probablement plus hipster que je ne veux bien l'admettre, j'ai choisi d'utiliser le plus récent : le *[Connection Scan Algorithm](http://i11www.iti.uni-karlsruhe.de/extra/publications/dpsw-isftr-13.pdf)*.
 
 Cet algorithme, tenant en quelques lignes, se « contente » de parcourir une table horaire précalculée des connexions entre les stations et de retenir la solution optimale en temps de trajet. Une connexion représente une possibilité de trajet entre deux stations. On la modélise donc par un quadruplet contenant la station de départ, la station d'arrivée, l'heure de départ et l'heure d'arrivée. La table horaire devient alors simplement une liste de ces connexions triées par heure de départ croissante.
+
+
+#### Alimentation des données : parsing des fichiers GTFS
+
+Dans la suite, on utilisera ces structures qui sont (presque) calquées sur la structure des fichiers GTFS.
+
+```scala
+case class Route(
+  routeId: Long,
+  routeShortName: String,
+  routeLongName: String,
+  routeDesc: String
+)
+```
+
+```scala
+case class Stop(
+  stopId: Long,
+  stopName: String,
+  stopDesc: String,
+  stopLat: Double,
+  stopLon: Double,
+  locationType: Int,
+  parentStation: String
+)
+```
+
+```scala
+case class Trip(
+  routeId: Long,
+  serviceId: Long,
+  tripId: Long,
+  tripShortName: String,
+  directionId: Long
+)
+```
+
+```scala
+case class StopTime(
+  tripId: Long,
+  arrivalTime: Duration,
+  departureTime: Duration,
+  stopId: Long
+)
+```
+
+```scala
+case class Transfer(
+  fromStopId: Long,
+  toStopId: Long,
+  transferType: String,
+  minTransferTime: Int
+)
+```
+
+Les fichiers GTFS, bien que portant l'extension `.txt` sont manipulables commes des fichiers CSV. Leur parsing est donc immédiat (on utilise dans cet exemple [scala-csv](https://github.com/tototoshi/scala-csv)) :
+
+```scala
+import com.github.tototoshi.csv._
+val routes: List[Route] = CSVReader.
+  open(new File("routes.txt")).
+  allWithHeaders().
+  map(Route.parse)
+
+object Route {
+  def parse(fields: Map[String, String]) = {
+    Route(
+      fields("route_id").toLong,
+      fields("route_short_name"),
+      fields("route_long_name"),
+      fields("route_desc")
+    )
+  }
+}
+```
+
+#### Construction de la table horaire
+
+La table horaire est, comme nous l'avons vu, une séquence de connexions modélisées par des quadruplets contenants chacun la station de départ, la station d'arrivée, l'heure de départ et l'heure d'arrivée.
+
+```scala
+case class Timetable(connections: Seq[Connection])
+case class Connection(
+  departureStation: Int,
+  arrivalStation: Int,
+  departureTimestamp: Int,
+  arrivalTimestamp: Int
+)
+```
+
+Sa construction se fait en deux étapes :
+
+0. en ingérant les connexions issues des courses (successions de points d'arrêts sur une même ligne) ;
+0. en ingérant les connexions issues des correspondances (« ponts » entre les courses).
+
+##### Connexions issues des courses
+
+> TODO
+
+##### COnnexions issues des transferts
+
+> TODO
