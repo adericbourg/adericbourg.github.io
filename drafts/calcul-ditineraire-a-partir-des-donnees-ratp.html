@@ -196,13 +196,12 @@
 <p>Cet algorithme, tenant en quelques lignes, se « contente » de parcourir une table horaire précalculée des connexions entre les stations et de retenir la solution optimale en temps de trajet. Une connexion représente une possibilité de trajet entre deux stations. On la modélise donc par un quadruplet contenant la station de départ, la station d'arrivée, l'heure de départ et l'heure d'arrivée. La table horaire devient alors simplement une liste de ces connexions triées par heure de départ croissante.</p>
 <h4>Alimentation des données : parsing des fichiers GTFS</h4>
 <p>Les fichiers GTFS, bien que portant l'extension <code>.txt</code> sont manipulables commes des fichiers CSV. Dans la suite, on utilisera des structures qui sont (presque) calquées sur le format de ces fichiers.</p>
-<p>Leur parsing est immédiat. Prenons par exemple le cas des routes (on utilise ici <a href="https://github.com/tototoshi/scala-csv">scala-csv</a>) :</p>
+<p>Sur le principe, leur parsing est immédiat. Prenons par exemple le cas des routes (on utilise ici <a href="https://github.com/tototoshi/scala-csv">scala-csv</a>) :</p>
 <div class="highlight"><pre><span class="k">import</span> <span class="nn">com.github.tototoshi.csv._</span>
 <span class="k">val</span> <span class="n">routes</span><span class="k">:</span> <span class="kt">List</span><span class="o">[</span><span class="kt">Route</span><span class="o">]</span> <span class="k">=</span> <span class="nc">CSVReader</span><span class="o">.</span>
   <span class="n">open</span><span class="o">(</span><span class="k">new</span> <span class="nc">File</span><span class="o">(</span><span class="s">&quot;routes.txt&quot;</span><span class="o">)).</span>
   <span class="n">allWithHeaders</span><span class="o">().</span>
   <span class="n">map</span><span class="o">(</span><span class="nc">Route</span><span class="o">.</span><span class="n">parse</span><span class="o">)</span>
-
 
 <span class="k">case</span> <span class="k">class</span> <span class="nc">Route</span><span class="o">(</span><span class="n">routeId</span><span class="k">:</span> <span class="kt">Long</span><span class="o">,</span> <span class="n">routeShortName</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> <span class="n">routeLongName</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> <span class="n">routeDesc</span><span class="k">:</span> <span class="kt">String</span><span class="o">)</span>
 
@@ -216,6 +215,41 @@
     <span class="o">)</span>
   <span class="o">}</span>
 <span class="o">}</span>
+</pre></div>
+
+
+<p>Dans la pratique, la volumétrie des horaires des courses rend l'opération plus complexe :</p>
+<div class="highlight"><pre><span class="nv">$ </span>wc -l *
+        <span class="m">2</span> agency.txt
+    <span class="m">65937</span> calendar_dates.txt
+     <span class="m">4578</span> calendar.txt
+     <span class="m">1067</span> routes.txt
+    <span class="m">26653</span> stops.txt
+ <span class="m">10402381</span> stop_times.txt
+    <span class="m">80338</span> transfers.txt
+   <span class="m">417920</span> trips.txt
+</pre></div>
+
+
+<p>Pour simplifier la suite de cet article, nous ne traiterons que les lignes de métro et les lignes de RER exploitées par la RATP. On parsera les données ligne par ligne dans la structure <code>GtfsData</code> pour ensuite les fusionner :</p>
+<div class="highlight"><pre><span class="k">case</span> <span class="k">class</span> <span class="nc">GtfsData</span><span class="o">(</span>
+  <span class="n">name</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span>
+  <span class="n">routes</span><span class="k">:</span> <span class="kt">Iterable</span><span class="o">[</span><span class="kt">Route</span><span class="o">],</span>
+  <span class="n">trips</span><span class="k">:</span> <span class="kt">Iterable</span><span class="o">[</span><span class="kt">Trip</span><span class="o">],</span>
+  <span class="n">stops</span><span class="k">:</span> <span class="kt">Iterable</span><span class="o">[</span><span class="kt">Stop</span><span class="o">],</span>
+  <span class="n">stopTimes</span><span class="k">:</span> <span class="kt">Iterable</span><span class="o">[</span><span class="kt">StopTime</span><span class="o">],</span>
+  <span class="n">transfers</span><span class="k">:</span> <span class="kt">Iterable</span><span class="o">[</span><span class="kt">Transfer</span><span class="o">]</span>
+<span class="o">)</span>
+
+<span class="c1">// Fusion des données de ligne</span>
+<span class="k">val</span> <span class="n">gtfsData</span> <span class="k">=</span> <span class="nc">GtfsData</span><span class="o">(</span>
+  <span class="s">&quot;RATP&quot;</span><span class="o">,</span>
+  <span class="n">lines</span><span class="o">.</span><span class="n">flatMap</span><span class="o">(</span><span class="k">_</span><span class="o">.</span><span class="n">routes</span><span class="o">),</span>
+  <span class="n">lines</span><span class="o">.</span><span class="n">flatMap</span><span class="o">(</span><span class="k">_</span><span class="o">.</span><span class="n">trips</span><span class="o">),</span>
+  <span class="n">lines</span><span class="o">.</span><span class="n">flatMap</span><span class="o">(</span><span class="k">_</span><span class="o">.</span><span class="n">stops</span><span class="o">),</span>
+  <span class="n">lines</span><span class="o">.</span><span class="n">flatMap</span><span class="o">(</span><span class="k">_</span><span class="o">.</span><span class="n">stopTimes</span><span class="o">),</span>
+  <span class="n">lines</span><span class="o">.</span><span class="n">flatMap</span><span class="o">(</span><span class="k">_</span><span class="o">.</span><span class="n">transfers</span><span class="o">)</span>
+<span class="o">)</span>
 </pre></div>
 
 
@@ -237,9 +271,55 @@
 <li>en ingérant les connexions issues des correspondances (« ponts » entre les courses).</li>
 </ol>
 <h5>Connexions issues des courses</h5>
-<blockquote>
-<p>TODO</p>
-</blockquote>
+<p>On ingère les horaires des courses en les groupant par... course et en prenant soin de ne pas « mélanger » les horaires de deux courses. Prenons l'exemple ci-dessous : les ceux courses fréquentent la même ligne mais ne s'arrêtent pas aux mêmes arrêts. Il n'y a pas de correspondance entre les deux.</p>
+<div class="highlight"><pre> Course I : A (t1) --------------------&gt; B (t3)
+Course II :               C (t2) --------------------&gt; D (t4)
+</pre></div>
+
+
+<p>Le fichier <code>stop_times.txt</code> ressemblerait à :</p>
+<div class="highlight"><pre>trip_id,arrival_time,departure_time,stop_id,stop_sequence,stop_headsign,shape_dist_traveled
+I, t1, t1, A, 1, ,
+II, t2, t2, C, 1, ,
+I, t3, t3, B, 1, ,
+II, t4, t4, D, 1, ,
+</pre></div>
+
+
+<p>Une lecture indépendante de l'identifiant de course (<code>trip_id</code>) amalgamerait donc ces deux courses et induirait de fausses correspondances.</p>
+<p>La création de la table horaire se fait en groupant deux à deux les horaires d'arrêt au sein d'une même course. Pour chaque élément à l'indice <code>i</code>, on créera une connexion partant de l'arrêt à cet indice et arrivant à l'arrêt de l'indice <code>i+1</code>. On implémente cette construction avec une fonction récursive qui dépile un à un les horaires de course.</p>
+<div class="highlight"><pre><span class="k">val</span> <span class="n">connectionsFromStopTimes</span> <span class="k">=</span> <span class="n">gtfsData</span><span class="o">.</span>
+  <span class="n">stopTimesByTripId</span><span class="o">.</span>
+  <span class="n">values</span><span class="o">.</span>
+  <span class="n">flatMap</span><span class="o">(</span><span class="n">stopTimesToConnections</span><span class="o">)</span>
+
+<span class="k">private</span> <span class="k">def</span> <span class="n">stopTimesToConnections</span><span class="o">(</span><span class="n">stopTimes</span><span class="k">:</span> <span class="kt">Iterable</span><span class="o">[</span><span class="kt">StopTime</span><span class="o">])</span><span class="k">:</span> <span class="kt">Iterable</span><span class="o">[</span><span class="kt">Connection</span><span class="o">]</span> <span class="k">=</span> <span class="o">{</span>
+  <span class="nd">@tailrec</span>
+  <span class="k">def</span> <span class="n">loop</span><span class="o">(</span><span class="n">stopTimes</span><span class="k">:</span> <span class="kt">List</span><span class="o">[</span><span class="kt">StopTime</span><span class="o">],</span> <span class="n">connections</span><span class="k">:</span> <span class="kt">List</span><span class="o">[</span><span class="kt">Connection</span><span class="o">])</span><span class="k">:</span> <span class="kt">List</span><span class="o">[</span><span class="kt">Connection</span><span class="o">]</span> <span class="k">=</span> <span class="o">{</span>
+    <span class="n">stopTimes</span> <span class="k">match</span> <span class="o">{</span>
+      <span class="c1">// Aucun horaire (n&#39;arrive que si la collection initiale est vide).</span>
+      <span class="c1">// On n&#39;a rien à faire de plus, on retourne les connexions (vides).</span>
+      <span class="k">case</span> <span class="nc">Nil</span> <span class="k">=&gt;</span> <span class="n">connections</span>
+      <span class="c1">// Dernier horaire : il est connecté au précédent et n&#39;ira pas plus loin.</span>
+      <span class="c1">// On en a terminé et on retourne les connexions.</span>
+      <span class="k">case</span> <span class="n">head</span> <span class="o">::</span> <span class="nc">Nil</span> <span class="k">=&gt;</span> <span class="n">connections</span>
+      <span class="c1">// Cas général : il reste des stations après la première de la collection.</span>
+      <span class="c1">// On créé une connexion entre celle-ci et la première des suivantes.</span>
+      <span class="k">case</span> <span class="n">head</span> <span class="o">::</span> <span class="n">tail</span> <span class="k">=&gt;</span>
+        <span class="k">val</span> <span class="n">departureStop</span> <span class="k">=</span> <span class="n">head</span><span class="o">.</span><span class="n">stopId</span><span class="o">.</span><span class="n">toInt</span>
+        <span class="k">val</span> <span class="n">arrivalStop</span> <span class="k">=</span> <span class="n">tail</span><span class="o">.</span><span class="n">head</span><span class="o">.</span><span class="n">stopId</span><span class="o">.</span><span class="n">toInt</span>
+        <span class="k">val</span> <span class="n">departureTime</span> <span class="k">=</span> <span class="n">durationToTimestamp</span><span class="o">(</span><span class="n">head</span><span class="o">.</span><span class="n">departureTime</span><span class="o">)</span>
+        <span class="k">val</span> <span class="n">arrivalTime</span> <span class="k">=</span> <span class="n">durationToTimestamp</span><span class="o">(</span><span class="n">tail</span><span class="o">.</span><span class="n">head</span><span class="o">.</span><span class="n">departureTime</span><span class="o">)</span>
+        <span class="k">val</span> <span class="n">connection</span> <span class="k">=</span> <span class="nc">Connection</span><span class="o">(</span><span class="n">departureStop</span><span class="o">,</span> <span class="n">arrivalStop</span><span class="o">,</span> <span class="n">departureTime</span><span class="o">,</span> <span class="n">arrivalTime</span><span class="o">)</span>
+        <span class="n">loop</span><span class="o">(</span><span class="n">tail</span><span class="o">,</span> <span class="n">connections</span> <span class="o">:+</span> <span class="n">connection</span><span class="o">)</span>
+    <span class="o">}</span>
+  <span class="o">}</span>
+  <span class="n">loop</span><span class="o">(</span><span class="n">stopTimes</span><span class="o">.</span><span class="n">toList</span><span class="o">,</span> <span class="nc">List</span><span class="o">())</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<p>Dans cet exemple de code, la fonction <code>durationToTimestamp</code> retourne un timestamp correspondant à l'heure effective pour la journée en cours à partir de l'heure seule fournie dans les données. Par exemple, le 01/01/2016, la durée <code>19h32min27s</code> permettra d'obtenir le timestamp équivalent à <code>2016-01-01T19:32:27.0Z</code>.</p>
 <h5>COnnexions issues des transferts</h5>
 <blockquote>
 <p>TODO</p>
@@ -284,25 +364,6 @@
 -->
 <h4>Tags</h4>
 	<ul id="sidebar-tags">
-	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/ssl.html">ssl</a></li>
-	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/algorithmique.html">algorithmique</a></li>
-	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/quotidien.html">quotidien</a></li>
-	    <li class="tag tag-1"><a href="http://www.dericbourg.net/tag/securite.html">sécurité</a></li>
-	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/jeu.html">jeu</a></li>
-	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/signature.html">signature</a></li>
-	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/tls.html">tls</a></li>
-	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/java.html">java</a></li>
-	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/motivation.html">motivation</a></li>
-	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/bien-etre.html">bien-être</a></li>
-	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/cve.html">cve</a></li>
-	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/python.html">python</a></li>
-	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/raspberrypi.html">raspberrypi</a></li>
-	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/vivre-ensemble.html">vivre ensemble</a></li>
-	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/bash.html">bash</a></li>
-	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/wifi.html">wifi</a></li>
-	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/linux.html">linux</a></li>
-	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/certificat.html">certificat</a></li>
-	    <li class="tag tag-4"><a href="http://www.dericbourg.net/tag/iptables.html">iptables</a></li>
 </ul>
 
 
