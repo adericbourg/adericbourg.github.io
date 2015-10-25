@@ -339,7 +339,7 @@ On a construit jusqu'ici deux tables horaires :
  * l'une issue des horaires des trains en station ;
  * l'autre issue des correspondances entre les trains.
 
-Reste maintenant à fusionner les deux. N'oublions pas que cette table doit être triée par heure de départ croissante. À ce détail près, cette étape est immédiate. 
+Reste maintenant à fusionner les deux. N'oublions pas que cette table doit être triée par heure de départ croissante. À ce détail près, cette étape est immédiate.
 
 ```scala
 val connectionsFromStopTimes = gtfsData.
@@ -351,4 +351,47 @@ val connectionsFromTransfers = transfersToConnections(gtfsData)
 val connections = (connectionsFromStopTimes ++ connectionsFromTransfers).
   toList.
   sortBy(_.arrivalTimestamp)
+```
+
+#### Exploitation de la table horaire : calcul d'itinéraire
+
+##### Explication de l'algorithme
+
+> TODO
+
+##### Exemple
+
+Partons d'un trajet entre [Maubert-Mutualité et Voltaire]( http://www.vianavigo.com/fr/itineraire-plan-de-quartier/?criteria=1&mrq=&id=&departure=Maubert+-+Mutualit%C3%A9%2C+Paris&departureType=StopArea&departureCity=Paris&departureCoordX=&departureCoordY=&departureExternalCode=59357&departureCityCode=75000&arrival=Voltaire+%2F+L%C3%A9on+Blum%2C+Paris&arrivalType=StopArea&arrivalCity=Paris&arrivalCityCode=75000&arrivalCoordX=&arrivalCoordY=&arrivalExternalCode=59616&date=25%2F10%2F2015&dateFormat=dd%2FMM%2Fyyyy&sens=1&hour=18&min=00&moreCriterions=true&via=&viaType=&viaCity=&viaCityCode=&viaExternalCode=&_train=on&rer=true&_rer=on&metro=true&_metro=on&_bus=on&_tram=on&walkSpeed=0&spcar=%C3%A2&hpx=1&hat=1&L=0&submitSearchItinerary=&ajid=/stif_web_carto/comp/itinerary/search.html_&_=1445793804586) en partant à 18h.
+
+```scala
+val maubert = 2350
+val voltaireLeonBlum = 1633
+
+csa.compute(
+  maubert,
+  voltaireLeonBlum,
+  durationToTimestamp(Duration.ofHours(18))
+)
+```
+
+On obtient le trajet :
+
+```
+Solution found with 15 connections
+  Maubert-Mutualité -> Cluny-La Sorbonne
+  Cluny-La Sorbonne -> Odéon
+  Odéon -> Odéon
+  Odéon -> Saint-Michel
+  Saint-Michel -> Cité
+  Cité -> Châtelet
+  Châtelet -> Les Halles
+  Les Halles -> Etienne Marcel
+  Etienne Marcel -> Réaumur-Sébastopol
+  Réaumur-Sébastopol -> Strasbourg-Saint-Denis
+  Strasbourg-Saint-Denis -> Strasbourg-Saint-Denis
+  Strasbourg-Saint-Denis -> République
+  République -> Oberkampf
+  Oberkampf -> Saint-Ambroise
+  Saint-Ambroise -> Voltaire (Léon Blum)
+Total transit time: 21 minutes
 ```
