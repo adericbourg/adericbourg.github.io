@@ -136,7 +136,7 @@ Cet algorithme, tenant en quelques lignes, se « contente » de parcourir une ta
 
 Les fichiers GTFS, bien que portant l'extension `.txt` sont manipulables commes des fichiers CSV. Dans la suite, on utilisera des structures qui sont (presque) calquées sur le format de ces fichiers.
 
-Leur parsing est immédiat. Prenons par exemple le cas des routes (on utilise ici [scala-csv](https://github.com/tototoshi/scala-csv)) :
+Sur le principe, leur parsing est immédiat. Prenons par exemple le cas des routes (on utilise ici [scala-csv](https://github.com/tototoshi/scala-csv)) :
 
 ```scala
 import com.github.tototoshi.csv._
@@ -144,7 +144,6 @@ val routes: List[Route] = CSVReader.
   open(new File("routes.txt")).
   allWithHeaders().
   map(Route.parse)
-
 
 case class Route(routeId: Long, routeShortName: String, routeLongName: String, routeDesc: String)
 
@@ -158,6 +157,43 @@ object Route {
     )
   }
 }
+```
+
+Dans la pratique, la volumétrie des horaires des courses rend l'opération plus complexe :
+
+```
+$ wc -l *
+        2 agency.txt
+    65937 calendar_dates.txt
+     4578 calendar.txt
+     1067 routes.txt
+    26653 stops.txt
+ 10402381 stop_times.txt
+    80338 transfers.txt
+   417920 trips.txt
+```
+
+Pour simplifier la suite de cet article, nous ne traiterons que les lignes de métro et les lignes de RER exploitées par la RATP. On parsera les données ligne par ligne dans la structure `GtfsData` pour ensuite les fusionner :
+
+```scala
+case class GtfsData(
+  name: String,
+  routes: Iterable[Route],
+  trips: Iterable[Trip],
+  stops: Iterable[Stop],
+  stopTimes: Iterable[StopTime],
+  transfers: Iterable[Transfer]
+)
+
+// Fusion des données de ligne
+val gtfsData = GtfsData(
+  "RATP",
+  lines.flatMap(_.routes),
+  lines.flatMap(_.trips),
+  lines.flatMap(_.stops),
+  lines.flatMap(_.stopTimes),
+  lines.flatMap(_.transfers)
+)
 ```
 
 #### Construction de la table horaire
@@ -181,7 +217,60 @@ Sa construction se fait en deux étapes :
 
 ##### Connexions issues des courses
 
-> TODO
+On ingère les horaires des courses en les groupant par... course et en prenant soin de ne pas « mélanger » les horaires de deux courses. Prenons l'exemple ci-dessous : les ceux courses fréquentent la même ligne mais ne s'arrêtent pas aux mêmes arrêts. Il n'y a pas de correspondance entre les deux.
+
+```
+ Course I : A (t1) --------------------> B (t3)
+Course II :               C (t2) --------------------> D (t4)
+```
+
+Le fichier `stop_times.txt` ressemblerait à :
+
+```
+trip_id,arrival_time,departure_time,stop_id,stop_sequence,stop_headsign,shape_dist_traveled
+I, t1, t1, A, 1, ,
+II, t2, t2, C, 1, ,
+I, t3, t3, B, 1, ,
+II, t4, t4, D, 1, ,
+```
+
+Une lecture indépendante de l'identifiant de course (`trip_id`) amalgamerait donc ces deux courses et induirait de fausses correspondances.
+
+La création de la table horaire se fait en groupant deux à deux les horaires d'arrêt au sein d'une même course. Pour chaque élément à l'indice `i`, on créera une connexion partant de l'arrêt à cet indice et arrivant à l'arrêt de l'indice `i+1`. On implémente cette construction avec une fonction récursive qui dépile un à un les horaires de course.
+
+
+```scala
+val connectionsFromStopTimes = gtfsData.
+  stopTimesByTripId.
+  values.
+  flatMap(stopTimesToConnections)
+
+private def stopTimesToConnections(stopTimes: Iterable[StopTime]): Iterable[Connection] = {
+  @tailrec
+  def loop(stopTimes: List[StopTime], connections: List[Connection]): List[Connection] = {
+    stopTimes match {
+      // Aucun horaire (n'arrive que si la collection initiale est vide).
+      // On n'a rien à faire de plus, on retourne les connexions (vides).
+      case Nil => connections
+      // Dernier horaire : il est connecté au précédent et n'ira pas plus loin.
+      // On en a terminé et on retourne les connexions.
+      case head :: Nil => connections
+      // Cas général : il reste des stations après la première de la collection.
+      // On créé une connexion entre celle-ci et la première des suivantes.
+      case head :: tail =>
+        val departureStop = head.stopId.toInt
+        val arrivalStop = tail.head.stopId.toInt
+        val departureTime = durationToTimestamp(head.departureTime)
+        val arrivalTime = durationToTimestamp(tail.head.departureTime)
+        val connection = Connection(departureStop, arrivalStop, departureTime, arrivalTime)
+        loop(tail, connections :+ connection)
+    }
+  }
+  loop(stopTimes.toList, List())
+}
+```
+
+Dans cet exemple de code, la fonction `durationToTimestamp` retourne un timestamp correspondant à l'heure effective pour la journée en cours à partir de l'heure seule fournie dans les données. Par exemple, le 01/01/2016, la durée `19h32min27s` permettra d'obtenir le timestamp équivalent à `2016-01-01T19:32:27.0Z`.
 
 ##### COnnexions issues des transferts
 
