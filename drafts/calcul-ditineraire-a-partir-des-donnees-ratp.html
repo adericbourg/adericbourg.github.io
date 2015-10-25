@@ -398,6 +398,41 @@ II, t4, t4, D, 1, ,
 
 <h4>Exploitation de la table horaire : calcul d'itinéraire</h4>
 <h5>Explication de l'algorithme</h5>
+<blockquote>
+<p>TODO</p>
+</blockquote>
+<h5>Exemple</h5>
+<p>Partons d'un trajet entre <a href="http://www.vianavigo.com/fr/itineraire-plan-de-quartier/?criteria=1&amp;mrq=&amp;id=&amp;departure=Maubert+-+Mutualit%C3%A9%2C+Paris&amp;departureType=StopArea&amp;departureCity=Paris&amp;departureCoordX=&amp;departureCoordY=&amp;departureExternalCode=59357&amp;departureCityCode=75000&amp;arrival=Voltaire+%2F+L%C3%A9on+Blum%2C+Paris&amp;arrivalType=StopArea&amp;arrivalCity=Paris&amp;arrivalCityCode=75000&amp;arrivalCoordX=&amp;arrivalCoordY=&amp;arrivalExternalCode=59616&amp;date=25%2F10%2F2015&amp;dateFormat=dd%2FMM%2Fyyyy&amp;sens=1&amp;hour=18&amp;min=00&amp;moreCriterions=true&amp;via=&amp;viaType=&amp;viaCity=&amp;viaCityCode=&amp;viaExternalCode=&amp;_train=on&amp;rer=true&amp;_rer=on&amp;metro=true&amp;_metro=on&amp;_bus=on&amp;_tram=on&amp;walkSpeed=0&amp;spcar=%C3%A2&amp;hpx=1&amp;hat=1&amp;L=0&amp;submitSearchItinerary=&amp;ajid=/stif_web_carto/comp/itinerary/search.html_&amp;_=1445793804586">Maubert-Mutualité et Voltaire</a> en partant à 18h.</p>
+<div class="highlight"><pre><span class="k">val</span> <span class="n">maubert</span> <span class="k">=</span> <span class="mi">2350</span>
+<span class="k">val</span> <span class="n">voltaireLeonBlum</span> <span class="k">=</span> <span class="mi">1633</span>
+
+<span class="n">csa</span><span class="o">.</span><span class="n">compute</span><span class="o">(</span>
+  <span class="n">maubert</span><span class="o">,</span>
+  <span class="n">voltaireLeonBlum</span><span class="o">,</span>
+  <span class="n">durationToTimestamp</span><span class="o">(</span><span class="nc">Duration</span><span class="o">.</span><span class="n">ofHours</span><span class="o">(</span><span class="mi">18</span><span class="o">))</span>
+<span class="o">)</span>
+</pre></div>
+
+
+<p>On obtient le trajet :</p>
+<div class="highlight"><pre>Solution found with 15 connections
+  Maubert-Mutualité -&gt; Cluny-La Sorbonne
+  Cluny-La Sorbonne -&gt; Odéon
+  Odéon -&gt; Odéon
+  Odéon -&gt; Saint-Michel
+  Saint-Michel -&gt; Cité
+  Cité -&gt; Châtelet
+  Châtelet -&gt; Les Halles
+  Les Halles -&gt; Etienne Marcel
+  Etienne Marcel -&gt; Réaumur-Sébastopol
+  Réaumur-Sébastopol -&gt; Strasbourg-Saint-Denis
+  Strasbourg-Saint-Denis -&gt; Strasbourg-Saint-Denis
+  Strasbourg-Saint-Denis -&gt; République
+  République -&gt; Oberkampf
+  Oberkampf -&gt; Saint-Ambroise
+  Saint-Ambroise -&gt; Voltaire (Léon Blum)
+Total transit time: 21 minutes
+</pre></div>
             </div><!-- /.entry-content -->
             <div class="comments">
               <h3>Comments</h3>
