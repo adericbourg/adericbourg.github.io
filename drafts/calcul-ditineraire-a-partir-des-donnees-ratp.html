@@ -293,7 +293,7 @@ II, t4, t4, D, 1, ,
   <span class="n">values</span><span class="o">.</span>
   <span class="n">flatMap</span><span class="o">(</span><span class="n">stopTimesToConnections</span><span class="o">)</span>
 
-<span class="k">private</span> <span class="k">def</span> <span class="n">stopTimesToConnections</span><span class="o">(</span><span class="n">stopTimes</span><span class="k">:</span> <span class="kt">Iterable</span><span class="o">[</span><span class="kt">StopTime</span><span class="o">])</span><span class="k">:</span> <span class="kt">Iterable</span><span class="o">[</span><span class="kt">Connection</span><span class="o">]</span> <span class="k">=</span> <span class="o">{</span>
+<span class="k">def</span> <span class="n">stopTimesToConnections</span><span class="o">(</span><span class="n">stopTimes</span><span class="k">:</span> <span class="kt">Iterable</span><span class="o">[</span><span class="kt">StopTime</span><span class="o">])</span><span class="k">:</span> <span class="kt">Iterable</span><span class="o">[</span><span class="kt">Connection</span><span class="o">]</span> <span class="k">=</span> <span class="o">{</span>
   <span class="nd">@tailrec</span>
   <span class="k">def</span> <span class="n">loop</span><span class="o">(</span><span class="n">stopTimes</span><span class="k">:</span> <span class="kt">List</span><span class="o">[</span><span class="kt">StopTime</span><span class="o">],</span> <span class="n">connections</span><span class="k">:</span> <span class="kt">List</span><span class="o">[</span><span class="kt">Connection</span><span class="o">])</span><span class="k">:</span> <span class="kt">List</span><span class="o">[</span><span class="kt">Connection</span><span class="o">]</span> <span class="k">=</span> <span class="o">{</span>
     <span class="n">stopTimes</span> <span class="k">match</span> <span class="o">{</span>
@@ -311,19 +311,89 @@ II, t4, t4, D, 1, ,
         <span class="k">val</span> <span class="n">departureTime</span> <span class="k">=</span> <span class="n">durationToTimestamp</span><span class="o">(</span><span class="n">head</span><span class="o">.</span><span class="n">departureTime</span><span class="o">)</span>
         <span class="k">val</span> <span class="n">arrivalTime</span> <span class="k">=</span> <span class="n">durationToTimestamp</span><span class="o">(</span><span class="n">tail</span><span class="o">.</span><span class="n">head</span><span class="o">.</span><span class="n">departureTime</span><span class="o">)</span>
         <span class="k">val</span> <span class="n">connection</span> <span class="k">=</span> <span class="nc">Connection</span><span class="o">(</span><span class="n">departureStop</span><span class="o">,</span> <span class="n">arrivalStop</span><span class="o">,</span> <span class="n">departureTime</span><span class="o">,</span> <span class="n">arrivalTime</span><span class="o">)</span>
+        <span class="c1">// Étape suivante de la récursion</span>
         <span class="n">loop</span><span class="o">(</span><span class="n">tail</span><span class="o">,</span> <span class="n">connections</span> <span class="o">:+</span> <span class="n">connection</span><span class="o">)</span>
     <span class="o">}</span>
   <span class="o">}</span>
+  <span class="c1">// Initialisation de la récursion</span>
   <span class="n">loop</span><span class="o">(</span><span class="n">stopTimes</span><span class="o">.</span><span class="n">toList</span><span class="o">,</span> <span class="nc">List</span><span class="o">())</span>
 <span class="o">}</span>
 </pre></div>
 
 
 <p>Dans cet exemple de code, la fonction <code>durationToTimestamp</code> retourne un timestamp correspondant à l'heure effective pour la journée en cours à partir de l'heure seule fournie dans les données. Par exemple, le 01/01/2016, la durée <code>19h32min27s</code> permettra d'obtenir le timestamp équivalent à <code>2016-01-01T19:32:27.0Z</code>.</p>
-<h5>COnnexions issues des transferts</h5>
-<blockquote>
-<p>TODO</p>
-</blockquote>
+<h5>Connexions issues des correspondances</h5>
+<p>Le fichier <code>transfers.txt</code> nous donne les correspondances disponibles sur une ligne. L'objectif de cette étape est de :</p>
+<ul>
+<li>ne conserver que les correspondances de notre réseau (dans cet exemple, nous ne travaillons pas sur les bus, on les éliminera donc) ;</li>
+<li>créer toutes les entrées de la table horaire correspondant à cette correspondance.</li>
+</ul>
+<p>Le filtrage des correspondances est aisé avec notre structure de données. Nous disposons déjà de l'ensemble des stations du réseau. Il nous suffit de vérifier que ces correspondances ont lieu entre deux stations du réseau.</p>
+<div class="highlight"><pre><span class="k">case</span> <span class="k">class</span> <span class="nc">GtfsData</span><span class="o">(...)</span> <span class="o">{</span>
+  <span class="c1">// Indexation des stations du réseau</span>
+  <span class="k">val</span> <span class="n">stopsByStopId</span><span class="k">:</span> <span class="kt">Map</span><span class="o">[</span><span class="kt">Long</span>, <span class="kt">Stop</span><span class="o">]</span> <span class="k">=</span> <span class="n">stops</span><span class="o">.</span><span class="n">map</span><span class="o">(</span><span class="n">stop</span> <span class="k">=&gt;</span> <span class="n">stop</span><span class="o">.</span><span class="n">stopId</span> <span class="o">-&gt;</span> <span class="n">stop</span><span class="o">)(</span><span class="n">collection</span><span class="o">.</span><span class="n">breakOut</span><span class="o">)</span>
+<span class="o">}</span>
+
+<span class="k">val</span> <span class="n">filteredTransfers</span><span class="k">:</span> <span class="kt">Iterable</span><span class="o">[</span><span class="kt">Transfer</span><span class="o">]</span> <span class="k">=</span> <span class="n">gtfsData</span><span class="o">.</span><span class="n">transfers</span><span class="o">.</span><span class="n">filter</span><span class="o">(</span><span class="n">transfer</span> <span class="k">=&gt;</span>
+  <span class="c1">// Filtrage des correspondances avec des stations hors du réseau</span>
+  <span class="n">gtfsData</span><span class="o">.</span><span class="n">stopsByStopId</span><span class="o">.</span><span class="n">contains</span><span class="o">(</span><span class="n">transfer</span><span class="o">.</span><span class="n">fromStopId</span><span class="o">)</span> <span class="o">&amp;&amp;</span>
+    <span class="n">gtfsData</span><span class="o">.</span><span class="n">stopsByStopId</span><span class="o">.</span><span class="n">contains</span><span class="o">(</span><span class="n">transfer</span><span class="o">.</span><span class="n">toStopId</span><span class="o">)</span>
+<span class="o">)</span>
+</pre></div>
+
+
+<p>Cela étant fait, pour chacune de ces correspondances, on créé dans la table horaire une connexion correspondant à chaque horaire de passage à cette station. On utilisera pour cela les données issues de <code>stop_times.txt</code>.</p>
+<div class="highlight"><pre><span class="k">def</span> <span class="n">transfersToConnections</span><span class="o">(</span><span class="n">filteredTransfers</span><span class="k">:</span> <span class="kt">Iterable</span><span class="o">[</span><span class="kt">Transfer</span><span class="o">])</span><span class="k">:</span> <span class="kt">Iterable</span><span class="o">[</span><span class="kt">Connection</span><span class="o">]</span> <span class="k">=</span> <span class="o">{</span>
+  <span class="nd">@tailrec</span>
+  <span class="k">def</span> <span class="n">loop</span><span class="o">(</span><span class="n">transfers</span><span class="k">:</span> <span class="kt">Iterable</span><span class="o">[</span><span class="kt">Transfer</span><span class="o">],</span> <span class="n">connections</span><span class="k">:</span> <span class="kt">List</span><span class="o">[</span><span class="kt">Connection</span><span class="o">])</span><span class="k">:</span> <span class="kt">List</span><span class="o">[</span><span class="kt">Connection</span><span class="o">]</span> <span class="k">=</span> <span class="o">{</span>
+    <span class="n">transfers</span> <span class="k">match</span> <span class="o">{</span>
+      <span class="c1">// Aucune correspondance à traiter. On en a terminé et on sort avec</span>
+      <span class="c1">// la liste construite jusqu&#39;ici.</span>
+      <span class="k">case</span> <span class="nc">Nil</span> <span class="k">=&gt;</span> <span class="n">connections</span>
+      <span class="c1">// Il reste au moins une correspondance à traiter (tail peut être Nil).</span>
+      <span class="k">case</span> <span class="n">head</span> <span class="o">::</span> <span class="n">tail</span> <span class="k">=&gt;</span>
+        <span class="k">val</span> <span class="n">departureStop</span> <span class="k">=</span> <span class="n">head</span><span class="o">.</span><span class="n">fromStopId</span>
+        <span class="k">val</span> <span class="n">arrivalStop</span> <span class="k">=</span> <span class="n">head</span><span class="o">.</span><span class="n">toStopId</span>
+        <span class="c1">// Pour chaque horaire de train à cette station, on créé</span>
+        <span class="c1">// une entrée dans la table horaire.</span>
+        <span class="k">val</span> <span class="n">transferConnections</span><span class="k">:</span> <span class="kt">List</span><span class="o">[</span><span class="kt">Connection</span><span class="o">]</span> <span class="k">=</span> <span class="n">gtfsData</span><span class="o">.</span>
+          <span class="n">stopTimesByStopId</span><span class="o">(</span><span class="n">departureStop</span><span class="o">).</span>
+          <span class="n">map</span><span class="o">(</span><span class="n">stopTime</span> <span class="k">=&gt;</span> <span class="o">{</span>
+            <span class="k">val</span> <span class="n">connectionDepartureTime</span> <span class="k">=</span> <span class="n">durationToTimestamp</span><span class="o">(</span><span class="n">stopTime</span><span class="o">.</span><span class="n">arrivalTime</span><span class="o">)</span>
+            <span class="nc">Connection</span><span class="o">(</span>
+              <span class="n">departureStop</span><span class="o">,</span>
+              <span class="n">arrivalStop</span><span class="o">,</span>
+              <span class="n">connectionDepartureTime</span><span class="o">,</span>
+              <span class="n">connectionDepartureTime</span> <span class="o">+</span> <span class="n">head</span><span class="o">.</span><span class="n">minTransferTime</span>
+            <span class="o">)</span>
+          <span class="o">})</span>
+        <span class="c1">// Étape suivante de la récursion.</span>
+        <span class="n">loop</span><span class="o">(</span><span class="n">tail</span><span class="o">,</span> <span class="n">connections</span> <span class="o">++</span> <span class="n">transferConnections</span><span class="o">)</span>
+    <span class="o">}</span>
+  <span class="o">}</span>
+  <span class="c1">// Initialisation de la récursion.</span>
+  <span class="n">loop</span><span class="o">(</span><span class="n">filteredTransfers</span><span class="o">.</span><span class="n">toList</span><span class="o">,</span> <span class="nc">List</span><span class="o">())</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<h5>Fusion des deux tables horaires</h5>
+<p>On a construit jusqu'ici deux tables horaires :</p>
+<ul>
+<li>l'une issue des horaires des trains en station ;</li>
+<li>l'autre issue des correspondances entre les trains.</li>
+</ul>
+<p>Reste maintenant à fusionner les deux. N'oublions pas que cette table doit être triée par heure de départ croissante. À ce détail près, cette étape est immédiate. </p>
+<div class="highlight"><pre><span class="k">val</span> <span class="n">connectionsFromStopTimes</span> <span class="k">=</span> <span class="n">gtfsData</span><span class="o">.</span>
+  <span class="n">stopTimesByTripId</span><span class="o">.</span>
+  <span class="n">values</span><span class="o">.</span>
+  <span class="n">flatMap</span><span class="o">(</span><span class="n">stopTimesToConnections</span><span class="o">)</span>
+<span class="k">val</span> <span class="n">connectionsFromTransfers</span> <span class="k">=</span> <span class="n">transfersToConnections</span><span class="o">(</span><span class="n">gtfsData</span><span class="o">)</span>
+
+<span class="k">val</span> <span class="n">connections</span> <span class="k">=</span> <span class="o">(</span><span class="n">connectionsFromStopTimes</span> <span class="o">++</span> <span class="n">connectionsFromTransfers</span><span class="o">).</span>
+  <span class="n">toList</span><span class="o">.</span>
+  <span class="n">sortBy</span><span class="o">(</span><span class="k">_</span><span class="o">.</span><span class="n">arrivalTimestamp</span><span class="o">)</span>
+</pre></div>
             </div><!-- /.entry-content -->
             <div class="comments">
               <h3>Comments</h3>
