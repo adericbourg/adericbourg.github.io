@@ -262,3 +262,8 @@ h4 {
   font-size: 1.35rem;
   font-weight: bold;
 }
+
+h5 {
+  font-style: italic;
+  font-weight: bold;
+}
