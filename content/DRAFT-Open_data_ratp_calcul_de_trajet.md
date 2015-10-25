@@ -245,7 +245,7 @@ val connectionsFromStopTimes = gtfsData.
   values.
   flatMap(stopTimesToConnections)
 
-private def stopTimesToConnections(stopTimes: Iterable[StopTime]): Iterable[Connection] = {
+def stopTimesToConnections(stopTimes: Iterable[StopTime]): Iterable[Connection] = {
   @tailrec
   def loop(stopTimes: List[StopTime], connections: List[Connection]): List[Connection] = {
     stopTimes match {
@@ -263,15 +263,92 @@ private def stopTimesToConnections(stopTimes: Iterable[StopTime]): Iterable[Conn
         val departureTime = durationToTimestamp(head.departureTime)
         val arrivalTime = durationToTimestamp(tail.head.departureTime)
         val connection = Connection(departureStop, arrivalStop, departureTime, arrivalTime)
+        // Étape suivante de la récursion
         loop(tail, connections :+ connection)
     }
   }
+  // Initialisation de la récursion
   loop(stopTimes.toList, List())
 }
 ```
 
 Dans cet exemple de code, la fonction `durationToTimestamp` retourne un timestamp correspondant à l'heure effective pour la journée en cours à partir de l'heure seule fournie dans les données. Par exemple, le 01/01/2016, la durée `19h32min27s` permettra d'obtenir le timestamp équivalent à `2016-01-01T19:32:27.0Z`.
 
-##### COnnexions issues des transferts
+##### Connexions issues des correspondances
 
-> TODO
+Le fichier `transfers.txt` nous donne les correspondances disponibles sur une ligne. L'objectif de cette étape est de :
+
+ * ne conserver que les correspondances de notre réseau (dans cet exemple, nous ne travaillons pas sur les bus, on les éliminera donc) ;
+ * créer toutes les entrées de la table horaire correspondant à cette correspondance.
+
+Le filtrage des correspondances est aisé avec notre structure de données. Nous disposons déjà de l'ensemble des stations du réseau. Il nous suffit de vérifier que ces correspondances ont lieu entre deux stations du réseau.
+
+```scala
+case class GtfsData(...) {
+  // Indexation des stations du réseau
+  val stopsByStopId: Map[Long, Stop] = stops.map(stop => stop.stopId -> stop)(collection.breakOut)
+}
+
+val filteredTransfers: Iterable[Transfer] = gtfsData.transfers.filter(transfer =>
+  // Filtrage des correspondances avec des stations hors du réseau
+  gtfsData.stopsByStopId.contains(transfer.fromStopId) &&
+    gtfsData.stopsByStopId.contains(transfer.toStopId)
+)
+```
+
+Cela étant fait, pour chacune de ces correspondances, on créé dans la table horaire une connexion correspondant à chaque horaire de passage à cette station. On utilisera pour cela les données issues de `stop_times.txt`.
+
+```scala
+def transfersToConnections(filteredTransfers: Iterable[Transfer]): Iterable[Connection] = {
+  @tailrec
+  def loop(transfers: Iterable[Transfer], connections: List[Connection]): List[Connection] = {
+    transfers match {
+      // Aucune correspondance à traiter. On en a terminé et on sort avec
+      // la liste construite jusqu'ici.
+      case Nil => connections
+      // Il reste au moins une correspondance à traiter (tail peut être Nil).
+      case head :: tail =>
+        val departureStop = head.fromStopId
+        val arrivalStop = head.toStopId
+        // Pour chaque horaire de train à cette station, on créé
+        // une entrée dans la table horaire.
+        val transferConnections: List[Connection] = gtfsData.
+          stopTimesByStopId(departureStop).
+          map(stopTime => {
+            val connectionDepartureTime = durationToTimestamp(stopTime.arrivalTime)
+            Connection(
+              departureStop,
+              arrivalStop,
+              connectionDepartureTime,
+              connectionDepartureTime + head.minTransferTime
+            )
+          })
+        // Étape suivante de la récursion.
+        loop(tail, connections ++ transferConnections)
+    }
+  }
+  // Initialisation de la récursion.
+  loop(filteredTransfers.toList, List())
+}
+```
+
+##### Fusion des deux tables horaires
+
+On a construit jusqu'ici deux tables horaires :
+
+ * l'une issue des horaires des trains en station ;
+ * l'autre issue des correspondances entre les trains.
+
+Reste maintenant à fusionner les deux. N'oublions pas que cette table doit être triée par heure de départ croissante. À ce détail près, cette étape est immédiate. 
+
+```scala
+val connectionsFromStopTimes = gtfsData.
+  stopTimesByTripId.
+  values.
+  flatMap(stopTimesToConnections)
+val connectionsFromTransfers = transfersToConnections(gtfsData)
+
+val connections = (connectionsFromStopTimes ++ connectionsFromTransfers).
+  toList.
+  sortBy(_.arrivalTimestamp)
+```
