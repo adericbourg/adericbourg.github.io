@@ -199,7 +199,7 @@
 <li>En sortant, ils décrémentent ce compteur.</li>
 <li>Le dernier lecteur à sortir débloque le sémaphore <code>db</code> et autorise alors un rédacteur en attente, s'il y en a un, à entrer.</li>
 </ol>
-<p>Sur notre exemple de DAO, la modification se ferait de la sorte (ce qui n'est pas redéfini n'a pas changé) :</p>
+<p>Sur notre exemple de DAO, la modification se ferait de la sorte (ce qui n'est pas explicitement redéfini n'a pas changé) :</p>
 <div class="highlight"><pre><span class="kd">public</span> <span class="kd">class</span> <span class="nc">CachedDao</span> <span class="kd">implements</span> <span class="n">Dao</span> <span class="o">{</span>
 
   <span class="kd">private</span> <span class="kd">final</span> <span class="n">Semaphore</span> <span class="n">lock</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Semaphore</span><span class="o">(</span><span class="mi">1</span><span class="o">);</span>
