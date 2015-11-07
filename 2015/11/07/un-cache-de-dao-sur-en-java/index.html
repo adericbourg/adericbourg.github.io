@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<!--[if IE 6]>
+<html class="ie6" lang="fr" prefix="og: http://ogp.me/ns#">
+<![endif]-->
+<!--[if IE 7]>
+<html class="ie7" lang="fr" prefix="og: http://ogp.me/ns#">
+<![endif]-->
+<!--[if IE 8]>
+<html class="ie8" lang="fr" prefix="og: http://ogp.me/ns#">
+<![endif]-->
+<!--[if !(IE 6) | !(IE 7) | !(IE 8)  ]><!-->
+<html lang="fr" prefix="og: http://ogp.me/ns#" itemscope itemtype="http://schema.org/Blog">
+<!--<![endif]-->
+<head>
+        <meta charset="utf-8" />
+        <title>Un cache de DAO sûr en Java - Blog bloquant</title>
+        <link href="http://www.dericbourg.net/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Blog bloquant Full Atom Feed" />
+        <link href="http://www.dericbourg.net/feeds/blog.atom.xml" type="application/atom+xml" rel="alternate" title="Blog bloquant Categories Atom Feed" />
+
+        <!-- Twitter card -->
+        <meta name="twitter:card" content="summary" />
+        <meta name="twitter:site" content="@adericbourg" />
+        <meta name="twitter:creator" content="@adericbourg" />
+        <meta name="twitter:title" content="Un cache de DAO sûr en Java - Blog bloquant" />
+        <meta name="twitter:description" content="L'ajout d'un cache sur un DAO est une opération courante et la bibliothèque Guava, très répandue, a par ailleurs énormément simplifié sa mise en œuvre. Néanmoins, il reste encore extrêmement facile de se tromper avec cette bibliothèque et... de réaliser un cache qui ne fonctionne pas. Contexte Partons ..." />
+        <meta name="twitter:domain" content="http://www.dericbourg.net/2015/11/07/un-cache-de-dao-sur-en-java/" />
+
+        <!-- Facebook Open Graph Meta Tags -->
+        <meta property="og:site_name" content="Blog bloquant"/>
+        <meta property="og:title" content="Un cache de DAO sûr en Java"/>
+        <meta property="og:url" content="http://www.dericbourg.net/2015/11/07/un-cache-de-dao-sur-en-java/index.html"/>
+        <meta property="og:description" content="L'ajout d'un cache sur un DAO est une opération courante et la bibliothèque Guava, très répandue, a par ailleurs énormément simplifié sa mise en œuvre. Néanmoins, il reste encore extrêmement facile de se tromper avec cette bibliothèque et... de réaliser un cache qui ne fonctionne pas. Contexte Partons ..."/>
+        <meta property="og:type" content="blog"/>
+
+        <!-- Mobile viewport optimized: j.mp/bplateviewport -->
+        <meta name="viewport" content="width=device-width,initial-scale=1, maximum-scale=1">
+
+        <link rel="stylesheet" type="text/css" href="http://www.dericbourg.net/theme/gumby.css" />
+        <link rel="stylesheet" type="text/css" href="http://www.dericbourg.net/theme/style.css" />
+        <link rel="stylesheet" type="text/css" href="http://www.dericbourg.net/theme/pygment.css" />
+
+        <script src="http://www.dericbourg.net/theme/js/libs/modernizr-2.6.2.min.js"></script>
+
+
+
+
+</head>
+
+<body id="index" class="home">
+
+
+    <div class="container">
+
+        <div class="row">
+
+          <header id="banner" class="body">
+                  <h1><a href="http://www.dericbourg.net/">Blog bloquant <strong></strong></a></h1>
+          </header><!-- /#banner -->
+
+            <div id="navigation" class="navbar row">
+              <a href="#" data-trigger="#navigation &gt; ul" class="toggle"><i class="icon-menu"></i></a>
+
+              <ul class="columns">
+                <li><a href="http://www.dericbourg.net/">Accueil</a></li>
+
+              </ul>
+
+
+            </div>
+
+<section id="content" class="body">
+
+   <div class="row">
+        <div class="eleven columns">
+
+
+            <header>
+              <h2 class="entry-title">Un cache de DAO sûr en Java</h2>
+           
+              <div>
+                    <a class="info label" href="http://www.dericbourg.net/tag/java.html">java</a>
+                    <a class="info label" href="http://www.dericbourg.net/tag/guava.html">guava</a>
+                    <a class="info label" href="http://www.dericbourg.net/tag/cache.html">cache</a>
+                    <a class="info label" href="http://www.dericbourg.net/tag/dao.html">dao</a>
+                    <a class="info label" href="http://www.dericbourg.net/tag/verrou.html">verrou</a>
+                    <a class="info label" href="http://www.dericbourg.net/tag/concurrence.html">concurrence</a>
+              </div>
+            </header>
+            <footer class="post-info">
+
+              <abbr class="published" title="2015-11-07T00:00:00+01:00">
+                sam. 07 novembre 2015
+              </abbr>
+              &ndash;
+              <a href="http://www.dericbourg.net/2015/11/07/un-cache-de-dao-sur-en-java/" rel="bookmark" title="Lien permanent vers Un cache de DAO sûr en Java">lien permanent</a>
+              <address class="vcard author">Par
+                <a class="url fn" href="http://www.dericbourg.net/author/alban-dericbourg.html"> Alban Dericbourg</a>
+              </address>
+
+            </footer><!-- /.post-info -->
+            <div class="entry-content">
+              <p>L'ajout d'un cache sur un DAO est une opération courante et la bibliothèque Guava, très répandue, a par ailleurs énormément simplifié sa mise en œuvre. Néanmoins, il reste encore extrêmement facile de se tromper avec cette bibliothèque et... de réaliser un cache qui ne fonctionne pas.</p>
+<h3>Contexte</h3>
+<p>Partons d'une interface de DAO « classique » permettant de réaliser les opérations <em>CRUD</em>. On y ajoute une méthode <code>getAll</code> qui retourne l'intégralité des objets (vous allez voir, c'est pour votre bien).</p>
+<div class="highlight"><pre><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">Dao</span> <span class="o">{</span>
+  <span class="n">Optional</span><span class="o">&lt;</span><span class="n">MyObject</span><span class="o">&gt;</span> <span class="nf">get</span><span class="o">(</span><span class="n">String</span> <span class="n">id</span><span class="o">);</span>
+  <span class="n">Iterable</span><span class="o">&lt;</span><span class="n">MyObject</span><span class="o">&gt;</span> <span class="nf">getAll</span><span class="o">();</span>
+  <span class="kt">void</span> <span class="nf">save</span><span class="o">(</span><span class="n">MyObject</span> <span class="n">myObject</span><span class="o">);</span>
+  <span class="kt">void</span> <span class="nf">delete</span><span class="o">(</span><span class="n">String</span> <span class="n">id</span><span class="o">);</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<p>Sans accorder d'importance à l'implémentation du DAO accédant effectivement aux données persistées, contentons-nous de supposer que ses performances ne sont pas suffisantes pour répondre aux sollicitations auxquelles est soumise notre application.</p>
+<h3>Cache des données</h3>
+<p>On se propose d'utiliser <a href="https://github.com/google/guava">Guava</a> pour implémenter ce cache. On utilise dans cet exemple un <a href="https://github.com/google/guava/wiki/CachesExplained"><code>LoadingCache</code></a> qui ira chercher en base la donnée s'il n'a pas déjà été sollicité pour celle-ci : on charge les valeurs une à une à la demande. Il permet également de rafraîchir les données automatiquement à intervalle régulier.</p>
+<p>L'encapsulation des données de cache dans des <code>Optional</code> est un parti pris. Deux choix étaient possibles :</p>
+<ul>
+<li>on peut choisir d'ignorer les valeurs inexistantes, auquel cas, si celles-ci sont demandées plusieurs fois, on fait autant d'appels à la base qu'on les demande ;</li>
+<li>on peut également choisir de placer une sentinelle dans le cache (en l'occurrence, l'instance « absente » d'<code>Optional</code>).</li>
+</ul>
+<p>Les deux approches ont leur avantages et leurs inconvénients et leur utilisation dépend de votre application et de vos besoins.</p>
+<div class="highlight"><pre><span class="n">LoadingCache</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">MyObject</span><span class="o">&gt;</span> <span class="n">cache</span> <span class="o">=</span> <span class="n">CacheBuilder</span><span class="o">.</span><span class="na">newBuilder</span><span class="o">()</span>
+    <span class="o">.</span><span class="na">build</span><span class="o">(</span><span class="k">new</span> <span class="n">CacheLoader</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">Optional</span><span class="o">&lt;</span><span class="n">MyObject</span><span class="o">&gt;&gt;()</span> <span class="o">{</span>
+      <span class="nd">@Override</span>
+      <span class="kd">public</span> <span class="n">Optional</span><span class="o">&lt;</span><span class="n">MyObject</span><span class="o">&gt;</span> <span class="nf">load</span><span class="o">(</span><span class="n">String</span> <span class="n">key</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">dbDao</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">key</span><span class="o">);</span>
+      <span class="o">}</span>
+    <span class="o">});</span>
+</pre></div>
+
+
+<h3>Implémentation naïve (et fausse)</h3>
+<p>En première approche, on peut supposer qu'il « suffit » de mettre à jour le cache pour chaque opération d'écriture sur la base de données. Une implémentation dans cette optique ressemblerait à ceci.</p>
+<div class="highlight"><pre><span class="kd">public</span> <span class="kd">class</span> <span class="nc">CachedDao</span> <span class="kd">implements</span> <span class="n">Dao</span> <span class="o">{</span>
+
+  <span class="c1">// DAO accédant aux données persistées.</span>
+  <span class="c1">// Dans la vraie vie, vous l&#39;auriez injecté, hein ?</span>
+  <span class="kd">private</span> <span class="kd">final</span> <span class="n">DbDao</span> <span class="n">dbDao</span><span class="o">;</span>
+
+  <span class="kd">private</span> <span class="kd">final</span> <span class="n">LoadingCache</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">MyObject</span><span class="o">&gt;</span> <span class="n">cache</span> <span class="o">=</span> <span class="n">createCache</span><span class="o">();</span>
+
+  <span class="kd">public</span> <span class="nf">CachedDao</span><span class="o">()</span> <span class="o">{</span>
+    <span class="k">this</span><span class="o">.</span><span class="na">dbDao</span> <span class="o">=</span> <span class="k">new</span> <span class="n">DbDao</span><span class="o">();</span>
+    <span class="c1">// Initialisation du cache : nécessaire pour utiliser le cache sur getAll.</span>
+    <span class="n">initCache</span><span class="o">();</span>
+  <span class="o">}</span>
+
+  <span class="kd">public</span> <span class="n">Optional</span><span class="o">&lt;</span><span class="n">MyObject</span><span class="o">&gt;</span> <span class="nf">get</span><span class="o">(</span><span class="n">String</span> <span class="n">id</span><span class="o">)</span> <span class="o">{</span>
+    <span class="k">return</span> <span class="n">cache</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">id</span><span class="o">);</span>
+  <span class="o">}</span>
+
+  <span class="kd">public</span> <span class="n">Iterable</span><span class="o">&lt;</span><span class="n">MyObject</span><span class="o">&gt;</span> <span class="nf">getAll</span><span class="o">()</span> <span class="o">{</span>
+    <span class="k">return</span> <span class="n">cache</span><span class="o">.</span><span class="na">asMap</span><span class="o">()</span>
+                <span class="o">.</span><span class="na">values</span><span class="o">()</span>
+                <span class="o">.</span><span class="na">stream</span><span class="o">()</span>
+                <span class="o">.</span><span class="na">map</span><span class="o">(</span><span class="n">Optional</span><span class="o">::</span><span class="n">get</span><span class="o">)</span>
+                <span class="o">.</span><span class="na">collect</span><span class="o">(</span><span class="n">Collectors</span><span class="o">.</span><span class="na">toList</span><span class="o">());</span>
+  <span class="o">}</span>
+
+  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">save</span><span class="o">(</span><span class="n">MyObject</span> <span class="n">myObject</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">dbDao</span><span class="o">.</span><span class="na">save</span><span class="o">(</span><span class="n">myObject</span><span class="o">);</span>
+    <span class="n">cache</span><span class="o">.</span><span class="na">refresh</span><span class="o">(</span><span class="n">myObject</span><span class="o">.</span><span class="na">getId</span><span class="o">());</span>
+  <span class="o">}</span>
+
+  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">delete</span><span class="o">(</span><span class="n">String</span> <span class="n">id</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">dbDao</span><span class="o">.</span><span class="na">delete</span><span class="o">(</span><span class="n">id</span><span class="o">);</span>
+    <span class="n">cache</span><span class="o">.</span><span class="na">refresh</span><span class="o">(</span><span class="n">id</span><span class="o">);</span>
+  <span class="o">}</span>
+
+  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">refresh</span><span class="o">()</span> <span class="o">{</span>
+    <span class="c1">// Vidage intégral du cache puis rechargement.</span>
+    <span class="n">cache</span><span class="o">.</span><span class="na">invalidateAll</span><span class="o">();</span>
+    <span class="n">initCache</span><span class="o">();</span>
+  <span class="o">}</span>
+
+  <span class="kd">private</span> <span class="kt">void</span> <span class="nf">initCache</span><span class="o">()</span> <span class="o">{</span>
+    <span class="k">for</span> <span class="o">(</span><span class="n">MyObject</span> <span class="n">myObject</span> <span class="o">:</span> <span class="n">dbDao</span><span class="o">.</span><span class="na">getAll</span><span class="o">())</span> <span class="o">{</span>
+      <span class="n">cache</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">myObject</span><span class="o">.</span><span class="na">getId</span><span class="o">(),</span> <span class="n">Optional</span><span class="o">.</span><span class="na">of</span><span class="o">(</span><span class="n">myObject</span><span class="o">));</span>
+    <span class="o">}</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<p>Pourquoi cette implémentation ne fonctionne pas ?</p>
+<p>Dans le cas de multiples appels concurrents, des interruptions peuvent avoir lieu à tout moment. L'appel à <code>delete</code> peut être interrompu entre la mise à jour de la base (<code>dbDao.delete(id)</code>) et le rafraîchissement du cache (<code>cache.refresh(id)</code>). Si cette interruption se fait à la faveur d'une lecture (<code>get</code>), cette dernière se fera sur un cache qui n'est pas encore mise à jour et donc renverra une donnée « périmée ». Rien ne dit qu'il est impératif de récupérer la dernière version de la donnée : suivant votre application, cela peut être acceptable.</p>
+<p>Mais alors, pire : supposons qu'un appel à <code>getAll</code> provoque une interruption pendant un rafraîchissement du cache, au milieu de la boucle de rechargement de la méthode <code>initCache</code>. On retourne alors une version incohérente (partielle) des données. Cette situation n'est, elle, pas acceptable.</p>
+<h3>Le problème des lecteurs et des rédacteurs</h3>
+<p>Le cas de figure dans lequel nous nous trouvons correspond à un problème bien connu formulé par Edsger Dijkstra pour modéliser... les accès aux bases de données. Ceux-ci sont soumis à deux contraintes :</p>
+<ul>
+<li>plusieurs lecteurs doivent pouvoir lire dans la base simultanément ;</li>
+<li>si un rédacteur est en train de modifier la base de données, aucun autre utilisateur (qu'il soit lecteur ou rédacteur) ne doit pouvoir y accéder.</li>
+</ul>
+<p>Une solution simple revient à attendre, lorsqu'un rédacteur se présente, d'attendre que tous les lecteurs soient partis et de bloquer l'entrée à tout nouvel utilisateur. En utilisant un sémaphore (<code>db</code>) et un compteur (<code>rc</code>), cela reviendrait à :</p>
+<ol>
+<li>Le premier lecteur à entrer acquiert le sémaphore <code>db</code>.</li>
+<li>Tous les lecteurs entrant incrémentent le compteur <code>rc</code>.</li>
+<li>En sortant, ils décrémentent ce compteur.</li>
+<li>Le dernier lecteur à sortir débloque le sémaphore <code>db</code> et autorise alors un rédacteur en attente, s'il y en a un, à entrer.</li>
+</ol>
+<p>Sur notre exemple de DAO, la modification se ferait de la sorte (ce qui n'est pas redéfini n'a pas changé) :</p>
+<div class="highlight"><pre><span class="kd">public</span> <span class="kd">class</span> <span class="nc">CachedDao</span> <span class="kd">implements</span> <span class="n">Dao</span> <span class="o">{</span>
+
+  <span class="kd">private</span> <span class="kd">final</span> <span class="n">Semaphore</span> <span class="n">lock</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Semaphore</span><span class="o">(</span><span class="mi">1</span><span class="o">);</span>
+  <span class="kd">private</span> <span class="kd">final</span> <span class="n">AtomicLong</span> <span class="n">concurrentAccess</span> <span class="o">=</span> <span class="k">new</span> <span class="n">AtomicLong</span><span class="o">(</span><span class="mi">0</span><span class="o">);</span>
+
+  <span class="kd">public</span> <span class="n">Optional</span><span class="o">&lt;</span><span class="n">MyObject</span><span class="o">&gt;</span> <span class="nf">get</span><span class="o">(</span><span class="n">String</span> <span class="n">id</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">InterruptedException</span> <span class="o">{</span>
+    <span class="k">if</span> <span class="o">(</span><span class="n">concurrentAccess</span><span class="o">.</span><span class="na">incrementAndGet</span><span class="o">()</span> <span class="o">==</span> <span class="mi">1</span><span class="o">)</span> <span class="o">{</span>
+      <span class="c1">// Premier lecteur à entrer</span>
+      <span class="n">lock</span><span class="o">.</span><span class="na">acquire</span><span class="o">();</span>
+    <span class="o">}</span>
+
+    <span class="n">Optional</span><span class="o">&lt;</span><span class="n">MyObject</span><span class="o">&gt;</span> <span class="n">returnValue</span> <span class="o">=</span> <span class="n">Optional</span><span class="o">.</span><span class="na">ofNullable</span><span class="o">(</span><span class="n">cache</span><span class="o">.</span><span class="na">getIfPresent</span><span class="o">(</span><span class="n">id</span><span class="o">));</span>
+
+    <span class="k">if</span> <span class="o">(</span><span class="n">concurrentAccess</span><span class="o">.</span><span class="na">decrementAndGet</span><span class="o">()</span> <span class="o">==</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span>
+      <span class="c1">// Dernier lecteur à sortir</span>
+      <span class="n">lock</span><span class="o">.</span><span class="na">release</span><span class="o">();</span>
+    <span class="o">}</span>
+
+    <span class="k">return</span> <span class="n">returnValue</span><span class="o">;</span>
+  <span class="o">}</span>
+
+  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">save</span><span class="o">(</span><span class="n">MyObject</span> <span class="n">myObject</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">InterruptedException</span> <span class="o">{</span>
+    <span class="c1">// Attente que le dernier utilisateur sorte</span>
+    <span class="n">lock</span><span class="o">.</span><span class="na">acquire</span><span class="o">();</span>
+
+    <span class="n">dbDao</span><span class="o">.</span><span class="na">save</span><span class="o">(</span><span class="n">myObject</span><span class="o">);</span>
+    <span class="n">cache</span><span class="o">.</span><span class="na">refresh</span><span class="o">(</span><span class="n">myObject</span><span class="o">.</span><span class="na">getId</span><span class="o">());</span>
+
+    <span class="c1">// Libération pour qu&#39;un utilisateur puisse revenir</span>
+    <span class="n">lock</span><span class="o">.</span><span class="na">release</span><span class="o">();</span>
+  <span class="o">}</span>
+
+  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">delete</span><span class="o">(</span><span class="n">String</span> <span class="n">id</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">InterruptedException</span> <span class="o">{</span>
+    <span class="c1">// Idem.</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<p>Mais s'il rentre un lecteur toutes les deux millisecondes et qu'il faut cinq millisecondes à chaque lecteur pour terminer sa consultation, il y aura toujours des lecteurs présents et le rédacteur ne pourra jamais entrer.</p>
+<p>Pour éviter cela, il faut que lorsqu'un rédacteur est en attente, tout lecteur qui se présente reste « derrière » le rédacteur et attende qu'il ait terminé.</p>
+<p>En Java, <a href="https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/locks/ReentrantReadWriteLock.html">la classe <code>ReentrantReadWriteLock</code></a> permet de répondre à cette condition. Il encapsule deux types de verrous :</p>
+<ul>
+<li>un verrou en lecture que tous les lecteurs peuvent « passer » tant qu'aucun verrou en écriture n'a été posé ;</li>
+<li>un verrou en écriture que tous les rédacteurs peuvent « passer » tant qu'aucun verrou en lecture ou en écriture n'a été posé.</li>
+</ul>
+<p>Exemple en lecture :</p>
+<div class="highlight"><pre><span class="n">ReadWriteLock</span> <span class="n">readWriteLock</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ReentrantReadWriteLock</span><span class="o">();</span>
+
+<span class="n">readWriteLock</span><span class="o">.</span><span class="na">readLock</span><span class="o">().</span><span class="na">lock</span><span class="o">();</span>
+
+  <span class="c1">// Cette section est accessible par plusieurs lecteurs simultanément</span>
+  <span class="c1">// si aucun verrou en écriture n&#39;a été acquis.</span>
+
+<span class="n">readWriteLock</span><span class="o">.</span><span class="na">readLock</span><span class="o">().</span><span class="na">unlock</span><span class="o">();</span>
+</pre></div>
+
+
+<p>Exemple en écriture :</p>
+<div class="highlight"><pre><span class="n">ReadWriteLock</span> <span class="n">readWriteLock</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ReentrantReadWriteLock</span><span class="o">();</span>
+
+<span class="n">readWriteLock</span><span class="o">.</span><span class="na">writeLock</span><span class="o">().</span><span class="na">lock</span><span class="o">();</span>
+
+  <span class="c1">// Cette section est accessible par un seul rédacteur à la fois</span>
+  <span class="c1">// si aucun verrou n&#39;est acquis (en lecture ou en écriture).</span>
+
+<span class="n">readWriteLock</span><span class="o">.</span><span class="na">writeLock</span><span class="o">().</span><span class="na">unlock</span><span class="o">();</span>
+</pre></div>
+
+
+<h3>Implémentation « sûre »</h3>
+<p>Nous pouvons réutiliser notre implémentation naïve : si elle n'était pas sûre, son intention restait valable. Pour l'adapter, on ajoute :</p>
+<ul>
+<li>des verrous en lecture sur les méthodes de lecture ;</li>
+<li>des verrous en écriture sur les méthodes d'écriture ;</li>
+<li>et... c'est tout.</li>
+</ul>
+<p>Il est en revanche nécessaire de « protéger » la libération des verrous. Si un traitement se passe mal — si par exemple si une exception est lancée — le verrou doit malgré tout être libéré. On encapsulera donc tout le code des sections critiques dans un bloc <code>try</code> / <code>finally</code>.</p>
+<p>Le code n'ayant pas changé pa rapport à la première version n'est pas représenté.</p>
+<div class="highlight"><pre><span class="kn">import</span> <span class="nn">java.util.concurrent.locks.ReadWriteLock</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.concurrent.locks.ReentrantReadWriteLock</span><span class="o">;</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">CachedDao</span> <span class="kd">implements</span> <span class="n">Dao</span> <span class="o">{</span>
+
+  <span class="kd">private</span> <span class="kd">final</span> <span class="n">ReadWriteLock</span> <span class="n">rwLock</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ReentrantReadWriteLock</span><span class="o">();</span>
+
+  <span class="kd">public</span> <span class="n">Optional</span><span class="o">&lt;</span><span class="n">MyObject</span><span class="o">&gt;</span> <span class="nf">get</span><span class="o">(</span><span class="n">String</span> <span class="n">id</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">rwLock</span><span class="o">.</span><span class="na">readLock</span><span class="o">().</span><span class="na">lock</span><span class="o">();</span>
+    <span class="k">try</span> <span class="o">{</span>
+      <span class="k">return</span> <span class="n">unsafeGet</span><span class="o">(</span><span class="n">id</span><span class="o">);</span>
+    <span class="o">}</span> <span class="k">finally</span> <span class="o">{</span>
+      <span class="n">rwLock</span><span class="o">.</span><span class="na">readLock</span><span class="o">().</span><span class="na">unlock</span><span class="o">();</span>
+    <span class="o">}</span>
+  <span class="o">}</span>
+
+  <span class="kd">public</span> <span class="n">Iterable</span><span class="o">&lt;</span><span class="n">MyObject</span><span class="o">&gt;</span> <span class="nf">getAll</span><span class="o">()</span> <span class="o">{</span>
+    <span class="n">rwLock</span><span class="o">.</span><span class="na">readLock</span><span class="o">().</span><span class="na">lock</span><span class="o">();</span>
+    <span class="k">try</span> <span class="o">{</span>
+      <span class="k">return</span> <span class="n">cache</span><span class="o">.</span><span class="na">asMap</span><span class="o">()</span>
+                  <span class="o">.</span><span class="na">values</span><span class="o">()</span>
+                  <span class="o">.</span><span class="na">stream</span><span class="o">()</span>
+                  <span class="o">.</span><span class="na">map</span><span class="o">(</span><span class="n">Optional</span><span class="o">::</span><span class="n">get</span><span class="o">)</span>
+                  <span class="o">.</span><span class="na">collect</span><span class="o">(</span><span class="n">Collectors</span><span class="o">.</span><span class="na">toList</span><span class="o">());</span>
+    <span class="o">}</span> <span class="k">finally</span> <span class="o">{</span>
+      <span class="n">rwLock</span><span class="o">.</span><span class="na">readLock</span><span class="o">().</span><span class="na">unlock</span><span class="o">();</span>
+    <span class="o">}</span>
+  <span class="o">}</span>
+
+  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">save</span><span class="o">(</span><span class="n">MyObject</span> <span class="n">myObject</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">rwLock</span><span class="o">.</span><span class="na">writeLock</span><span class="o">().</span><span class="na">lock</span><span class="o">();</span>
+    <span class="k">try</span> <span class="o">{</span>
+      <span class="n">unsafeSave</span><span class="o">(</span><span class="n">myObject</span><span class="o">);</span>
+    <span class="o">}</span> <span class="k">finally</span> <span class="o">{</span>
+      <span class="n">rwLock</span><span class="o">.</span><span class="na">writeLock</span><span class="o">().</span><span class="na">unlock</span><span class="o">();</span>
+    <span class="o">}</span>
+  <span class="o">}</span>
+
+  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">delete</span><span class="o">(</span><span class="n">String</span> <span class="n">id</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">rwLock</span><span class="o">.</span><span class="na">writeLock</span><span class="o">().</span><span class="na">lock</span><span class="o">();</span>
+    <span class="k">try</span> <span class="o">{</span>
+      <span class="n">unsafeDelete</span><span class="o">(</span><span class="n">id</span><span class="o">);</span>
+    <span class="o">}</span> <span class="k">finally</span> <span class="o">{</span>
+      <span class="n">rwLock</span><span class="o">.</span><span class="na">writeLock</span><span class="o">().</span><span class="na">unlock</span><span class="o">();</span>
+    <span class="o">}</span>
+  <span class="o">}</span>
+
+  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">refresh</span><span class="o">()</span> <span class="o">{</span>
+    <span class="n">rwLock</span><span class="o">.</span><span class="na">writeLock</span><span class="o">().</span><span class="na">lock</span><span class="o">();</span>
+    <span class="k">try</span> <span class="o">{</span>
+      <span class="n">unsafeRefresh</span><span class="o">();</span>
+    <span class="o">}</span> <span class="k">finally</span> <span class="o">{</span>
+      <span class="n">rwLock</span><span class="o">.</span><span class="na">writeLock</span><span class="o">().</span><span class="na">unlock</span><span class="o">();</span>
+    <span class="o">}</span>
+  <span class="o">}</span>
+
+  <span class="kd">private</span> <span class="n">Optional</span><span class="o">&lt;</span><span class="n">MyObject</span><span class="o">&gt;</span> <span class="nf">unsafeGet</span><span class="o">(</span><span class="n">String</span> <span class="n">id</span><span class="o">)</span> <span class="o">{</span>
+    <span class="k">return</span> <span class="n">Optional</span><span class="o">.</span><span class="na">ofNullable</span><span class="o">(</span><span class="n">cache</span><span class="o">.</span><span class="na">getIfPresent</span><span class="o">(</span><span class="n">id</span><span class="o">));</span>
+  <span class="o">}</span>
+
+  <span class="kd">private</span> <span class="kt">void</span> <span class="nf">unsafeSave</span><span class="o">(</span><span class="n">MyObject</span> <span class="n">myObject</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">dbDao</span><span class="o">.</span><span class="na">save</span><span class="o">(</span><span class="n">myObject</span><span class="o">);</span>
+    <span class="n">cache</span><span class="o">.</span><span class="na">refresh</span><span class="o">(</span><span class="n">myObject</span><span class="o">.</span><span class="na">getId</span><span class="o">());</span>
+  <span class="o">}</span>
+
+  <span class="kd">private</span> <span class="kt">void</span> <span class="nf">unsafeDelete</span><span class="o">(</span><span class="n">String</span> <span class="n">id</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">dbDao</span><span class="o">.</span><span class="na">delete</span><span class="o">(</span><span class="n">id</span><span class="o">);</span>
+    <span class="n">cache</span><span class="o">.</span><span class="na">refresh</span><span class="o">(</span><span class="n">id</span><span class="o">);</span>
+  <span class="o">}</span>
+
+  <span class="kd">private</span> <span class="kt">void</span> <span class="nf">unsafeRefresh</span><span class="o">()</span> <span class="o">{</span>
+    <span class="c1">// Vidage intégral du cache puis rechargement.</span>
+    <span class="n">cache</span><span class="o">.</span><span class="na">invalidateAll</span><span class="o">();</span>
+    <span class="n">initCache</span><span class="o">();</span>
+  <span class="o">}</span>
+
+  <span class="kd">private</span> <span class="kt">void</span> <span class="nf">initCache</span><span class="o">()</span> <span class="o">{</span>
+    <span class="k">for</span> <span class="o">(</span><span class="n">MyObject</span> <span class="n">myObject</span> <span class="o">:</span> <span class="n">dbDao</span><span class="o">.</span><span class="na">getAll</span><span class="o">())</span> <span class="o">{</span>
+      <span class="n">cache</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">myObject</span><span class="o">.</span><span class="na">getId</span><span class="o">(),</span> <span class="n">Optional</span><span class="o">.</span><span class="na">of</span><span class="o">(</span><span class="n">myObject</span><span class="o">));</span>
+    <span class="o">}</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<h3>Pour aller plus loin</h3>
+<p>Le DAO présenté ici est « sûr » dans la mesure où il garantit la cohérence avec la base des données retournées. En revanche, pour cela, un compromis sur les performances a du être fait. En effet, cette implémentation ne permet pas d'écritures simultanées : la modification de deux objets distincts n'est pas possible.</p>
+<p>Peut-on faire mieux ? Si vous pensez que oui, quelle serait votre approche ?</p>
+            </div><!-- /.entry-content -->
+            <div class="comments">
+              <h3>Comments</h3>
+              <div id="disqus_thread"></div>
+              <script type="text/javascript">
+                  var disqus_shortname = 'dericbourg';
+                  (function() {
+                      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                  })();
+              </script>
+              <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+            </div>
+
+
+        </div><!-- /.eleven.columns -->
+
+<div class="three columns">
+
+      <div class="btn primary"><a href="https://github.com/adericbourg" target="_blank">Github</a></div>
+
+      <div class="btn twitter"><a href="https://twitter.com/adericbourg" target="_blank">Twitter</a></div>
+
+
+
+<!--
+<h4>Pages</h4>
+
+ <ul>
+  </ul>
+
+<h4>Catégories</h4>
+<ul>
+		<li><a href="http://www.dericbourg.net/category/blog.html">Blog</a></li>
+</ul>
+
+-->
+<h4>Tags</h4>
+	<ul id="sidebar-tags">
+</ul>
+
+
+
+</div> </div><!-- /.row -->
+
+
+</section>
+
+       </div><!-- /.row -->
+    </div><!-- /.container -->
+
+
+       <div class="container.nopad bg">
+
+
+        <footer id="credits" class="row">
+          <div class="seven columns left-center">
+
+                   <address id="about" class="vcard body">
+                    Proudly powered by <a href="http://getpelican.com/">Pelican</a>,
+                    which takes great advantage of <a href="http://python.org">Python</a>.
+                    <br />
+                    Based on the <a target="_blank" href="http://gumbyframework.com">Gumby Framework</a>
+                    </address>
+          </div>
+        </footer>
+
+    </div>
+
+
+<script type="text/javascript">
+    var disqus_shortname = 'dericbourg';
+    (function () {
+        var s = document.createElement('script'); s.async = true;
+        s.type = 'text/javascript';
+        s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
+        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+    }());
+</script>
+  <script src="http://www.dericbourg.net/theme/js/libs/jquery-1.9.1.min.js"></script>
+  <script src="http://www.dericbourg.net/theme/js/libs/gumby.min.js"></script>
+  <script src="http://www.dericbourg.net/theme/js/plugins.js"></script>
+</body>
+</html>
