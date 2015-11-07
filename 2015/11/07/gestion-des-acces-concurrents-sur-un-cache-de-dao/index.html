@@ -116,7 +116,7 @@
 <p>On se propose d'utiliser <a href="https://github.com/google/guava">Guava</a> pour implémenter ce cache. On utilise dans cet exemple un <a href="https://github.com/google/guava/wiki/CachesExplained"><code>LoadingCache</code></a> qui ira chercher en base la donnée s'il n'a pas déjà été sollicité pour celle-ci : on charge les valeurs une à une à la demande. Il permet également de rafraîchir les données automatiquement à intervalle régulier.</p>
 <p>L'encapsulation des données de cache dans des <code>Optional</code> est un parti pris. Deux choix étaient possibles :</p>
 <ul>
-<li>on peut choisir d'ignorer les valeurs inexistantes, auquel cas, si celles-ci sont demandées plusieurs fois, on fait autant d'appels à la base qu'on les demande ;</li>
+<li>on peut choisir d'ignorer les valeurs inexistantes, auquel cas, si celles-ci sont demandées plusieurs fois, ce sont autant d'appels à la base qui seront faits ;</li>
 <li>on peut également choisir de placer une sentinelle dans le cache (en l'occurrence, l'instance « absente » d'<code>Optional</code>).</li>
 </ul>
 <p>Les deux approches ont leur avantages et leurs inconvénients et leur utilisation dépend de votre application et de vos besoins.</p>
