@@ -70,6 +70,7 @@ public class CachedDao implements Dao {
     return cache.asMap()
                 .values()
                 .stream()
+                .filter(Optional::isPresent)
                 .map(Optional::get)
                 .collect(Collectors.toList());
   }
@@ -232,6 +233,7 @@ public class CachedDao implements Dao {
       return cache.asMap()
                   .values()
                   .stream()
+                  .filter(Optional::isPresent)
                   .map(Optional::get)
                   .collect(Collectors.toList());
     } finally {
