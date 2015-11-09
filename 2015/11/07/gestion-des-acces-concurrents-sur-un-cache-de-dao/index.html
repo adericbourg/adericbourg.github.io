@@ -154,6 +154,7 @@
     <span class="k">return</span> <span class="n">cache</span><span class="o">.</span><span class="na">asMap</span><span class="o">()</span>
                 <span class="o">.</span><span class="na">values</span><span class="o">()</span>
                 <span class="o">.</span><span class="na">stream</span><span class="o">()</span>
+                <span class="o">.</span><span class="na">filter</span><span class="o">(</span><span class="n">Optional</span><span class="o">::</span><span class="n">isPresent</span><span class="o">)</span>
                 <span class="o">.</span><span class="na">map</span><span class="o">(</span><span class="n">Optional</span><span class="o">::</span><span class="n">get</span><span class="o">)</span>
                 <span class="o">.</span><span class="na">collect</span><span class="o">(</span><span class="n">Collectors</span><span class="o">.</span><span class="na">toList</span><span class="o">());</span>
   <span class="o">}</span>
@@ -301,6 +302,7 @@
       <span class="k">return</span> <span class="n">cache</span><span class="o">.</span><span class="na">asMap</span><span class="o">()</span>
                   <span class="o">.</span><span class="na">values</span><span class="o">()</span>
                   <span class="o">.</span><span class="na">stream</span><span class="o">()</span>
+                  <span class="o">.</span><span class="na">filter</span><span class="o">(</span><span class="n">Optional</span><span class="o">::</span><span class="n">isPresent</span><span class="o">)</span>
                   <span class="o">.</span><span class="na">map</span><span class="o">(</span><span class="n">Optional</span><span class="o">::</span><span class="n">get</span><span class="o">)</span>
                   <span class="o">.</span><span class="na">collect</span><span class="o">(</span><span class="n">Collectors</span><span class="o">.</span><span class="na">toList</span><span class="o">());</span>
     <span class="o">}</span> <span class="k">finally</span> <span class="o">{</span>
