@@ -357,11 +357,182 @@ val connections = (connectionsFromStopTimes ++ connectionsFromTransfers).
 
 ##### Explication de l'algorithme
 
-> TODO
+> Cette explication est largement inspirée de l'explication de l'algorithme du [csa-challenge de CaptainTrain](https://github.com/captaintrain/csa-challenge/blob/master/readme.md).
+
+La table horaire est, comme on l'a vu, une suite de tuples contenant :
+
+ * la station de départ ;
+ * la station d'arrivée ;
+ * l'heure de départ sous forme de *timestamp* ;
+ * l'heure d'arrivée sous forme de *timestamp*.
+
+On appelle ces tuples des connexions. La table est triée par ordre d'heure de départ croissante.
+
+Pour chaque station *s*, de la table, on considère l'heure et la station d'arrivée. Si celles-ci sont optimales, on les conserve. Les stations étant des entiers, on les conserve dans deux tableaux : `arrival_timestamp[s]` et `in_connection[s]`.
+
+L'objectif est de se rendre d'un point de départ *o* à un point d'arrivée *d* en partant à l'heure *t0*.
+
+###### Initialisation
+
+```
+Pour chaque station s
+    arrival_timestamp[s] ← infinite
+    in_connection[s] ← invalid_value
+
+arrival_timestamp[o] ← t0
+```
+
+###### Boucle de calcul
+
+On parcourt l'ensemble des connexions contenues dans la table et on considère l'amélioration qu'elle apporte sur le trajet. À la fin de la boucle, lorsque toutes les connexions on été parcourues, toutes les heures d'arrivée depuis *o* vers une autre station ont été calculées. 
+
+```
+Pour chaque connexion c
+    Si arrival_timestamp[c.departure_station] < c.departure_timestamp 
+    et arrival_timestamp[c.arrival_station] > c.arrival_timestamp
+        arrival_timestamp[c.arrival_station] ← c.arrival_timestamp
+        in_connection[c.arrival_station] ← c
+```
+
+###### Résultat
+
+Pour obtenir le résultat, on parcourt le tableau des stations d'arrivée (`in_connections`) en partant de la destination *d* jusqu'à retrouver le point de départ *o*. 
+
+
+##### Implémentation
+
+Je propose ici une implémentation qui pourrait probablement être (largement, rien que par sa muabilité) améliorée. Partons toujours de là. 
+
+###### API
+
+Cette implémentation est paramétrée par : 
+
+ * la table horaire ;
+ * un dictionnaire des arrêts indexés par leur identifiant.
+
+Le calcul d'itinéraire (méthode `compute`) prend en entrée : 
+
+ * un arrêt de départ ;
+ * un arrêt d'arrivée ;
+ * une heure de départ.
+
+Il retourne la liste des connexions optimales pour effectuer ce trajet.
+
+```scala
+class CSA(timetable: Timetable, stopsByStopId: Map[Int, Stop]) {
+  def compute(departureStation: Int, arrivalStation: Int, departureTime: Int): Seq[Connection] = ???
+}
+```
+
+###### Initialisation
+
+On initialise les tableaux avec une valeur « virtuellement infinie » (valeur maximale qu'un entier peut représenter) à l'exception de l'heure d'arrivée optimale à la station de départ... puisque cette valeur est connue.
+
+```scala
+val inConnection = Array.fill[Int](CSA.MaxStations)(Int.MaxValue)
+val earliestArrival = Array.fill[Int](CSA.MaxStations)(Int.MaxValue)
+
+def compute(departureStation: Int, arrivalStation: Int, departureTime: Int): Seq[Connection] = {
+  earliestArrival(departureStation) = departureTime
+  ???
+}    
+```
+
+###### Calcul du trajet : vision macroscopique
+
+On retrouve les deux étapes du calcul dans la méthode `compute` : 
+
+ * la première qui parcourt les connexions et détermine l'heure d'arrivée optimale pour chaque station (`loop`) ;
+ * la seconde qui, à partir de cette table des connexions optimales, reconstruit le trajet (`computeRoute`).
+
+```scala
+def compute(departureStation: Int, arrivalStation: Int, departureTime: Int): Seq[Connection] = {
+  earliestArrival(departureStation) = departureTime
+
+  if (departureStation <= CSA.MaxStations && arrivalStation <= CSA.MaxStations) {
+    loop(arrivalStation)
+  }
+
+  computeRoute(arrivalStation)
+}
+```
+
+###### Parcours de la table horaire
+
+On construit ce parcours à partir d'une fonction *tail recursive* ([récursion terminale](https://fr.wikipedia.org/wiki/R%C3%A9cursion_terminale) en français). Une telle fonction a la particularité de voir son appel récursif comme la dernière instruction à être évaluée. Son avantage est de pouvoir être « optimisée » par le compilateur en une itération, nous libérant du risque de dépassement de capacité de la pile inhérent aux récursions.
+
+```scala
+private def loop(arrivalStation: Int): Unit = {
+  @tailrec
+  def inner(conns: Seq[(Connection, Int)], earliest: Int): Unit = {
+    var newEarliest = earliest
+    conns match {
+      case Seq() =>
+        // Aucune connexion : on n'a rien à faire
+        ()
+      case (connection, index) +: _ if connection.arrivalTimestamp > earliest =>
+        // L'heure d'arrivée de la connexion dépasse l'heure d'arrivée « optimale » actuelle.
+        // On ne fait rien.
+        ()
+      case (connection, index) +: tail =>
+        // La connexion optimise les horaires déjà calculés. On met à jour les horaires.
+        if (leavesAfterArrival(connection) && optimizesArrivalTime(connection)) {
+          earliestArrival(connection.arrivalStation) = connection.arrivalTimestamp
+          inConnection(connection.arrivalStation) = index
+          if (connection.arrivalStation == arrivalStation) {
+            newEarliest = Math.min(earliest, connection.arrivalTimestamp)
+          }
+        }
+        inner(tail, newEarliest)
+    }
+  }
+  inner(timetable.connections.zipWithIndex, Int.MaxValue)
+}
+
+private def leavesAfterArrival(connection: Connection): Boolean = {
+  connection.departureTimestamp >= earliestArrival(connection.departureStation)
+}
+
+private def optimizesArrivalTime(connection: Connection): Boolean = {
+  connection.arrivalTimestamp < earliestArrival(connection.arrivalStation)
+}
+```
+
+> TODO ?
+
+###### Construction de l'itinéraire à partir de la table horaire
+
+Une fois la table horaire `inConnection` calculée, l'itinéraire est « facile » à reconsituer. On part de la station d'arrivée et si l'heure d'arrivée pour celle-ci est « l'infini », c'est que l'on n'a pas pu déterminer de trajet permettant d'atteindre cette station. Sinon, on parcourt les connexions en partant de la fin (de la station d'arrivée, donc) : 
+
+ * on prend la connexion *n* (celle d'arrivée), ce qui nous donne la station de départ de cette connexion ;
+ * puis on prend la connexion *n-1* arrivant à la station de départ de la connexion précédente et ainsi de suite.
+
+On obtient alors une succession de connexions dont le premier élément est la connexion de terminant à la station d'arrivée et dont les dernier élément est la connexion partant de la station de départ. Il ne reste plus qu'à inverser cette liste pour obtenir le trajet.
+
+```scala
+private def computeRoute(arrivalStation: Int): Seq[Connection] = {
+  inConnection(arrivalStation) match {
+    case Int.MaxValue =>
+      Seq() // Pas de solution
+    case _ => {
+      var route = Array[Connection]()
+      var lastConnectionIndex = inConnection(arrivalStation)
+      while (lastConnectionIndex != Int.MaxValue) {
+        val connection: Connection = timetable.connections(lastConnectionIndex)
+        route = route :+ connection
+        lastConnectionIndex = inConnection(connection.departureStation)
+      }
+      route.reverse
+    }
+  }
+}
+```
+
+Ce cas est volontairement écrit en « Java++ » plutôt qu'en « bon Scala » par simplicité de lecture. Saurez-vous écrire le cas général en une ligne (ou deux) ?
 
 ##### Exemple
 
-Partons d'un trajet entre [Maubert-Mutualité et Voltaire]( http://www.vianavigo.com/fr/itineraire-plan-de-quartier/?criteria=1&mrq=&id=&departure=Maubert+-+Mutualit%C3%A9%2C+Paris&departureType=StopArea&departureCity=Paris&departureCoordX=&departureCoordY=&departureExternalCode=59357&departureCityCode=75000&arrival=Voltaire+%2F+L%C3%A9on+Blum%2C+Paris&arrivalType=StopArea&arrivalCity=Paris&arrivalCityCode=75000&arrivalCoordX=&arrivalCoordY=&arrivalExternalCode=59616&date=25%2F10%2F2015&dateFormat=dd%2FMM%2Fyyyy&sens=1&hour=18&min=00&moreCriterions=true&via=&viaType=&viaCity=&viaCityCode=&viaExternalCode=&_train=on&rer=true&_rer=on&metro=true&_metro=on&_bus=on&_tram=on&walkSpeed=0&spcar=%C3%A2&hpx=1&hat=1&L=0&submitSearchItinerary=&ajid=/stif_web_carto/comp/itinerary/search.html_&_=1445793804586) en partant à 18h.
+Partons d'un trajet entre Maubert-Mutualité et Voltaire en partant à 18h.
 
 ```scala
 val maubert = 2350
@@ -374,7 +545,7 @@ csa.compute(
 )
 ```
 
-On obtient le trajet :
+On obtient le trajet (notez la présence des connexions de correspondance à Odéon et Strasbourg-Saint-Denis) :
 
 ```
 Solution found with 15 connections
@@ -395,3 +566,7 @@ Solution found with 15 connections
   Saint-Ambroise -> Voltaire (Léon Blum)
 Total transit time: 21 minutes
 ```
+
+##### Analyse
+
+Cet algorithme présente l'avantage de s'exécuter en un temps proportionnel au nombre de connexions (considérons les correspondances du trajet comme négligeables en nombre au regard de la taille de la table horaire). Il occupe également un espace mémoire proportionnel au nombre de connexions. 
