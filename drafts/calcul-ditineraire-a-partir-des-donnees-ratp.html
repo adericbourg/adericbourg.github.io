@@ -399,10 +399,161 @@ II, t4, t4, D, 1, ,
 <h4>Exploitation de la table horaire : calcul d'itinéraire</h4>
 <h5>Explication de l'algorithme</h5>
 <blockquote>
-<p>TODO</p>
+<p>Cette explication est largement inspirée de l'explication de l'algorithme du <a href="https://github.com/captaintrain/csa-challenge/blob/master/readme.md">csa-challenge de CaptainTrain</a>.</p>
 </blockquote>
+<p>La table horaire est, comme on l'a vu, une suite de tuples contenant :</p>
+<ul>
+<li>la station de départ ;</li>
+<li>la station d'arrivée ;</li>
+<li>l'heure de départ sous forme de <em>timestamp</em> ;</li>
+<li>l'heure d'arrivée sous forme de <em>timestamp</em>.</li>
+</ul>
+<p>On appelle ces tuples des connexions. La table est triée par ordre d'heure de départ croissante.</p>
+<p>Pour chaque station <em>s</em>, de la table, on considère l'heure et la station d'arrivée. Si celles-ci sont optimales, on les conserve. Les stations étant des entiers, on les conserve dans deux tableaux : <code>arrival_timestamp[s]</code> et <code>in_connection[s]</code>.</p>
+<p>L'objectif est de se rendre d'un point de départ <em>o</em> à un point d'arrivée <em>d</em> en partant à l'heure <em>t0</em>.</p>
+<h6>Initialisation</h6>
+<div class="highlight"><pre>Pour chaque station s
+    arrival_timestamp[s] ← infinite
+    in_connection[s] ← invalid_value
+
+arrival_timestamp[o] ← t0
+</pre></div>
+
+
+<h6>Boucle de calcul</h6>
+<p>On parcourt l'ensemble des connexions contenues dans la table et on considère l'amélioration qu'elle apporte sur le trajet. À la fin de la boucle, lorsque toutes les connexions on été parcourues, toutes les heures d'arrivée depuis <em>o</em> vers une autre station ont été calculées. </p>
+<div class="highlight"><pre>Pour chaque connexion c
+    Si arrival_timestamp[c.departure_station] &lt; c.departure_timestamp 
+    et arrival_timestamp[c.arrival_station] &gt; c.arrival_timestamp
+        arrival_timestamp[c.arrival_station] ← c.arrival_timestamp
+        in_connection[c.arrival_station] ← c
+</pre></div>
+
+
+<h6>Résultat</h6>
+<p>Pour obtenir le résultat, on parcourt le tableau des stations d'arrivée (<code>in_connections</code>) en partant de la destination <em>d</em> jusqu'à retrouver le point de départ <em>o</em>. </p>
+<h5>Implémentation</h5>
+<p>Je propose ici une implémentation qui pourrait probablement être (largement, rien que par sa muabilité) améliorée. Partons toujours de là. </p>
+<h6>API</h6>
+<p>Cette implémentation est paramétrée par : </p>
+<ul>
+<li>la table horaire ;</li>
+<li>un dictionnaire des arrêts indexés par leur identifiant.</li>
+</ul>
+<p>Le calcul d'itinéraire (méthode <code>compute</code>) prend en entrée : </p>
+<ul>
+<li>un arrêt de départ ;</li>
+<li>un arrêt d'arrivée ;</li>
+<li>une heure de départ.</li>
+</ul>
+<p>Il retourne la liste des connexions optimales pour effectuer ce trajet.</p>
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">CSA</span><span class="o">(</span><span class="n">timetable</span><span class="k">:</span> <span class="kt">Timetable</span><span class="o">,</span> <span class="n">stopsByStopId</span><span class="k">:</span> <span class="kt">Map</span><span class="o">[</span><span class="kt">Int</span>, <span class="kt">Stop</span><span class="o">])</span> <span class="o">{</span>
+  <span class="k">def</span> <span class="n">compute</span><span class="o">(</span><span class="n">departureStation</span><span class="k">:</span> <span class="kt">Int</span><span class="o">,</span> <span class="n">arrivalStation</span><span class="k">:</span> <span class="kt">Int</span><span class="o">,</span> <span class="n">departureTime</span><span class="k">:</span> <span class="kt">Int</span><span class="o">)</span><span class="k">:</span> <span class="kt">Seq</span><span class="o">[</span><span class="kt">Connection</span><span class="o">]</span> <span class="k">=</span> <span class="o">???</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<h6>Initialisation</h6>
+<p>On initialise les tableaux avec une valeur « virtuellement infinie » (valeur maximale qu'un entier peut représenter) à l'exception de l'heure d'arrivée optimale à la station de départ... puisque cette valeur est connue.</p>
+<div class="highlight"><pre><span class="k">val</span> <span class="n">inConnection</span> <span class="k">=</span> <span class="nc">Array</span><span class="o">.</span><span class="n">fill</span><span class="o">[</span><span class="kt">Int</span><span class="o">](</span><span class="nc">CSA</span><span class="o">.</span><span class="nc">MaxStations</span><span class="o">)(</span><span class="nc">Int</span><span class="o">.</span><span class="nc">MaxValue</span><span class="o">)</span>
+<span class="k">val</span> <span class="n">earliestArrival</span> <span class="k">=</span> <span class="nc">Array</span><span class="o">.</span><span class="n">fill</span><span class="o">[</span><span class="kt">Int</span><span class="o">](</span><span class="nc">CSA</span><span class="o">.</span><span class="nc">MaxStations</span><span class="o">)(</span><span class="nc">Int</span><span class="o">.</span><span class="nc">MaxValue</span><span class="o">)</span>
+
+<span class="k">def</span> <span class="n">compute</span><span class="o">(</span><span class="n">departureStation</span><span class="k">:</span> <span class="kt">Int</span><span class="o">,</span> <span class="n">arrivalStation</span><span class="k">:</span> <span class="kt">Int</span><span class="o">,</span> <span class="n">departureTime</span><span class="k">:</span> <span class="kt">Int</span><span class="o">)</span><span class="k">:</span> <span class="kt">Seq</span><span class="o">[</span><span class="kt">Connection</span><span class="o">]</span> <span class="k">=</span> <span class="o">{</span>
+  <span class="n">earliestArrival</span><span class="o">(</span><span class="n">departureStation</span><span class="o">)</span> <span class="k">=</span> <span class="n">departureTime</span>
+  <span class="o">???</span>
+<span class="o">}</span>    
+</pre></div>
+
+
+<h6>Calcul du trajet : vision macroscopique</h6>
+<p>On retrouve les deux étapes du calcul dans la méthode <code>compute</code> : </p>
+<ul>
+<li>la première qui parcourt les connexions et détermine l'heure d'arrivée optimale pour chaque station (<code>loop</code>) ;</li>
+<li>la seconde qui, à partir de cette table des connexions optimales, reconstruit le trajet (<code>computeRoute</code>).</li>
+</ul>
+<div class="highlight"><pre><span class="k">def</span> <span class="n">compute</span><span class="o">(</span><span class="n">departureStation</span><span class="k">:</span> <span class="kt">Int</span><span class="o">,</span> <span class="n">arrivalStation</span><span class="k">:</span> <span class="kt">Int</span><span class="o">,</span> <span class="n">departureTime</span><span class="k">:</span> <span class="kt">Int</span><span class="o">)</span><span class="k">:</span> <span class="kt">Seq</span><span class="o">[</span><span class="kt">Connection</span><span class="o">]</span> <span class="k">=</span> <span class="o">{</span>
+  <span class="n">earliestArrival</span><span class="o">(</span><span class="n">departureStation</span><span class="o">)</span> <span class="k">=</span> <span class="n">departureTime</span>
+
+  <span class="k">if</span> <span class="o">(</span><span class="n">departureStation</span> <span class="o">&lt;=</span> <span class="nc">CSA</span><span class="o">.</span><span class="nc">MaxStations</span> <span class="o">&amp;&amp;</span> <span class="n">arrivalStation</span> <span class="o">&lt;=</span> <span class="nc">CSA</span><span class="o">.</span><span class="nc">MaxStations</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">loop</span><span class="o">(</span><span class="n">arrivalStation</span><span class="o">)</span>
+  <span class="o">}</span>
+
+  <span class="n">computeRoute</span><span class="o">(</span><span class="n">arrivalStation</span><span class="o">)</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<h6>Parcours de la table horaire</h6>
+<p>On construit ce parcours à partir d'une fonction <em>tail recursive</em> (<a href="https://fr.wikipedia.org/wiki/R%C3%A9cursion_terminale">récursion terminale</a> en français). Une telle fonction a la particularité de voir son appel récursif comme la dernière instruction à être évaluée. Son avantage est de pouvoir être « optimisée » par le compilateur en une itération, nous libérant du risque de dépassement de capacité de la pile inhérent aux récursions.</p>
+<div class="highlight"><pre><span class="k">private</span> <span class="k">def</span> <span class="n">loop</span><span class="o">(</span><span class="n">arrivalStation</span><span class="k">:</span> <span class="kt">Int</span><span class="o">)</span><span class="k">:</span> <span class="kt">Unit</span> <span class="o">=</span> <span class="o">{</span>
+  <span class="nd">@tailrec</span>
+  <span class="k">def</span> <span class="n">inner</span><span class="o">(</span><span class="n">conns</span><span class="k">:</span> <span class="kt">Seq</span><span class="o">[(</span><span class="kt">Connection</span>, <span class="kt">Int</span><span class="o">)],</span> <span class="n">earliest</span><span class="k">:</span> <span class="kt">Int</span><span class="o">)</span><span class="k">:</span> <span class="kt">Unit</span> <span class="o">=</span> <span class="o">{</span>
+    <span class="k">var</span> <span class="n">newEarliest</span> <span class="k">=</span> <span class="n">earliest</span>
+    <span class="n">conns</span> <span class="k">match</span> <span class="o">{</span>
+      <span class="k">case</span> <span class="nc">Seq</span><span class="o">()</span> <span class="k">=&gt;</span>
+        <span class="c1">// Aucune connexion : on n&#39;a rien à faire</span>
+        <span class="o">()</span>
+      <span class="k">case</span> <span class="o">(</span><span class="n">connection</span><span class="o">,</span> <span class="n">index</span><span class="o">)</span> <span class="o">+:</span> <span class="k">_</span> <span class="k">if</span> <span class="n">connection</span><span class="o">.</span><span class="n">arrivalTimestamp</span> <span class="o">&gt;</span> <span class="n">earliest</span> <span class="k">=&gt;</span>
+        <span class="c1">// L&#39;heure d&#39;arrivée de la connexion dépasse l&#39;heure d&#39;arrivée « optimale » actuelle.</span>
+        <span class="c1">// On ne fait rien.</span>
+        <span class="o">()</span>
+      <span class="k">case</span> <span class="o">(</span><span class="n">connection</span><span class="o">,</span> <span class="n">index</span><span class="o">)</span> <span class="o">+:</span> <span class="n">tail</span> <span class="k">=&gt;</span>
+        <span class="c1">// La connexion optimise les horaires déjà calculés. On met à jour les horaires.</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">leavesAfterArrival</span><span class="o">(</span><span class="n">connection</span><span class="o">)</span> <span class="o">&amp;&amp;</span> <span class="n">optimizesArrivalTime</span><span class="o">(</span><span class="n">connection</span><span class="o">))</span> <span class="o">{</span>
+          <span class="n">earliestArrival</span><span class="o">(</span><span class="n">connection</span><span class="o">.</span><span class="n">arrivalStation</span><span class="o">)</span> <span class="k">=</span> <span class="n">connection</span><span class="o">.</span><span class="n">arrivalTimestamp</span>
+          <span class="n">inConnection</span><span class="o">(</span><span class="n">connection</span><span class="o">.</span><span class="n">arrivalStation</span><span class="o">)</span> <span class="k">=</span> <span class="n">index</span>
+          <span class="k">if</span> <span class="o">(</span><span class="n">connection</span><span class="o">.</span><span class="n">arrivalStation</span> <span class="o">==</span> <span class="n">arrivalStation</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">newEarliest</span> <span class="k">=</span> <span class="nc">Math</span><span class="o">.</span><span class="n">min</span><span class="o">(</span><span class="n">earliest</span><span class="o">,</span> <span class="n">connection</span><span class="o">.</span><span class="n">arrivalTimestamp</span><span class="o">)</span>
+          <span class="o">}</span>
+        <span class="o">}</span>
+        <span class="n">inner</span><span class="o">(</span><span class="n">tail</span><span class="o">,</span> <span class="n">newEarliest</span><span class="o">)</span>
+    <span class="o">}</span>
+  <span class="o">}</span>
+  <span class="n">inner</span><span class="o">(</span><span class="n">timetable</span><span class="o">.</span><span class="n">connections</span><span class="o">.</span><span class="n">zipWithIndex</span><span class="o">,</span> <span class="nc">Int</span><span class="o">.</span><span class="nc">MaxValue</span><span class="o">)</span>
+<span class="o">}</span>
+
+<span class="k">private</span> <span class="k">def</span> <span class="n">leavesAfterArrival</span><span class="o">(</span><span class="n">connection</span><span class="k">:</span> <span class="kt">Connection</span><span class="o">)</span><span class="k">:</span> <span class="kt">Boolean</span> <span class="o">=</span> <span class="o">{</span>
+  <span class="n">connection</span><span class="o">.</span><span class="n">departureTimestamp</span> <span class="o">&gt;=</span> <span class="n">earliestArrival</span><span class="o">(</span><span class="n">connection</span><span class="o">.</span><span class="n">departureStation</span><span class="o">)</span>
+<span class="o">}</span>
+
+<span class="k">private</span> <span class="k">def</span> <span class="n">optimizesArrivalTime</span><span class="o">(</span><span class="n">connection</span><span class="k">:</span> <span class="kt">Connection</span><span class="o">)</span><span class="k">:</span> <span class="kt">Boolean</span> <span class="o">=</span> <span class="o">{</span>
+  <span class="n">connection</span><span class="o">.</span><span class="n">arrivalTimestamp</span> <span class="o">&lt;</span> <span class="n">earliestArrival</span><span class="o">(</span><span class="n">connection</span><span class="o">.</span><span class="n">arrivalStation</span><span class="o">)</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<blockquote>
+<p>TODO ?</p>
+</blockquote>
+<h6>Construction de l'itinéraire à partir de la table horaire</h6>
+<p>Une fois la table horaire <code>inConnection</code> calculée, l'itinéraire est « facile » à reconsituer. On part de la station d'arrivée et si l'heure d'arrivée pour celle-ci est « l'infini », c'est que l'on n'a pas pu déterminer de trajet permettant d'atteindre cette station. Sinon, on parcourt les connexions en partant de la fin (de la station d'arrivée, donc) : </p>
+<ul>
+<li>on prend la connexion <em>n</em> (celle d'arrivée), ce qui nous donne la station de départ de cette connexion ;</li>
+<li>puis on prend la connexion <em>n-1</em> arrivant à la station de départ de la connexion précédente et ainsi de suite.</li>
+</ul>
+<p>On obtient alors une succession de connexions dont le premier élément est la connexion de terminant à la station d'arrivée et dont les dernier élément est la connexion partant de la station de départ. Il ne reste plus qu'à inverser cette liste pour obtenir le trajet.</p>
+<div class="highlight"><pre><span class="k">private</span> <span class="k">def</span> <span class="n">computeRoute</span><span class="o">(</span><span class="n">arrivalStation</span><span class="k">:</span> <span class="kt">Int</span><span class="o">)</span><span class="k">:</span> <span class="kt">Seq</span><span class="o">[</span><span class="kt">Connection</span><span class="o">]</span> <span class="k">=</span> <span class="o">{</span>
+  <span class="n">inConnection</span><span class="o">(</span><span class="n">arrivalStation</span><span class="o">)</span> <span class="k">match</span> <span class="o">{</span>
+    <span class="k">case</span> <span class="nc">Int</span><span class="o">.</span><span class="nc">MaxValue</span> <span class="k">=&gt;</span>
+      <span class="nc">Seq</span><span class="o">()</span> <span class="c1">// Pas de solution</span>
+    <span class="k">case</span> <span class="k">_</span> <span class="k">=&gt;</span> <span class="o">{</span>
+      <span class="k">var</span> <span class="n">route</span> <span class="k">=</span> <span class="nc">Array</span><span class="o">[</span><span class="kt">Connection</span><span class="o">]()</span>
+      <span class="k">var</span> <span class="n">lastConnectionIndex</span> <span class="k">=</span> <span class="n">inConnection</span><span class="o">(</span><span class="n">arrivalStation</span><span class="o">)</span>
+      <span class="k">while</span> <span class="o">(</span><span class="n">lastConnectionIndex</span> <span class="o">!=</span> <span class="nc">Int</span><span class="o">.</span><span class="nc">MaxValue</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">val</span> <span class="n">connection</span><span class="k">:</span> <span class="kt">Connection</span> <span class="o">=</span> <span class="n">timetable</span><span class="o">.</span><span class="n">connections</span><span class="o">(</span><span class="n">lastConnectionIndex</span><span class="o">)</span>
+        <span class="n">route</span> <span class="k">=</span> <span class="n">route</span> <span class="o">:+</span> <span class="n">connection</span>
+        <span class="n">lastConnectionIndex</span> <span class="k">=</span> <span class="n">inConnection</span><span class="o">(</span><span class="n">connection</span><span class="o">.</span><span class="n">departureStation</span><span class="o">)</span>
+      <span class="o">}</span>
+      <span class="n">route</span><span class="o">.</span><span class="n">reverse</span>
+    <span class="o">}</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<p>Ce cas est volontairement écrit en « Java++ » plutôt qu'en « bon Scala » par simplicité de lecture. Saurez-vous écrire le cas général en une ligne (ou deux) ?</p>
 <h5>Exemple</h5>
-<p>Partons d'un trajet entre <a href="http://www.vianavigo.com/fr/itineraire-plan-de-quartier/?criteria=1&amp;mrq=&amp;id=&amp;departure=Maubert+-+Mutualit%C3%A9%2C+Paris&amp;departureType=StopArea&amp;departureCity=Paris&amp;departureCoordX=&amp;departureCoordY=&amp;departureExternalCode=59357&amp;departureCityCode=75000&amp;arrival=Voltaire+%2F+L%C3%A9on+Blum%2C+Paris&amp;arrivalType=StopArea&amp;arrivalCity=Paris&amp;arrivalCityCode=75000&amp;arrivalCoordX=&amp;arrivalCoordY=&amp;arrivalExternalCode=59616&amp;date=25%2F10%2F2015&amp;dateFormat=dd%2FMM%2Fyyyy&amp;sens=1&amp;hour=18&amp;min=00&amp;moreCriterions=true&amp;via=&amp;viaType=&amp;viaCity=&amp;viaCityCode=&amp;viaExternalCode=&amp;_train=on&amp;rer=true&amp;_rer=on&amp;metro=true&amp;_metro=on&amp;_bus=on&amp;_tram=on&amp;walkSpeed=0&amp;spcar=%C3%A2&amp;hpx=1&amp;hat=1&amp;L=0&amp;submitSearchItinerary=&amp;ajid=/stif_web_carto/comp/itinerary/search.html_&amp;_=1445793804586">Maubert-Mutualité et Voltaire</a> en partant à 18h.</p>
+<p>Partons d'un trajet entre Maubert-Mutualité et Voltaire en partant à 18h.</p>
 <div class="highlight"><pre><span class="k">val</span> <span class="n">maubert</span> <span class="k">=</span> <span class="mi">2350</span>
 <span class="k">val</span> <span class="n">voltaireLeonBlum</span> <span class="k">=</span> <span class="mi">1633</span>
 
@@ -414,7 +565,7 @@ II, t4, t4, D, 1, ,
 </pre></div>
 
 
-<p>On obtient le trajet :</p>
+<p>On obtient le trajet (notez la présence des connexions de correspondance à Odéon et Strasbourg-Saint-Denis) :</p>
 <div class="highlight"><pre>Solution found with 15 connections
   Maubert-Mutualité -&gt; Cluny-La Sorbonne
   Cluny-La Sorbonne -&gt; Odéon
@@ -433,6 +584,10 @@ II, t4, t4, D, 1, ,
   Saint-Ambroise -&gt; Voltaire (Léon Blum)
 Total transit time: 21 minutes
 </pre></div>
+
+
+<h5>Analyse</h5>
+<p>Cet algorithme présente l'avantage de s'exécuter en un temps proportionnel au nombre de connexions (considérons les correspondances du trajet comme négligeables en nombre au regard de la taille de la table horaire). Il occupe également un espace mémoire proportionnel au nombre de connexions. </p>
             </div><!-- /.entry-content -->
             <div class="comments">
               <h3>Comments</h3>
