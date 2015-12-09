@@ -432,6 +432,13 @@ arrival_timestamp[o] ← t0
 
 <h6>Résultat</h6>
 <p>Pour obtenir le résultat, on parcourt le tableau des stations d'arrivée (<code>in_connections</code>) en partant de la destination <em>d</em> jusqu'à retrouver le point de départ <em>o</em>. </p>
+<h5>Analyse</h5>
+<p>Cet algorithme présente l'avantage de s'exécuter en un temps proportionnel au nombre de connexions en occupant un espace mémoire lui aussi proportionnel au nombre de connexions. Dans le cas du métro parisien, on peut évaluer que le nombre de correspondances est du même ordre de grandeur que le nombre <em>N</em> de stations. Cela revient à avoir : </p>
+<ul>
+<li>environ <em>N-1</em> connexions entre stations d'une même ligne ;</li>
+<li><em>2N</em> connexions issues des correspondance (une connexion dans un sens, une connexion dans l'autre).</li>
+</ul>
+<p>L'algorithme a donc une complexité proportionnelle au nombre de stations.</p>
 <h5>Implémentation</h5>
 <p>Je propose ici une implémentation qui pourrait probablement être (largement, rien que par sa muabilité) améliorée. Partons toujours de là. </p>
 <h6>API</h6>
@@ -586,8 +593,15 @@ Total transit time: 21 minutes
 </pre></div>
 
 
-<h5>Analyse</h5>
-<p>Cet algorithme présente l'avantage de s'exécuter en un temps proportionnel au nombre de connexions (considérons les correspondances du trajet comme négligeables en nombre au regard de la taille de la table horaire). Il occupe également un espace mémoire proportionnel au nombre de connexions. </p>
+<h3>Conclusion</h3>
+<p>En comparaison, l'<a href="https://fr.wikipedia.org/wiki/Algorithme_de_Dijkstra">algorithme de plus court chemin de Dijkstra</a> présente une complexité proportionnelle à <em>C.log(N)</em> où <em>N</em> est le nombre de stations et <em>C</em> le nombre de correspondances entre deux stations, soit environ <em>N.log(N)</em> dans notre évaluation, tout en occupant un espace mémoire de taille proportionnelle à <em>N</em>. </p>
+<p>Le métro parisien est constitué de 303 stations (<em>N = 303</em> et <em>N.log(N) = 752</em>) : on reste donc dans le même ordre de magnitude sur ces deux algorithmes au moment du calcul d'itinéraire. En revanche, le <em>Connexion scan algorithm</em> demande de pré-calculer la table horaire : il induit donc un coût préalable. Cette table précalculée le rend également moins souple : elle rend plus difficile le paramétrage de l'algorithme en fonction des préférences du voyageur. La facilité de marche du voyageur peut par exemple être utilisée pour pondérer la durée d'une correspondance : </p>
+<ul>
+<li>avec le CSA, il est nécessaire de calculer une table prenant en compte ce paramètre (une correspondance étant une connexion comme une autre) ;</li>
+<li>avec l'algorithme de Dijkstra, il « suffit » d'associer un poids plus fort aux arêtes représentant une correspondance lorsque le voyageur a des difficultés à se déplacer.</li>
+</ul>
+<p>Si le CSA est plus simple à implémenter, il l'est au détriment de la souplesse en première approche. Il est cependant possible de typer les connexions de correspondance pour leur attribuer différentes heures d'arrivée en fonction de la vélocité pédestre du voyageur.</p>
+<p>Enfin, si cet exemple a été mené sur le réseau ferré RATP d'Île de France, son extension au réseau de bus (347 lignes) n'est pas viable : la table horaire devient trop volumineuse pour tenir en mémoire et les performances s'en ressentent. Mon intuition est que cet algorithme est très pertinent sur de « petites » tables horaires (jusqu'à quelques centaines de stations). Dès que le réseau grossit, en revanche, il est préférable de chercher un autre algorithme moins gourmand en mémoire et en pré-calcul. </p>
             </div><!-- /.entry-content -->
             <div class="comments">
               <h3>Comments</h3>
