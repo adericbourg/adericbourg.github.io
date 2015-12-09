@@ -398,6 +398,7 @@ Pour chaque connexion c
 
 Pour obtenir le résultat, on parcourt le tableau des stations d'arrivée (`in_connections`) en partant de la destination *d* jusqu'à retrouver le point de départ *o*. 
 
+> TODO faire un exemple sur un petit jeu de données ?
 
 ##### Analyse
 
