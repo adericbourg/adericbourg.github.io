@@ -508,7 +508,7 @@ private def optimizesArrivalTime(connection: Connection): Boolean = {
 }
 ```
 
-> TODO ?
+> TODO plus d'explications ?
 
 ###### Construction de l'itinéraire à partir de la table horaire
 
