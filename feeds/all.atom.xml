@@ -1,5 +1,610 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Blog bloquant</title><link href="http://www.dericbourg.net/" rel="alternate"></link><link href="http://www.dericbourg.net/feeds/all.atom.xml" rel="self"></link><id>http://www.dericbourg.net/</id><updated>2015-11-07T00:00:00+01:00</updated><entry><title>Gestion des accès concurrents sur un cache de DAO</title><link href="http://www.dericbourg.net/2015/11/07/gestion-des-acces-concurrents-sur-un-cache-de-dao/" rel="alternate"></link><updated>2015-11-07T00:00:00+01:00</updated><author><name>Alban Dericbourg</name></author><id>tag:www.dericbourg.net,2015-11-07:2015/11/07/gestion-des-acces-concurrents-sur-un-cache-de-dao/</id><summary type="html">&lt;p&gt;L'ajout d'un cache sur un DAO est une opération courante et la bibliothèque Guava, très répandue, a par ailleurs énormément simplifié sa mise en œuvre. Néanmoins, il reste encore extrêmement facile de se tromper avec cette bibliothèque et... de réaliser un cache qui ne fonctionne pas.&lt;/p&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Blog bloquant</title><link href="http://www.dericbourg.net/" rel="alternate"></link><link href="http://www.dericbourg.net/feeds/all.atom.xml" rel="self"></link><id>http://www.dericbourg.net/</id><updated>2015-12-10T00:00:00+01:00</updated><entry><title>Calcul d'itinéraire à partir des données RATP</title><link href="http://www.dericbourg.net/2015/12/10/calcul-ditineraire-a-partir-des-donnees-ratp/" rel="alternate"></link><updated>2015-12-10T00:00:00+01:00</updated><author><name>Alban Dericbourg</name></author><id>tag:www.dericbourg.net,2015-12-10:2015/12/10/calcul-ditineraire-a-partir-des-donnees-ratp/</id><summary type="html">&lt;p&gt;La RATP progresse dans l'&lt;a href="http://data.ratp.fr"&gt;ouverture de ses données&lt;/a&gt; et même si elle ne propose pas encore un accès à son &lt;a href="https://fr.wikipedia.org/wiki/Syst%C3%A8me_d'information_en_ligne"&gt;système SIEL&lt;/a&gt;, elle propose néanmoins les données de son offre de transport au &lt;a href="https://developers.google.com/transit/gtfs/"&gt;format GTFS&lt;/a&gt;. Une bonne occasion de s'initier au calcul d'itinéraire !&lt;/p&gt;
+&lt;p&gt;L'histoire et le contexte des calculs d'itinéraires est très bien synthétisé par &lt;a href="https://twitter.com/tristramg"&gt;Tristram Gräbener&lt;/a&gt; dans son &lt;a href="http://blog.tristramg.eu/petit-historique-du-calcul-ditineraire.html"&gt;Petit historique du calcul d'itinéraire&lt;/a&gt;. Probablement plus hipster que je ne veux bien l'admettre, j'ai choisi d'utiliser le plus récent : le &lt;em&gt;&lt;a href="http://i11www.iti.uni-karlsruhe.de/extra/publications/dpsw-isftr-13.pdf"&gt;Connection Scan Algorithm&lt;/a&gt;&lt;/em&gt;. &lt;/p&gt;
+&lt;h3&gt;Connection scan algorithm&lt;/h3&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Cette explication est largement inspirée de l'explication de l'algorithme du &lt;a href="https://github.com/captaintrain/csa-challenge/blob/master/readme.md"&gt;csa-challenge de CaptainTrain&lt;/a&gt;.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Cet algorithme, tenant en quelques lignes, se « contente » de parcourir une table horaire pré-calculée des connexions entre les stations et de retenir la solution optimale en temps de trajet. Une connexion représente une possibilité de trajet entre deux stations. On la modélise donc par un quadruplet contenant :&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;la station de départ, &lt;/li&gt;
+&lt;li&gt;la station d'arrivée, &lt;/li&gt;
+&lt;li&gt;l'heure de départ,&lt;/li&gt;
+&lt;li&gt;l'heure d'arrivée. &lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;La table horaire devient alors simplement une liste de ces connexions triées par heure de départ croissante.&lt;/p&gt;
+&lt;p&gt;Pour chaque station &lt;em&gt;s&lt;/em&gt;, on considère l'heure et la station d'arrivée. Si celles-ci sont optimales, on les conserve. Les stations étant identifiées par des entiers, on les conserve dans deux tableaux : &lt;code&gt;arrival_timestamp[s]&lt;/code&gt; et &lt;code&gt;in_connection[s]&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;L'objectif est de se rendre d'un point de départ &lt;em&gt;o&lt;/em&gt; à un point d'arrivée &lt;em&gt;d&lt;/em&gt; en partant à l'heure &lt;em&gt;t0&lt;/em&gt;.&lt;/p&gt;
+&lt;h4&gt;Initialisation&lt;/h4&gt;
+&lt;p&gt;On initialise l'algorithme en attribuant une durée infinie au trajet vers tout point d'arrêt à l'exception de la gare de départ (on en part, on sait qu'on y est à &lt;em&gt;t0&lt;/em&gt;). &lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;Pour chaque station s
+    arrival_timestamp[s] ← infinite
+    in_connection[s] ← invalid_value
+
+arrival_timestamp[o] ← t0
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h4&gt;Boucle de calcul&lt;/h4&gt;
+&lt;p&gt;On parcourt l'ensemble des connexions contenues dans la table et on considère l'amélioration qu'elle apporte sur le trajet. À la fin de la boucle, lorsque toutes les connexions on été parcourues, toutes les heures d'arrivée depuis &lt;em&gt;o&lt;/em&gt; vers une autre station ont été calculées. &lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;Pour chaque connexion c
+    Si arrival_timestamp[c.departure_station] ≤ c.departure_timestamp 
+    et arrival_timestamp[c.arrival_station] &amp;gt; c.arrival_timestamp
+        arrival_timestamp[c.arrival_station] ← c.arrival_timestamp
+        in_connection[c.arrival_station] ← c
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h4&gt;Résultat&lt;/h4&gt;
+&lt;p&gt;Pour obtenir le résultat, on parcourt le tableau des stations d'arrivée (&lt;code&gt;in_connections&lt;/code&gt;) en partant de la destination &lt;em&gt;d&lt;/em&gt; jusqu'à retrouver le point de départ &lt;em&gt;o&lt;/em&gt;. &lt;/p&gt;
+&lt;h4&gt;Exemple&lt;/h4&gt;
+&lt;p&gt;Prenons un exemple sur une ligne fictive : &lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;         -----o C
+       /  
+o-----o B
+A      \
+         -----o D
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;On souhaite rejoindre &lt;code&gt;C&lt;/code&gt; depuis &lt;code&gt;A&lt;/code&gt; en partant à l'heure 2 avec la table horaire suivante :&lt;/p&gt;
+&lt;table class="table table-bordered table-condensed table-striped"&gt;
+&lt;thead&gt;
+  &lt;tr&gt;
+    &lt;th&gt;Station de départ&lt;/th&gt;
+    &lt;th&gt;Station d'arrivée&lt;/th&gt;
+    &lt;th&gt;Heure de départ&lt;/th&gt;
+    &lt;th&gt;Heure d'arrivée&lt;/th&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;&lt;td&gt;A&lt;/td&gt;&lt;td&gt;B&lt;/td&gt;&lt;td&gt;0&lt;/td&gt;&lt;td&gt;1&lt;/td&gt;&lt;/tr&gt;
+  &lt;tr&gt;&lt;td&gt;B&lt;/td&gt;&lt;td&gt;D&lt;/td&gt;&lt;td&gt;1&lt;/td&gt;&lt;td&gt;2&lt;/td&gt;&lt;/tr&gt;
+  &lt;tr&gt;&lt;td&gt;A&lt;/td&gt;&lt;td&gt;B&lt;/td&gt;&lt;td&gt;2&lt;/td&gt;&lt;td&gt;3&lt;/td&gt;&lt;/tr&gt;
+  &lt;tr&gt;&lt;td&gt;B&lt;/td&gt;&lt;td&gt;C&lt;/td&gt;&lt;td&gt;3&lt;/td&gt;&lt;td&gt;4&lt;/td&gt;&lt;/tr&gt;
+  &lt;tr&gt;&lt;td&gt;A&lt;/td&gt;&lt;td&gt;B&lt;/td&gt;&lt;td&gt;4&lt;/td&gt;&lt;td&gt;5&lt;/td&gt;&lt;/tr&gt;
+  &lt;tr&gt;&lt;td&gt;A&lt;/td&gt;&lt;td&gt;B&lt;/td&gt;&lt;td&gt;5&lt;/td&gt;&lt;td&gt;6&lt;/td&gt;&lt;/tr&gt;
+  &lt;tr&gt;&lt;td&gt;B&lt;/td&gt;&lt;td&gt;D&lt;/td&gt;&lt;td&gt;5&lt;/td&gt;&lt;td&gt;6&lt;/td&gt;&lt;/tr&gt;
+  &lt;tr&gt;&lt;td&gt;B&lt;/td&gt;&lt;td&gt;C&lt;/td&gt;&lt;td&gt;6&lt;/td&gt;&lt;td&gt;7&lt;/td&gt;&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;Initialisons les données. &lt;/p&gt;
+&lt;table class="table table-condensed"&gt;
+&lt;thead&gt;
+  &lt;tr&gt;&lt;th&gt;&lt;/th&gt; &lt;th&gt;A&lt;/th&gt;&lt;th&gt;B&lt;/th&gt;&lt;th&gt;C&lt;/th&gt;&lt;th&gt;D&lt;/th&gt;&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;&lt;th&gt;Heure&lt;/th&gt; &lt;td&gt;2&lt;/td&gt;&lt;td&gt;&amp;infin;&lt;/td&gt;&lt;td&gt;&amp;infin;&lt;/td&gt;&lt;td&gt;&amp;infin;&lt;/td&gt;&lt;/tr&gt;
+  &lt;tr&gt;&lt;th&gt;Station&lt;/th&gt; &lt;td&gt;N/A&lt;/td&gt;&lt;td&gt;N/A&lt;/td&gt;&lt;td&gt;N/A&lt;/td&gt;&lt;td&gt;N/A&lt;/td&gt;&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;On parcours ensuite la table horaire dans l'ordre. Les deux premières lignes sont ignorées, elles ne passent pas la condition horaire.&lt;/p&gt;
+&lt;p&gt;On arrive à (A, B, 2, 3) : &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Heure(A) ≤ 2 (2 ≤ 2)&lt;/li&gt;
+&lt;li&gt;Heure(B) &amp;gt; 3 (&amp;infin; &amp;gt; 3)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;On met à jour les tables intermédiaires.&lt;/p&gt;
+&lt;table class="table table-condensed"&gt;
+&lt;thead&gt;
+  &lt;tr&gt;&lt;th&gt;&lt;/th&gt; &lt;th&gt;A&lt;/th&gt;&lt;th&gt;B&lt;/th&gt;&lt;th&gt;C&lt;/th&gt;&lt;th&gt;D&lt;/th&gt;&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;&lt;th&gt;Heure&lt;/th&gt; &lt;td&gt;2&lt;/td&gt;&lt;td&gt;&lt;strong&gt;3&lt;/strong&gt;&lt;/td&gt;&lt;td&gt;&amp;infin;&lt;/td&gt;&lt;td&gt;&amp;infin;&lt;/td&gt;&lt;/tr&gt;
+  &lt;tr&gt;&lt;th&gt;Station&lt;/th&gt; &lt;td&gt;N/A&lt;/td&gt;&lt;td&gt;&lt;strong&gt;(A, B, 2, 3)&lt;/strong&gt;&lt;/td&gt;&lt;td&gt;N/A&lt;/td&gt;&lt;td&gt;N/A&lt;/td&gt;&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;On continue avec avec (B, C, 3, 4) qui satisfait également les conditions. &lt;/p&gt;
+&lt;table class="table table-condensed"&gt;
+&lt;thead&gt;
+  &lt;tr&gt;&lt;th&gt;&lt;/th&gt; &lt;th&gt;A&lt;/th&gt;&lt;th&gt;B&lt;/th&gt;&lt;th&gt;C&lt;/th&gt;&lt;th&gt;D&lt;/th&gt;&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;&lt;th&gt;Heure&lt;/th&gt; &lt;td&gt;2&lt;/td&gt;&lt;td&gt;3&lt;/td&gt;&lt;td&gt;&lt;strong&gt;4&lt;/strong&gt;&lt;/td&gt;&lt;td&gt;&amp;infin;&lt;/td&gt;&lt;/tr&gt;
+  &lt;tr&gt;&lt;th&gt;Station&lt;/th&gt; &lt;td&gt;N/A&lt;/td&gt;&lt;td&gt;(A, B, 2, 3)&lt;/td&gt;&lt;td&gt;&lt;strong&gt;(B, C, 3, 4)&lt;/strong&gt;&lt;/td&gt;&lt;td&gt;N/A&lt;/td&gt;&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;Un œil averti aura remarqué que le trajet est ici déterminé. L'algorithme se poursuit néanmoins. &lt;/p&gt;
+&lt;p&gt;On arrive sur (A, B, 4, 5). On n'a bien Heure(A) ≤ 3 mais en revanche on n'a pas Heure(B) &amp;gt; 4. On passe la connexion. De même pour (A, B, 5, 6). &lt;/p&gt;
+&lt;p&gt;Vient (B, D, 5, 6) : &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Heure(B) ≤ 5 (3 ≤ 5)&lt;/li&gt;
+&lt;li&gt;Heure(D) &amp;gt; 6 (&amp;infin; &amp;gt; 6)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Les tableaux sont donc mis à jour.&lt;/p&gt;
+&lt;table class="table table-condensed"&gt;
+&lt;thead&gt;
+  &lt;tr&gt;&lt;th&gt;&lt;/th&gt; &lt;th&gt;A&lt;/th&gt;&lt;th&gt;B&lt;/th&gt;&lt;th&gt;C&lt;/th&gt;&lt;th&gt;D&lt;/th&gt;&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;&lt;th&gt;Heure&lt;/th&gt; &lt;td&gt;2&lt;/td&gt;&lt;td&gt;3&lt;/td&gt;&lt;td&gt;4&lt;/td&gt;&lt;td&gt;&lt;strong&gt;6&lt;/strong&gt;&lt;/td&gt;&lt;/tr&gt;
+  &lt;tr&gt;&lt;th&gt;Station&lt;/th&gt; &lt;td&gt;N/A&lt;/td&gt;&lt;td&gt;(A, B, 2, 3)&lt;/td&gt;&lt;td&gt;(B, C, 3, 4)&lt;/td&gt;&lt;td&gt;&lt;strong&gt;(B, D, 5, 6)&lt;/strong&gt;&lt;/td&gt;&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;Il reste enfin la connexion (B, C, 6, 7) qui ne remplit par la condition Heure(C) &amp;gt; 7. On ne fait donc rien de cette connexion et les tableaux sont calculés. &lt;/p&gt;
+&lt;p&gt;Pour obtenir le trajet, on part de la destination, donc de l'entrée associée au point d'arrêt C dans le tableau des stations. On trouve (B, C, 3, 4). On va alors chercher l'entrée associée au départ de cette connexion, soit l'entrée associée à B. On trouve (A, B, 2, 3). Le point de départ de cette connexion est notre point de départ : la recherche est terminée. &lt;/p&gt;
+&lt;p&gt;En dépilant (&lt;em&gt;Last in, first out&lt;/em&gt;) ces connexions, on retrouve le trajet à parcourir : &lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;(A, B, 2, 3)&lt;/li&gt;
+&lt;li&gt;(B, C, 3, 4)&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;L'algorithme nous a donc permis de déterminer le trajet pour aller de A à C en partant à l'heure 2 ainsi que l'heure d'arrivée. &lt;/p&gt;
+&lt;h4&gt;Analyse&lt;/h4&gt;
+&lt;p&gt;Cet algorithme présente l'avantage de s'exécuter en un temps proportionnel au nombre de connexions en occupant un espace mémoire lui aussi proportionnel au nombre de connexions. Dans le cas du métro parisien, on peut évaluer que le nombre de correspondances est du même ordre de grandeur que le nombre &lt;em&gt;N&lt;/em&gt; de stations. Cela revient à avoir : &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;environ &lt;em&gt;N&lt;/em&gt; connexions entre stations d'une même ligne (le chiffre est légèrement faussé par la présence de lignes en « fourche ») ;&lt;/li&gt;
+&lt;li&gt;environ &lt;em&gt;2N&lt;/em&gt; connexions issues des correspondances (une connexion dans un sens, une connexion dans l'autre).&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;L'algorithme a donc une complexité proportionnelle au nombre de stations.&lt;/p&gt;
+&lt;h3&gt;Exploitation des données de la RATP&lt;/h3&gt;
+&lt;h4&gt;Format GTFS&lt;/h4&gt;
+&lt;p&gt;Le format GTFS est un standard et la RATP se conforme à ce standard, simple et bien documenté. Les données sont réparties sur plusieurs fichiers dont nous n'en retiendrons que certains dans cet article.&lt;/p&gt;
+&lt;h5&gt;routes.txt&lt;/h5&gt;
+&lt;p&gt;Le fichier décrit le nom et la direction des routes. Une route est assimilable à un trajet (origine - destination).&lt;/p&gt;
+&lt;p&gt;Prenons l'exemple de la ligne 13 du métro parisien dont le plan simplifié est représenté sur la figure ci-dessous. Cette ligne est parcourue par quatre routes :&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Châtillon - Montrouge en direction de Saint-Denis Université ;&lt;/li&gt;
+&lt;li&gt;Châtillon - Montrouge en direction de Gennevilliers Les Courtilles ;&lt;/li&gt;
+&lt;li&gt;Saint-Denis Université en direction de Châtillon - Montrouge ;&lt;/li&gt;
+&lt;li&gt;Gennevilliers Les Courtilles en direction de Châtillon - Montrouge.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img alt="Plan simplifié de la ligne 13 du métro parisien" class="center" src="/images/connection_scan_algorithm/ligne13.png" /&gt;&lt;/p&gt;
+&lt;p&gt;Le fichier &lt;code&gt;routes.txt&lt;/code&gt; contient pour cette ligne :&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;route_id&lt;span class="p"&gt;,&lt;/span&gt;agency_id&lt;span class="p"&gt;,&lt;/span&gt;route_short_name&lt;span class="p"&gt;,&lt;/span&gt;route_long_name&lt;span class="p"&gt;,&lt;/span&gt;route_desc&lt;span class="p"&gt;,&lt;/span&gt;route_type&lt;span class="p"&gt;,&lt;/span&gt;route_url&lt;span class="p"&gt;,&lt;/span&gt;route_color&lt;span class="p"&gt;,&lt;/span&gt;route_text_color
+&lt;span class="m"&gt;1197620&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="m"&gt;100&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;13&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;(CHATILLON - MONTROUGE &amp;lt;-&amp;gt; ST-DENIS-UNIVERSITE/LES COURTILLES) - Aller&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,,&lt;/span&gt;&lt;span class="m"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,,&lt;/span&gt;FFFFFF&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="m"&gt;000000&lt;/span&gt;
+&lt;span class="m"&gt;1197621&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="m"&gt;100&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;13&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;(CHATILLON - MONTROUGE &amp;lt;-&amp;gt; ST-DENIS-UNIVERSITE/LES COURTILLES) - Aller&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,,&lt;/span&gt;&lt;span class="m"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,,&lt;/span&gt;FFFFFF&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="m"&gt;000000&lt;/span&gt;
+&lt;span class="m"&gt;1197622&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="m"&gt;100&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;13&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;(CHATILLON - MONTROUGE &amp;lt;-&amp;gt; ST-DENIS-UNIVERSITE/LES COURTILLES) - Retour&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,,&lt;/span&gt;&lt;span class="m"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,,&lt;/span&gt;FFFFFF&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="m"&gt;000000&lt;/span&gt;
+&lt;span class="m"&gt;1197623&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="m"&gt;100&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;13&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;(CHATILLON - MONTROUGE &amp;lt;-&amp;gt; ST-DENIS-UNIVERSITE/LES COURTILLES) - Retour&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,,&lt;/span&gt;&lt;span class="m"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,,&lt;/span&gt;FFFFFF&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="m"&gt;000000&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h5&gt;stops.txt&lt;/h5&gt;
+&lt;p&gt;Ce fichier liste les arrêts avec, éventuellement, quelques informations complémentaires. La RATP fournit l'adresse la plus proche de l'arrêt ainsi que les coordonnées GPS de son centre (dans le cas d'une station qui dispose de plusieurs sorties). À noter que ce fichier n'est pas ordonné selon le sens de parcours des courses sur la ligne.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Une &lt;strong&gt;mission&lt;/strong&gt; est un trajet parcouru par un ensemble de trains. Elle est décrite par : 
+&lt;ul&gt;
+  &lt;li&gt; la gare de départ ;&lt;/li&gt;
+  &lt;li&gt; la gare d'arrivée ;&lt;/li&gt;
+  &lt;li&gt; les gares intermédiaires desservies (certains trajets peuvent « sauter » des gares).&lt;/li&gt;
+&lt;/ul&gt;
+Lorsqu'un train suit une mission, il réalise une &lt;strong&gt;course&lt;/strong&gt;.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Exemple des quatre premières stations de la ligne 13 :&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;stop_id,stop_code,stop_name,stop_desc,stop_lat,stop_lon,location_type,parent_station
+2397,,&amp;quot;Pernety&amp;quot;,&amp;quot;Raymond Losserand (72 rue) - 75114&amp;quot;,48.833933819810916,2.31790897216328,0,
+1969,,&amp;quot;Châtillon Montrouge&amp;quot;,&amp;quot;République (220 avenue de la) - 92020&amp;quot;,48.810283363510756,2.3012888709759522,0,
+2406,,&amp;quot;Place de Clichy&amp;quot;,&amp;quot;Clichy (terre-plein face au 7 place de) - 75109&amp;quot;,48.883203999876585,2.3272660246411383,0,
+...
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h5&gt;trips.txt&lt;/h5&gt;
+&lt;p&gt;Ce fichier liste les courses et les associe à une route. Nous reviendrons sur son utilité en observant les horaires d'arrêt.&lt;/p&gt;
+&lt;p&gt;Exemple sur la ligne 13 :&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;route_id,service_id,trip_id,trip_headsign,trip_short_name,direction_id,shape_id
+1197620,1762288,10017622880912413,101,101,0,
+1197620,1762289,10017622890912413,101,101,0,
+1197620,1762292,10017622920912413,101,101,0,
+...
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h5&gt;stops_times.txt&lt;/h5&gt;
+&lt;p&gt;Ce fichier présente les horaires des courses aux stations (points d'arrêt). Ce fichier est trié par course et par heure d'arrêt en station.&lt;/p&gt;
+&lt;p&gt;Un détail est à noter quant aux horaires : ceux-ci sont fournis pour la journée qui peut se terminer... le lendemain. Un métro circulant le dimanche à 1h du matin sera en réalité rattaché à la journée du samedi. Ainsi, son horaire ne sera pas « à 1h le dimanche » mais « à 25h le samedi ». Bien que cette astuce puisse sembler tordue, elle simplifie en pratique beaucoup de choses, notamment pour maintenir la continuité des courses : il serait absurde de scinder la course d'un train sous prétexte qu'il roule à cheval sur deux jours calendaires.&lt;/p&gt;
+&lt;p&gt;Exemple pour la ligne 13 :&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;trip_id,arrival_time,departure_time,stop_id,stop_sequence,stop_headsign,shape_dist_traveled
+10017622880912413,19:38:00,19:38:00,1969,1,,
+10017622880912413,19:40:00,19:40:00,1880,2,,
+10017622880912413,19:41:00,19:41:00,1879,3,,
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Dans cet exemple, pour la course présentée, le véhicule s'arrête à 19:38:00 à l'arrêt 1969 (Châtillon - Montrouge) et en repart à la même heure. On en déduira qu'on ne prend vraisemblabement pas en compte le temps d'arrêt en station. Il arrive ensuite à la station 1880 (Malakoff - Rue Etienne Dolet) à 19:40:00, puis à la station 1879 (Malakoff - Plateau de Vanves) à 19:41:00, etc.&lt;/p&gt;
+&lt;h5&gt;transfers.txt&lt;/h5&gt;
+&lt;p&gt;&lt;code&gt;transfers.txt&lt;/code&gt; regroupe les correspondances entre plusieurs points d'arrêt.&lt;/p&gt;
+&lt;p&gt;Ce fichier n'étant pas compréhensible par un humain, prenons un exemple et déroulons-le :&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;from_stop_id,to_stop_id,transfer_type,min_transfer_time
+4211780,2270,2,212
+4472773,1724,2,228
+3619167,2276,2,252
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Sur la première ligne, la correspondance se fait entre l'arrêt « 4211780 » et l'arrêt « 2270 ». Un recherche dans le fichier &lt;code&gt;stops.txt&lt;/code&gt; permet de donner un nom humainement compréhensible à ces identifiants : ils correspondent ici tous les deux au point d'arrêt « Mairie de Saint-Ouen ».&lt;/p&gt;
+&lt;p&gt;À partir du l'identifiant d'un point d'arrêt, on peut également ressortir les identifiants de course (&lt;code&gt;trip_id&lt;/code&gt;). Prenons-en un au hasard :&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;grep &lt;span class="m"&gt;2270&lt;/span&gt; stop_times.txt &lt;span class="p"&gt;|&lt;/span&gt; cut -d, -f1 &lt;span class="p"&gt;|&lt;/span&gt; head -n1
+10017622880912417
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;À partir de cet identifiant, on peut retrouver la route associée (&lt;code&gt;route_id&lt;/code&gt;) :&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;grep &lt;span class="m"&gt;10017622880912417&lt;/span&gt; trips.txt &lt;span class="p"&gt;|&lt;/span&gt; cut -d, -f1
+1197623
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;On trouve donc qu'il s'agissait de la ligne 13 dans le sens « retour » :&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;grep ^1197623, routes.txt
+1197623,100,&lt;span class="s2"&gt;&amp;quot;13&amp;quot;&lt;/span&gt;,&lt;span class="s2"&gt;&amp;quot;(CHATILLON - MONTROUGE &amp;lt;-&amp;gt; ST-DENIS-UNIVERSITE/LES COURTILLES) - Retour&amp;quot;&lt;/span&gt;,,1,,FFFFFF,000000
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Vérifions par acquit de conscience l'autre identifiant de point d'arrêt :&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;grep &lt;span class="m"&gt;4211780&lt;/span&gt; stop_times.txt &lt;span class="p"&gt;|&lt;/span&gt; cut -d, -f1 &lt;span class="p"&gt;|&lt;/span&gt; head -n1
+119841521246955
+&lt;span class="nv"&gt;$ &lt;/span&gt;grep &lt;span class="m"&gt;119841521246955&lt;/span&gt; trips.txt
+1364288,1984152,119841521246955,,1,1,
+&lt;span class="nv"&gt;$ &lt;/span&gt;grep &lt;span class="m"&gt;1364288&lt;/span&gt; routes.txt
+1364288,100,&lt;span class="s2"&gt;&amp;quot;N44&amp;quot;&lt;/span&gt;,&lt;span class="s2"&gt;&amp;quot;(GARGES-SARCELLES RER &amp;lt;-&amp;gt; GARE DE L&amp;#39;EST) - Retour&amp;quot;&lt;/span&gt;,,3,,FFFFFF,000000
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Il s'agit donc du &lt;a href="http://www.ratp.fr/informer/pdf/orienter/f_horaire.php?fm=gif&amp;amp;loc=noctilien&amp;amp;nompdf=n44"&gt;Noctilien N44&lt;/a&gt; qui passe effectivement par « Mairie de Saint-Ouen ». La boucle est bouclée.&lt;/p&gt;
+&lt;h4&gt;Parsing des fichiers GTFS&lt;/h4&gt;
+&lt;p&gt;Les fichiers GTFS, bien que portant l'extension &lt;code&gt;.txt&lt;/code&gt; sont manipulables comme des fichiers CSV. Dans la suite, on utilisera des structures qui sont (presque) calquées sur le format de ces fichiers. Sur le principe, leur parsing est immédiat. Prenons par exemple le cas des routes (on utilise ici &lt;a href="https://github.com/tototoshi/scala-csv"&gt;scala-csv&lt;/a&gt;) :&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="k"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;com.github.tototoshi.csv._&lt;/span&gt;
+
+&lt;span class="k"&gt;case&lt;/span&gt; &lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;Route&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;routeId&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;Long&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="n"&gt;routeShortName&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;String&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="n"&gt;routeLongName&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;String&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="n"&gt;routeDesc&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;String&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+
+&lt;span class="k"&gt;object&lt;/span&gt; &lt;span class="nc"&gt;Route&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+  &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="n"&gt;parse&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;fields&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;Map&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="kt"&gt;String&lt;/span&gt;, &lt;span class="kt"&gt;String&lt;/span&gt;&lt;span class="o"&gt;])&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+    &lt;span class="nc"&gt;Route&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;
+      &lt;span class="n"&gt;fields&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;route_id&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;).&lt;/span&gt;&lt;span class="n"&gt;toLong&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt;
+      &lt;span class="n"&gt;fields&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;route_short_name&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;),&lt;/span&gt;
+      &lt;span class="n"&gt;fields&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;route_long_name&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;),&lt;/span&gt;
+      &lt;span class="n"&gt;fields&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;route_desc&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+    &lt;span class="o"&gt;)&lt;/span&gt;
+  &lt;span class="o"&gt;}&lt;/span&gt;
+&lt;span class="o"&gt;}&lt;/span&gt;
+
+&lt;span class="k"&gt;val&lt;/span&gt; &lt;span class="n"&gt;routes&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;List&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="kt"&gt;Route&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="nc"&gt;CSVReader&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;
+  &lt;span class="n"&gt;open&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="k"&gt;new&lt;/span&gt; &lt;span class="nc"&gt;File&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;routes.txt&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;)).&lt;/span&gt;
+  &lt;span class="n"&gt;allWithHeaders&lt;/span&gt;&lt;span class="o"&gt;().&lt;/span&gt;
+  &lt;span class="n"&gt;map&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="nc"&gt;Route&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;parse&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Dans la pratique, la volumétrie des horaires des courses rend l'opération plus complexe :&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;wc -l *
+        &lt;span class="m"&gt;2&lt;/span&gt; agency.txt
+    &lt;span class="m"&gt;65937&lt;/span&gt; calendar_dates.txt
+     &lt;span class="m"&gt;4578&lt;/span&gt; calendar.txt
+     &lt;span class="m"&gt;1067&lt;/span&gt; routes.txt
+    &lt;span class="m"&gt;26653&lt;/span&gt; stops.txt
+ &lt;span class="m"&gt;10402381&lt;/span&gt; stop_times.txt
+    &lt;span class="m"&gt;80338&lt;/span&gt; transfers.txt
+   &lt;span class="m"&gt;417920&lt;/span&gt; trips.txt
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Pour simplifier la suite de cet article, nous ne traiterons que les lignes ferrées (métro et RER) exploitées par la RATP. On regroupera les données ligne par ligne (au sens RATP) dans la structure &lt;code&gt;GtfsData&lt;/code&gt; pour ensuite les fusionner :&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="k"&gt;case&lt;/span&gt; &lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;GtfsData&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;
+  &lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;String&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt;
+  &lt;span class="n"&gt;routes&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;Iterable&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="kt"&gt;Route&lt;/span&gt;&lt;span class="o"&gt;],&lt;/span&gt;
+  &lt;span class="n"&gt;trips&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;Iterable&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="kt"&gt;Trip&lt;/span&gt;&lt;span class="o"&gt;],&lt;/span&gt;
+  &lt;span class="n"&gt;stops&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;Iterable&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="kt"&gt;Stop&lt;/span&gt;&lt;span class="o"&gt;],&lt;/span&gt;
+  &lt;span class="n"&gt;stopTimes&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;Iterable&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="kt"&gt;StopTime&lt;/span&gt;&lt;span class="o"&gt;],&lt;/span&gt;
+  &lt;span class="n"&gt;transfers&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;Iterable&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="kt"&gt;Transfer&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt;
+&lt;span class="o"&gt;)&lt;/span&gt;
+
+&lt;span class="k"&gt;val&lt;/span&gt; &lt;span class="n"&gt;lines&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;Iterable&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="kt"&gt;GtfsData&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="n"&gt;parseGtfsDataByLine&lt;/span&gt;&lt;span class="o"&gt;()&lt;/span&gt;
+&lt;span class="k"&gt;val&lt;/span&gt; &lt;span class="n"&gt;gtfsData&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="nc"&gt;GtfsData&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;
+  &lt;span class="s"&gt;&amp;quot;RATP&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt;
+  &lt;span class="n"&gt;lines&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;flatMap&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="k"&gt;_&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;routes&lt;/span&gt;&lt;span class="o"&gt;),&lt;/span&gt;
+  &lt;span class="n"&gt;lines&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;flatMap&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="k"&gt;_&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;trips&lt;/span&gt;&lt;span class="o"&gt;),&lt;/span&gt;
+  &lt;span class="n"&gt;lines&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;flatMap&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="k"&gt;_&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;stops&lt;/span&gt;&lt;span class="o"&gt;),&lt;/span&gt;
+  &lt;span class="n"&gt;lines&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;flatMap&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="k"&gt;_&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;stopTimes&lt;/span&gt;&lt;span class="o"&gt;),&lt;/span&gt;
+  &lt;span class="n"&gt;lines&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;flatMap&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="k"&gt;_&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;transfers&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+&lt;span class="o"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h4&gt;Construction de la table horaire&lt;/h4&gt;
+&lt;p&gt;La table horaire est, comme nous l'avons vu, une séquence de connexions modélisées par des quadruplets contenants chacun la station de départ, la station d'arrivée, l'heure de départ et l'heure d'arrivée.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="k"&gt;case&lt;/span&gt; &lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;Timetable&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;connections&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;Seq&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="kt"&gt;Connection&lt;/span&gt;&lt;span class="o"&gt;])&lt;/span&gt;
+&lt;span class="k"&gt;case&lt;/span&gt; &lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;Connection&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;
+  &lt;span class="n"&gt;departureStation&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;Int&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt;
+  &lt;span class="n"&gt;arrivalStation&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;Int&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt;
+  &lt;span class="n"&gt;departureTimestamp&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;Int&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt;
+  &lt;span class="n"&gt;arrivalTimestamp&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;Int&lt;/span&gt;
+&lt;span class="o"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Sa construction se fait en deux étapes :&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;en ingérant les connexions issues des courses (successions de points d'arrêts sur une même ligne) ;&lt;/li&gt;
+&lt;li&gt;en ingérant les connexions issues des correspondances (« ponts » entre les courses).&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h5&gt;Connexions issues des courses&lt;/h5&gt;
+&lt;p&gt;On ingère les horaires des courses en les groupant par... course et en prenant soin de ne pas « mélanger » les horaires de deux courses. Prenons l'exemple ci-dessous : les ceux courses fréquentent la même ligne mais ne s'arrêtent pas aux mêmes arrêts. Il n'y a pas de correspondance entre les deux.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt; Course I : A (t1) --------------------&amp;gt; B (t3)
+Course II :               C (t2) --------------------&amp;gt; D (t4)
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Le fichier &lt;code&gt;stop_times.txt&lt;/code&gt; ressemblerait à :&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;trip_id,arrival_time,departure_time,stop_id,stop_sequence,stop_headsign,shape_dist_traveled
+I, t1, t1, A, 1, ,
+II, t2, t2, C, 1, ,
+I, t3, t3, B, 1, ,
+II, t4, t4, D, 1, ,
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Une lecture indépendante de l'identifiant de course (&lt;code&gt;trip_id&lt;/code&gt;) amalgamerait donc ces deux courses et induirait de fausses correspondances.&lt;/p&gt;
+&lt;p&gt;La création de la table horaire se fait en groupant deux à deux les horaires d'arrêt au sein d'une même course. Pour chaque élément à l'indice &lt;code&gt;i&lt;/code&gt;, on créera une connexion partant de l'arrêt à cet indice et arrivant à l'arrêt de l'indice &lt;code&gt;i+1&lt;/code&gt;. On implémente cette construction avec une fonction récursive qui dépile un à un les horaires de course.&lt;/p&gt;
+&lt;p&gt;On utilise ici une fonction &lt;em&gt;tail recursive&lt;/em&gt; (&lt;a href="https://fr.wikipedia.org/wiki/R%C3%A9cursion_terminale"&gt;récursion terminale&lt;/a&gt; en français), annotée &lt;code&gt;@tailrec&lt;/code&gt;. Une telle fonction a la particularité de voir son appel récursif comme la dernière instruction à être évaluée. Son avantage est de pouvoir être « optimisée » par le compilateur en une itération (« boucle &lt;code&gt;for&lt;/code&gt; »), nous libérant du risque de dépassement de capacité de la pile inhérent aux récursions.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="k"&gt;val&lt;/span&gt; &lt;span class="n"&gt;connectionsFromStopTimes&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="n"&gt;gtfsData&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;
+  &lt;span class="n"&gt;stopTimesByTripId&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;
+  &lt;span class="n"&gt;values&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;
+  &lt;span class="n"&gt;flatMap&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;stopTimesToConnections&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="n"&gt;stopTimesToConnections&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;stopTimes&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;Iterable&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="kt"&gt;StopTime&lt;/span&gt;&lt;span class="o"&gt;])&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;Iterable&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="kt"&gt;Connection&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+  &lt;span class="nd"&gt;@tailrec&lt;/span&gt;
+  &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="n"&gt;inner&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;stopTimes&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;List&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="kt"&gt;StopTime&lt;/span&gt;&lt;span class="o"&gt;],&lt;/span&gt; &lt;span class="n"&gt;connections&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;List&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="kt"&gt;Connection&lt;/span&gt;&lt;span class="o"&gt;])&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;List&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="kt"&gt;Connection&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+    &lt;span class="n"&gt;stopTimes&lt;/span&gt; &lt;span class="k"&gt;match&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+      &lt;span class="c1"&gt;// Aucun horaire (n&amp;#39;arrive que si la collection initiale est vide).&lt;/span&gt;
+      &lt;span class="c1"&gt;// On n&amp;#39;a rien à faire de plus, on retourne les connexions (vides).&lt;/span&gt;
+      &lt;span class="k"&gt;case&lt;/span&gt; &lt;span class="nc"&gt;Nil&lt;/span&gt; &lt;span class="k"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;connections&lt;/span&gt;
+      &lt;span class="c1"&gt;// Dernier horaire : il est connecté au précédent et n&amp;#39;ira pas plus loin.&lt;/span&gt;
+      &lt;span class="c1"&gt;// On en a terminé et on retourne les connexions.&lt;/span&gt;
+      &lt;span class="k"&gt;case&lt;/span&gt; &lt;span class="n"&gt;head&lt;/span&gt; &lt;span class="o"&gt;::&lt;/span&gt; &lt;span class="nc"&gt;Nil&lt;/span&gt; &lt;span class="k"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;connections&lt;/span&gt;
+      &lt;span class="c1"&gt;// Cas général : il reste des stations après la première de la collection.&lt;/span&gt;
+      &lt;span class="c1"&gt;// On créé une connexion entre celle-ci et la première des suivantes.&lt;/span&gt;
+      &lt;span class="k"&gt;case&lt;/span&gt; &lt;span class="n"&gt;head&lt;/span&gt; &lt;span class="o"&gt;::&lt;/span&gt; &lt;span class="n"&gt;tail&lt;/span&gt; &lt;span class="k"&gt;=&amp;gt;&lt;/span&gt;
+        &lt;span class="k"&gt;val&lt;/span&gt; &lt;span class="n"&gt;departureStop&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="n"&gt;head&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;stopId&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;toInt&lt;/span&gt;
+        &lt;span class="k"&gt;val&lt;/span&gt; &lt;span class="n"&gt;arrivalStop&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="n"&gt;tail&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;head&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;stopId&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;toInt&lt;/span&gt;
+        &lt;span class="k"&gt;val&lt;/span&gt; &lt;span class="n"&gt;departureTime&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="n"&gt;durationToTimestamp&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;head&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;departureTime&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+        &lt;span class="k"&gt;val&lt;/span&gt; &lt;span class="n"&gt;arrivalTime&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="n"&gt;durationToTimestamp&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;tail&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;head&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;departureTime&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+        &lt;span class="k"&gt;val&lt;/span&gt; &lt;span class="n"&gt;connection&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="nc"&gt;Connection&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;departureStop&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="n"&gt;arrivalStop&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="n"&gt;departureTime&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="n"&gt;arrivalTime&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+        &lt;span class="c1"&gt;// Étape suivante de la récursion&lt;/span&gt;
+        &lt;span class="n"&gt;inner&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;tail&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="n"&gt;connections&lt;/span&gt; &lt;span class="o"&gt;:+&lt;/span&gt; &lt;span class="n"&gt;connection&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+    &lt;span class="o"&gt;}&lt;/span&gt;
+  &lt;span class="o"&gt;}&lt;/span&gt;
+  &lt;span class="c1"&gt;// Initialisation de la récursion&lt;/span&gt;
+  &lt;span class="n"&gt;inner&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;stopTimes&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;toList&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="nc"&gt;List&lt;/span&gt;&lt;span class="o"&gt;())&lt;/span&gt;
+&lt;span class="o"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Dans cet exemple de code, la fonction &lt;code&gt;durationToTimestamp&lt;/code&gt; retourne un timestamp correspondant à l'heure effective pour la journée en cours à partir de l'heure seule fournie dans les données. Par exemple, le 01/01/2016, la durée &lt;code&gt;19h32min27s&lt;/code&gt; permettra d'obtenir le timestamp équivalent à &lt;code&gt;2016-01-01T19:32:27.0Z&lt;/code&gt;.&lt;/p&gt;
+&lt;h5&gt;Connexions issues des correspondances&lt;/h5&gt;
+&lt;p&gt;Le fichier &lt;code&gt;transfers.txt&lt;/code&gt; nous donne les correspondances disponibles sur une ligne. L'objectif de cette étape est :&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;de ne conserver que les correspondances de notre réseau (dans cet exemple, nous ne travaillons pas sur les bus, nous les éliminons donc) ;&lt;/li&gt;
+&lt;li&gt;de créer toutes les entrées de la table horaire correspondant à cette correspondance.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Le filtrage des correspondances est aisé avec notre structure de données. Nous disposons déjà de l'ensemble des stations du réseau. Il nous suffit de vérifier que ces correspondances ont lieu entre deux stations du réseau.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="k"&gt;case&lt;/span&gt; &lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;GtfsData&lt;/span&gt;&lt;span class="o"&gt;(...)&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+  &lt;span class="c1"&gt;// Indexation des stations du réseau&lt;/span&gt;
+  &lt;span class="k"&gt;val&lt;/span&gt; &lt;span class="n"&gt;stopsByStopId&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;Map&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="kt"&gt;Long&lt;/span&gt;, &lt;span class="kt"&gt;Stop&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="n"&gt;stops&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;map&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;stop&lt;/span&gt; &lt;span class="k"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;stop&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;stopId&lt;/span&gt; &lt;span class="o"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;stop&lt;/span&gt;&lt;span class="o"&gt;)(&lt;/span&gt;&lt;span class="n"&gt;collection&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;breakOut&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+&lt;span class="o"&gt;}&lt;/span&gt;
+
+&lt;span class="k"&gt;val&lt;/span&gt; &lt;span class="n"&gt;filteredTransfers&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;Iterable&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="kt"&gt;Transfer&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="n"&gt;gtfsData&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;transfers&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;filter&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;transfer&lt;/span&gt; &lt;span class="k"&gt;=&amp;gt;&lt;/span&gt;
+  &lt;span class="c1"&gt;// Filtrage des correspondances avec des stations hors du réseau&lt;/span&gt;
+  &lt;span class="n"&gt;gtfsData&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;stopsByStopId&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;contains&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;transfer&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;fromStopId&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt;
+    &lt;span class="n"&gt;gtfsData&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;stopsByStopId&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;contains&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;transfer&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;toStopId&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+&lt;span class="o"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Cela étant fait, pour chacune de ces correspondances, on créé dans la table horaire une connexion correspondant à chaque horaire de passage à cette station. On utilisera pour cela les données issues de &lt;code&gt;stop_times.txt&lt;/code&gt;. Cette fonction est très similaire dans son fonctionnement à &lt;code&gt;stopTimesToConnections&lt;/code&gt;.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="n"&gt;transfersToConnections&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;filteredTransfers&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;Iterable&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="kt"&gt;Transfer&lt;/span&gt;&lt;span class="o"&gt;])&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;Iterable&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="kt"&gt;Connection&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+  &lt;span class="nd"&gt;@tailrec&lt;/span&gt;
+  &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="n"&gt;inner&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;transfers&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;Iterable&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="kt"&gt;Transfer&lt;/span&gt;&lt;span class="o"&gt;],&lt;/span&gt; &lt;span class="n"&gt;connections&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;List&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="kt"&gt;Connection&lt;/span&gt;&lt;span class="o"&gt;])&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;List&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="kt"&gt;Connection&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+    &lt;span class="n"&gt;transfers&lt;/span&gt; &lt;span class="k"&gt;match&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+      &lt;span class="c1"&gt;// Aucune correspondance à traiter. On en a terminé et on sort avec&lt;/span&gt;
+      &lt;span class="c1"&gt;// la liste construite jusqu&amp;#39;ici.&lt;/span&gt;
+      &lt;span class="k"&gt;case&lt;/span&gt; &lt;span class="nc"&gt;Nil&lt;/span&gt; &lt;span class="k"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;connections&lt;/span&gt;
+      &lt;span class="c1"&gt;// Il reste au moins une correspondance à traiter (tail peut être Nil).&lt;/span&gt;
+      &lt;span class="k"&gt;case&lt;/span&gt; &lt;span class="n"&gt;head&lt;/span&gt; &lt;span class="o"&gt;::&lt;/span&gt; &lt;span class="n"&gt;tail&lt;/span&gt; &lt;span class="k"&gt;=&amp;gt;&lt;/span&gt;
+        &lt;span class="k"&gt;val&lt;/span&gt; &lt;span class="n"&gt;departureStop&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="n"&gt;head&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;fromStopId&lt;/span&gt;
+        &lt;span class="k"&gt;val&lt;/span&gt; &lt;span class="n"&gt;arrivalStop&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="n"&gt;head&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;toStopId&lt;/span&gt;
+        &lt;span class="c1"&gt;// Pour chaque horaire de train à cette station, on créé&lt;/span&gt;
+        &lt;span class="c1"&gt;// une entrée dans la table horaire.&lt;/span&gt;
+        &lt;span class="k"&gt;val&lt;/span&gt; &lt;span class="n"&gt;transferConnections&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;List&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="kt"&gt;Connection&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="n"&gt;gtfsData&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;
+          &lt;span class="n"&gt;stopTimesByStopId&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;departureStop&lt;/span&gt;&lt;span class="o"&gt;).&lt;/span&gt;
+          &lt;span class="n"&gt;map&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;stopTime&lt;/span&gt; &lt;span class="k"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+            &lt;span class="k"&gt;val&lt;/span&gt; &lt;span class="n"&gt;connectionDepartureTime&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="n"&gt;durationToTimestamp&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;stopTime&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;arrivalTime&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+            &lt;span class="nc"&gt;Connection&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;
+              &lt;span class="n"&gt;departureStop&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt;
+              &lt;span class="n"&gt;arrivalStop&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt;
+              &lt;span class="n"&gt;connectionDepartureTime&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt;
+              &lt;span class="n"&gt;connectionDepartureTime&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="n"&gt;head&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;minTransferTime&lt;/span&gt;
+            &lt;span class="o"&gt;)&lt;/span&gt;
+          &lt;span class="o"&gt;})&lt;/span&gt;
+        &lt;span class="c1"&gt;// Étape suivante de la récursion.&lt;/span&gt;
+        &lt;span class="n"&gt;inner&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;tail&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="n"&gt;connections&lt;/span&gt; &lt;span class="o"&gt;++&lt;/span&gt; &lt;span class="n"&gt;transferConnections&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+    &lt;span class="o"&gt;}&lt;/span&gt;
+  &lt;span class="o"&gt;}&lt;/span&gt;
+  &lt;span class="c1"&gt;// Initialisation de la récursion.&lt;/span&gt;
+  &lt;span class="n"&gt;inner&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;filteredTransfers&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;toList&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="nc"&gt;List&lt;/span&gt;&lt;span class="o"&gt;())&lt;/span&gt;
+&lt;span class="o"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h5&gt;Fusion des deux tables horaires&lt;/h5&gt;
+&lt;p&gt;On a construit jusqu'ici deux tables horaires :&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;l'une issue des horaires des trains en station ;&lt;/li&gt;
+&lt;li&gt;l'autre issue des correspondances entre les trains.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Reste maintenant à fusionner les deux. N'oublions pas que cette table doit être triée par heure de départ croissante. À ce détail près, cette étape est immédiate.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="k"&gt;val&lt;/span&gt; &lt;span class="n"&gt;connectionsFromStopTimes&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="n"&gt;gtfsData&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;
+  &lt;span class="n"&gt;stopTimesByTripId&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;
+  &lt;span class="n"&gt;values&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;
+  &lt;span class="n"&gt;flatMap&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;stopTimesToConnections&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+&lt;span class="k"&gt;val&lt;/span&gt; &lt;span class="n"&gt;connectionsFromTransfers&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="n"&gt;transfersToConnections&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;gtfsData&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+
+&lt;span class="k"&gt;val&lt;/span&gt; &lt;span class="n"&gt;connections&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;connectionsFromStopTimes&lt;/span&gt; &lt;span class="o"&gt;++&lt;/span&gt; &lt;span class="n"&gt;connectionsFromTransfers&lt;/span&gt;&lt;span class="o"&gt;).&lt;/span&gt;
+  &lt;span class="n"&gt;toList&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;
+  &lt;span class="n"&gt;sortBy&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="k"&gt;_&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;departureTimestamp&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;Implémentation de l'algorithme&lt;/h3&gt;
+&lt;p&gt;Je propose ici une implémentation en Scala qui pourrait probablement être (largement, rien que par sa mutabilité) améliorée. Partons toujours de là. &lt;/p&gt;
+&lt;h4&gt;API&lt;/h4&gt;
+&lt;p&gt;Cette implémentation est paramétrée par : &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;la table horaire ;&lt;/li&gt;
+&lt;li&gt;un dictionnaire des arrêts indexés par leur identifiant.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Le calcul d'itinéraire (méthode &lt;code&gt;compute&lt;/code&gt;) prend en entrée : &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;un arrêt de départ ;&lt;/li&gt;
+&lt;li&gt;un arrêt d'arrivée ;&lt;/li&gt;
+&lt;li&gt;une heure de départ.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Il retourne la liste des connexions optimales pour effectuer ce trajet.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;CSA&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;timetable&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;Timetable&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="n"&gt;stopsByStopId&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;Map&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="kt"&gt;Int&lt;/span&gt;, &lt;span class="kt"&gt;Stop&lt;/span&gt;&lt;span class="o"&gt;])&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+  &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="n"&gt;compute&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;departureStation&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;Int&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="n"&gt;arrivalStation&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;Int&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="n"&gt;departureTime&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;Int&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;Seq&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="kt"&gt;Connection&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="o"&gt;???&lt;/span&gt;
+&lt;span class="o"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h4&gt;Initialisation&lt;/h4&gt;
+&lt;p&gt;On initialise les tableaux avec une valeur « virtuellement infinie » (valeur maximale qu'un entier peut représenter) à l'exception de l'heure d'arrivée optimale à la station de départ... puisque cette valeur est connue.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="k"&gt;val&lt;/span&gt; &lt;span class="n"&gt;inConnection&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="nc"&gt;Array&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;fill&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="kt"&gt;Int&lt;/span&gt;&lt;span class="o"&gt;](&lt;/span&gt;&lt;span class="nc"&gt;CSA&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="nc"&gt;MaxStations&lt;/span&gt;&lt;span class="o"&gt;)(&lt;/span&gt;&lt;span class="nc"&gt;Int&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="nc"&gt;MaxValue&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+&lt;span class="k"&gt;val&lt;/span&gt; &lt;span class="n"&gt;earliestArrival&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="nc"&gt;Array&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;fill&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="kt"&gt;Int&lt;/span&gt;&lt;span class="o"&gt;](&lt;/span&gt;&lt;span class="nc"&gt;CSA&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="nc"&gt;MaxStations&lt;/span&gt;&lt;span class="o"&gt;)(&lt;/span&gt;&lt;span class="nc"&gt;Int&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="nc"&gt;MaxValue&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="n"&gt;compute&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;departureStation&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;Int&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="n"&gt;arrivalStation&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;Int&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="n"&gt;departureTime&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;Int&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;Seq&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="kt"&gt;Connection&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+  &lt;span class="n"&gt;earliestArrival&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;departureStation&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="n"&gt;departureTime&lt;/span&gt;
+  &lt;span class="c1"&gt;// [...]&lt;/span&gt;
+&lt;span class="o"&gt;}&lt;/span&gt;    
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h4&gt;Calcul du trajet&lt;/h4&gt;
+&lt;h5&gt;Vue macroscopique&lt;/h5&gt;
+&lt;p&gt;On retrouve les deux étapes du calcul dans la méthode &lt;code&gt;compute&lt;/code&gt; : &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;la première qui parcourt les connexions et détermine l'heure d'arrivée optimale pour chaque station (&lt;code&gt;scanTimetable&lt;/code&gt;) ;&lt;/li&gt;
+&lt;li&gt;la seconde qui, à partir de cette table des connexions optimales, reconstruit le trajet (&lt;code&gt;computeRoute&lt;/code&gt;).&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="n"&gt;compute&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;departureStation&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;Int&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="n"&gt;arrivalStation&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;Int&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="n"&gt;departureTime&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;Int&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;Seq&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="kt"&gt;Connection&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+  &lt;span class="n"&gt;earliestArrival&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;departureStation&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="n"&gt;departureTime&lt;/span&gt;
+
+  &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;departureStation&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;=&lt;/span&gt; &lt;span class="nc"&gt;CSA&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="nc"&gt;MaxStations&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class="n"&gt;arrivalStation&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;=&lt;/span&gt; &lt;span class="nc"&gt;CSA&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="nc"&gt;MaxStations&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+    &lt;span class="n"&gt;scanTimetable&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;arrivalStation&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+  &lt;span class="o"&gt;}&lt;/span&gt;
+
+  &lt;span class="n"&gt;computeRoute&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;arrivalStation&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+&lt;span class="o"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h5&gt;Parcours de la table horaire&lt;/h5&gt;
+&lt;p&gt;On utilise une fois de plus une récursion terminale. &lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="k"&gt;private&lt;/span&gt; &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="n"&gt;scanTimetable&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;arrivalStation&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;Int&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;Unit&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+  &lt;span class="nd"&gt;@tailrec&lt;/span&gt;
+  &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="n"&gt;inner&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;conns&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;Seq&lt;/span&gt;&lt;span class="o"&gt;[(&lt;/span&gt;&lt;span class="kt"&gt;Connection&lt;/span&gt;, &lt;span class="kt"&gt;Int&lt;/span&gt;&lt;span class="o"&gt;)],&lt;/span&gt; &lt;span class="n"&gt;earliest&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;Int&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;Unit&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+    &lt;span class="k"&gt;var&lt;/span&gt; &lt;span class="n"&gt;newEarliest&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="n"&gt;earliest&lt;/span&gt;
+    &lt;span class="n"&gt;conns&lt;/span&gt; &lt;span class="k"&gt;match&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+      &lt;span class="k"&gt;case&lt;/span&gt; &lt;span class="nc"&gt;Seq&lt;/span&gt;&lt;span class="o"&gt;()&lt;/span&gt; &lt;span class="k"&gt;=&amp;gt;&lt;/span&gt;
+        &lt;span class="c1"&gt;// Aucune connexion dans la table horaire.&lt;/span&gt;
+        &lt;span class="c1"&gt;// Ce n&amp;#39;est pas le cas le plus intéressant mais il n&amp;#39;y a rien à faire.&lt;/span&gt;
+        &lt;span class="o"&gt;()&lt;/span&gt;
+      &lt;span class="k"&gt;case&lt;/span&gt; &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;connection&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="n"&gt;index&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt; &lt;span class="o"&gt;+:&lt;/span&gt; &lt;span class="k"&gt;_&lt;/span&gt; &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;connection&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;arrivalTimestamp&lt;/span&gt; &lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;earliest&lt;/span&gt; &lt;span class="k"&gt;=&amp;gt;&lt;/span&gt;
+        &lt;span class="c1"&gt;// L&amp;#39;heure d&amp;#39;arrivée de la connexion dépasse l&amp;#39;heure d&amp;#39;arrivée « optimale » actuelle.&lt;/span&gt;
+        &lt;span class="c1"&gt;// On ne fait rien.&lt;/span&gt;
+        &lt;span class="o"&gt;()&lt;/span&gt;
+      &lt;span class="k"&gt;case&lt;/span&gt; &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;connection&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="n"&gt;index&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt; &lt;span class="o"&gt;+:&lt;/span&gt; &lt;span class="n"&gt;tail&lt;/span&gt; &lt;span class="k"&gt;=&amp;gt;&lt;/span&gt;
+        &lt;span class="c1"&gt;// La connexion optimise les horaires déjà calculés. On met à jour les horaires.&lt;/span&gt;
+        &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;leavesAfterArrival&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;connection&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class="n"&gt;optimizesArrivalTime&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;connection&lt;/span&gt;&lt;span class="o"&gt;))&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+          &lt;span class="n"&gt;earliestArrival&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;connection&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;arrivalStation&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="n"&gt;connection&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;arrivalTimestamp&lt;/span&gt;
+          &lt;span class="n"&gt;inConnection&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;connection&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;arrivalStation&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="n"&gt;index&lt;/span&gt;
+          &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;connection&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;arrivalStation&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="n"&gt;arrivalStation&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+            &lt;span class="n"&gt;newEarliest&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="nc"&gt;Math&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;min&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;earliest&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="n"&gt;connection&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;arrivalTimestamp&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+          &lt;span class="o"&gt;}&lt;/span&gt;
+        &lt;span class="o"&gt;}&lt;/span&gt;
+        &lt;span class="n"&gt;inner&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;tail&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="n"&gt;newEarliest&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+    &lt;span class="o"&gt;}&lt;/span&gt;
+  &lt;span class="o"&gt;}&lt;/span&gt;
+  &lt;span class="n"&gt;inner&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;timetable&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;connections&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;zipWithIndex&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="nc"&gt;Int&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="nc"&gt;MaxValue&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+&lt;span class="o"&gt;}&lt;/span&gt;
+
+&lt;span class="k"&gt;private&lt;/span&gt; &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="n"&gt;leavesAfterArrival&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;connection&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;Connection&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;Boolean&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+  &lt;span class="n"&gt;connection&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;departureTimestamp&lt;/span&gt; &lt;span class="o"&gt;&amp;gt;=&lt;/span&gt; &lt;span class="n"&gt;earliestArrival&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;connection&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;departureStation&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+&lt;span class="o"&gt;}&lt;/span&gt;
+
+&lt;span class="k"&gt;private&lt;/span&gt; &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="n"&gt;optimizesArrivalTime&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;connection&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;Connection&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;Boolean&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+  &lt;span class="n"&gt;connection&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;arrivalTimestamp&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&lt;/span&gt; &lt;span class="n"&gt;earliestArrival&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;connection&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;arrivalStation&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+&lt;span class="o"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h5&gt;Construction de l'itinéraire à partir de la table horaire&lt;/h5&gt;
+&lt;p&gt;Une fois la table horaire &lt;code&gt;inConnection&lt;/code&gt; calculée, on reconsitue l'itinéraire inversé en partant de la station d'arrivée et en remontant jusqu'à la station de départ. &lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="k"&gt;private&lt;/span&gt; &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="n"&gt;computeRoute&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;arrivalStation&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;Int&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;Seq&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="kt"&gt;Connection&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+  &lt;span class="n"&gt;inConnection&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;arrivalStation&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt; &lt;span class="k"&gt;match&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+    &lt;span class="k"&gt;case&lt;/span&gt; &lt;span class="nc"&gt;Int&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="nc"&gt;MaxValue&lt;/span&gt; &lt;span class="k"&gt;=&amp;gt;&lt;/span&gt;
+      &lt;span class="nc"&gt;Seq&lt;/span&gt;&lt;span class="o"&gt;()&lt;/span&gt; &lt;span class="c1"&gt;// Pas de solution&lt;/span&gt;
+    &lt;span class="k"&gt;case&lt;/span&gt; &lt;span class="k"&gt;_&lt;/span&gt; &lt;span class="k"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+      &lt;span class="k"&gt;var&lt;/span&gt; &lt;span class="n"&gt;route&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="nc"&gt;Array&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="kt"&gt;Connection&lt;/span&gt;&lt;span class="o"&gt;]()&lt;/span&gt;
+      &lt;span class="k"&gt;var&lt;/span&gt; &lt;span class="n"&gt;lastConnectionIndex&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="n"&gt;inConnection&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;arrivalStation&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+      &lt;span class="k"&gt;while&lt;/span&gt; &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;lastConnectionIndex&lt;/span&gt; &lt;span class="o"&gt;!=&lt;/span&gt; &lt;span class="nc"&gt;Int&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="nc"&gt;MaxValue&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+        &lt;span class="k"&gt;val&lt;/span&gt; &lt;span class="n"&gt;connection&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;Connection&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;timetable&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;connections&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;lastConnectionIndex&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+        &lt;span class="n"&gt;route&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="n"&gt;route&lt;/span&gt; &lt;span class="o"&gt;:+&lt;/span&gt; &lt;span class="n"&gt;connection&lt;/span&gt;
+        &lt;span class="n"&gt;lastConnectionIndex&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="n"&gt;inConnection&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;connection&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;departureStation&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+      &lt;span class="o"&gt;}&lt;/span&gt;
+      &lt;span class="n"&gt;route&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;reverse&lt;/span&gt;
+    &lt;span class="o"&gt;}&lt;/span&gt;
+  &lt;span class="o"&gt;}&lt;/span&gt;
+&lt;span class="o"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Ce cas est volontairement écrit en « Java++ » plutôt qu'en « bon Scala » par simplicité de lecture. Saurez-vous écrire le cas général en une ligne (ou deux) ?&lt;/p&gt;
+&lt;h4&gt;Exemple&lt;/h4&gt;
+&lt;p&gt;Partons d'un trajet entre Maubert-Mutualité et Voltaire en partant à 18h.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="k"&gt;val&lt;/span&gt; &lt;span class="n"&gt;maubert&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;2350&lt;/span&gt;
+&lt;span class="k"&gt;val&lt;/span&gt; &lt;span class="n"&gt;voltaireLeonBlum&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;1633&lt;/span&gt;
+
+&lt;span class="n"&gt;csa&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;compute&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;
+  &lt;span class="n"&gt;maubert&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt;
+  &lt;span class="n"&gt;voltaireLeonBlum&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt;
+  &lt;span class="n"&gt;durationToTimestamp&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="nc"&gt;Duration&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ofHours&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;18&lt;/span&gt;&lt;span class="o"&gt;))&lt;/span&gt;
+&lt;span class="o"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;On obtient le trajet (notez la présence des connexions de correspondance à Odéon et Strasbourg-Saint-Denis) :&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;Solution found with 15 connections
+  Maubert-Mutualité -&amp;gt; Cluny-La Sorbonne
+  Cluny-La Sorbonne -&amp;gt; Odéon
+  Odéon -&amp;gt; Odéon
+  Odéon -&amp;gt; Saint-Michel
+  Saint-Michel -&amp;gt; Cité
+  Cité -&amp;gt; Châtelet
+  Châtelet -&amp;gt; Les Halles
+  Les Halles -&amp;gt; Etienne Marcel
+  Etienne Marcel -&amp;gt; Réaumur-Sébastopol
+  Réaumur-Sébastopol -&amp;gt; Strasbourg-Saint-Denis
+  Strasbourg-Saint-Denis -&amp;gt; Strasbourg-Saint-Denis
+  Strasbourg-Saint-Denis -&amp;gt; République
+  République -&amp;gt; Oberkampf
+  Oberkampf -&amp;gt; Saint-Ambroise
+  Saint-Ambroise -&amp;gt; Voltaire (Léon Blum)
+Total transit time: 21 minutes
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;Conclusion&lt;/h3&gt;
+&lt;p&gt;En comparaison, l'&lt;a href="https://fr.wikipedia.org/wiki/Algorithme_de_Dijkstra"&gt;algorithme de plus court chemin de Dijkstra&lt;/a&gt; présente une complexité proportionnelle à &lt;em&gt;C.log(N)&lt;/em&gt; où &lt;em&gt;N&lt;/em&gt; est le nombre de stations et &lt;em&gt;C&lt;/em&gt; le nombre de correspondances entre deux stations, soit environ &lt;em&gt;N.log(N)&lt;/em&gt; dans notre évaluation, tout en occupant un espace mémoire de taille proportionnelle à &lt;em&gt;N&lt;/em&gt;. &lt;/p&gt;
+&lt;p&gt;Le métro parisien est constitué de 303 stations (&lt;em&gt;N = 303&lt;/em&gt; et &lt;em&gt;N.log(N) = 752&lt;/em&gt;) : on reste donc dans le même ordre de magnitude sur ces deux algorithmes au moment du calcul d'itinéraire. En revanche, le &lt;em&gt;Connexion scan algorithm&lt;/em&gt; demande de pré-calculer la table horaire : il induit donc un coût préalable. Cette table pré-calculée le rend également moins souple : elle rend plus difficile le paramétrage de l'algorithme en fonction des préférences du voyageur. La facilité de marche du voyageur peut par exemple être utilisée pour pondérer la durée d'une correspondance : &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;avec le CSA, il est nécessaire de calculer une table prenant en compte ce paramètre (une correspondance étant une connexion comme une autre) ;&lt;/li&gt;
+&lt;li&gt;avec l'algorithme de Dijkstra, il « suffit » d'associer un poids plus fort aux arêtes représentant une correspondance lorsque le voyageur a des difficultés à se déplacer.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Si le CSA est plus simple à implémenter, il l'est au détriment de la souplesse en première approche. Il est cependant possible de typer les connexions de correspondance pour leur attribuer différentes heures d'arrivée en fonction de la vélocité pédestre du voyageur. &lt;/p&gt;
+&lt;p&gt;Enfin, si cet exemple a été mené sur le réseau ferré RATP d'Île de France, son extension au réseau de bus (347 lignes) n'est pas viable : la table horaire devient trop volumineuse pour tenir en mémoire et les performances s'en ressentent. Mon intuition est que cet algorithme est très pertinent sur de « petites » tables horaires (jusqu'à quelques centaines de stations). Dès que le réseau grossit, en revanche, il est préférable de chercher un autre algorithme moins gourmand en mémoire et en pré-calcul. &lt;/p&gt;</summary><category term="opendata"></category><category term="ratp"></category><category term="gtfs"></category><category term="scala"></category></entry><entry><title>Gestion des accès concurrents sur un cache de DAO</title><link href="http://www.dericbourg.net/2015/11/07/gestion-des-acces-concurrents-sur-un-cache-de-dao/" rel="alternate"></link><updated>2015-11-07T00:00:00+01:00</updated><author><name>Alban Dericbourg</name></author><id>tag:www.dericbourg.net,2015-11-07:2015/11/07/gestion-des-acces-concurrents-sur-un-cache-de-dao/</id><summary type="html">&lt;p&gt;L'ajout d'un cache sur un DAO est une opération courante et la bibliothèque Guava, très répandue, a par ailleurs énormément simplifié sa mise en œuvre. Néanmoins, il reste encore extrêmement facile de se tromper avec cette bibliothèque et... de réaliser un cache qui ne fonctionne pas.&lt;/p&gt;
 &lt;h3&gt;Contexte&lt;/h3&gt;
 &lt;p&gt;Partons d'une interface de DAO « classique » permettant de réaliser les opérations &lt;em&gt;CRUD&lt;/em&gt;. On y ajoute une méthode &lt;code&gt;getAll&lt;/code&gt; qui retourne l'intégralité des objets (vous allez voir, c'est pour votre bien).&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="kd"&gt;public&lt;/span&gt; &lt;span class="kd"&gt;interface&lt;/span&gt; &lt;span class="nc"&gt;Dao&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;

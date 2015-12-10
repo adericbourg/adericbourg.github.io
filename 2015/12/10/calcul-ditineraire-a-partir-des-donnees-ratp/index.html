@@ -23,12 +23,12 @@
         <meta name="twitter:creator" content="@adericbourg" />
         <meta name="twitter:title" content="Calcul d'itinéraire à partir des données RATP - Blog bloquant" />
         <meta name="twitter:description" content="La RATP progresse dans l'ouverture de ses données et même si elle ne propose pas encore un accès à son système SIEL, elle propose néanmoins les données de son offre de transport au format GTFS. Une bonne occasion de s'initier au calcul d'itinéraire ! L'histoire et le ..." />
-        <meta name="twitter:domain" content="http://www.dericbourg.net/drafts/calcul-ditineraire-a-partir-des-donnees-ratp.html" />
+        <meta name="twitter:domain" content="http://www.dericbourg.net/2015/12/10/calcul-ditineraire-a-partir-des-donnees-ratp/" />
 
         <!-- Facebook Open Graph Meta Tags -->
         <meta property="og:site_name" content="Blog bloquant"/>
         <meta property="og:title" content="Calcul d'itinéraire à partir des données RATP"/>
-        <meta property="og:url" content="http://www.dericbourg.net/drafts/calcul-ditineraire-a-partir-des-donnees-ratp.htmlindex.html"/>
+        <meta property="og:url" content="http://www.dericbourg.net/2015/12/10/calcul-ditineraire-a-partir-des-donnees-ratp/index.html"/>
         <meta property="og:description" content="La RATP progresse dans l'ouverture de ses données et même si elle ne propose pas encore un accès à son système SIEL, elle propose néanmoins les données de son offre de transport au format GTFS. Une bonne occasion de s'initier au calcul d'itinéraire ! L'histoire et le ..."/>
         <meta property="og:type" content="blog"/>
 
@@ -80,15 +80,17 @@
               <div>
                     <a class="info label" href="http://www.dericbourg.net/tag/opendata.html">opendata</a>
                     <a class="info label" href="http://www.dericbourg.net/tag/ratp.html">ratp</a>
+                    <a class="info label" href="http://www.dericbourg.net/tag/gtfs.html">gtfs</a>
+                    <a class="info label" href="http://www.dericbourg.net/tag/scala.html">scala</a>
               </div>
             </header>
             <footer class="post-info">
 
-              <abbr class="published" title="2015-09-12T00:00:00+02:00">
-                sam. 12 septembre 2015
+              <abbr class="published" title="2015-12-10T00:00:00+01:00">
+                jeu. 10 décembre 2015
               </abbr>
               &ndash;
-              <a href="http://www.dericbourg.net/drafts/calcul-ditineraire-a-partir-des-donnees-ratp.html" rel="bookmark" title="Lien permanent vers Calcul d'itinéraire à partir des données RATP">lien permanent</a>
+              <a href="http://www.dericbourg.net/2015/12/10/calcul-ditineraire-a-partir-des-donnees-ratp/" rel="bookmark" title="Lien permanent vers Calcul d'itinéraire à partir des données RATP">lien permanent</a>
               <address class="vcard author">Par
                 <a class="url fn" href="http://www.dericbourg.net/author/alban-dericbourg.html"> Alban Dericbourg</a>
               </address>
@@ -101,7 +103,7 @@
 <blockquote>
 <p>Cette explication est largement inspirée de l'explication de l'algorithme du <a href="https://github.com/captaintrain/csa-challenge/blob/master/readme.md">csa-challenge de CaptainTrain</a>.</p>
 </blockquote>
-<p>Cet algorithme, tenant en quelques lignes, se « contente » de parcourir une table horaire précalculée des connexions entre les stations et de retenir la solution optimale en temps de trajet. Une connexion représente une possibilité de trajet entre deux stations. On la modélise donc par un quadruplet contenant :</p>
+<p>Cet algorithme, tenant en quelques lignes, se « contente » de parcourir une table horaire pré-calculée des connexions entre les stations et de retenir la solution optimale en temps de trajet. Une connexion représente une possibilité de trajet entre deux stations. On la modélise donc par un quadruplet contenant :</p>
 <ul>
 <li>la station de départ, </li>
 <li>la station d'arrivée, </li>
@@ -165,7 +167,7 @@ A      \
 </table>
 
 <p>Initialisons les données. </p>
-<table class="table">
+<table class="table table-condensed">
 <thead>
   <tr><th></th> <th>A</th><th>B</th><th>C</th><th>D</th></tr>
 </thead>
@@ -182,7 +184,7 @@ A      \
 <li>Heure(B) &gt; 3 (&infin; &gt; 3)</li>
 </ul>
 <p>On met à jour les tables intermédiaires.</p>
-<table class="table">
+<table class="table table-condensed">
 <thead>
   <tr><th></th> <th>A</th><th>B</th><th>C</th><th>D</th></tr>
 </thead>
@@ -193,7 +195,7 @@ A      \
 </table>
 
 <p>On continue avec avec (B, C, 3, 4) qui satisfait également les conditions. </p>
-<table class="table">
+<table class="table table-condensed">
 <thead>
   <tr><th></th> <th>A</th><th>B</th><th>C</th><th>D</th></tr>
 </thead>
@@ -211,7 +213,7 @@ A      \
 <li>Heure(D) &gt; 6 (&infin; &gt; 6)</li>
 </ul>
 <p>Les tableaux sont donc mis à jour.</p>
-<table class="table">
+<table class="table table-condensed">
 <thead>
   <tr><th></th> <th>A</th><th>B</th><th>C</th><th>D</th></tr>
 </thead>
@@ -232,8 +234,8 @@ A      \
 <h4>Analyse</h4>
 <p>Cet algorithme présente l'avantage de s'exécuter en un temps proportionnel au nombre de connexions en occupant un espace mémoire lui aussi proportionnel au nombre de connexions. Dans le cas du métro parisien, on peut évaluer que le nombre de correspondances est du même ordre de grandeur que le nombre <em>N</em> de stations. Cela revient à avoir : </p>
 <ul>
-<li>environ <em>N-1</em> connexions entre stations d'une même ligne ;</li>
-<li><em>2N</em> connexions issues des correspondance (une connexion dans un sens, une connexion dans l'autre).</li>
+<li>environ <em>N</em> connexions entre stations d'une même ligne (le chiffre est légèrement faussé par la présence de lignes en « fourche ») ;</li>
+<li>environ <em>2N</em> connexions issues des correspondances (une connexion dans un sens, une connexion dans l'autre).</li>
 </ul>
 <p>L'algorithme a donc une complexité proportionnelle au nombre de stations.</p>
 <h3>Exploitation des données de la RATP</h3>
@@ -241,7 +243,7 @@ A      \
 <p>Le format GTFS est un standard et la RATP se conforme à ce standard, simple et bien documenté. Les données sont réparties sur plusieurs fichiers dont nous n'en retiendrons que certains dans cet article.</p>
 <h5>routes.txt</h5>
 <p>Le fichier décrit le nom et la direction des routes. Une route est assimilable à un trajet (origine - destination).</p>
-<p>Prenons l'exemple de la ligne 13 du métro parsien dont le plan simplifié est représenté sur la figure ci-dessous. Cette ligne est parcourue par quatre routes :</p>
+<p>Prenons l'exemple de la ligne 13 du métro parisien dont le plan simplifié est représenté sur la figure ci-dessous. Cette ligne est parcourue par quatre routes :</p>
 <ul>
 <li>Châtillon - Montrouge en direction de Saint-Denis Université ;</li>
 <li>Châtillon - Montrouge en direction de Gennevilliers Les Courtilles ;</li>
@@ -265,7 +267,7 @@ A      \
 <ul>
   <li> la gare de départ ;</li>
   <li> la gare d'arrivée ;</li>
-  <li> les gares intermédiaires désservies (certains trajets peuvent « sauter » des gares).</li>
+  <li> les gares intermédiaires desservies (certains trajets peuvent « sauter » des gares).</li>
 </ul>
 Lorsqu'un train suit une mission, il réalise une <strong>course</strong>.</p>
 </blockquote>
@@ -342,7 +344,7 @@ Lorsqu'un train suit une mission, il réalise une <strong>course</strong>.</p>
 
 <p>Il s'agit donc du <a href="http://www.ratp.fr/informer/pdf/orienter/f_horaire.php?fm=gif&amp;loc=noctilien&amp;nompdf=n44">Noctilien N44</a> qui passe effectivement par « Mairie de Saint-Ouen ». La boucle est bouclée.</p>
 <h4>Parsing des fichiers GTFS</h4>
-<p>Les fichiers GTFS, bien que portant l'extension <code>.txt</code> sont manipulables commes des fichiers CSV. Dans la suite, on utilisera des structures qui sont (presque) calquées sur le format de ces fichiers. Sur le principe, leur parsing est immédiat. Prenons par exemple le cas des routes (on utilise ici <a href="https://github.com/tototoshi/scala-csv">scala-csv</a>) :</p>
+<p>Les fichiers GTFS, bien que portant l'extension <code>.txt</code> sont manipulables comme des fichiers CSV. Dans la suite, on utilisera des structures qui sont (presque) calquées sur le format de ces fichiers. Sur le principe, leur parsing est immédiat. Prenons par exemple le cas des routes (on utilise ici <a href="https://github.com/tototoshi/scala-csv">scala-csv</a>) :</p>
 <div class="highlight"><pre><span class="k">import</span> <span class="nn">com.github.tototoshi.csv._</span>
 
 <span class="k">case</span> <span class="k">class</span> <span class="nc">Route</span><span class="o">(</span><span class="n">routeId</span><span class="k">:</span> <span class="kt">Long</span><span class="o">,</span> <span class="n">routeShortName</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> <span class="n">routeLongName</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> <span class="n">routeDesc</span><span class="k">:</span> <span class="kt">String</span><span class="o">)</span>
@@ -544,8 +546,8 @@ II, t4, t4, D, 1, ,
 </pre></div>
 
 
-<h3>Implémentation</h3>
-<p>Je propose ici une implémentation en Scala qui pourrait probablement être (largement, rien que par sa muabilité) améliorée. Partons toujours de là. </p>
+<h3>Implémentation de l'algorithme</h3>
+<p>Je propose ici une implémentation en Scala qui pourrait probablement être (largement, rien que par sa mutabilité) améliorée. Partons toujours de là. </p>
 <h4>API</h4>
 <p>Cette implémentation est paramétrée par : </p>
 <ul>
@@ -572,7 +574,7 @@ II, t4, t4, D, 1, ,
 
 <span class="k">def</span> <span class="n">compute</span><span class="o">(</span><span class="n">departureStation</span><span class="k">:</span> <span class="kt">Int</span><span class="o">,</span> <span class="n">arrivalStation</span><span class="k">:</span> <span class="kt">Int</span><span class="o">,</span> <span class="n">departureTime</span><span class="k">:</span> <span class="kt">Int</span><span class="o">)</span><span class="k">:</span> <span class="kt">Seq</span><span class="o">[</span><span class="kt">Connection</span><span class="o">]</span> <span class="k">=</span> <span class="o">{</span>
   <span class="n">earliestArrival</span><span class="o">(</span><span class="n">departureStation</span><span class="o">)</span> <span class="k">=</span> <span class="n">departureTime</span>
-  <span class="o">???</span>
+  <span class="c1">// [...]</span>
 <span class="o">}</span>    
 </pre></div>
 
@@ -604,7 +606,8 @@ II, t4, t4, D, 1, ,
     <span class="k">var</span> <span class="n">newEarliest</span> <span class="k">=</span> <span class="n">earliest</span>
     <span class="n">conns</span> <span class="k">match</span> <span class="o">{</span>
       <span class="k">case</span> <span class="nc">Seq</span><span class="o">()</span> <span class="k">=&gt;</span>
-        <span class="c1">// Aucune connexion : on n&#39;a rien à faire</span>
+        <span class="c1">// Aucune connexion dans la table horaire.</span>
+        <span class="c1">// Ce n&#39;est pas le cas le plus intéressant mais il n&#39;y a rien à faire.</span>
         <span class="o">()</span>
       <span class="k">case</span> <span class="o">(</span><span class="n">connection</span><span class="o">,</span> <span class="n">index</span><span class="o">)</span> <span class="o">+:</span> <span class="k">_</span> <span class="k">if</span> <span class="n">connection</span><span class="o">.</span><span class="n">arrivalTimestamp</span> <span class="o">&gt;</span> <span class="n">earliest</span> <span class="k">=&gt;</span>
         <span class="c1">// L&#39;heure d&#39;arrivée de la connexion dépasse l&#39;heure d&#39;arrivée « optimale » actuelle.</span>
@@ -635,16 +638,8 @@ II, t4, t4, D, 1, ,
 </pre></div>
 
 
-<blockquote>
-<p>TODO plus d'explications ?</p>
-</blockquote>
 <h5>Construction de l'itinéraire à partir de la table horaire</h5>
-<p>Une fois la table horaire <code>inConnection</code> calculée, l'itinéraire est « facile » à reconsituer. On part de la station d'arrivée et si l'heure d'arrivée pour celle-ci est « l'infini », c'est que l'on n'a pas pu déterminer de trajet permettant d'atteindre cette station. Sinon, on parcourt les connexions en partant de la fin (de la station d'arrivée, donc) : </p>
-<ul>
-<li>on prend la connexion <em>n</em> (celle d'arrivée), ce qui nous donne la station de départ de cette connexion ;</li>
-<li>puis on prend la connexion <em>n-1</em> arrivant à la station de départ de la connexion précédente et ainsi de suite.</li>
-</ul>
-<p>On obtient alors une succession de connexions dont le premier élément est la connexion de terminant à la station d'arrivée et dont les dernier élément est la connexion partant de la station de départ. Il ne reste plus qu'à inverser cette liste pour obtenir le trajet.</p>
+<p>Une fois la table horaire <code>inConnection</code> calculée, on reconsitue l'itinéraire inversé en partant de la station d'arrivée et en remontant jusqu'à la station de départ. </p>
 <div class="highlight"><pre><span class="k">private</span> <span class="k">def</span> <span class="n">computeRoute</span><span class="o">(</span><span class="n">arrivalStation</span><span class="k">:</span> <span class="kt">Int</span><span class="o">)</span><span class="k">:</span> <span class="kt">Seq</span><span class="o">[</span><span class="kt">Connection</span><span class="o">]</span> <span class="k">=</span> <span class="o">{</span>
   <span class="n">inConnection</span><span class="o">(</span><span class="n">arrivalStation</span><span class="o">)</span> <span class="k">match</span> <span class="o">{</span>
     <span class="k">case</span> <span class="nc">Int</span><span class="o">.</span><span class="nc">MaxValue</span> <span class="k">=&gt;</span>
@@ -701,7 +696,7 @@ Total transit time: 21 minutes
 
 <h3>Conclusion</h3>
 <p>En comparaison, l'<a href="https://fr.wikipedia.org/wiki/Algorithme_de_Dijkstra">algorithme de plus court chemin de Dijkstra</a> présente une complexité proportionnelle à <em>C.log(N)</em> où <em>N</em> est le nombre de stations et <em>C</em> le nombre de correspondances entre deux stations, soit environ <em>N.log(N)</em> dans notre évaluation, tout en occupant un espace mémoire de taille proportionnelle à <em>N</em>. </p>
-<p>Le métro parisien est constitué de 303 stations (<em>N = 303</em> et <em>N.log(N) = 752</em>) : on reste donc dans le même ordre de magnitude sur ces deux algorithmes au moment du calcul d'itinéraire. En revanche, le <em>Connexion scan algorithm</em> demande de pré-calculer la table horaire : il induit donc un coût préalable. Cette table précalculée le rend également moins souple : elle rend plus difficile le paramétrage de l'algorithme en fonction des préférences du voyageur. La facilité de marche du voyageur peut par exemple être utilisée pour pondérer la durée d'une correspondance : </p>
+<p>Le métro parisien est constitué de 303 stations (<em>N = 303</em> et <em>N.log(N) = 752</em>) : on reste donc dans le même ordre de magnitude sur ces deux algorithmes au moment du calcul d'itinéraire. En revanche, le <em>Connexion scan algorithm</em> demande de pré-calculer la table horaire : il induit donc un coût préalable. Cette table pré-calculée le rend également moins souple : elle rend plus difficile le paramétrage de l'algorithme en fonction des préférences du voyageur. La facilité de marche du voyageur peut par exemple être utilisée pour pondérer la durée d'une correspondance : </p>
 <ul>
 <li>avec le CSA, il est nécessaire de calculer une table prenant en compte ce paramètre (une correspondance étant une connexion comme une autre) ;</li>
 <li>avec l'algorithme de Dijkstra, il « suffit » d'associer un poids plus fort aux arêtes représentant une correspondance lorsque le voyageur a des difficultés à se déplacer.</li>
