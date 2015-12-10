@@ -8,7 +8,7 @@ La RATP progresse dans l'[ouverture de ses données](http://data.ratp.fr) et mê
 
 ### Format des données
 
-Le format GTFS est un standard et la RATP se conforme à ce standard, simple et bien documenté. Nous n'en retiendrons que certains en première approche.
+Le format GTFS est un standard et la RATP se conforme à ce standard, simple et bien documenté. Les données sont réparties sur plusieurs fichiers dont nous n'en retiendrons que certains dans cet article.
 
 #### routes.txt
 
@@ -35,7 +35,15 @@ route_id,agency_id,route_short_name,route_long_name,route_desc,route_type,route_
 
 #### stops.txt
 
-Ce fichier liste les arrêts avec, éventuellement, quelques informations complémentaires. La RATP fournit l'adresse la plus proche de l'arrêt ainsi que les coordonnées GPS de son centre (dans le cas d'une station qui dispose de plusieurs sorties). À noter que ce fichier n'est pas ordonné selon le sens de parcours des missions sur la ligne.
+Ce fichier liste les arrêts avec, éventuellement, quelques informations complémentaires. La RATP fournit l'adresse la plus proche de l'arrêt ainsi que les coordonnées GPS de son centre (dans le cas d'une station qui dispose de plusieurs sorties). À noter que ce fichier n'est pas ordonné selon le sens de parcours des courses sur la ligne.
+
+> Une **mission** est un trajet parcouru par un ensemble de trains. Elle est décrite par : 
+> <ul>
+>   <li> la gare de départ ;</li>
+>   <li> la gare d'arrivée ;</li>
+>   <li> les gares intermédiaires désservies (certains trajets peuvent « sauter » des gares).</li>
+> </ul>
+> Lorsqu'un train suit une mission, il réalise une **course**.
 
 Exemple des quatre premières stations de la ligne 13 :
 
@@ -65,7 +73,7 @@ route_id,service_id,trip_id,trip_headsign,trip_short_name,direction_id,shape_id
 
 Ce fichier présente les horaires des courses aux stations (points d'arrêt). Ce fichier est trié par course et par heure d'arrêt en station.
 
-Un détail est à noter quant aux horaires : ceux-ci sont fournis pour la journée qui peut se terminer... le lendemain. Un métro circulant le dimanche à 1h du matin sera en réalité rattaché à la journée du samedi. Ainsi, son horaire ne sera pas « à 1h le dimanche» mais « à 25h le samedi ». Bien que cette astuce puisse sembler tordue, elle simplifie en pratique beaucoup de choses, notamment pour maintenir la continuité des missions : il serait absurde de scinder la mission d'un train sous prétexte qu'il roule à cheval sur deux jours calendaires.
+Un détail est à noter quant aux horaires : ceux-ci sont fournis pour la journée qui peut se terminer... le lendemain. Un métro circulant le dimanche à 1h du matin sera en réalité rattaché à la journée du samedi. Ainsi, son horaire ne sera pas « à 1h le dimanche » mais « à 25h le samedi ». Bien que cette astuce puisse sembler tordue, elle simplifie en pratique beaucoup de choses, notamment pour maintenir la continuité des courses : il serait absurde de scinder la course d'un train sous prétexte qu'il roule à cheval sur deux jours calendaires.
 
 Exemple pour la ligne 13 :
 ```
@@ -81,7 +89,7 @@ Dans cet exemple, pour la course présentée, le véhicule s'arrête à 19:38:00
 
 `transfers.txt` regroupe les correspondances entre plusieurs points d'arrêt.
 
-Pour prendre un exemple :
+Ce fichier n'étant pas compréhensible par un humain, prenons un exemple et déroulons-le :
 ```
 from_stop_id,to_stop_id,transfer_type,min_transfer_time
 4211780,2270,2,212
@@ -89,7 +97,7 @@ from_stop_id,to_stop_id,transfer_type,min_transfer_time
 3619167,2276,2,252
 ```
 
-Prenons la première ligne : la correspondance se fait entre l'arrêt « 4211780 » et l'arrêt « 2270 ». Un recherche dans le fichier `stops.txt` permet de donner un nom humainement compréhensible à ces identifiants : ils correspondent ici tous les deux au point d'arrêt « Mairie de Saint-Ouen ».
+Sur la première ligne, la correspondance se fait entre l'arrêt « 4211780 » et l'arrêt « 2270 ». Un recherche dans le fichier `stops.txt` permet de donner un nom humainement compréhensible à ces identifiants : ils correspondent ici tous les deux au point d'arrêt « Mairie de Saint-Ouen ».
 
 À partir du l'identifiant d'un point d'arrêt, on peut également ressortir les identifiants de course (`trip_id`). Prenons-en un au hasard :
 
@@ -105,7 +113,7 @@ $ grep 10017622880912417 trips.txt | cut -d, -f1
 1197623
 ```
 
-On trouve donc qu'il s'agissait (encore...) de la ligne 13 dans le sens « retour » :
+On trouve donc qu'il s'agissait de la ligne 13 dans le sens « retour » :
 
 ```
 $ grep ^1197623, routes.txt
@@ -140,10 +148,6 @@ Sur le principe, leur parsing est immédiat. Prenons par exemple le cas des rout
 
 ```scala
 import com.github.tototoshi.csv._
-val routes: List[Route] = CSVReader.
-  open(new File("routes.txt")).
-  allWithHeaders().
-  map(Route.parse)
 
 case class Route(routeId: Long, routeShortName: String, routeLongName: String, routeDesc: String)
 
@@ -157,6 +161,12 @@ object Route {
     )
   }
 }
+
+val routes: List[Route] = CSVReader.
+  open(new File("routes.txt")).
+  allWithHeaders().
+  map(Route.parse)
+
 ```
 
 Dans la pratique, la volumétrie des horaires des courses rend l'opération plus complexe :
@@ -173,7 +183,7 @@ $ wc -l *
    417920 trips.txt
 ```
 
-Pour simplifier la suite de cet article, nous ne traiterons que les lignes de métro et les lignes de RER exploitées par la RATP. On parsera les données ligne par ligne dans la structure `GtfsData` pour ensuite les fusionner :
+Pour simplifier la suite de cet article, nous ne traiterons que les lignes ferrées (métro et RER) exploitées par la RATP. On regroupera les données ligne par ligne (au sens RATP) dans la structure `GtfsData` pour ensuite les fusionner :
 
 ```scala
 case class GtfsData(
@@ -185,7 +195,7 @@ case class GtfsData(
   transfers: Iterable[Transfer]
 )
 
-// Fusion des données de ligne
+val lines: Iterable[GtfsData] = parseGtfsDataByLine()
 val gtfsData = GtfsData(
   "RATP",
   lines.flatMap(_.routes),
@@ -238,6 +248,8 @@ Une lecture indépendante de l'identifiant de course (`trip_id`) amalgamerait do
 
 La création de la table horaire se fait en groupant deux à deux les horaires d'arrêt au sein d'une même course. Pour chaque élément à l'indice `i`, on créera une connexion partant de l'arrêt à cet indice et arrivant à l'arrêt de l'indice `i+1`. On implémente cette construction avec une fonction récursive qui dépile un à un les horaires de course.
 
+On utilise ici une fonction *tail recursive* ([récursion terminale](https://fr.wikipedia.org/wiki/R%C3%A9cursion_terminale) en français), annotée `@tailrec`. Une telle fonction a la particularité de voir son appel récursif comme la dernière instruction à être évaluée. Son avantage est de pouvoir être « optimisée » par le compilateur en une itération (« boucle `for` »), nous libérant du risque de dépassement de capacité de la pile inhérent aux récursions.
+
 
 ```scala
 val connectionsFromStopTimes = gtfsData.
@@ -247,7 +259,7 @@ val connectionsFromStopTimes = gtfsData.
 
 def stopTimesToConnections(stopTimes: Iterable[StopTime]): Iterable[Connection] = {
   @tailrec
-  def loop(stopTimes: List[StopTime], connections: List[Connection]): List[Connection] = {
+  def inner(stopTimes: List[StopTime], connections: List[Connection]): List[Connection] = {
     stopTimes match {
       // Aucun horaire (n'arrive que si la collection initiale est vide).
       // On n'a rien à faire de plus, on retourne les connexions (vides).
@@ -264,11 +276,11 @@ def stopTimesToConnections(stopTimes: Iterable[StopTime]): Iterable[Connection] 
         val arrivalTime = durationToTimestamp(tail.head.departureTime)
         val connection = Connection(departureStop, arrivalStop, departureTime, arrivalTime)
         // Étape suivante de la récursion
-        loop(tail, connections :+ connection)
+        inner(tail, connections :+ connection)
     }
   }
   // Initialisation de la récursion
-  loop(stopTimes.toList, List())
+  inner(stopTimes.toList, List())
 }
 ```
 
@@ -276,10 +288,10 @@ Dans cet exemple de code, la fonction `durationToTimestamp` retourne un timestam
 
 ##### Connexions issues des correspondances
 
-Le fichier `transfers.txt` nous donne les correspondances disponibles sur une ligne. L'objectif de cette étape est de :
+Le fichier `transfers.txt` nous donne les correspondances disponibles sur une ligne. L'objectif de cette étape est :
 
- * ne conserver que les correspondances de notre réseau (dans cet exemple, nous ne travaillons pas sur les bus, on les éliminera donc) ;
- * créer toutes les entrées de la table horaire correspondant à cette correspondance.
+ * de ne conserver que les correspondances de notre réseau (dans cet exemple, nous ne travaillons pas sur les bus, nous les éliminons donc) ;
+ * de créer toutes les entrées de la table horaire correspondant à cette correspondance.
 
 Le filtrage des correspondances est aisé avec notre structure de données. Nous disposons déjà de l'ensemble des stations du réseau. Il nous suffit de vérifier que ces correspondances ont lieu entre deux stations du réseau.
 
@@ -296,12 +308,12 @@ val filteredTransfers: Iterable[Transfer] = gtfsData.transfers.filter(transfer =
 )
 ```
 
-Cela étant fait, pour chacune de ces correspondances, on créé dans la table horaire une connexion correspondant à chaque horaire de passage à cette station. On utilisera pour cela les données issues de `stop_times.txt`.
+Cela étant fait, pour chacune de ces correspondances, on créé dans la table horaire une connexion correspondant à chaque horaire de passage à cette station. On utilisera pour cela les données issues de `stop_times.txt`. Cette fonction est très similaire dans son fonctionnement à `stopTimesToConnections`.
 
 ```scala
 def transfersToConnections(filteredTransfers: Iterable[Transfer]): Iterable[Connection] = {
   @tailrec
-  def loop(transfers: Iterable[Transfer], connections: List[Connection]): List[Connection] = {
+  def inner(transfers: Iterable[Transfer], connections: List[Connection]): List[Connection] = {
     transfers match {
       // Aucune correspondance à traiter. On en a terminé et on sort avec
       // la liste construite jusqu'ici.
@@ -324,11 +336,11 @@ def transfersToConnections(filteredTransfers: Iterable[Transfer]): Iterable[Conn
             )
           })
         // Étape suivante de la récursion.
-        loop(tail, connections ++ transferConnections)
+        inner(tail, connections ++ transferConnections)
     }
   }
   // Initialisation de la récursion.
-  loop(filteredTransfers.toList, List())
+  inner(filteredTransfers.toList, List())
 }
 ```
 
@@ -350,7 +362,7 @@ val connectionsFromTransfers = transfersToConnections(gtfsData)
 
 val connections = (connectionsFromStopTimes ++ connectionsFromTransfers).
   toList.
-  sortBy(_.arrivalTimestamp)
+  sortBy(_.departureTimestamp)
 ```
 
 #### Exploitation de la table horaire : calcul d'itinéraire
@@ -359,20 +371,22 @@ val connections = (connectionsFromStopTimes ++ connectionsFromTransfers).
 
 > Cette explication est largement inspirée de l'explication de l'algorithme du [csa-challenge de CaptainTrain](https://github.com/captaintrain/csa-challenge/blob/master/readme.md).
 
-La table horaire est, comme on l'a vu, une suite de tuples contenant :
+La table horaire est, comme on l'a vu, une suite de connexions, des tuples contenant :
 
  * la station de départ ;
+ * l'heure de départ sous forme de *timestamp* ; 
  * la station d'arrivée ;
- * l'heure de départ sous forme de *timestamp* ;
  * l'heure d'arrivée sous forme de *timestamp*.
 
-On appelle ces tuples des connexions. La table est triée par ordre d'heure de départ croissante.
+La table est triée par ordre d'heure de départ croissante.
 
 Pour chaque station *s*, de la table, on considère l'heure et la station d'arrivée. Si celles-ci sont optimales, on les conserve. Les stations étant des entiers, on les conserve dans deux tableaux : `arrival_timestamp[s]` et `in_connection[s]`.
 
 L'objectif est de se rendre d'un point de départ *o* à un point d'arrivée *d* en partant à l'heure *t0*.
 
 ###### Initialisation
+
+On initialise l'algorithme en attribuant une durée infinie au trajet vers tout point d'arrêt à l'exception de la gare de départ (on en part, on sait qu'on y est à *t0*). 
 
 ```
 Pour chaque station s
@@ -388,7 +402,7 @@ On parcourt l'ensemble des connexions contenues dans la table et on considère l
 
 ```
 Pour chaque connexion c
-    Si arrival_timestamp[c.departure_station] < c.departure_timestamp 
+    Si arrival_timestamp[c.departure_station] ≤ c.departure_timestamp 
     et arrival_timestamp[c.arrival_station] > c.arrival_timestamp
         arrival_timestamp[c.arrival_station] ← c.arrival_timestamp
         in_connection[c.arrival_station] ← c
@@ -398,7 +412,114 @@ Pour chaque connexion c
 
 Pour obtenir le résultat, on parcourt le tableau des stations d'arrivée (`in_connections`) en partant de la destination *d* jusqu'à retrouver le point de départ *o*. 
 
-> TODO faire un exemple sur un petit jeu de données ?
+###### Exemple 
+
+Prenons un exemple sur une ligne fictive : 
+
+```
+         -----o C
+       /  
+o-----o B
+A      \
+         -----o D
+```
+
+On souhaite rejoindre `D` depuis `A` en partant à l'heure 2 avec la table horaire suivante :
+
+<table class="table table-bordered table-condensed table-striped">
+<thead>
+  <tr>
+    <th>Station de départ</th>
+    <th>Station d'arrivée</th>
+    <th>Heure de départ</th>
+    <th>Heure d'arrivée</th>
+</thead>
+<tbody>
+  <tr><td>A</td><td>B</td><td>0</td><td>1</td></tr>
+  <tr><td>B</td><td>D</td><td>1</td><td>2</td></tr>
+  <tr><td>A</td><td>B</td><td>2</td><td>3</td></tr>
+  <tr><td>B</td><td>C</td><td>3</td><td>4</td></tr>
+  <tr><td>A</td><td>B</td><td>4</td><td>5</td></tr>
+  <tr><td>A</td><td>B</td><td>5</td><td>6</td></tr>
+  <tr><td>B</td><td>D</td><td>5</td><td>6</td></tr>
+  <tr><td>B</td><td>C</td><td>6</td><td>7</td></tr>
+</tbody>
+</table>
+
+Initialisons les données. 
+
+<table class="table">
+<thead>
+  <tr><th></th> <th>A</th><th>B</th><th>C</th><th>D</th></tr>
+</thead>
+<tbody>
+  <tr><th>Heure</th> <td>2</td><td>&infin;</td><td>&infin;</td><td>&infin;</td></tr>
+  <tr><th>Station</th> <td>N/A</td><td>N/A</td><td>N/A</td><td>N/A</td></tr>
+</tbody>
+</table>
+
+On parcours ensuite la table horaire dans l'ordre. Les deux premières lignes sont ignorées, elles ne passent pas la condition horaire.
+
+On arrive à (A, B, 2, 3) : 
+
+ * Heure(A) ≤ 2 (2 ≤ 2)
+ * Heure(B) > 3 (&infin; > 3)
+
+On met à jour les tables intermédiaires.
+
+<table class="table">
+<thead>
+  <tr><th></th> <th>A</th><th>B</th><th>C</th><th>D</th></tr>
+</thead>
+<tbody>
+  <tr><th>Heure</th> <td>2</td><td><strong>3</strong></td><td>&infin;</td><td>&infin;</td></tr>
+  <tr><th>Station</th> <td>N/A</td><td><strong>(A, B, 2, 3)</strong></td><td>N/A</td><td>N/A</td></tr>
+</tbody>
+</table>
+
+On continue avec avec (B, C, 3, 4) qui satisfait également les conditions. 
+
+<table class="table">
+<thead>
+  <tr><th></th> <th>A</th><th>B</th><th>C</th><th>D</th></tr>
+</thead>
+<tbody>
+  <tr><th>Heure</th> <td>2</td><td>3</td><td><strong>4</strong></td><td>&infin;</td></tr>
+  <tr><th>Station</th> <td>N/A</td><td>(A, B, 2, 3)</td><td><strong>(B, C, 3, 4)</strong></td><td>N/A</td></tr>
+</tbody>
+</table>
+
+Un œil averti aura remarqué que le trajet est ici déterminé. L'algorithme se poursuit néanmoins. 
+
+On arrive sur (A, B, 4, 5). On n'a bien Heure(A) ≤ 3 mais en revanche on n'a pas Heure(B) > 4. On passe la connexion. De même pour (A, B, 5, 6). 
+
+Vient (B, D, 5, 6) : 
+
+ * Heure(B) ≤ 5 (3 ≤ 5)
+ * Heure(D) > 6 (&infin; > 6)
+
+Les tableaux sont donc mis à jour.
+
+<table class="table">
+<thead>
+  <tr><th></th> <th>A</th><th>B</th><th>C</th><th>D</th></tr>
+</thead>
+<tbody>
+  <tr><th>Heure</th> <td>2</td><td>3</td><td>4</td><td><strong>6</strong></td></tr>
+  <tr><th>Station</th> <td>N/A</td><td>(A, B, 2, 3)</td><td>(B, C, 3, 4)</td><td><strong>(B, D, 5, 6)</strong></td></tr>
+</tbody>
+</table>
+
+Il reste enfin la connexion (B, C, 6, 7) qui ne remplit par la condition Heure(C) > 7. On ne fait donc rien de cette connexion et les tableaux sont calculés. 
+
+Pour obtenir le trajet, on part de la destination, donc de l'entrée associée au point d'arrêt C dans le tableau des stations. On trouve (B, C, 3, 4). On va alors chercher l'entrée associée au départ de cette connexion, soit l'entrée associée à B. On trouve (A, B, 2, 3). Le point de départ de cette connexion est notre point de départ : la recherche est terminée. 
+
+En dépilant (*Last in, first out*) ces connexions, on retrouve le trajet à parcourir : 
+
+ 0. (A, B, 2, 3)
+ 0. (B, C, 3, 4)
+
+L'algorithme nous a donc permis de déterminer le trajet pour aller de A à C en partant à l'heure 2 ainsi que l'heure d'arrivée. 
 
 ##### Analyse
 
@@ -470,7 +591,7 @@ def compute(departureStation: Int, arrivalStation: Int, departureTime: Int): Seq
 
 ###### Parcours de la table horaire
 
-On construit ce parcours à partir d'une fonction *tail recursive* ([récursion terminale](https://fr.wikipedia.org/wiki/R%C3%A9cursion_terminale) en français). Une telle fonction a la particularité de voir son appel récursif comme la dernière instruction à être évaluée. Son avantage est de pouvoir être « optimisée » par le compilateur en une itération, nous libérant du risque de dépassement de capacité de la pile inhérent aux récursions.
+On utilise une fois de plus une récursion terminale. 
 
 ```scala
 private def loop(arrivalStation: Int): Unit = {
@@ -587,6 +708,6 @@ Le métro parisien est constitué de 303 stations (*N = 303* et *N.log(N) = 752*
  * avec le CSA, il est nécessaire de calculer une table prenant en compte ce paramètre (une correspondance étant une connexion comme une autre) ;
  * avec l'algorithme de Dijkstra, il « suffit » d'associer un poids plus fort aux arêtes représentant une correspondance lorsque le voyageur a des difficultés à se déplacer.
 
-Si le CSA est plus simple à implémenter, il l'est au détriment de la souplesse en première approche. Il est cependant possible de typer les connexions de correspondance pour leur attribuer différentes heures d'arrivée en fonction de la vélocité pédestre du voyageur.
+Si le CSA est plus simple à implémenter, il l'est au détriment de la souplesse en première approche. Il est cependant possible de typer les connexions de correspondance pour leur attribuer différentes heures d'arrivée en fonction de la vélocité pédestre du voyageur. 
 
 Enfin, si cet exemple a été mené sur le réseau ferré RATP d'Île de France, son extension au réseau de bus (347 lignes) n'est pas viable : la table horaire devient trop volumineuse pour tenir en mémoire et les performances s'en ressentent. Mon intuition est que cet algorithme est très pertinent sur de « petites » tables horaires (jusqu'à quelques centaines de stations). Dès que le réseau grossit, en revanche, il est préférable de chercher un autre algorithme moins gourmand en mémoire et en pré-calcul. 
