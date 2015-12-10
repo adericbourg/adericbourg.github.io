@@ -22,14 +22,14 @@
         <meta name="twitter:site" content="@adericbourg" />
         <meta name="twitter:creator" content="@adericbourg" />
         <meta name="twitter:title" content="Calcul d'itinéraire à partir des données RATP - Blog bloquant" />
-        <meta name="twitter:description" content="La RATP progresse dans l'ouverture de ses données et même si elle ne propose pas encore un accès à son système SIEL, elle propose néanmoins les données de son offre de transport au format GTFS. Une bonne occasion de s'initier au calcul d'itinéraire ! Format des données Le ..." />
+        <meta name="twitter:description" content="La RATP progresse dans l'ouverture de ses données et même si elle ne propose pas encore un accès à son système SIEL, elle propose néanmoins les données de son offre de transport au format GTFS. Une bonne occasion de s'initier au calcul d'itinéraire ! L'histoire et le ..." />
         <meta name="twitter:domain" content="http://www.dericbourg.net/drafts/calcul-ditineraire-a-partir-des-donnees-ratp.html" />
 
         <!-- Facebook Open Graph Meta Tags -->
         <meta property="og:site_name" content="Blog bloquant"/>
         <meta property="og:title" content="Calcul d'itinéraire à partir des données RATP"/>
         <meta property="og:url" content="http://www.dericbourg.net/drafts/calcul-ditineraire-a-partir-des-donnees-ratp.htmlindex.html"/>
-        <meta property="og:description" content="La RATP progresse dans l'ouverture de ses données et même si elle ne propose pas encore un accès à son système SIEL, elle propose néanmoins les données de son offre de transport au format GTFS. Une bonne occasion de s'initier au calcul d'itinéraire ! Format des données Le ..."/>
+        <meta property="og:description" content="La RATP progresse dans l'ouverture de ses données et même si elle ne propose pas encore un accès à son système SIEL, elle propose néanmoins les données de son offre de transport au format GTFS. Une bonne occasion de s'initier au calcul d'itinéraire ! L'histoire et le ..."/>
         <meta property="og:type" content="blog"/>
 
         <!-- Mobile viewport optimized: j.mp/bplateviewport -->
@@ -96,9 +96,150 @@
             </footer><!-- /.post-info -->
             <div class="entry-content">
               <p>La RATP progresse dans l'<a href="http://data.ratp.fr">ouverture de ses données</a> et même si elle ne propose pas encore un accès à son <a href="https://fr.wikipedia.org/wiki/Syst%C3%A8me_d'information_en_ligne">système SIEL</a>, elle propose néanmoins les données de son offre de transport au <a href="https://developers.google.com/transit/gtfs/">format GTFS</a>. Une bonne occasion de s'initier au calcul d'itinéraire !</p>
-<h3>Format des données</h3>
+<p>L'histoire et le contexte des calculs d'itinéraires est très bien synthétisé par <a href="https://twitter.com/tristramg">Tristram Gräbener</a> dans son <a href="http://blog.tristramg.eu/petit-historique-du-calcul-ditineraire.html">Petit historique du calcul d'itinéraire</a>. Probablement plus hipster que je ne veux bien l'admettre, j'ai choisi d'utiliser le plus récent : le <em><a href="http://i11www.iti.uni-karlsruhe.de/extra/publications/dpsw-isftr-13.pdf">Connection Scan Algorithm</a></em>. </p>
+<h3>Connection scan algorithm</h3>
+<blockquote>
+<p>Cette explication est largement inspirée de l'explication de l'algorithme du <a href="https://github.com/captaintrain/csa-challenge/blob/master/readme.md">csa-challenge de CaptainTrain</a>.</p>
+</blockquote>
+<p>Cet algorithme, tenant en quelques lignes, se « contente » de parcourir une table horaire précalculée des connexions entre les stations et de retenir la solution optimale en temps de trajet. Une connexion représente une possibilité de trajet entre deux stations. On la modélise donc par un quadruplet contenant :</p>
+<ul>
+<li>la station de départ, </li>
+<li>la station d'arrivée, </li>
+<li>l'heure de départ,</li>
+<li>l'heure d'arrivée. </li>
+</ul>
+<p>La table horaire devient alors simplement une liste de ces connexions triées par heure de départ croissante.</p>
+<p>Pour chaque station <em>s</em>, on considère l'heure et la station d'arrivée. Si celles-ci sont optimales, on les conserve. Les stations étant identifiées par des entiers, on les conserve dans deux tableaux : <code>arrival_timestamp[s]</code> et <code>in_connection[s]</code>.</p>
+<p>L'objectif est de se rendre d'un point de départ <em>o</em> à un point d'arrivée <em>d</em> en partant à l'heure <em>t0</em>.</p>
+<h4>Initialisation</h4>
+<p>On initialise l'algorithme en attribuant une durée infinie au trajet vers tout point d'arrêt à l'exception de la gare de départ (on en part, on sait qu'on y est à <em>t0</em>). </p>
+<div class="highlight"><pre>Pour chaque station s
+    arrival_timestamp[s] ← infinite
+    in_connection[s] ← invalid_value
+
+arrival_timestamp[o] ← t0
+</pre></div>
+
+
+<h4>Boucle de calcul</h4>
+<p>On parcourt l'ensemble des connexions contenues dans la table et on considère l'amélioration qu'elle apporte sur le trajet. À la fin de la boucle, lorsque toutes les connexions on été parcourues, toutes les heures d'arrivée depuis <em>o</em> vers une autre station ont été calculées. </p>
+<div class="highlight"><pre>Pour chaque connexion c
+    Si arrival_timestamp[c.departure_station] ≤ c.departure_timestamp 
+    et arrival_timestamp[c.arrival_station] &gt; c.arrival_timestamp
+        arrival_timestamp[c.arrival_station] ← c.arrival_timestamp
+        in_connection[c.arrival_station] ← c
+</pre></div>
+
+
+<h4>Résultat</h4>
+<p>Pour obtenir le résultat, on parcourt le tableau des stations d'arrivée (<code>in_connections</code>) en partant de la destination <em>d</em> jusqu'à retrouver le point de départ <em>o</em>. </p>
+<h4>Exemple</h4>
+<p>Prenons un exemple sur une ligne fictive : </p>
+<div class="highlight"><pre>         -----o C
+       /  
+o-----o B
+A      \
+         -----o D
+</pre></div>
+
+
+<p>On souhaite rejoindre <code>D</code> depuis <code>A</code> en partant à l'heure 2 avec la table horaire suivante :</p>
+<table class="table table-bordered table-condensed table-striped">
+<thead>
+  <tr>
+    <th>Station de départ</th>
+    <th>Station d'arrivée</th>
+    <th>Heure de départ</th>
+    <th>Heure d'arrivée</th>
+</thead>
+<tbody>
+  <tr><td>A</td><td>B</td><td>0</td><td>1</td></tr>
+  <tr><td>B</td><td>D</td><td>1</td><td>2</td></tr>
+  <tr><td>A</td><td>B</td><td>2</td><td>3</td></tr>
+  <tr><td>B</td><td>C</td><td>3</td><td>4</td></tr>
+  <tr><td>A</td><td>B</td><td>4</td><td>5</td></tr>
+  <tr><td>A</td><td>B</td><td>5</td><td>6</td></tr>
+  <tr><td>B</td><td>D</td><td>5</td><td>6</td></tr>
+  <tr><td>B</td><td>C</td><td>6</td><td>7</td></tr>
+</tbody>
+</table>
+
+<p>Initialisons les données. </p>
+<table class="table">
+<thead>
+  <tr><th></th> <th>A</th><th>B</th><th>C</th><th>D</th></tr>
+</thead>
+<tbody>
+  <tr><th>Heure</th> <td>2</td><td>&infin;</td><td>&infin;</td><td>&infin;</td></tr>
+  <tr><th>Station</th> <td>N/A</td><td>N/A</td><td>N/A</td><td>N/A</td></tr>
+</tbody>
+</table>
+
+<p>On parcours ensuite la table horaire dans l'ordre. Les deux premières lignes sont ignorées, elles ne passent pas la condition horaire.</p>
+<p>On arrive à (A, B, 2, 3) : </p>
+<ul>
+<li>Heure(A) ≤ 2 (2 ≤ 2)</li>
+<li>Heure(B) &gt; 3 (&infin; &gt; 3)</li>
+</ul>
+<p>On met à jour les tables intermédiaires.</p>
+<table class="table">
+<thead>
+  <tr><th></th> <th>A</th><th>B</th><th>C</th><th>D</th></tr>
+</thead>
+<tbody>
+  <tr><th>Heure</th> <td>2</td><td><strong>3</strong></td><td>&infin;</td><td>&infin;</td></tr>
+  <tr><th>Station</th> <td>N/A</td><td><strong>(A, B, 2, 3)</strong></td><td>N/A</td><td>N/A</td></tr>
+</tbody>
+</table>
+
+<p>On continue avec avec (B, C, 3, 4) qui satisfait également les conditions. </p>
+<table class="table">
+<thead>
+  <tr><th></th> <th>A</th><th>B</th><th>C</th><th>D</th></tr>
+</thead>
+<tbody>
+  <tr><th>Heure</th> <td>2</td><td>3</td><td><strong>4</strong></td><td>&infin;</td></tr>
+  <tr><th>Station</th> <td>N/A</td><td>(A, B, 2, 3)</td><td><strong>(B, C, 3, 4)</strong></td><td>N/A</td></tr>
+</tbody>
+</table>
+
+<p>Un œil averti aura remarqué que le trajet est ici déterminé. L'algorithme se poursuit néanmoins. </p>
+<p>On arrive sur (A, B, 4, 5). On n'a bien Heure(A) ≤ 3 mais en revanche on n'a pas Heure(B) &gt; 4. On passe la connexion. De même pour (A, B, 5, 6). </p>
+<p>Vient (B, D, 5, 6) : </p>
+<ul>
+<li>Heure(B) ≤ 5 (3 ≤ 5)</li>
+<li>Heure(D) &gt; 6 (&infin; &gt; 6)</li>
+</ul>
+<p>Les tableaux sont donc mis à jour.</p>
+<table class="table">
+<thead>
+  <tr><th></th> <th>A</th><th>B</th><th>C</th><th>D</th></tr>
+</thead>
+<tbody>
+  <tr><th>Heure</th> <td>2</td><td>3</td><td>4</td><td><strong>6</strong></td></tr>
+  <tr><th>Station</th> <td>N/A</td><td>(A, B, 2, 3)</td><td>(B, C, 3, 4)</td><td><strong>(B, D, 5, 6)</strong></td></tr>
+</tbody>
+</table>
+
+<p>Il reste enfin la connexion (B, C, 6, 7) qui ne remplit par la condition Heure(C) &gt; 7. On ne fait donc rien de cette connexion et les tableaux sont calculés. </p>
+<p>Pour obtenir le trajet, on part de la destination, donc de l'entrée associée au point d'arrêt C dans le tableau des stations. On trouve (B, C, 3, 4). On va alors chercher l'entrée associée au départ de cette connexion, soit l'entrée associée à B. On trouve (A, B, 2, 3). Le point de départ de cette connexion est notre point de départ : la recherche est terminée. </p>
+<p>En dépilant (<em>Last in, first out</em>) ces connexions, on retrouve le trajet à parcourir : </p>
+<ol>
+<li>(A, B, 2, 3)</li>
+<li>(B, C, 3, 4)</li>
+</ol>
+<p>L'algorithme nous a donc permis de déterminer le trajet pour aller de A à C en partant à l'heure 2 ainsi que l'heure d'arrivée. </p>
+<h4>Analyse</h4>
+<p>Cet algorithme présente l'avantage de s'exécuter en un temps proportionnel au nombre de connexions en occupant un espace mémoire lui aussi proportionnel au nombre de connexions. Dans le cas du métro parisien, on peut évaluer que le nombre de correspondances est du même ordre de grandeur que le nombre <em>N</em> de stations. Cela revient à avoir : </p>
+<ul>
+<li>environ <em>N-1</em> connexions entre stations d'une même ligne ;</li>
+<li><em>2N</em> connexions issues des correspondance (une connexion dans un sens, une connexion dans l'autre).</li>
+</ul>
+<p>L'algorithme a donc une complexité proportionnelle au nombre de stations.</p>
+<h3>Exploitation des données de la RATP</h3>
+<h4>Format GTFS</h4>
 <p>Le format GTFS est un standard et la RATP se conforme à ce standard, simple et bien documenté. Les données sont réparties sur plusieurs fichiers dont nous n'en retiendrons que certains dans cet article.</p>
-<h4>routes.txt</h4>
+<h5>routes.txt</h5>
 <p>Le fichier décrit le nom et la direction des routes. Une route est assimilable à un trajet (origine - destination).</p>
 <p>Prenons l'exemple de la ligne 13 du métro parsien dont le plan simplifié est représenté sur la figure ci-dessous. Cette ligne est parcourue par quatre routes :</p>
 <ul>
@@ -117,7 +258,7 @@
 </pre></div>
 
 
-<h4>stops.txt</h4>
+<h5>stops.txt</h5>
 <p>Ce fichier liste les arrêts avec, éventuellement, quelques informations complémentaires. La RATP fournit l'adresse la plus proche de l'arrêt ainsi que les coordonnées GPS de son centre (dans le cas d'une station qui dispose de plusieurs sorties). À noter que ce fichier n'est pas ordonné selon le sens de parcours des courses sur la ligne.</p>
 <blockquote>
 <p>Une <strong>mission</strong> est un trajet parcouru par un ensemble de trains. Elle est décrite par : 
@@ -137,7 +278,7 @@ Lorsqu'un train suit une mission, il réalise une <strong>course</strong>.</p>
 </pre></div>
 
 
-<h4>trips.txt</h4>
+<h5>trips.txt</h5>
 <p>Ce fichier liste les courses et les associe à une route. Nous reviendrons sur son utilité en observant les horaires d'arrêt.</p>
 <p>Exemple sur la ligne 13 :</p>
 <div class="highlight"><pre>route_id,service_id,trip_id,trip_headsign,trip_short_name,direction_id,shape_id
@@ -148,7 +289,7 @@ Lorsqu'un train suit une mission, il réalise une <strong>course</strong>.</p>
 </pre></div>
 
 
-<h4>stops_times.txt</h4>
+<h5>stops_times.txt</h5>
 <p>Ce fichier présente les horaires des courses aux stations (points d'arrêt). Ce fichier est trié par course et par heure d'arrêt en station.</p>
 <p>Un détail est à noter quant aux horaires : ceux-ci sont fournis pour la journée qui peut se terminer... le lendemain. Un métro circulant le dimanche à 1h du matin sera en réalité rattaché à la journée du samedi. Ainsi, son horaire ne sera pas « à 1h le dimanche » mais « à 25h le samedi ». Bien que cette astuce puisse sembler tordue, elle simplifie en pratique beaucoup de choses, notamment pour maintenir la continuité des courses : il serait absurde de scinder la course d'un train sous prétexte qu'il roule à cheval sur deux jours calendaires.</p>
 <p>Exemple pour la ligne 13 :</p>
@@ -160,7 +301,7 @@ Lorsqu'un train suit une mission, il réalise une <strong>course</strong>.</p>
 
 
 <p>Dans cet exemple, pour la course présentée, le véhicule s'arrête à 19:38:00 à l'arrêt 1969 (Châtillon - Montrouge) et en repart à la même heure. On en déduira qu'on ne prend vraisemblabement pas en compte le temps d'arrêt en station. Il arrive ensuite à la station 1880 (Malakoff - Rue Etienne Dolet) à 19:40:00, puis à la station 1879 (Malakoff - Plateau de Vanves) à 19:41:00, etc.</p>
-<h4>transfers.txt</h4>
+<h5>transfers.txt</h5>
 <p><code>transfers.txt</code> regroupe les correspondances entre plusieurs points d'arrêt.</p>
 <p>Ce fichier n'étant pas compréhensible par un humain, prenons un exemple et déroulons-le :</p>
 <div class="highlight"><pre>from_stop_id,to_stop_id,transfer_type,min_transfer_time
@@ -200,12 +341,8 @@ Lorsqu'un train suit une mission, il réalise une <strong>course</strong>.</p>
 
 
 <p>Il s'agit donc du <a href="http://www.ratp.fr/informer/pdf/orienter/f_horaire.php?fm=gif&amp;loc=noctilien&amp;nompdf=n44">Noctilien N44</a> qui passe effectivement par « Mairie de Saint-Ouen ». La boucle est bouclée.</p>
-<h3>Calcul d'itinéraire</h3>
-<p>L'histoire et le contexte des calculs d'itinéraires est très bien synthétisé par <a href="https://twitter.com/tristramg">Tristram Gräbener</a> dans son <a href="http://blog.tristramg.eu/petit-historique-du-calcul-ditineraire.html">Petit historique du calcul d'itinéraire</a>. Probablement plus hipster que je ne veux bien l'admettre, j'ai choisi d'utiliser le plus récent : le <em><a href="http://i11www.iti.uni-karlsruhe.de/extra/publications/dpsw-isftr-13.pdf">Connection Scan Algorithm</a></em>.</p>
-<p>Cet algorithme, tenant en quelques lignes, se « contente » de parcourir une table horaire précalculée des connexions entre les stations et de retenir la solution optimale en temps de trajet. Une connexion représente une possibilité de trajet entre deux stations. On la modélise donc par un quadruplet contenant la station de départ, la station d'arrivée, l'heure de départ et l'heure d'arrivée. La table horaire devient alors simplement une liste de ces connexions triées par heure de départ croissante.</p>
-<h4>Alimentation des données : parsing des fichiers GTFS</h4>
-<p>Les fichiers GTFS, bien que portant l'extension <code>.txt</code> sont manipulables commes des fichiers CSV. Dans la suite, on utilisera des structures qui sont (presque) calquées sur le format de ces fichiers.</p>
-<p>Sur le principe, leur parsing est immédiat. Prenons par exemple le cas des routes (on utilise ici <a href="https://github.com/tototoshi/scala-csv">scala-csv</a>) :</p>
+<h4>Parsing des fichiers GTFS</h4>
+<p>Les fichiers GTFS, bien que portant l'extension <code>.txt</code> sont manipulables commes des fichiers CSV. Dans la suite, on utilisera des structures qui sont (presque) calquées sur le format de ces fichiers. Sur le principe, leur parsing est immédiat. Prenons par exemple le cas des routes (on utilise ici <a href="https://github.com/tototoshi/scala-csv">scala-csv</a>) :</p>
 <div class="highlight"><pre><span class="k">import</span> <span class="nn">com.github.tototoshi.csv._</span>
 
 <span class="k">case</span> <span class="k">class</span> <span class="nc">Route</span><span class="o">(</span><span class="n">routeId</span><span class="k">:</span> <span class="kt">Long</span><span class="o">,</span> <span class="n">routeShortName</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> <span class="n">routeLongName</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> <span class="n">routeDesc</span><span class="k">:</span> <span class="kt">String</span><span class="o">)</span>
@@ -407,149 +544,9 @@ II, t4, t4, D, 1, ,
 </pre></div>
 
 
-<h4>Exploitation de la table horaire : calcul d'itinéraire</h4>
-<h5>Explication de l'algorithme</h5>
-<blockquote>
-<p>Cette explication est largement inspirée de l'explication de l'algorithme du <a href="https://github.com/captaintrain/csa-challenge/blob/master/readme.md">csa-challenge de CaptainTrain</a>.</p>
-</blockquote>
-<p>La table horaire est, comme on l'a vu, une suite de connexions, des tuples contenant :</p>
-<ul>
-<li>la station de départ ;</li>
-<li>l'heure de départ sous forme de <em>timestamp</em> ; </li>
-<li>la station d'arrivée ;</li>
-<li>l'heure d'arrivée sous forme de <em>timestamp</em>.</li>
-</ul>
-<p>La table est triée par ordre d'heure de départ croissante.</p>
-<p>Pour chaque station <em>s</em>, de la table, on considère l'heure et la station d'arrivée. Si celles-ci sont optimales, on les conserve. Les stations étant des entiers, on les conserve dans deux tableaux : <code>arrival_timestamp[s]</code> et <code>in_connection[s]</code>.</p>
-<p>L'objectif est de se rendre d'un point de départ <em>o</em> à un point d'arrivée <em>d</em> en partant à l'heure <em>t0</em>.</p>
-<h6>Initialisation</h6>
-<p>On initialise l'algorithme en attribuant une durée infinie au trajet vers tout point d'arrêt à l'exception de la gare de départ (on en part, on sait qu'on y est à <em>t0</em>). </p>
-<div class="highlight"><pre>Pour chaque station s
-    arrival_timestamp[s] ← infinite
-    in_connection[s] ← invalid_value
-
-arrival_timestamp[o] ← t0
-</pre></div>
-
-
-<h6>Boucle de calcul</h6>
-<p>On parcourt l'ensemble des connexions contenues dans la table et on considère l'amélioration qu'elle apporte sur le trajet. À la fin de la boucle, lorsque toutes les connexions on été parcourues, toutes les heures d'arrivée depuis <em>o</em> vers une autre station ont été calculées. </p>
-<div class="highlight"><pre>Pour chaque connexion c
-    Si arrival_timestamp[c.departure_station] ≤ c.departure_timestamp 
-    et arrival_timestamp[c.arrival_station] &gt; c.arrival_timestamp
-        arrival_timestamp[c.arrival_station] ← c.arrival_timestamp
-        in_connection[c.arrival_station] ← c
-</pre></div>
-
-
-<h6>Résultat</h6>
-<p>Pour obtenir le résultat, on parcourt le tableau des stations d'arrivée (<code>in_connections</code>) en partant de la destination <em>d</em> jusqu'à retrouver le point de départ <em>o</em>. </p>
-<h6>Exemple</h6>
-<p>Prenons un exemple sur une ligne fictive : </p>
-<div class="highlight"><pre>         -----o C
-       /  
-o-----o B
-A      \
-         -----o D
-</pre></div>
-
-
-<p>On souhaite rejoindre <code>D</code> depuis <code>A</code> en partant à l'heure 2 avec la table horaire suivante :</p>
-<table class="table table-bordered table-condensed table-striped">
-<thead>
-  <tr>
-    <th>Station de départ</th>
-    <th>Station d'arrivée</th>
-    <th>Heure de départ</th>
-    <th>Heure d'arrivée</th>
-</thead>
-<tbody>
-  <tr><td>A</td><td>B</td><td>0</td><td>1</td></tr>
-  <tr><td>B</td><td>D</td><td>1</td><td>2</td></tr>
-  <tr><td>A</td><td>B</td><td>2</td><td>3</td></tr>
-  <tr><td>B</td><td>C</td><td>3</td><td>4</td></tr>
-  <tr><td>A</td><td>B</td><td>4</td><td>5</td></tr>
-  <tr><td>A</td><td>B</td><td>5</td><td>6</td></tr>
-  <tr><td>B</td><td>D</td><td>5</td><td>6</td></tr>
-  <tr><td>B</td><td>C</td><td>6</td><td>7</td></tr>
-</tbody>
-</table>
-
-<p>Initialisons les données. </p>
-<table class="table">
-<thead>
-  <tr><th></th> <th>A</th><th>B</th><th>C</th><th>D</th></tr>
-</thead>
-<tbody>
-  <tr><th>Heure</th> <td>2</td><td>&infin;</td><td>&infin;</td><td>&infin;</td></tr>
-  <tr><th>Station</th> <td>N/A</td><td>N/A</td><td>N/A</td><td>N/A</td></tr>
-</tbody>
-</table>
-
-<p>On parcours ensuite la table horaire dans l'ordre. Les deux premières lignes sont ignorées, elles ne passent pas la condition horaire.</p>
-<p>On arrive à (A, B, 2, 3) : </p>
-<ul>
-<li>Heure(A) ≤ 2 (2 ≤ 2)</li>
-<li>Heure(B) &gt; 3 (&infin; &gt; 3)</li>
-</ul>
-<p>On met à jour les tables intermédiaires.</p>
-<table class="table">
-<thead>
-  <tr><th></th> <th>A</th><th>B</th><th>C</th><th>D</th></tr>
-</thead>
-<tbody>
-  <tr><th>Heure</th> <td>2</td><td><strong>3</strong></td><td>&infin;</td><td>&infin;</td></tr>
-  <tr><th>Station</th> <td>N/A</td><td><strong>(A, B, 2, 3)</strong></td><td>N/A</td><td>N/A</td></tr>
-</tbody>
-</table>
-
-<p>On continue avec avec (B, C, 3, 4) qui satisfait également les conditions. </p>
-<table class="table">
-<thead>
-  <tr><th></th> <th>A</th><th>B</th><th>C</th><th>D</th></tr>
-</thead>
-<tbody>
-  <tr><th>Heure</th> <td>2</td><td>3</td><td><strong>4</strong></td><td>&infin;</td></tr>
-  <tr><th>Station</th> <td>N/A</td><td>(A, B, 2, 3)</td><td><strong>(B, C, 3, 4)</strong></td><td>N/A</td></tr>
-</tbody>
-</table>
-
-<p>Un œil averti aura remarqué que le trajet est ici déterminé. L'algorithme se poursuit néanmoins. </p>
-<p>On arrive sur (A, B, 4, 5). On n'a bien Heure(A) ≤ 3 mais en revanche on n'a pas Heure(B) &gt; 4. On passe la connexion. De même pour (A, B, 5, 6). </p>
-<p>Vient (B, D, 5, 6) : </p>
-<ul>
-<li>Heure(B) ≤ 5 (3 ≤ 5)</li>
-<li>Heure(D) &gt; 6 (&infin; &gt; 6)</li>
-</ul>
-<p>Les tableaux sont donc mis à jour.</p>
-<table class="table">
-<thead>
-  <tr><th></th> <th>A</th><th>B</th><th>C</th><th>D</th></tr>
-</thead>
-<tbody>
-  <tr><th>Heure</th> <td>2</td><td>3</td><td>4</td><td><strong>6</strong></td></tr>
-  <tr><th>Station</th> <td>N/A</td><td>(A, B, 2, 3)</td><td>(B, C, 3, 4)</td><td><strong>(B, D, 5, 6)</strong></td></tr>
-</tbody>
-</table>
-
-<p>Il reste enfin la connexion (B, C, 6, 7) qui ne remplit par la condition Heure(C) &gt; 7. On ne fait donc rien de cette connexion et les tableaux sont calculés. </p>
-<p>Pour obtenir le trajet, on part de la destination, donc de l'entrée associée au point d'arrêt C dans le tableau des stations. On trouve (B, C, 3, 4). On va alors chercher l'entrée associée au départ de cette connexion, soit l'entrée associée à B. On trouve (A, B, 2, 3). Le point de départ de cette connexion est notre point de départ : la recherche est terminée. </p>
-<p>En dépilant (<em>Last in, first out</em>) ces connexions, on retrouve le trajet à parcourir : </p>
-<ol>
-<li>(A, B, 2, 3)</li>
-<li>(B, C, 3, 4)</li>
-</ol>
-<p>L'algorithme nous a donc permis de déterminer le trajet pour aller de A à C en partant à l'heure 2 ainsi que l'heure d'arrivée. </p>
-<h5>Analyse</h5>
-<p>Cet algorithme présente l'avantage de s'exécuter en un temps proportionnel au nombre de connexions en occupant un espace mémoire lui aussi proportionnel au nombre de connexions. Dans le cas du métro parisien, on peut évaluer que le nombre de correspondances est du même ordre de grandeur que le nombre <em>N</em> de stations. Cela revient à avoir : </p>
-<ul>
-<li>environ <em>N-1</em> connexions entre stations d'une même ligne ;</li>
-<li><em>2N</em> connexions issues des correspondance (une connexion dans un sens, une connexion dans l'autre).</li>
-</ul>
-<p>L'algorithme a donc une complexité proportionnelle au nombre de stations.</p>
-<h5>Implémentation</h5>
-<p>Je propose ici une implémentation qui pourrait probablement être (largement, rien que par sa muabilité) améliorée. Partons toujours de là. </p>
-<h6>API</h6>
+<h3>Implémentation</h3>
+<p>Je propose ici une implémentation en Scala qui pourrait probablement être (largement, rien que par sa muabilité) améliorée. Partons toujours de là. </p>
+<h4>API</h4>
 <p>Cette implémentation est paramétrée par : </p>
 <ul>
 <li>la table horaire ;</li>
@@ -568,7 +565,7 @@ A      \
 </pre></div>
 
 
-<h6>Initialisation</h6>
+<h4>Initialisation</h4>
 <p>On initialise les tableaux avec une valeur « virtuellement infinie » (valeur maximale qu'un entier peut représenter) à l'exception de l'heure d'arrivée optimale à la station de départ... puisque cette valeur est connue.</p>
 <div class="highlight"><pre><span class="k">val</span> <span class="n">inConnection</span> <span class="k">=</span> <span class="nc">Array</span><span class="o">.</span><span class="n">fill</span><span class="o">[</span><span class="kt">Int</span><span class="o">](</span><span class="nc">CSA</span><span class="o">.</span><span class="nc">MaxStations</span><span class="o">)(</span><span class="nc">Int</span><span class="o">.</span><span class="nc">MaxValue</span><span class="o">)</span>
 <span class="k">val</span> <span class="n">earliestArrival</span> <span class="k">=</span> <span class="nc">Array</span><span class="o">.</span><span class="n">fill</span><span class="o">[</span><span class="kt">Int</span><span class="o">](</span><span class="nc">CSA</span><span class="o">.</span><span class="nc">MaxStations</span><span class="o">)(</span><span class="nc">Int</span><span class="o">.</span><span class="nc">MaxValue</span><span class="o">)</span>
@@ -580,17 +577,18 @@ A      \
 </pre></div>
 
 
-<h6>Calcul du trajet : vision macroscopique</h6>
+<h4>Calcul du trajet</h4>
+<h5>Vue macroscopique</h5>
 <p>On retrouve les deux étapes du calcul dans la méthode <code>compute</code> : </p>
 <ul>
-<li>la première qui parcourt les connexions et détermine l'heure d'arrivée optimale pour chaque station (<code>loop</code>) ;</li>
+<li>la première qui parcourt les connexions et détermine l'heure d'arrivée optimale pour chaque station (<code>scanTimetable</code>) ;</li>
 <li>la seconde qui, à partir de cette table des connexions optimales, reconstruit le trajet (<code>computeRoute</code>).</li>
 </ul>
 <div class="highlight"><pre><span class="k">def</span> <span class="n">compute</span><span class="o">(</span><span class="n">departureStation</span><span class="k">:</span> <span class="kt">Int</span><span class="o">,</span> <span class="n">arrivalStation</span><span class="k">:</span> <span class="kt">Int</span><span class="o">,</span> <span class="n">departureTime</span><span class="k">:</span> <span class="kt">Int</span><span class="o">)</span><span class="k">:</span> <span class="kt">Seq</span><span class="o">[</span><span class="kt">Connection</span><span class="o">]</span> <span class="k">=</span> <span class="o">{</span>
   <span class="n">earliestArrival</span><span class="o">(</span><span class="n">departureStation</span><span class="o">)</span> <span class="k">=</span> <span class="n">departureTime</span>
 
   <span class="k">if</span> <span class="o">(</span><span class="n">departureStation</span> <span class="o">&lt;=</span> <span class="nc">CSA</span><span class="o">.</span><span class="nc">MaxStations</span> <span class="o">&amp;&amp;</span> <span class="n">arrivalStation</span> <span class="o">&lt;=</span> <span class="nc">CSA</span><span class="o">.</span><span class="nc">MaxStations</span><span class="o">)</span> <span class="o">{</span>
-    <span class="n">loop</span><span class="o">(</span><span class="n">arrivalStation</span><span class="o">)</span>
+    <span class="n">scanTimetable</span><span class="o">(</span><span class="n">arrivalStation</span><span class="o">)</span>
   <span class="o">}</span>
 
   <span class="n">computeRoute</span><span class="o">(</span><span class="n">arrivalStation</span><span class="o">)</span>
@@ -598,9 +596,9 @@ A      \
 </pre></div>
 
 
-<h6>Parcours de la table horaire</h6>
+<h5>Parcours de la table horaire</h5>
 <p>On utilise une fois de plus une récursion terminale. </p>
-<div class="highlight"><pre><span class="k">private</span> <span class="k">def</span> <span class="n">loop</span><span class="o">(</span><span class="n">arrivalStation</span><span class="k">:</span> <span class="kt">Int</span><span class="o">)</span><span class="k">:</span> <span class="kt">Unit</span> <span class="o">=</span> <span class="o">{</span>
+<div class="highlight"><pre><span class="k">private</span> <span class="k">def</span> <span class="n">scanTimetable</span><span class="o">(</span><span class="n">arrivalStation</span><span class="k">:</span> <span class="kt">Int</span><span class="o">)</span><span class="k">:</span> <span class="kt">Unit</span> <span class="o">=</span> <span class="o">{</span>
   <span class="nd">@tailrec</span>
   <span class="k">def</span> <span class="n">inner</span><span class="o">(</span><span class="n">conns</span><span class="k">:</span> <span class="kt">Seq</span><span class="o">[(</span><span class="kt">Connection</span>, <span class="kt">Int</span><span class="o">)],</span> <span class="n">earliest</span><span class="k">:</span> <span class="kt">Int</span><span class="o">)</span><span class="k">:</span> <span class="kt">Unit</span> <span class="o">=</span> <span class="o">{</span>
     <span class="k">var</span> <span class="n">newEarliest</span> <span class="k">=</span> <span class="n">earliest</span>
@@ -640,7 +638,7 @@ A      \
 <blockquote>
 <p>TODO plus d'explications ?</p>
 </blockquote>
-<h6>Construction de l'itinéraire à partir de la table horaire</h6>
+<h5>Construction de l'itinéraire à partir de la table horaire</h5>
 <p>Une fois la table horaire <code>inConnection</code> calculée, l'itinéraire est « facile » à reconsituer. On part de la station d'arrivée et si l'heure d'arrivée pour celle-ci est « l'infini », c'est que l'on n'a pas pu déterminer de trajet permettant d'atteindre cette station. Sinon, on parcourt les connexions en partant de la fin (de la station d'arrivée, donc) : </p>
 <ul>
 <li>on prend la connexion <em>n</em> (celle d'arrivée), ce qui nous donne la station de départ de cette connexion ;</li>
@@ -667,7 +665,7 @@ A      \
 
 
 <p>Ce cas est volontairement écrit en « Java++ » plutôt qu'en « bon Scala » par simplicité de lecture. Saurez-vous écrire le cas général en une ligne (ou deux) ?</p>
-<h5>Exemple</h5>
+<h4>Exemple</h4>
 <p>Partons d'un trajet entre Maubert-Mutualité et Voltaire en partant à 18h.</p>
 <div class="highlight"><pre><span class="k">val</span> <span class="n">maubert</span> <span class="k">=</span> <span class="mi">2350</span>
 <span class="k">val</span> <span class="n">voltaireLeonBlum</span> <span class="k">=</span> <span class="mi">1633</span>
