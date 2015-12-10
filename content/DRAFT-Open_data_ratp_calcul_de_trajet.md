@@ -1,8 +1,7 @@
 Title: Calcul d'itinéraire à partir des données RATP
-Date: 2015-09-12
+Date: 2015-12-10
 Category: Blog
-Tags: opendata, ratp
-Status: draft
+Tags: opendata, ratp, gtfs, scala
 
 La RATP progresse dans l'[ouverture de ses données](http://data.ratp.fr) et même si elle ne propose pas encore un accès à son [système SIEL](https://fr.wikipedia.org/wiki/Syst%C3%A8me_d'information_en_ligne), elle propose néanmoins les données de son offre de transport au [format GTFS](https://developers.google.com/transit/gtfs/). Une bonne occasion de s'initier au calcul d'itinéraire !
 
@@ -13,7 +12,7 @@ L'histoire et le contexte des calculs d'itinéraires est très bien synthétisé
 
 > Cette explication est largement inspirée de l'explication de l'algorithme du [csa-challenge de CaptainTrain](https://github.com/captaintrain/csa-challenge/blob/master/readme.md).
 
-Cet algorithme, tenant en quelques lignes, se « contente » de parcourir une table horaire précalculée des connexions entre les stations et de retenir la solution optimale en temps de trajet. Une connexion représente une possibilité de trajet entre deux stations. On la modélise donc par un quadruplet contenant :
+Cet algorithme, tenant en quelques lignes, se « contente » de parcourir une table horaire pré-calculée des connexions entre les stations et de retenir la solution optimale en temps de trajet. Une connexion représente une possibilité de trajet entre deux stations. On la modélise donc par un quadruplet contenant :
 
  * la station de départ, 
  * la station d'arrivée, 
@@ -90,7 +89,7 @@ On souhaite rejoindre `C` depuis `A` en partant à l'heure 2 avec la table horai
 
 Initialisons les données. 
 
-<table class="table">
+<table class="table table-condensed">
 <thead>
   <tr><th></th> <th>A</th><th>B</th><th>C</th><th>D</th></tr>
 </thead>
@@ -109,7 +108,7 @@ On arrive à (A, B, 2, 3) :
 
 On met à jour les tables intermédiaires.
 
-<table class="table">
+<table class="table table-condensed">
 <thead>
   <tr><th></th> <th>A</th><th>B</th><th>C</th><th>D</th></tr>
 </thead>
@@ -121,7 +120,7 @@ On met à jour les tables intermédiaires.
 
 On continue avec avec (B, C, 3, 4) qui satisfait également les conditions. 
 
-<table class="table">
+<table class="table table-condensed">
 <thead>
   <tr><th></th> <th>A</th><th>B</th><th>C</th><th>D</th></tr>
 </thead>
@@ -142,7 +141,7 @@ Vient (B, D, 5, 6) :
 
 Les tableaux sont donc mis à jour.
 
-<table class="table">
+<table class="table table-condensed">
 <thead>
   <tr><th></th> <th>A</th><th>B</th><th>C</th><th>D</th></tr>
 </thead>
@@ -167,8 +166,8 @@ L'algorithme nous a donc permis de déterminer le trajet pour aller de A à C en
 
 Cet algorithme présente l'avantage de s'exécuter en un temps proportionnel au nombre de connexions en occupant un espace mémoire lui aussi proportionnel au nombre de connexions. Dans le cas du métro parisien, on peut évaluer que le nombre de correspondances est du même ordre de grandeur que le nombre *N* de stations. Cela revient à avoir : 
 
- * environ *N-1* connexions entre stations d'une même ligne ;
- * *2N* connexions issues des correspondance (une connexion dans un sens, une connexion dans l'autre).
+ * environ *N* connexions entre stations d'une même ligne (le chiffre est légèrement faussé par la présence de lignes en « fourche ») ;
+ * environ *2N* connexions issues des correspondances (une connexion dans un sens, une connexion dans l'autre).
 
 L'algorithme a donc une complexité proportionnelle au nombre de stations.
 
@@ -183,7 +182,7 @@ Le format GTFS est un standard et la RATP se conforme à ce standard, simple et 
 
 Le fichier décrit le nom et la direction des routes. Une route est assimilable à un trajet (origine - destination).
 
-Prenons l'exemple de la ligne 13 du métro parsien dont le plan simplifié est représenté sur la figure ci-dessous. Cette ligne est parcourue par quatre routes :
+Prenons l'exemple de la ligne 13 du métro parisien dont le plan simplifié est représenté sur la figure ci-dessous. Cette ligne est parcourue par quatre routes :
 
 * Châtillon - Montrouge en direction de Saint-Denis Université ;
 * Châtillon - Montrouge en direction de Gennevilliers Les Courtilles ;
@@ -210,7 +209,7 @@ Ce fichier liste les arrêts avec, éventuellement, quelques informations compl�
 > <ul>
 >   <li> la gare de départ ;</li>
 >   <li> la gare d'arrivée ;</li>
->   <li> les gares intermédiaires désservies (certains trajets peuvent « sauter » des gares).</li>
+>   <li> les gares intermédiaires desservies (certains trajets peuvent « sauter » des gares).</li>
 > </ul>
 > Lorsqu'un train suit une mission, il réalise une **course**.
 
@@ -305,7 +304,7 @@ Il s'agit donc du [Noctilien N44](http://www.ratp.fr/informer/pdf/orienter/f_hor
 
 #### Parsing des fichiers GTFS
 
-Les fichiers GTFS, bien que portant l'extension `.txt` sont manipulables commes des fichiers CSV. Dans la suite, on utilisera des structures qui sont (presque) calquées sur le format de ces fichiers. Sur le principe, leur parsing est immédiat. Prenons par exemple le cas des routes (on utilise ici [scala-csv](https://github.com/tototoshi/scala-csv)) :
+Les fichiers GTFS, bien que portant l'extension `.txt` sont manipulables comme des fichiers CSV. Dans la suite, on utilisera des structures qui sont (presque) calquées sur le format de ces fichiers. Sur le principe, leur parsing est immédiat. Prenons par exemple le cas des routes (on utilise ici [scala-csv](https://github.com/tototoshi/scala-csv)) :
 
 ```scala
 import com.github.tototoshi.csv._
@@ -526,9 +525,9 @@ val connections = (connectionsFromStopTimes ++ connectionsFromTransfers).
   sortBy(_.departureTimestamp)
 ```
 
-### Implémentation
+### Implémentation de l'algorithme
 
-Je propose ici une implémentation en Scala qui pourrait probablement être (largement, rien que par sa muabilité) améliorée. Partons toujours de là. 
+Je propose ici une implémentation en Scala qui pourrait probablement être (largement, rien que par sa mutabilité) améliorée. Partons toujours de là. 
 
 #### API
 
@@ -561,7 +560,7 @@ val earliestArrival = Array.fill[Int](CSA.MaxStations)(Int.MaxValue)
 
 def compute(departureStation: Int, arrivalStation: Int, departureTime: Int): Seq[Connection] = {
   earliestArrival(departureStation) = departureTime
-  ???
+  // [...]
 }    
 ```
 
@@ -597,7 +596,8 @@ private def scanTimetable(arrivalStation: Int): Unit = {
     var newEarliest = earliest
     conns match {
       case Seq() =>
-        // Aucune connexion : on n'a rien à faire
+        // Aucune connexion dans la table horaire.
+        // Ce n'est pas le cas le plus intéressant mais il n'y a rien à faire.
         ()
       case (connection, index) +: _ if connection.arrivalTimestamp > earliest =>
         // L'heure d'arrivée de la connexion dépasse l'heure d'arrivée « optimale » actuelle.
@@ -627,16 +627,10 @@ private def optimizesArrivalTime(connection: Connection): Boolean = {
 }
 ```
 
-> TODO plus d'explications ?
 
 ##### Construction de l'itinéraire à partir de la table horaire
 
-Une fois la table horaire `inConnection` calculée, l'itinéraire est « facile » à reconsituer. On part de la station d'arrivée et si l'heure d'arrivée pour celle-ci est « l'infini », c'est que l'on n'a pas pu déterminer de trajet permettant d'atteindre cette station. Sinon, on parcourt les connexions en partant de la fin (de la station d'arrivée, donc) : 
-
- * on prend la connexion *n* (celle d'arrivée), ce qui nous donne la station de départ de cette connexion ;
- * puis on prend la connexion *n-1* arrivant à la station de départ de la connexion précédente et ainsi de suite.
-
-On obtient alors une succession de connexions dont le premier élément est la connexion de terminant à la station d'arrivée et dont les dernier élément est la connexion partant de la station de départ. Il ne reste plus qu'à inverser cette liste pour obtenir le trajet.
+Une fois la table horaire `inConnection` calculée, on reconsitue l'itinéraire inversé en partant de la station d'arrivée et en remontant jusqu'à la station de départ. 
 
 ```scala
 private def computeRoute(arrivalStation: Int): Seq[Connection] = {
@@ -700,7 +694,7 @@ Total transit time: 21 minutes
 
 En comparaison, l'[algorithme de plus court chemin de Dijkstra](https://fr.wikipedia.org/wiki/Algorithme_de_Dijkstra) présente une complexité proportionnelle à *C.log(N)* où *N* est le nombre de stations et *C* le nombre de correspondances entre deux stations, soit environ *N.log(N)* dans notre évaluation, tout en occupant un espace mémoire de taille proportionnelle à *N*. 
 
-Le métro parisien est constitué de 303 stations (*N = 303* et *N.log(N) = 752*) : on reste donc dans le même ordre de magnitude sur ces deux algorithmes au moment du calcul d'itinéraire. En revanche, le *Connexion scan algorithm* demande de pré-calculer la table horaire : il induit donc un coût préalable. Cette table précalculée le rend également moins souple : elle rend plus difficile le paramétrage de l'algorithme en fonction des préférences du voyageur. La facilité de marche du voyageur peut par exemple être utilisée pour pondérer la durée d'une correspondance : 
+Le métro parisien est constitué de 303 stations (*N = 303* et *N.log(N) = 752*) : on reste donc dans le même ordre de magnitude sur ces deux algorithmes au moment du calcul d'itinéraire. En revanche, le *Connexion scan algorithm* demande de pré-calculer la table horaire : il induit donc un coût préalable. Cette table pré-calculée le rend également moins souple : elle rend plus difficile le paramétrage de l'algorithme en fonction des préférences du voyageur. La facilité de marche du voyageur peut par exemple être utilisée pour pondérer la durée d'une correspondance : 
 
  * avec le CSA, il est nécessaire de calculer une table prenant en compte ce paramètre (une correspondance étant une connexion comme une autre) ;
  * avec l'algorithme de Dijkstra, il « suffit » d'associer un poids plus fort aux arêtes représentant une correspondance lorsque le voyageur a des difficultés à se déplacer.
