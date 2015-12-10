@@ -66,7 +66,7 @@ A      \
          -----o D
 ```
 
-On souhaite rejoindre `D` depuis `A` en partant à l'heure 2 avec la table horaire suivante :
+On souhaite rejoindre `C` depuis `A` en partant à l'heure 2 avec la table horaire suivante :
 
 <table class="table table-bordered table-condensed table-striped">
 <thead>
