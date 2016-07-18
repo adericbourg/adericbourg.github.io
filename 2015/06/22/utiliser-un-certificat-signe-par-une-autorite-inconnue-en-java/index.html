@@ -75,7 +75,6 @@
 
               </ul>
 
-
             </div>
 
 <section id="content" class="body">
@@ -121,19 +120,19 @@
 <p>Un certificat accepté et reconnu dans un environnement restreint est donc préférable à pas de certificat du tout.</p>
 <h3>L'arrivée des problèmes</h3>
 <p>Mais, généralement, lorsque votre client ne connaît pas l'autorité de certification racine, il refuse par défaut la connexion :</p>
-<div class="highlight"><pre><span class="nv">$ </span>curl -v https://www.exemple.com
+<div class="highlight"><pre><span></span>$ curl -v https://www.exemple.com
 * Rebuilt URL to: https://www.example.com/
 * Hostname was NOT found in DNS cache
 *   Trying 1.2.3.4...
-* Connected to www.example.com <span class="o">(</span>1.2.3.4<span class="o">)</span> port <span class="m">443</span> <span class="o">(</span><span class="c">#0)</span>
-* successfully <span class="nb">set </span>certificate verify locations:
+* Connected to www.example.com <span class="o">(</span>1.2.3.4<span class="o">)</span> port <span class="m">443</span> <span class="o">(</span><span class="c1">#0)</span>
+* successfully <span class="nb">set</span> certificate verify locations:
 *   CAfile: none
     CApath: /etc/ssl/certs
 * SSLv3, TLS handshake, Client hello <span class="o">(</span>1<span class="o">)</span>:
 * SSLv3, TLS handshake, Server hello <span class="o">(</span>2<span class="o">)</span>:
 * SSLv3, TLS handshake, CERT <span class="o">(</span>11<span class="o">)</span>:
 * SSLv3, TLS alert, Server hello <span class="o">(</span>2<span class="o">)</span>:
-* SSL certificate problem: unable to get <span class="nb">local </span>issuer certificate
+* SSL certificate problem: unable to get <span class="nb">local</span> issuer certificate
 * Closing connection 0
 </pre></div>
 
@@ -146,29 +145,29 @@
 </ul>
 <p>Je ne peux que vous déconseiller avec toute la vigueur qui m'est donnée la première solution et vous apporter tout mon soutien pour la seconde.</p>
 <p>Pour reprendre l'exemple ci-dessus, l'appel avec <code>curl</code> est simplement complété avec l'option <code>--cacert</code> :</p>
-<div class="highlight"><pre><span class="nv">$ </span>curl -v https://www.example.com --cacert cert.pem
+<div class="highlight"><pre><span></span>$ curl -v https://www.example.com --cacert cert.pem
 </pre></div>
 
 
 <h3>Depuis une application Java</h3>
 <p>Le même mécanisme s'applique lorsque vous vous connectez à un service en utilisant une application Java. Si le certificat n'est pas sûr, vous vous verrez refuser la connexion :</p>
-<div class="highlight"><pre>sun.security.provider.certpath.SunCertPathBuilderException: unable to find valid certification path to requested target
+<div class="highlight"><pre><span></span>sun.security.provider.certpath.SunCertPathBuilderException: unable to find valid certification path to requested target
 </pre></div>
 
 
 <p>Tout comme avec <code>curl</code>, il existe une option pour spécifier un certificat faisant autorité. Il faut avant tout le stocker dans un conteneur spéficique à la JVM puis de préciser son emplacement dans la propriété système <code>javax.net.ssl.trustStore</code>.</p>
 <p>Pour créer ce conteneur, on utilise l'outil <code>keytool</code> fourni avec le JDK.</p>
-<div class="highlight"><pre><span class="nv">$ </span>keytool -importcert -file cert.cer -keystore keystore.jks
+<div class="highlight"><pre><span></span>$ keytool -importcert -file cert.cer -keystore keystore.jks
 Entrez le mot de passe du fichier de clés :  
 Ressaisissez le nouveau mot de passe :  
-<span class="c"># Ici s&#39;affichent les détails du certificat que vous importez</span>
+<span class="c1"># Ici s&#39;affichent les détails du certificat que vous importez</span>
 Faire confiance à ce certificat ? <span class="o">[</span>non<span class="o">]</span> :  oui
 Certificat ajouté au fichier de clés
 </pre></div>
 
 
 <p>Reste à le déclarer dans votre application :</p>
-<div class="highlight"><pre><span class="n">System</span><span class="o">.</span><span class="na">setProperty</span><span class="o">(</span><span class="s">&quot;javax.net.ssl.trustStore&quot;</span><span class="o">,</span> <span class="s">&quot;/path/to/keystore.jks&quot;</span><span class="o">);</span>
+<div class="highlight"><pre><span></span><span class="n">System</span><span class="o">.</span><span class="na">setProperty</span><span class="o">(</span><span class="s">&quot;javax.net.ssl.trustStore&quot;</span><span class="o">,</span> <span class="s">&quot;/path/to/keystore.jks&quot;</span><span class="o">);</span>
 <span class="n">System</span><span class="o">.</span><span class="na">setProperty</span><span class="o">(</span><span class="s">&quot;javax.net.ssl.trustStorePassword&quot;</span><span class="o">,</span> <span class="o">******);</span>
 </pre></div>
 
@@ -178,7 +177,7 @@ Certificat ajouté au fichier de clés
 <p>Il peut être pénible d'utiliser ce morceau de code dans chacune de vos applications, ou tout au moins fastidieux. Heureusement, il est également possible d'enregistrer un certificat au niveau de la JVM. On le déclare alors une bonne fois pour toutes.</p>
 <p>Si vous avez parcouru le répertoire <code>/etc/ssl/certs</code> évoqué au début de cet article, vous y aurez peut-être remarqué un répertoire <code>java</code>. Il s'agit du portefeuille de certificats dédié à la JVM.</p>
 <p>Pour y ajouter un certificat, lancez en tant qu'utilisateur privilégié (<em>root</em>) :</p>
-<div class="highlight"><pre>keytool -import -alias CertificatDeMonEntreprise <span class="se">\</span>
+<div class="highlight"><pre><span></span>keytool -import -alias CertificatDeMonEntreprise <span class="se">\</span>
   -keypass changeit <span class="se">\</span>
   -keystore <span class="nv">$JAVA_HOME</span>/jre/lib/security/cacerts <span class="se">\</span>
   -file cert.pem
@@ -190,7 +189,7 @@ Certificat ajouté au fichier de clés
 <p>Vous êtes maintenant capable de vous connecter depuis une application Java à l'ensemble des services exposés avec le certificat TLS de votre entreprise et ce sans nécessiter d'adaptation du code. </p>
 <h3>Depuis une application Java (bis)</h3>
 <p>Si, par malheur, vous ne pouvez pas déposer de fichier sur la machine exécutant votre application (c'est le cas sur certains hébergement « cloud » que je n'aime pas utiliser), vous pouvez toujours « stocker » votre <em>keystore</em> dans votre livrable (jar, war...). Mais... vous ne pourrez pas l'utiliser directement : la propriété <code>javax.net.ssl.trustStore</code> ne permet pas de déclarer de référence à un fichier dans le <em>package</em>. On peut en revanche l'écrire « à la main » sur le disque. L'exemple qui suit utilise <a href="https://github.com/google/guava">Guava</a>.</p>
-<div class="highlight"><pre><span class="n">File</span> <span class="n">tempDir</span> <span class="o">=</span> <span class="n">Files</span><span class="o">.</span><span class="na">createTempDir</span><span class="o">();</span>
+<div class="highlight"><pre><span></span><span class="n">File</span> <span class="n">tempDir</span> <span class="o">=</span> <span class="n">Files</span><span class="o">.</span><span class="na">createTempDir</span><span class="o">();</span>
 <span class="n">File</span> <span class="n">myStore</span> <span class="o">=</span> <span class="k">new</span> <span class="n">File</span><span class="o">(</span><span class="n">tempDir</span><span class="o">,</span> <span class="s">&quot;keystore.jks&quot;</span><span class="o">);</span>
 <span class="k">try</span> <span class="o">(</span><span class="n">InputStream</span> <span class="n">storeStream</span> <span class="o">=</span> <span class="n">MyExample</span><span class="o">.</span><span class="na">class</span><span class="o">.</span><span class="na">getClassLoader</span><span class="o">().</span><span class="na">getResourceAsStream</span><span class="o">(</span><span class="s">&quot;keystore.jks&quot;</span><span class="o">);</span>
      <span class="n">FileOutputStream</span> <span class="n">outputStream</span> <span class="o">=</span> <span class="k">new</span> <span class="n">FileOutputStream</span><span class="o">(</span><span class="n">myStore</span><span class="o">))</span> <span class="o">{</span>
@@ -229,6 +228,16 @@ Certificat ajouté au fichier de clés
       <div class="btn twitter"><a href="https://twitter.com/adericbourg" target="_blank">Twitter</a></div>
 
 
+
+    <hr/>
+
+    <nav class="widget">
+      <a href="http://www.antiifcampaign.com">
+        <img height="60" width="120"
+             src="http://antiifcampaign.com/assets/banner_ive-joined.gif"
+             alt="I have joined Anti-IF Campaign">
+      </a>
+    </nav>
 
 <!--
 <h4>Pages</h4>

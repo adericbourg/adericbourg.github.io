@@ -75,7 +75,6 @@
 
               </ul>
 
-
             </div>
 
 <section id="content" class="body">
@@ -114,7 +113,7 @@ Le problème consiste à compter et identifier les différentes façons de place
 <p><img alt="Représentation de la modélisation" class="center" src="/images/eight_queens/modelisation.png" /></p>
 <blockquote>
 <p><strong>Note :</strong> en Python, la fonction <a href="https://docs.python.org/2/library/functions.html#enumerate"><code>enumerate</code></a> permet d'obtenir de façon immédiate ce résultat.</p>
-<div class="highlight"><pre>&gt;&gt;&gt; list(enumerate([3, 2, 1]))
+<div class="highlight"><pre><span></span>&gt;&gt;&gt; list(enumerate([3, 2, 1]))
 [(0, 3), (1, 2), (2, 1)]
 </pre></div>
 
@@ -133,7 +132,7 @@ Le problème consiste à compter et identifier les différentes façons de place
 <h4>Génération des permutations</h4>
 <p>Il est possible de déterminer toutes les permutations possibles d'un tableau en utilisant — par exemple — l'<a href="https://en.wikipedia.org/wiki/Heap%27s_algorithm">algorithme de Heap</a> qui minimise le nombre de mouvements nécessaires à l'obtention de l'intégralité des permutations. Une permutation est obtenue de la précédente en interchangeant la position de deux éléments (et seulement deux).</p>
 <p>J'en propose une implémentation récursive : compte tenu des dimensions des tableaux de notre problème, cela reste raisonnable ; on ne risque pas le dépassement de la capacité de la pile d'exécution.</p>
-<div class="highlight"><pre><span class="k">def</span> <span class="nf">permutations</span><span class="p">(</span><span class="n">array</span><span class="p">):</span>
+<div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">permutations</span><span class="p">(</span><span class="n">array</span><span class="p">):</span>
     <span class="k">def</span> <span class="nf">__permutations</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">size</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">size</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
             <span class="k">yield</span> <span class="n">array</span>
@@ -151,26 +150,26 @@ Le problème consiste à compter et identifier les différentes façons de place
 
 
 <p>Pour donner un exemple :</p>
-<div class="highlight"><pre><span class="o">&gt;&gt;&gt;</span> <span class="k">for</span> <span class="n">perm</span> <span class="ow">in</span> <span class="n">permutations</span><span class="p">([</span><span class="s">&#39;a&#39;</span><span class="p">,</span> <span class="s">&#39;b&#39;</span><span class="p">,</span> <span class="s">&#39;c&#39;</span><span class="p">]):</span> <span class="k">print</span> <span class="n">perm</span>
+<div class="highlight"><pre><span></span><span class="o">&gt;&gt;&gt;</span> <span class="k">for</span> <span class="n">perm</span> <span class="ow">in</span> <span class="n">permutations</span><span class="p">([</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">]):</span> <span class="k">print</span> <span class="n">perm</span>
 <span class="o">...</span>
-<span class="p">[</span><span class="s">&#39;a&#39;</span><span class="p">,</span> <span class="s">&#39;b&#39;</span><span class="p">,</span> <span class="s">&#39;c&#39;</span><span class="p">]</span>
-<span class="p">[</span><span class="s">&#39;b&#39;</span><span class="p">,</span> <span class="s">&#39;a&#39;</span><span class="p">,</span> <span class="s">&#39;c&#39;</span><span class="p">]</span>
-<span class="p">[</span><span class="s">&#39;c&#39;</span><span class="p">,</span> <span class="s">&#39;a&#39;</span><span class="p">,</span> <span class="s">&#39;b&#39;</span><span class="p">]</span>
-<span class="p">[</span><span class="s">&#39;a&#39;</span><span class="p">,</span> <span class="s">&#39;c&#39;</span><span class="p">,</span> <span class="s">&#39;b&#39;</span><span class="p">]</span>
-<span class="p">[</span><span class="s">&#39;b&#39;</span><span class="p">,</span> <span class="s">&#39;c&#39;</span><span class="p">,</span> <span class="s">&#39;a&#39;</span><span class="p">]</span>
-<span class="p">[</span><span class="s">&#39;c&#39;</span><span class="p">,</span> <span class="s">&#39;b&#39;</span><span class="p">,</span> <span class="s">&#39;a&#39;</span><span class="p">]</span>
+<span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">]</span>
+<span class="p">[</span><span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">]</span>
+<span class="p">[</span><span class="s1">&#39;c&#39;</span><span class="p">,</span> <span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">]</span>
+<span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">]</span>
+<span class="p">[</span><span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">,</span> <span class="s1">&#39;a&#39;</span><span class="p">]</span>
+<span class="p">[</span><span class="s1">&#39;c&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;a&#39;</span><span class="p">]</span>
 </pre></div>
 
 
 <p>En pratique, la bibliothèque standard Python propose dans le module <a href="https://docs.python.org/3/library/itertools.html"><code>itertools</code></a> une fonction générant ces permutations. Mesurons grossièrement le temps d'exécution de ce code avec les deux implémentations :</p>
-<div class="highlight"><pre><span class="n">a</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">]</span>
+<div class="highlight"><pre><span></span><span class="n">a</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">]</span>
 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10000</span><span class="p">):</span>
     <span class="k">for</span> <span class="n">perm</span> <span class="ow">in</span> <span class="n">permutations</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>
         <span class="n">perm</span>
 </pre></div>
 
 
-<div class="highlight"><pre># Heap
+<div class="highlight"><pre><span></span># Heap
 $ time python heaps.py
 real    0m42.860s
 user    0m42.832s
@@ -192,7 +191,7 @@ sys     0m0.000s
 <li>par construction de l'ensemble sur lequel on initialise les permutations, aucune reine ne peut être sur la même colonne qu'un autre.</li>
 </ul>
 <p>Il reste alors à appliquer directement la formule de vérification des diagonales proposée dans le paragraphe <em>Modélisation</em>. Le code qui suit n'est volontairement pas l'écriture « idéale » en Python par souci de lisibilité pour ceux qui n'y sont pas familiers.</p>
-<div class="highlight"><pre><span class="k">def</span> <span class="nf">is_safe</span><span class="p">(</span><span class="n">permutation</span><span class="p">):</span>
+<div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">is_safe</span><span class="p">(</span><span class="n">permutation</span><span class="p">):</span>
     <span class="n">size</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">permutation</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">size</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">size</span><span class="p">):</span>
@@ -203,7 +202,7 @@ sys     0m0.000s
 
 
 <p>On initialise la première permutation à <code>[0, 1, 2, ..., n - 1]</code> avec <code>range(n)</code>. Une fois les permutations calculées, le câblage de l'ensemble est immédiat.</p>
-<div class="highlight"><pre><span class="k">def</span> <span class="nf">solve</span><span class="p">(</span><span class="n">board_size</span><span class="p">):</span>
+<div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">solve</span><span class="p">(</span><span class="n">board_size</span><span class="p">):</span>
     <span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">permutations</span>
     <span class="n">solutions</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">permutation</span> <span class="ow">in</span> <span class="n">permutations</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">board_size</span><span class="p">)):</span>
@@ -215,15 +214,15 @@ sys     0m0.000s
 
 <h4>Représentation des solutions</h4>
 <p>Il est toujours plus simple de vérifier les solutions en les visualisant. <a href="https://en.wikipedia.org/wiki/Eight_queens_puzzle#Counting_solutions">Le nombre de solutions en fonction du nombre de reines étant connu</a>, on ajoute le nombre de solutions trouvées pour faciliter la validation de l'algorithme.</p>
-<div class="highlight"><pre><span class="k">def</span> <span class="nf">print_solutions</span><span class="p">(</span><span class="n">solutions</span><span class="p">,</span> <span class="n">board_size</span><span class="p">):</span>
-    <span class="n">separator</span> <span class="o">=</span> <span class="s">&#39;+---&#39;</span> <span class="o">*</span> <span class="n">board_size</span> <span class="o">+</span> <span class="s">&#39;+&#39;</span>
+<div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">print_solutions</span><span class="p">(</span><span class="n">solutions</span><span class="p">,</span> <span class="n">board_size</span><span class="p">):</span>
+    <span class="n">separator</span> <span class="o">=</span> <span class="s1">&#39;+---&#39;</span> <span class="o">*</span> <span class="n">board_size</span> <span class="o">+</span> <span class="s1">&#39;+&#39;</span>
     <span class="k">for</span> <span class="n">solution</span> <span class="ow">in</span> <span class="n">solutions</span><span class="p">:</span>
         <span class="k">for</span> <span class="n">column</span> <span class="ow">in</span> <span class="n">solution</span><span class="p">:</span>
             <span class="k">print</span> <span class="n">separator</span>
-            <span class="k">print</span> <span class="s">&#39;|   &#39;</span> <span class="o">*</span> <span class="n">column</span> <span class="o">+</span> <span class="s">&#39;| Q |&#39;</span> <span class="o">+</span> <span class="s">&#39;   |&#39;</span> <span class="o">*</span> <span class="p">(</span><span class="n">board_size</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">column</span><span class="p">)</span>
+            <span class="k">print</span> <span class="s1">&#39;|   &#39;</span> <span class="o">*</span> <span class="n">column</span> <span class="o">+</span> <span class="s1">&#39;| Q |&#39;</span> <span class="o">+</span> <span class="s1">&#39;   |&#39;</span> <span class="o">*</span> <span class="p">(</span><span class="n">board_size</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">column</span><span class="p">)</span>
         <span class="k">print</span> <span class="n">separator</span>
         <span class="k">print</span>
-    <span class="k">print</span> <span class="s">&quot;Found&quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">solutions</span><span class="p">),</span> <span class="s">&quot;solutions&quot;</span>
+    <span class="k">print</span> <span class="s2">&quot;Found&quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">solutions</span><span class="p">),</span> <span class="s2">&quot;solutions&quot;</span>
 
 
 <span class="n">size</span> <span class="o">=</span> <span class="mi">8</span>
@@ -232,7 +231,7 @@ sys     0m0.000s
 </pre></div>
 
 
-<div class="highlight"><pre># 91 autres solutions
+<div class="highlight"><pre><span></span># 91 autres solutions
 # [...]
 
 +---+---+---+---+---+---+---+---+
@@ -258,7 +257,7 @@ Found 92 solutions
 
 
 <p>Il faut environ 60 ms pour obtenir l'intégralité des solutions et les représenter.</p>
-<div class="highlight"><pre><span class="nv">$ </span><span class="nb">time </span>python brute-force.py
+<div class="highlight"><pre><span></span>$ <span class="nb">time</span> python brute-force.py
 python brute-force.py  0,06s user 0,00s system 91% cpu 0,061 total
 </pre></div>
 
@@ -280,7 +279,7 @@ python brute-force.py  0,06s user 0,00s system 91% cpu 0,061 total
 <li>que la colonne que laquelle la reine a été placée n'est pas déjà attribuée à une autre reine en vérifiant que le tableau de solutions ne contient pas la colonne que l'on cherche à attribuer (<code>not col in queens</code>);</li>
 <li>qu'aucune reine ne se trouve sur les mêmes diagonales que la nouvelle.</li>
 </ul>
-<div class="highlight"><pre><span class="k">def</span> <span class="nf">is_safe</span><span class="p">(</span><span class="n">col</span><span class="p">,</span> <span class="n">queens</span><span class="p">):</span>
+<div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">is_safe</span><span class="p">(</span><span class="n">col</span><span class="p">,</span> <span class="n">queens</span><span class="p">):</span>
     <span class="n">line</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">queens</span><span class="p">)</span>
     <span class="k">return</span> <span class="p">(</span><span class="ow">not</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">queens</span> <span class="ow">and</span>
             <span class="ow">not</span> <span class="nb">any</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">col</span> <span class="o">-</span> <span class="n">x</span><span class="p">)</span> <span class="o">==</span> <span class="n">line</span> <span class="o">-</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">x</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">queens</span><span class="p">)))</span>
@@ -288,8 +287,8 @@ python brute-force.py  0,06s user 0,00s system 91% cpu 0,061 total
 
 
 <p>Passons à la résolution en elle-même. Pour chaque nouvelle ligne, nous allons tester l'intégralité des colonnes au regard des solutions obtenues jusqu'à la ligne précédente. Cela donne :</p>
-<div class="highlight"><pre><span class="k">def</span> <span class="nf">solve</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
-    <span class="c"># Initialisation des solutions pour une taille 0 (tableau contenant un tableau vide)</span>
+<div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">solve</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+    <span class="c1"># Initialisation des solutions pour une taille 0 (tableau contenant un tableau vide)</span>
     <span class="n">solutions</span> <span class="o">=</span> <span class="p">[</span> <span class="p">[]</span> <span class="p">]</span>
     <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
         <span class="n">solutions</span> <span class="o">=</span> <span class="p">[</span><span class="n">solution</span> <span class="o">+</span> <span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">solution</span> <span class="ow">in</span> <span class="n">solutions</span>
@@ -317,7 +316,7 @@ python brute-force.py  0,06s user 0,00s system 91% cpu 0,061 total
 </ul>
 <p>On suppose donc ici aussi que chaque reine est sur une ligne distincte : la reine 0 sera sur la ligne 0, la reine 1 sur la ligne 1, etc.</p>
 <p>La description du modèle devient :</p>
-<div class="highlight"><pre><span class="kn">from</span> <span class="nn">Numberjack</span> <span class="kn">import</span> <span class="o">*</span>
+<div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">Numberjack</span> <span class="kn">import</span> <span class="o">*</span>
 
 <span class="k">def</span> <span class="nf">model_queens</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
     <span class="n">queens</span> <span class="o">=</span> <span class="p">[</span><span class="n">Variable</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">)]</span>
@@ -331,27 +330,27 @@ python brute-force.py  0,06s user 0,00s system 91% cpu 0,061 total
 
 
 <p>La résolution du problème est alors immédiate :</p>
-<div class="highlight"><pre><span class="k">def</span> <span class="nf">solve_queens</span><span class="p">(</span><span class="n">param</span><span class="p">):</span>
-    <span class="n">n</span> <span class="o">=</span> <span class="n">param</span><span class="p">[</span><span class="s">&#39;n&#39;</span><span class="p">]</span>
+<div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">solve_queens</span><span class="p">(</span><span class="n">param</span><span class="p">):</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="n">param</span><span class="p">[</span><span class="s1">&#39;n&#39;</span><span class="p">]</span>
     <span class="p">(</span><span class="n">queens</span><span class="p">,</span> <span class="n">model</span><span class="p">)</span> <span class="o">=</span> <span class="n">model_queens</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
-    <span class="n">solver</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">param</span><span class="p">[</span><span class="s">&#39;solver&#39;</span><span class="p">])</span>
+    <span class="n">solver</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">param</span><span class="p">[</span><span class="s1">&#39;solver&#39;</span><span class="p">])</span>
     <span class="n">solver</span><span class="o">.</span><span class="n">solve</span><span class="p">()</span>
     <span class="n">print_chessboard</span><span class="p">(</span><span class="n">queens</span><span class="p">)</span>
-    <span class="k">print</span> <span class="s">&#39;Nodes:&#39;</span><span class="p">,</span> <span class="n">solver</span><span class="o">.</span><span class="n">getNodes</span><span class="p">(),</span> <span class="s">&#39; Time:&#39;</span><span class="p">,</span> <span class="n">solver</span><span class="o">.</span><span class="n">getTime</span><span class="p">()</span>
+    <span class="k">print</span> <span class="s1">&#39;Nodes:&#39;</span><span class="p">,</span> <span class="n">solver</span><span class="o">.</span><span class="n">getNodes</span><span class="p">(),</span> <span class="s1">&#39; Time:&#39;</span><span class="p">,</span> <span class="n">solver</span><span class="o">.</span><span class="n">getTime</span><span class="p">()</span>
 
 <span class="k">def</span> <span class="nf">print_chessboard</span><span class="p">(</span><span class="n">queens</span><span class="p">):</span>
-    <span class="n">separator</span> <span class="o">=</span> <span class="s">&#39;+---&#39;</span><span class="o">*</span><span class="nb">len</span><span class="p">(</span><span class="n">queens</span><span class="p">)</span><span class="o">+</span><span class="s">&#39;+&#39;</span>
+    <span class="n">separator</span> <span class="o">=</span> <span class="s1">&#39;+---&#39;</span><span class="o">*</span><span class="nb">len</span><span class="p">(</span><span class="n">queens</span><span class="p">)</span><span class="o">+</span><span class="s1">&#39;+&#39;</span>
     <span class="k">for</span> <span class="n">queen</span> <span class="ow">in</span> <span class="n">queens</span><span class="p">:</span>
         <span class="k">print</span> <span class="n">separator</span>
-        <span class="k">print</span> <span class="s">&#39;|   &#39;</span><span class="o">*</span><span class="n">queen</span><span class="o">.</span><span class="n">get_value</span><span class="p">()</span><span class="o">+</span><span class="s">&#39;| Q |&#39;</span><span class="o">+</span><span class="s">&#39;   |&#39;</span><span class="o">*</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">queens</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="o">-</span><span class="n">queen</span><span class="o">.</span><span class="n">get_value</span><span class="p">())</span>
+        <span class="k">print</span> <span class="s1">&#39;|   &#39;</span><span class="o">*</span><span class="n">queen</span><span class="o">.</span><span class="n">get_value</span><span class="p">()</span><span class="o">+</span><span class="s1">&#39;| Q |&#39;</span><span class="o">+</span><span class="s1">&#39;   |&#39;</span><span class="o">*</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">queens</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="o">-</span><span class="n">queen</span><span class="o">.</span><span class="n">get_value</span><span class="p">())</span>
     <span class="k">print</span> <span class="n">separator</span>
 
-<span class="n">solve_queens</span><span class="p">(</span><span class="nb">input</span><span class="p">({</span> <span class="s">&#39;solver&#39;</span><span class="p">:</span><span class="s">&#39;Mistral&#39;</span><span class="p">,</span> <span class="s">&#39;n&#39;</span><span class="p">:</span><span class="mi">8</span> <span class="p">}))</span>
+<span class="n">solve_queens</span><span class="p">(</span><span class="nb">input</span><span class="p">({</span> <span class="s1">&#39;solver&#39;</span><span class="p">:</span><span class="s1">&#39;Mistral&#39;</span><span class="p">,</span> <span class="s1">&#39;n&#39;</span><span class="p">:</span><span class="mi">8</span> <span class="p">}))</span>
 </pre></div>
 
 
 <p>La proposition d'une solution est également très rapide :</p>
-<div class="highlight"><pre>+---+---+---+---+---+---+---+---+
+<div class="highlight"><pre><span></span>+---+---+---+---+---+---+---+---+
 | Q |   |   |   |   |   |   |   |
 +---+---+---+---+---+---+---+---+
 |   |   |   |   | Q |   |   |   |
@@ -432,6 +431,16 @@ Nodes: 24  Time: 0.0
       <div class="btn twitter"><a href="https://twitter.com/adericbourg" target="_blank">Twitter</a></div>
 
 
+
+    <hr/>
+
+    <nav class="widget">
+      <a href="http://www.antiifcampaign.com">
+        <img height="60" width="120"
+             src="http://antiifcampaign.com/assets/banner_ive-joined.gif"
+             alt="I have joined Anti-IF Campaign">
+      </a>
+    </nav>
 
 <!--
 <h4>Pages</h4>

@@ -75,7 +75,6 @@
 
               </ul>
 
-
             </div>
 
 <section id="content" class="body">
@@ -112,7 +111,7 @@
               <p>L'ajout d'un cache sur un DAO est une opération courante et la bibliothèque Guava, très répandue, a par ailleurs énormément simplifié sa mise en œuvre. Néanmoins, il reste encore extrêmement facile de se tromper avec cette bibliothèque et... de réaliser un cache qui ne fonctionne pas.</p>
 <h3>Contexte</h3>
 <p>Partons d'une interface de DAO « classique » permettant de réaliser les opérations <em>CRUD</em>. On y ajoute une méthode <code>getAll</code> qui retourne l'intégralité des objets (vous allez voir, c'est pour votre bien).</p>
-<div class="highlight"><pre><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">Dao</span> <span class="o">{</span>
+<div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">Dao</span> <span class="o">{</span>
   <span class="n">Optional</span><span class="o">&lt;</span><span class="n">MyObject</span><span class="o">&gt;</span> <span class="nf">get</span><span class="o">(</span><span class="n">String</span> <span class="n">id</span><span class="o">);</span>
   <span class="n">Iterable</span><span class="o">&lt;</span><span class="n">MyObject</span><span class="o">&gt;</span> <span class="nf">getAll</span><span class="o">();</span>
   <span class="kt">void</span> <span class="nf">save</span><span class="o">(</span><span class="n">MyObject</span> <span class="n">myObject</span><span class="o">);</span>
@@ -130,7 +129,7 @@
 <li>on peut également choisir de placer une sentinelle dans le cache (en l'occurrence, l'instance « absente » d'<code>Optional</code>).</li>
 </ul>
 <p>Les deux approches ont leur avantages et leurs inconvénients et leur utilisation dépend de votre application et de vos besoins.</p>
-<div class="highlight"><pre><span class="n">LoadingCache</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">MyObject</span><span class="o">&gt;</span> <span class="n">cache</span> <span class="o">=</span> <span class="n">CacheBuilder</span><span class="o">.</span><span class="na">newBuilder</span><span class="o">()</span>
+<div class="highlight"><pre><span></span><span class="n">LoadingCache</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">MyObject</span><span class="o">&gt;</span> <span class="n">cache</span> <span class="o">=</span> <span class="n">CacheBuilder</span><span class="o">.</span><span class="na">newBuilder</span><span class="o">()</span>
     <span class="o">.</span><span class="na">build</span><span class="o">(</span><span class="k">new</span> <span class="n">CacheLoader</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">Optional</span><span class="o">&lt;</span><span class="n">MyObject</span><span class="o">&gt;&gt;()</span> <span class="o">{</span>
       <span class="nd">@Override</span>
       <span class="kd">public</span> <span class="n">Optional</span><span class="o">&lt;</span><span class="n">MyObject</span><span class="o">&gt;</span> <span class="nf">load</span><span class="o">(</span><span class="n">String</span> <span class="n">key</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
@@ -142,7 +141,7 @@
 
 <h3>Implémentation naïve (et fausse)</h3>
 <p>En première approche, on peut supposer qu'il « suffit » de mettre à jour le cache pour chaque opération d'écriture sur la base de données. Une implémentation dans cette optique ressemblerait à ceci.</p>
-<div class="highlight"><pre><span class="kd">public</span> <span class="kd">class</span> <span class="nc">CachedDao</span> <span class="kd">implements</span> <span class="n">Dao</span> <span class="o">{</span>
+<div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">CachedDao</span> <span class="kd">implements</span> <span class="n">Dao</span> <span class="o">{</span>
 
   <span class="c1">// DAO accédant aux données persistées.</span>
   <span class="c1">// Dans la vraie vie, vous l&#39;auriez injecté, hein ?</span>
@@ -211,7 +210,7 @@
 <li>Le dernier lecteur à sortir débloque le sémaphore <code>db</code> et autorise alors un rédacteur en attente, s'il y en a un, à entrer.</li>
 </ol>
 <p>Sur notre exemple de DAO, la modification se ferait de la sorte (ce qui n'est pas explicitement redéfini n'a pas changé) :</p>
-<div class="highlight"><pre><span class="kd">public</span> <span class="kd">class</span> <span class="nc">CachedDao</span> <span class="kd">implements</span> <span class="n">Dao</span> <span class="o">{</span>
+<div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">CachedDao</span> <span class="kd">implements</span> <span class="n">Dao</span> <span class="o">{</span>
 
   <span class="kd">private</span> <span class="kd">final</span> <span class="n">Semaphore</span> <span class="n">lock</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Semaphore</span><span class="o">(</span><span class="mi">1</span><span class="o">);</span>
   <span class="kd">private</span> <span class="kd">final</span> <span class="n">AtomicLong</span> <span class="n">concurrentAccess</span> <span class="o">=</span> <span class="k">new</span> <span class="n">AtomicLong</span><span class="o">(</span><span class="mi">0</span><span class="o">);</span>
@@ -258,7 +257,7 @@
 <li>un verrou en écriture que tous les rédacteurs peuvent « passer » tant qu'aucun verrou en lecture ou en écriture n'a été posé.</li>
 </ul>
 <p>Exemple en lecture :</p>
-<div class="highlight"><pre><span class="n">ReadWriteLock</span> <span class="n">readWriteLock</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ReentrantReadWriteLock</span><span class="o">();</span>
+<div class="highlight"><pre><span></span><span class="n">ReadWriteLock</span> <span class="n">readWriteLock</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ReentrantReadWriteLock</span><span class="o">();</span>
 
 <span class="n">readWriteLock</span><span class="o">.</span><span class="na">readLock</span><span class="o">().</span><span class="na">lock</span><span class="o">();</span>
 
@@ -270,7 +269,7 @@
 
 
 <p>Exemple en écriture :</p>
-<div class="highlight"><pre><span class="n">ReadWriteLock</span> <span class="n">readWriteLock</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ReentrantReadWriteLock</span><span class="o">();</span>
+<div class="highlight"><pre><span></span><span class="n">ReadWriteLock</span> <span class="n">readWriteLock</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ReentrantReadWriteLock</span><span class="o">();</span>
 
 <span class="n">readWriteLock</span><span class="o">.</span><span class="na">writeLock</span><span class="o">().</span><span class="na">lock</span><span class="o">();</span>
 
@@ -290,7 +289,7 @@
 </ul>
 <p>Il est en revanche nécessaire de « protéger » la libération des verrous. Si un traitement se passe mal — si par exemple si une exception est lancée — le verrou doit malgré tout être libéré. On encapsulera donc tout le code des sections critiques dans un bloc <code>try</code> / <code>finally</code>.</p>
 <p>Le code n'ayant pas changé pa rapport à la première version n'est pas représenté.</p>
-<div class="highlight"><pre><span class="kn">import</span> <span class="nn">java.util.concurrent.locks.ReadWriteLock</span><span class="o">;</span>
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">java.util.concurrent.locks.ReadWriteLock</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">java.util.concurrent.locks.ReentrantReadWriteLock</span><span class="o">;</span>
 
 <span class="kd">public</span> <span class="kd">class</span> <span class="nc">CachedDao</span> <span class="kd">implements</span> <span class="n">Dao</span> <span class="o">{</span>
@@ -404,6 +403,16 @@
       <div class="btn twitter"><a href="https://twitter.com/adericbourg" target="_blank">Twitter</a></div>
 
 
+
+    <hr/>
+
+    <nav class="widget">
+      <a href="http://www.antiifcampaign.com">
+        <img height="60" width="120"
+             src="http://antiifcampaign.com/assets/banner_ive-joined.gif"
+             alt="I have joined Anti-IF Campaign">
+      </a>
+    </nav>
 
 <!--
 <h4>Pages</h4>

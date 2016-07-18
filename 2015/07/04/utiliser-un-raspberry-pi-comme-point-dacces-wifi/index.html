@@ -75,7 +75,6 @@
 
               </ul>
 
-
             </div>
 
 <section id="content" class="body">
@@ -120,13 +119,13 @@ point d'accès Wifi.</p>
 <p>Dans la suite, on considèrera que l'interface sans fil est nommée <code>wlan0</code>.  </p>
 <h3>Définition d'une adresse IP statique</h3>
 <p>Dans le fichier <code>/etc/network/interfaces</code>, supprimer les lignes suivantes :</p>
-<div class="highlight"><pre>iface wlan0 inet manual
+<div class="highlight"><pre><span></span>iface wlan0 inet manual
 wpa-roam /etc/wpa_supplicant/wpa_supplicant.conf
 </pre></div>
 
 
 <p>Les remplacer par :</p>
-<div class="highlight"><pre>allow-hotplug wlan0
+<div class="highlight"><pre><span></span>allow-hotplug wlan0
 iface wlan0 inet static
 address 192.168.100.1
 netmask 255.255.255.0
@@ -134,7 +133,7 @@ netmask 255.255.255.0
 
 
 <p>Redémarrez le réseau :</p>
-<div class="highlight"><pre>sudo service networking restart
+<div class="highlight"><pre><span></span>sudo service networking restart
 </pre></div>
 
 
@@ -142,12 +141,12 @@ netmask 255.255.255.0
 <p>Le serveur DHCP permet d'attribuer automatiquement une adresse IP aux machines
 qui se connecteront à votre réseau Wifi.</p>
 <p>Installez le paquet <em><a href="https://packages.debian.org/isc-dhcp-server">isc-dhcp-server</a></em> :</p>
-<div class="highlight"><pre>sudo apt-get install isc-dhcp-server
+<div class="highlight"><pre><span></span>sudo apt-get install isc-dhcp-server
 </pre></div>
 
 
 <p>À ce stade, le service ne devrait pas démarrer correctement :</p>
-<div class="highlight"><pre>Generating /etc/default/isc-dhcp-server...
+<div class="highlight"><pre><span></span>Generating /etc/default/isc-dhcp-server...
 [FAIL] Starting ISC DHCP server: dhcpd[....] check syslog for diagnostics. ... failed!
  failed!
 invoke-rc.d: initscript isc-dhcp-server, action &quot;start&quot; failed.
@@ -157,7 +156,7 @@ invoke-rc.d: initscript isc-dhcp-server, action &quot;start&quot; failed.
 <p>Vous pouvez ignorer ces erreurs pour le moment.</p>
 <p>Éditez le fichier de configuration du serveur : <code>/etc/dhcp/dhcpd.conf</code> et
 commentez les options <em>domain-name</em> et <em>domain-name-servers</em> :</p>
-<div class="highlight"><pre>#option domain-name &quot;example.org&quot;;
+<div class="highlight"><pre><span></span>#option domain-name &quot;example.org&quot;;
 #option domain-name-servers ns1.example.org, ns2.example.org;
 </pre></div>
 
@@ -166,14 +165,14 @@ commentez les options <em>domain-name</em> et <em>domain-name-servers</em> :</p>
 DHCP qu'il est le seul à fournir des adresses IP sur ce réseau et donc possède
 la pleine connaissance des
 <a href="http://www.linux-france.org/prj/edu/archinet/systeme/ch27s03.html">baux accordés</a>.</p>
-<div class="highlight"><pre># If this DHCP server is the official DHCP server for the local
+<div class="highlight"><pre><span></span># If this DHCP server is the official DHCP server for the local
 # network, the authoritative directive should be uncommented.
 authoritative;
 </pre></div>
 
 
 <p>Enfin, configurez le comportement du serveur DHCP :</p>
-<div class="highlight"><pre>subnet 192.168.100.0 netmask 255.255.255.0 {
+<div class="highlight"><pre><span></span>subnet 192.168.100.0 netmask 255.255.255.0 {
   range 192.168.100.10 192.168.100.50;
   option broadcast-address 192.168.100.255;
   option routers 192.168.100.1;
@@ -205,7 +204,7 @@ Vous pouvez bien évidemment en utiliser d'autres (certains préfèrent
 <a href="https://developers.google.com/speed/public-dns/">ceux de Google</a>...).</p>
 <p>Déclarez enfin l'interface sans fil comme l'interface par défaut pour répondre
 aux requêtes DHCP dans le fichier <code>/etc/default/isc-dhcp-server</code> :</p>
-<div class="highlight"><pre># On what interfaces should the DHCP server (dhcpd) serve DHCP requests?
+<div class="highlight"><pre><span></span># On what interfaces should the DHCP server (dhcpd) serve DHCP requests?
 #       Separate multiple interfaces with spaces, e.g. &quot;eth0 eth1&quot;.
 #INTERFACES=&quot;&quot;
 INTERFACES=&quot;wlan0&quot;
@@ -215,12 +214,12 @@ INTERFACES=&quot;wlan0&quot;
 <h3>Installation de <em>hostapd</em></h3>
 <p><a href="https://w1.fi/hostapd/">Hostapd</a> est un démon permettant de créer un point
 d'accès sans fil. Pour l'installer :</p>
-<div class="highlight"><pre>sudo apt-get install hostapd
+<div class="highlight"><pre><span></span>sudo apt-get install hostapd
 </pre></div>
 
 
 <p>Créez son fichier de configuration, <code>/etc/hostapd/hostapd.conf</code> :</p>
-<div class="highlight"><pre>interface=wlan0
+<div class="highlight"><pre><span></span>interface=wlan0
 driver=nl80211
 ssid=&lt;YOUR SSID&gt;
 hw_mode=g
@@ -243,26 +242,26 @@ rsn_pairwise=CCMP
 </ul>
 <p>Déclarez enfin ce fichier afin qu'il soit utilisé par hostapd dans
 <code>/etc/default/hostapd</code> en ajoutant la ligne :</p>
-<div class="highlight"><pre>DAEMON_CONF=&quot;/etc/hostapd/hostapd.conf&quot;
+<div class="highlight"><pre><span></span>DAEMON_CONF=&quot;/etc/hostapd/hostapd.conf&quot;
 </pre></div>
 
 
 <h3>Configuration du routage entre l'interface sans fil et l'interface filaire</h3>
 <p>Activer le routage IP dans le fichier <code>/etc/sysctl.conf</code> en décommentant la
 ligne suivante :</p>
-<div class="highlight"><pre>net.ipv4.ip_forward=1
+<div class="highlight"><pre><span></span>net.ipv4.ip_forward=1
 </pre></div>
 
 
 <p>Pour activer ce routage immédiatement (sans avoir besoin de redémarrer), lancez
 la commande :</p>
-<div class="highlight"><pre>sudo sh -c &quot;echo 1 &gt; /proc/sys/net/ipv4/ip_forward&quot;
+<div class="highlight"><pre><span></span>sudo sh -c &quot;echo 1 &gt; /proc/sys/net/ipv4/ip_forward&quot;
 </pre></div>
 
 
 <p>Vous pouvez enfin configurer le routage en utilisant
 <em><a href="http://ipset.netfilter.org/iptables.man.html">iptables</a></em> :</p>
-<div class="highlight"><pre>sudo iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
+<div class="highlight"><pre><span></span>sudo iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
 sudo iptables -A FORWARD -i eth0 -o wlan0 -m state --state RELATED,ESTABLISHED -j ACCEPT
 sudo iptables -A FORWARD -i wlan0 -o eth0 -j ACCEPT
 </pre></div>
@@ -273,7 +272,7 @@ sudo iptables -A FORWARD -i wlan0 -o eth0 -j ACCEPT
 les recharger à chaque lancement de la machine, vous pouvez utiliser le paquet
 <em><a href="https://packages.debian.org/iptables-persistent">iptables-persistent</a></em>. Pour
 l'installer :</p>
-<div class="highlight"><pre>sudo apt-get install iptables-persistent
+<div class="highlight"><pre><span></span>sudo apt-get install iptables-persistent
 </pre></div>
 
 
@@ -281,7 +280,7 @@ l'installer :</p>
 définies. Choisissez « oui ». Si vous souhaitez les redéfinir ultérieurement,
 vous pourrez les enregistrer en invoquant la cible <em>save</em> et les recharger avec
 <em>reload</em> :</p>
-<div class="highlight"><pre>sudo /etc/init.d/iptables-persistent save
+<div class="highlight"><pre><span></span>sudo /etc/init.d/iptables-persistent save
 sudo /etc/init.d/iptables-persistent reload
 </pre></div>
 
@@ -317,6 +316,16 @@ propre point d'accès Wifi.</p>
       <div class="btn twitter"><a href="https://twitter.com/adericbourg" target="_blank">Twitter</a></div>
 
 
+
+    <hr/>
+
+    <nav class="widget">
+      <a href="http://www.antiifcampaign.com">
+        <img height="60" width="120"
+             src="http://antiifcampaign.com/assets/banner_ive-joined.gif"
+             alt="I have joined Anti-IF Campaign">
+      </a>
+    </nav>
 
 <!--
 <h4>Pages</h4>

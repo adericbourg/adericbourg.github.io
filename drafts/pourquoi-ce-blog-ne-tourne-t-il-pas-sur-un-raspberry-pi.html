@@ -75,7 +75,6 @@
 
               </ul>
 
-
             </div>
 
 <section id="content" class="body">
@@ -121,7 +120,7 @@
 </ul>
 <h3>Au démoulage</h3>
 <p>Si l'on mesure naïvement le temps de chargement d'une page, on obtient :</p>
-<div class="highlight"><pre><span class="nv">$ </span><span class="k">for</span> i in <span class="k">$(</span>seq <span class="m">1</span> 10<span class="k">)</span><span class="p">;</span> <span class="k">do</span> curl -o /dev/null -s -w %<span class="o">{</span>time_total<span class="o">}</span><span class="se">\\</span>n http://blog.dericbourg.net<span class="p">;</span> <span class="k">done</span>
+<div class="highlight"><pre><span></span>$ <span class="k">for</span> i in <span class="k">$(</span>seq <span class="m">1</span> 10<span class="k">)</span><span class="p">;</span> <span class="k">do</span> curl -o /dev/null -s -w %<span class="o">{</span>time_total<span class="o">}</span><span class="se">\\</span>n http://blog.dericbourg.net<span class="p">;</span> <span class="k">done</span>
 1,661
 1,645
 1,649
@@ -145,7 +144,7 @@
 <li>la durée d'attente du premier octet, <code>time_starttransfer</code>, qui inclut la durée d'attente du lancement du transfert (valeur précédente) et le temps nécessaire au serveur à calculer le résultat.</li>
 </ul>
 <p>On obtient, en ajoutant en dernière colonne le temps total :</p>
-<div class="highlight"><pre><span class="nv">$ </span><span class="k">for</span> i in <span class="k">$(</span>seq <span class="m">1</span> 10<span class="k">)</span><span class="p">;</span> <span class="k">do</span> curl -o /dev/null -s -w %<span class="o">{</span>time_namelookup<span class="o">}</span><span class="se">\\</span>t%<span class="o">{</span>time_connect<span class="o">}</span><span class="se">\\</span>t%<span class="o">{</span>time_pretransfer<span class="o">}</span><span class="se">\\</span>t%<span class="o">{</span>time_starttransfer<span class="o">}</span><span class="se">\\</span>t<span class="se">\\</span>t%<span class="o">{</span>time_total<span class="o">}</span><span class="se">\\</span>n http://blog.dericbourg.net<span class="p">;</span> <span class="k">done</span>
+<div class="highlight"><pre><span></span>$ <span class="k">for</span> i in <span class="k">$(</span>seq <span class="m">1</span> 10<span class="k">)</span><span class="p">;</span> <span class="k">do</span> curl -o /dev/null -s -w %<span class="o">{</span>time_namelookup<span class="o">}</span><span class="se">\\</span>t%<span class="o">{</span>time_connect<span class="o">}</span><span class="se">\\</span>t%<span class="o">{</span>time_pretransfer<span class="o">}</span><span class="se">\\</span>t%<span class="o">{</span>time_starttransfer<span class="o">}</span><span class="se">\\</span>t<span class="se">\\</span>t%<span class="o">{</span>time_total<span class="o">}</span><span class="se">\\</span>n http://blog.dericbourg.net<span class="p">;</span> <span class="k">done</span>
 0,012   0,021   0,021   1,651           1,653
 0,004   0,027   0,027   1,647           1,648
 0,004   0,020   0,020   1,659           1,660
@@ -162,7 +161,7 @@
 <p>C'est donc le calcul du résultat qui est le plus coûteux en temps. Cela inclut l'interprétation du PHP mais également l'ensemble des requêtes en base.</p>
 <h3>Nginx, par curiosité</h3>
 <p>Réalisons la même mesure sur <a href="http://nginx.org/">Nginx</a> utilisant <a href="http://php-fpm.org/">php5-fpm</a>. On obtient :</p>
-<div class="highlight"><pre><span class="nv">$ </span><span class="k">for</span> i in <span class="k">$(</span>seq <span class="m">1</span> 10<span class="k">)</span><span class="p">;</span> <span class="k">do</span> curl -o /dev/null -s -w %<span class="o">{</span>time_namelookup<span class="o">}</span><span class="se">\\</span>t%<span class="o">{</span>time_connect<span class="o">}</span><span class="se">\\</span>t%<span class="o">{</span>time_pretransfer<span class="o">}</span><span class="se">\\</span>t%<span class="o">{</span>time_starttransfer<span class="o">}</span><span class="se">\\</span>t<span class="se">\\</span>t%<span class="o">{</span>time_total<span class="o">}</span><span class="se">\\</span>n http://blog.dericbourg.net<span class="p">;</span> <span class="k">done</span>
+<div class="highlight"><pre><span></span>$ <span class="k">for</span> i in <span class="k">$(</span>seq <span class="m">1</span> 10<span class="k">)</span><span class="p">;</span> <span class="k">do</span> curl -o /dev/null -s -w %<span class="o">{</span>time_namelookup<span class="o">}</span><span class="se">\\</span>t%<span class="o">{</span>time_connect<span class="o">}</span><span class="se">\\</span>t%<span class="o">{</span>time_pretransfer<span class="o">}</span><span class="se">\\</span>t%<span class="o">{</span>time_starttransfer<span class="o">}</span><span class="se">\\</span>t<span class="se">\\</span>t%<span class="o">{</span>time_total<span class="o">}</span><span class="se">\\</span>n http://blog.dericbourg.net<span class="p">;</span> <span class="k">done</span>
 0,012   0,021   0,021   1,491           1,498
 0,004   0,017   0,017   1,467           1,468
 0,004   0,017   0,017   1,490           1,494
@@ -220,6 +219,16 @@ Attente des IO (nombre de ticks) : https://serverfault.com/questions/169676/howt
       <div class="btn twitter"><a href="https://twitter.com/adericbourg" target="_blank">Twitter</a></div>
 
 
+
+    <hr/>
+
+    <nav class="widget">
+      <a href="http://www.antiifcampaign.com">
+        <img height="60" width="120"
+             src="http://antiifcampaign.com/assets/banner_ive-joined.gif"
+             alt="I have joined Anti-IF Campaign">
+      </a>
+    </nav>
 
 <!--
 <h4>Pages</h4>
