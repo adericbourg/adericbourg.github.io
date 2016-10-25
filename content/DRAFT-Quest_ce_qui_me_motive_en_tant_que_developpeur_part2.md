@@ -6,3 +6,6 @@ Sumary: TODO
 Status: draft
 
 TODO
+
+* Définition de l'autorité selon Jean-marie Muller
+* Manager gentilhomme, Emmanuel Jaffelin
