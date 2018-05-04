@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Blog bloquant</title><link href="http://www.dericbourg.net/" rel="alternate"></link><link href="http://www.dericbourg.net/feeds/blog.atom.xml" rel="self"></link><id>http://www.dericbourg.net/</id><updated>2015-12-10T00:00:00+01:00</updated><entry><title>Calcul d'itinéraire à partir des données RATP</title><link href="http://www.dericbourg.net/2015/12/10/calcul-ditineraire-a-partir-des-donnees-ratp/" rel="alternate"></link><published>2015-12-10T00:00:00+01:00</published><author><name>Alban Dericbourg</name></author><id>tag:www.dericbourg.net,2015-12-10:2015/12/10/calcul-ditineraire-a-partir-des-donnees-ratp/</id><summary type="html">&lt;p&gt;La RATP progresse dans l'&lt;a href="http://data.ratp.fr"&gt;ouverture de ses données&lt;/a&gt; et même si elle ne propose pas encore un accès à son &lt;a href="https://fr.wikipedia.org/wiki/Syst%C3%A8me_d'information_en_ligne"&gt;système SIEL&lt;/a&gt;, elle propose néanmoins les données de son offre de transport au &lt;a href="https://developers.google.com/transit/gtfs/"&gt;format GTFS&lt;/a&gt;. Une bonne occasion de s'initier au calcul d'itinéraire !&lt;/p&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Blog bloquant - Blog</title><link href="//www.dericbourg.net/" rel="alternate"></link><link href="//www.dericbourg.net/feeds/blog.atom.xml" rel="self"></link><id>//www.dericbourg.net/</id><updated>2015-12-10T00:00:00+01:00</updated><entry><title>Calcul d'itinéraire à partir des données RATP</title><link href="//www.dericbourg.net/2015/12/10/calcul-ditineraire-a-partir-des-donnees-ratp/" rel="alternate"></link><published>2015-12-10T00:00:00+01:00</published><updated>2015-12-10T00:00:00+01:00</updated><author><name>Alban Dericbourg</name></author><id>tag:www.dericbourg.net,2015-12-10:/2015/12/10/calcul-ditineraire-a-partir-des-donnees-ratp/</id><summary type="html">&lt;p&gt;La RATP progresse dans l'&lt;a href="http://data.ratp.fr"&gt;ouverture de ses données&lt;/a&gt; et même si elle ne propose pas encore un accès à son &lt;a href="https://fr.wikipedia.org/wiki/Syst%C3%A8me_d'information_en_ligne"&gt;système SIEL&lt;/a&gt;, elle propose néanmoins les données de son offre de transport au &lt;a href="https://developers.google.com/transit/gtfs/"&gt;format GTFS&lt;/a&gt;. Une bonne occasion de s'initier au calcul d'itinéraire !&lt;/p&gt;
+&lt;p&gt;L'histoire et le contexte des calculs …&lt;/p&gt;</summary><content type="html">&lt;p&gt;La RATP progresse dans l'&lt;a href="http://data.ratp.fr"&gt;ouverture de ses données&lt;/a&gt; et même si elle ne propose pas encore un accès à son &lt;a href="https://fr.wikipedia.org/wiki/Syst%C3%A8me_d'information_en_ligne"&gt;système SIEL&lt;/a&gt;, elle propose néanmoins les données de son offre de transport au &lt;a href="https://developers.google.com/transit/gtfs/"&gt;format GTFS&lt;/a&gt;. Une bonne occasion de s'initier au calcul d'itinéraire !&lt;/p&gt;
 &lt;p&gt;L'histoire et le contexte des calculs d'itinéraires est très bien synthétisé par &lt;a href="https://twitter.com/tristramg"&gt;Tristram Gräbener&lt;/a&gt; dans son &lt;a href="http://blog.tristramg.eu/petit-historique-du-calcul-ditineraire.html"&gt;Petit historique du calcul d'itinéraire&lt;/a&gt;. Probablement plus hipster que je ne veux bien l'admettre, j'ai choisi d'utiliser le plus récent : le &lt;em&gt;&lt;a href="http://i11www.iti.uni-karlsruhe.de/extra/publications/dpsw-isftr-13.pdf"&gt;Connection Scan Algorithm&lt;/a&gt;&lt;/em&gt;. &lt;/p&gt;
 &lt;h3&gt;Connection scan algorithm&lt;/h3&gt;
 &lt;blockquote&gt;
@@ -152,7 +153,7 @@ A      \
 &lt;li&gt;Saint-Denis Université en direction de Châtillon - Montrouge ;&lt;/li&gt;
 &lt;li&gt;Gennevilliers Les Courtilles en direction de Châtillon - Montrouge.&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;&lt;img alt="Plan simplifié de la ligne 13 du métro parisien" class="center" src="/images/connection_scan_algorithm/ligne13.png" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Plan simplifié de la ligne 13 du métro parisien" class="center" src="/images/connection_scan_algorithm/ligne13.png"&gt;&lt;/p&gt;
 &lt;p&gt;Le fichier &lt;code&gt;routes.txt&lt;/code&gt; contient pour cette ligne :&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;route_id&lt;span class="p"&gt;,&lt;/span&gt;agency_id&lt;span class="p"&gt;,&lt;/span&gt;route_short_name&lt;span class="p"&gt;,&lt;/span&gt;route_long_name&lt;span class="p"&gt;,&lt;/span&gt;route_desc&lt;span class="p"&gt;,&lt;/span&gt;route_type&lt;span class="p"&gt;,&lt;/span&gt;route_url&lt;span class="p"&gt;,&lt;/span&gt;route_color&lt;span class="p"&gt;,&lt;/span&gt;route_text_color
 &lt;span class="m"&gt;1197620&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="m"&gt;100&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;13&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;(CHATILLON - MONTROUGE &amp;lt;-&amp;gt; ST-DENIS-UNIVERSITE/LES COURTILLES) - Aller&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,,&lt;/span&gt;&lt;span class="m"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,,&lt;/span&gt;FFFFFF&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="m"&gt;000000&lt;/span&gt;
@@ -218,29 +219,29 @@ Lorsqu'un train suit une mission, il réalise une &lt;strong&gt;course&lt;/stron
 &lt;p&gt;Sur la première ligne, la correspondance se fait entre l'arrêt « 4211780 » et l'arrêt « 2270 ». Un recherche dans le fichier &lt;code&gt;stops.txt&lt;/code&gt; permet de donner un nom humainement compréhensible à ces identifiants : ils correspondent ici tous les deux au point d'arrêt « Mairie de Saint-Ouen ».&lt;/p&gt;
 &lt;p&gt;À partir du l'identifiant d'un point d'arrêt, on peut également ressortir les identifiants de course (&lt;code&gt;trip_id&lt;/code&gt;). Prenons-en un au hasard :&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ grep &lt;span class="m"&gt;2270&lt;/span&gt; stop_times.txt &lt;span class="p"&gt;|&lt;/span&gt; cut -d, -f1 &lt;span class="p"&gt;|&lt;/span&gt; head -n1
-10017622880912417
+&lt;span class="m"&gt;10017622880912417&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;p&gt;À partir de cet identifiant, on peut retrouver la route associée (&lt;code&gt;route_id&lt;/code&gt;) :&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ grep &lt;span class="m"&gt;10017622880912417&lt;/span&gt; trips.txt &lt;span class="p"&gt;|&lt;/span&gt; cut -d, -f1
-1197623
+&lt;span class="m"&gt;1197623&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;p&gt;On trouve donc qu'il s'agissait de la ligne 13 dans le sens « retour » :&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ grep ^1197623, routes.txt
-1197623,100,&lt;span class="s2"&gt;&amp;quot;13&amp;quot;&lt;/span&gt;,&lt;span class="s2"&gt;&amp;quot;(CHATILLON - MONTROUGE &amp;lt;-&amp;gt; ST-DENIS-UNIVERSITE/LES COURTILLES) - Retour&amp;quot;&lt;/span&gt;,,1,,FFFFFF,000000
+&lt;span class="m"&gt;1197623&lt;/span&gt;,100,&lt;span class="s2"&gt;&amp;quot;13&amp;quot;&lt;/span&gt;,&lt;span class="s2"&gt;&amp;quot;(CHATILLON - MONTROUGE &amp;lt;-&amp;gt; ST-DENIS-UNIVERSITE/LES COURTILLES) - Retour&amp;quot;&lt;/span&gt;,,1,,FFFFFF,000000
 &lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;p&gt;Vérifions par acquit de conscience l'autre identifiant de point d'arrêt :&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ grep &lt;span class="m"&gt;4211780&lt;/span&gt; stop_times.txt &lt;span class="p"&gt;|&lt;/span&gt; cut -d, -f1 &lt;span class="p"&gt;|&lt;/span&gt; head -n1
-119841521246955
+&lt;span class="m"&gt;119841521246955&lt;/span&gt;
 $ grep &lt;span class="m"&gt;119841521246955&lt;/span&gt; trips.txt
-1364288,1984152,119841521246955,,1,1,
+&lt;span class="m"&gt;1364288&lt;/span&gt;,1984152,119841521246955,,1,1,
 $ grep &lt;span class="m"&gt;1364288&lt;/span&gt; routes.txt
-1364288,100,&lt;span class="s2"&gt;&amp;quot;N44&amp;quot;&lt;/span&gt;,&lt;span class="s2"&gt;&amp;quot;(GARGES-SARCELLES RER &amp;lt;-&amp;gt; GARE DE L&amp;#39;EST) - Retour&amp;quot;&lt;/span&gt;,,3,,FFFFFF,000000
+&lt;span class="m"&gt;1364288&lt;/span&gt;,100,&lt;span class="s2"&gt;&amp;quot;N44&amp;quot;&lt;/span&gt;,&lt;span class="s2"&gt;&amp;quot;(GARGES-SARCELLES RER &amp;lt;-&amp;gt; GARE DE L&amp;#39;EST) - Retour&amp;quot;&lt;/span&gt;,,3,,FFFFFF,000000
 &lt;/pre&gt;&lt;/div&gt;
 
 
@@ -604,7 +605,9 @@ Total transit time: 21 minutes
 &lt;li&gt;avec l'algorithme de Dijkstra, il « suffit » d'associer un poids plus fort aux arêtes représentant une correspondance lorsque le voyageur a des difficultés à se déplacer.&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;Si le CSA est plus simple à implémenter, il l'est au détriment de la souplesse en première approche. Il est cependant possible de typer les connexions de correspondance pour leur attribuer différentes heures d'arrivée en fonction de la vélocité pédestre du voyageur. &lt;/p&gt;
-&lt;p&gt;Enfin, si cet exemple a été mené sur le réseau ferré RATP d'Île de France, son extension au réseau de bus (347 lignes) n'est pas viable : la table horaire devient trop volumineuse pour tenir en mémoire et les performances s'en ressentent. Mon intuition est que cet algorithme est très pertinent sur de « petites » tables horaires (jusqu'à quelques centaines de stations). Dès que le réseau grossit, en revanche, il est préférable de chercher un autre algorithme moins gourmand en mémoire et en pré-calcul. &lt;/p&gt;</summary><category term="opendata"></category><category term="ratp"></category><category term="gtfs"></category><category term="scala"></category></entry><entry><title>Gestion des accès concurrents sur un cache de DAO</title><link href="http://www.dericbourg.net/2015/11/07/gestion-des-acces-concurrents-sur-un-cache-de-dao/" rel="alternate"></link><published>2015-11-07T00:00:00+01:00</published><author><name>Alban Dericbourg</name></author><id>tag:www.dericbourg.net,2015-11-07:2015/11/07/gestion-des-acces-concurrents-sur-un-cache-de-dao/</id><summary type="html">&lt;p&gt;L'ajout d'un cache sur un DAO est une opération courante et la bibliothèque Guava, très répandue, a par ailleurs énormément simplifié sa mise en œuvre. Néanmoins, il reste encore extrêmement facile de se tromper avec cette bibliothèque et... de réaliser un cache qui ne fonctionne pas.&lt;/p&gt;
+&lt;p&gt;Enfin, si cet exemple a été mené sur le réseau ferré RATP d'Île de France, son extension au réseau de bus (347 lignes) n'est pas viable : la table horaire devient trop volumineuse pour tenir en mémoire et les performances s'en ressentent. Mon intuition est que cet algorithme est très pertinent sur de « petites » tables horaires (jusqu'à quelques centaines de stations). Dès que le réseau grossit, en revanche, il est préférable de chercher un autre algorithme moins gourmand en mémoire et en pré-calcul. &lt;/p&gt;</content><category term="opendata"></category><category term="ratp"></category><category term="gtfs"></category><category term="scala"></category></entry><entry><title>Gestion des accès concurrents sur un cache de DAO</title><link href="//www.dericbourg.net/2015/11/07/gestion-des-acces-concurrents-sur-un-cache-de-dao/" rel="alternate"></link><published>2015-11-07T00:00:00+01:00</published><updated>2015-11-07T00:00:00+01:00</updated><author><name>Alban Dericbourg</name></author><id>tag:www.dericbourg.net,2015-11-07:/2015/11/07/gestion-des-acces-concurrents-sur-un-cache-de-dao/</id><summary type="html">&lt;p&gt;L'ajout d'un cache sur un DAO est une opération courante et la bibliothèque Guava, très répandue, a par ailleurs énormément simplifié sa mise en œuvre. Néanmoins, il reste encore extrêmement facile de se tromper avec cette bibliothèque et... de réaliser un cache qui ne fonctionne pas.&lt;/p&gt;
+&lt;h3&gt;Contexte&lt;/h3&gt;
+&lt;p&gt;Partons d'une interface …&lt;/p&gt;</summary><content type="html">&lt;p&gt;L'ajout d'un cache sur un DAO est une opération courante et la bibliothèque Guava, très répandue, a par ailleurs énormément simplifié sa mise en œuvre. Néanmoins, il reste encore extrêmement facile de se tromper avec cette bibliothèque et... de réaliser un cache qui ne fonctionne pas.&lt;/p&gt;
 &lt;h3&gt;Contexte&lt;/h3&gt;
 &lt;p&gt;Partons d'une interface de DAO « classique » permettant de réaliser les opérations &lt;em&gt;CRUD&lt;/em&gt;. On y ajoute une méthode &lt;code&gt;getAll&lt;/code&gt; qui retourne l'intégralité des objets (vous allez voir, c'est pour votre bien).&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kd"&gt;public&lt;/span&gt; &lt;span class="kd"&gt;interface&lt;/span&gt; &lt;span class="nc"&gt;Dao&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
@@ -873,12 +876,12 @@ Total transit time: 21 minutes
 
 &lt;h3&gt;Pour aller plus loin&lt;/h3&gt;
 &lt;p&gt;Le DAO présenté ici est « sûr » dans la mesure où il garantit la cohérence avec la base des données retournées. En revanche, pour cela, un compromis sur les performances a du être fait. En effet, cette implémentation ne permet pas d'écritures simultanées : la modification de deux objets distincts n'est pas possible.&lt;/p&gt;
-&lt;p&gt;Peut-on faire mieux ? Si vous pensez que oui, quelle serait votre approche ?&lt;/p&gt;</summary><category term="java"></category><category term="guava"></category><category term="cache"></category><category term="dao"></category><category term="verrou"></category><category term="concurrence"></category></entry><entry><title>Problème des huit reines</title><link href="http://www.dericbourg.net/2015/08/11/probleme-des-huit-reines/" rel="alternate"></link><published>2015-08-11T00:00:00+02:00</published><author><name>Alban Dericbourg</name></author><id>tag:www.dericbourg.net,2015-08-11:2015/08/11/probleme-des-huit-reines/</id><summary type="html">&lt;p&gt;J'ai rencontré le &lt;a href="https://fr.wikipedia.org/wiki/Probl%C3%A8me_des_huit_dames"&gt;problème des huits reines&lt;/a&gt; lors d'un entretien d'embauche. Sans juger de la pertinence de cet exercice dans ce cadre (indépendamment du fait que j'aie lamentablement et honteusement échoué), la période estivale, propice à la détente, m'a incité à pousser le jeu plus en avant (mon orgueil a probablement contribué lui aussi).
+&lt;p&gt;Peut-on faire mieux ? Si vous pensez que oui, quelle serait votre approche ?&lt;/p&gt;</content><category term="java"></category><category term="guava"></category><category term="cache"></category><category term="dao"></category><category term="verrou"></category><category term="concurrence"></category></entry><entry><title>Problème des huit reines</title><link href="//www.dericbourg.net/2015/08/11/probleme-des-huit-reines/" rel="alternate"></link><published>2015-08-11T00:00:00+02:00</published><updated>2015-08-11T00:00:00+02:00</updated><author><name>Alban Dericbourg</name></author><id>tag:www.dericbourg.net,2015-08-11:/2015/08/11/probleme-des-huit-reines/</id><summary type="html">&lt;p&gt;J'ai rencontré le &lt;a href="https://fr.wikipedia.org/wiki/Probl%C3%A8me_des_huit_dames"&gt;problème des huits reines&lt;/a&gt; lors d'un entretien d'embauche. Sans juger de la pertinence de cet exercice dans ce cadre (indépendamment du fait que j'aie lamentablement et honteusement échoué), la période estivale, propice à la détente, m'a incité à pousser le jeu plus en avant (mon orgueil a …&lt;/p&gt;</summary><content type="html">&lt;p&gt;J'ai rencontré le &lt;a href="https://fr.wikipedia.org/wiki/Probl%C3%A8me_des_huit_dames"&gt;problème des huits reines&lt;/a&gt; lors d'un entretien d'embauche. Sans juger de la pertinence de cet exercice dans ce cadre (indépendamment du fait que j'aie lamentablement et honteusement échoué), la période estivale, propice à la détente, m'a incité à pousser le jeu plus en avant (mon orgueil a probablement contribué lui aussi).
 Le problème consiste à compter et identifier les différentes façons de placer sur un échiquier de 64 cases 8 reines de façon à ce que, relativement aux règles des échecs, elles ne se menacent pas mutuellement. Une reine peut se déplacer de façon rectiligne d'un nombre de cases arbitraire dans toutes les directions ; lorsqu'une reine est placée, la ligne, la colonne et les diagonales sur lesquelles elle se situe sont donc « condamnées ».&lt;/p&gt;
 &lt;h3&gt;Modélisation&lt;/h3&gt;
 &lt;p&gt;On ne peut pas placer plusieurs reines sur une même ligne. On peut donc simplifier la modélisation en ne travaillant que sur les colonnes. Ainsi, on cherchera à ne retourner qu'un tableau d'index de colonne, chacun de ces index correspondant à la ligne de son propre index dans le tableau. Pour illustrer, on produira en retour un tableau de la forme &lt;code&gt;[x, y, z]&lt;/code&gt; qui correspond en pratique aux coordonnées &lt;code&gt;(0, x)&lt;/code&gt;, &lt;code&gt;(1, y)&lt;/code&gt; et &lt;code&gt;(2, z)&lt;/code&gt; sur l'échiquier.&lt;/p&gt;
 &lt;p&gt;Représentons cette modélisation dans le cas de la résolution du problème avec huit reines.&lt;/p&gt;
-&lt;p&gt;&lt;img alt="Représentation de la modélisation" class="center" src="/images/eight_queens/modelisation.png" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Représentation de la modélisation" class="center" src="/images/eight_queens/modelisation.png"&gt;&lt;/p&gt;
 &lt;blockquote&gt;
 &lt;p&gt;&lt;strong&gt;Note :&lt;/strong&gt; en Python, la fonction &lt;a href="https://docs.python.org/2/library/functions.html#enumerate"&gt;&lt;code&gt;enumerate&lt;/code&gt;&lt;/a&gt; permet d'obtenir de façon immédiate ce résultat.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&amp;gt;&amp;gt;&amp;gt; list(enumerate([3, 2, 1]))
@@ -894,7 +897,7 @@ Le problème consiste à compter et identifier les différentes façons de place
 &lt;li&gt;Deux reines sont sur la même diagonale lorsque leur différence d'index dans le tableau (donc leur différence d'index de ligne) est égal à leur différence d'index de colonne (&lt;code&gt;abs(c[i] - c[j]) == abs(i - j)&lt;/code&gt;). La valeur absolue permet de traiter indifféremment les diagonales « montantes » et les diagonales « descendantes ».&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;Ainsi, les solutions, lorsqu'elles existent, forment un sous-ensemble des permutations de {1 ; 2 ; ... ; &lt;em&gt;n&lt;/em&gt; - 1} (où &lt;em&gt;n&lt;/em&gt; est le nombre de reines et la dimension de l'échiquier).&lt;/p&gt;
-&lt;p&gt;&lt;img alt="Représentation de la modélisation" class="center" src="/images/eight_queens/diagonale.png" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Représentation de la modélisation" class="center" src="/images/eight_queens/diagonale.png"&gt;&lt;/p&gt;
 &lt;h3&gt;Approche naïve : examen de l'intégralité des permutations&lt;/h3&gt;
 &lt;p&gt;Cette approche revient à essayer toutes les combinaisons de placement des reines et de retenir celles pour lesquelles toutes les reines sont en sécurité. Compte tenu du fait que deux reines ne peuvent être sur la même colonne, la solution est une permutation de la suite d'entiers de 0 à &lt;em&gt;n&lt;/em&gt; - 1.&lt;/p&gt;
 &lt;h4&gt;Génération des permutations&lt;/h4&gt;
@@ -1026,7 +1029,7 @@ Found 92 solutions
 
 &lt;p&gt;Il faut environ 60 ms pour obtenir l'intégralité des solutions et les représenter.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ &lt;span class="nb"&gt;time&lt;/span&gt; python brute-force.py
-python brute-force.py  0,06s user 0,00s system 91% cpu 0,061 total
+python brute-force.py  &lt;span class="m"&gt;0&lt;/span&gt;,06s user &lt;span class="m"&gt;0&lt;/span&gt;,00s system &lt;span class="m"&gt;91&lt;/span&gt;% cpu &lt;span class="m"&gt;0&lt;/span&gt;,061 total
 &lt;/pre&gt;&lt;/div&gt;
 
 
@@ -1036,11 +1039,11 @@ python brute-force.py  0,06s user 0,00s system 91% cpu 0,061 total
 &lt;h4&gt;Exemple&lt;/h4&gt;
 &lt;p&gt;Pour y voir plus clair, commençons par un exemple simple. On souhaite obtenir les combinaisons de nœuds permettant de former le mot « BLOG » en parcourant l'arbre. On continue de descendre dans l'arbre tant que la combinaison permet d'obtenir une solution (nœuds bleus). Dès que celle-ci ne le permet plus (nœud rouge), on ignore les branches suivantes (nœud gris).&lt;/p&gt;
 &lt;p&gt;Dans cet exemple, on n'obtient qu'une solution mais rien n'empêche d'en avoir plusieurs.&lt;/p&gt;
-&lt;p&gt;&lt;img alt="Exemple de backtracking" class="center" src="/images/eight_queens/backtracking.png" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Exemple de backtracking" class="center" src="/images/eight_queens/backtracking.png"&gt;&lt;/p&gt;
 &lt;h4&gt;Résolution&lt;/h4&gt;
 &lt;p&gt;On conserve la même modélisation : les &lt;em&gt;n&lt;/em&gt; reines sont réparties sur les &lt;em&gt;n&lt;/em&gt; lignes à raison d'une par ligne. On place les reines une par une tant que cela est possible. Si le placement d'une reine échoue — donc qu'il n'existe pas de position telle que la reine puisse être en sécurité, on remet en question les choix précédents afin de sortir du blocage. On revient alors à un point où des alternatives étaient possibles et on essaie la possibilité suivante.&lt;/p&gt;
 &lt;p&gt;L'arbre qui sera parcouru contient toutes les positions des reines, valides ou non. On a donc un arbre de la forme de la figure ci-dessous (tronqué, dans l'exemple de 4 reines et d'un échiquier de 16 cases).&lt;/p&gt;
-&lt;p&gt;&lt;img alt="Application du backtracking au problème" class="center" src="/images/eight_queens/backtracking_queens.png" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Application du backtracking au problème" class="center" src="/images/eight_queens/backtracking_queens.png"&gt;&lt;/p&gt;
 &lt;p&gt;Commençons par nous pencher sur la fonction indiquant si une reine est en sécurité. Nous ne fonctionnons plus avec des permutations contenant toutes les positions des reines mais sur des positions partielles — avec un nombre de reines inférieur au nombre de reines total attendu — valides par rapport auxquelles on vérifie si l'on peut ajouter une reine à une position donnée. Plutôt que de vérifier systématiquement la validité de l'intégralité de la solution, on vérifie que l'ajout d'une reine à la solution partielle précédente donnée produit une solution valide.&lt;/p&gt;
 &lt;p&gt;On teste donc :&lt;/p&gt;
 &lt;ul&gt;
@@ -1171,9 +1174,19 @@ Nodes: 24  Time: 0.0
 &lt;/table&gt;
 
 &lt;p&gt;Comme le montre le tableau ci-dessus, le choix de la méthode de résolution dépendra surtout du besoin : faut-il &lt;em&gt;une&lt;/em&gt; solution ou &lt;em&gt;toutes&lt;/em&gt; les solutions ? Lorsqu'il les faut toutes, les quelques dizaines de millisecondes d'écart entre les deux algorithmes ne font pas la différence pour huit reines. En revanche, l'augmentation de la taille de l'échiquier induit une augmentation exponentielle du temps de résolution. Le graphique ci-dessous montre la flagrance de différence de temps d'exécution entre les deux algorithmes lorsque le nombre de permutations augmente.&lt;/p&gt;
-&lt;p&gt;&lt;img alt="Comparaison des durées d'obtention de toutes les solutions en fonction de l'algorithme" class="center" src="/images/eight_queens/comparaison.png" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Comparaison des durées d'obtention de toutes les solutions en fonction de l'algorithme" class="center" src="/images/eight_queens/comparaison.png"&gt;&lt;/p&gt;
 &lt;p&gt;Dès 10 reines et un échiquier de 100 cases, l'algorithme de force brute n'est plus utilisable : il lui faut plusieurs dizaines de minutes pour fournir les solutions. La solution implémentant l'algorithme de &lt;em&gt;backtracking&lt;/em&gt;, elle, retourne les 14&amp;nbsp;200 solutions en moins de 10 secondes.&lt;/p&gt;
-&lt;p&gt;La résolution par contraintes, reste très performante lorsque le problème de complexifie : elle permet d'obtenir une solution en moins de 150&amp;nbsp;ms pour 200 reines et un échiquier de 40&amp;nbsp;000 cases. Bien qu'elle ne propose qu'une et une seule solution, elle peut s'avérer pertinente lorsqu'on ne cherche pas un résultat particulier. L'implémentation présentée ici monte ses limites en dépassant les 500 reines et les 250 000 cases.&lt;/p&gt;</summary><category term="algorithmique"></category><category term="python"></category><category term="jeu"></category></entry><entry><title>Utiliser un Raspberry Pi comme point d'accès Wifi</title><link href="http://www.dericbourg.net/2015/07/04/utiliser-un-raspberry-pi-comme-point-dacces-wifi/" rel="alternate"></link><published>2015-07-04T00:00:00+02:00</published><author><name>Alban Dericbourg</name></author><id>tag:www.dericbourg.net,2015-07-04:2015/07/04/utiliser-un-raspberry-pi-comme-point-dacces-wifi/</id><summary type="html">&lt;p&gt;Dans cet article, nous verrons comment configurer un Raspberry Pi en tant que
+&lt;p&gt;La résolution par contraintes, reste très performante lorsque le problème de complexifie : elle permet d'obtenir une solution en moins de 150&amp;nbsp;ms pour 200 reines et un échiquier de 40&amp;nbsp;000 cases. Bien qu'elle ne propose qu'une et une seule solution, elle peut s'avérer pertinente lorsqu'on ne cherche pas un résultat particulier. L'implémentation présentée ici monte ses limites en dépassant les 500 reines et les 250 000 cases.&lt;/p&gt;</content><category term="algorithmique"></category><category term="python"></category><category term="jeu"></category></entry><entry><title>Utiliser un Raspberry Pi comme point d'accès Wifi</title><link href="//www.dericbourg.net/2015/07/04/utiliser-un-raspberry-pi-comme-point-dacces-wifi/" rel="alternate"></link><published>2015-07-04T00:00:00+02:00</published><updated>2015-07-04T00:00:00+02:00</updated><author><name>Alban Dericbourg</name></author><id>tag:www.dericbourg.net,2015-07-04:/2015/07/04/utiliser-un-raspberry-pi-comme-point-dacces-wifi/</id><summary type="html">&lt;p&gt;Dans cet article, nous verrons comment configurer un Raspberry Pi en tant que
+point d'accès Wifi.&lt;/p&gt;
+&lt;h3&gt;Pré-requis&lt;/h3&gt;
+&lt;p&gt;Je supposerai que vous avez à disposition :&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://www.raspberrypi.org/"&gt;Un Raspberry Pi&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;La distribution &lt;a href="https://www.raspbian.org/"&gt;Raspbian&lt;/a&gt; ou toute autre
+   distribution Linux&lt;/li&gt;
+&lt;li&gt;Un &lt;em&gt;dongle&lt;/em&gt; Wifi (déjà installé et détecté)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Dans la suite, on considèrera que l'interface sans …&lt;/p&gt;</summary><content type="html">&lt;p&gt;Dans cet article, nous verrons comment configurer un Raspberry Pi en tant que
 point d'accès Wifi.&lt;/p&gt;
 &lt;h3&gt;Pré-requis&lt;/h3&gt;
 &lt;p&gt;Je supposerai que vous avez à disposition :&lt;/p&gt;
@@ -1357,7 +1370,13 @@ sudo /etc/init.d/iptables-persistent reload
 façon transparente. Étant donnée la richesse des matériels et leurs
 spécificités, je ne garantis pas que ce « mode d'emploi » soit universel.
 J'espère néanmoins qu'il vous aura aidé en première approche à monter votre
-propre point d'accès Wifi.&lt;/p&gt;</summary><category term="wifi"></category><category term="raspberrypi"></category><category term="linux"></category><category term="iptables"></category></entry><entry><title>Utiliser un certificat signé par une autorité inconnue en Java</title><link href="http://www.dericbourg.net/2015/06/22/utiliser-un-certificat-signe-par-une-autorite-inconnue-en-java/" rel="alternate"></link><published>2015-06-22T00:00:00+02:00</published><author><name>Alban Dericbourg</name></author><id>tag:www.dericbourg.net,2015-06-22:2015/06/22/utiliser-un-certificat-signe-par-une-autorite-inconnue-en-java/</id><summary type="html">&lt;p&gt;Lorsque vous vous connectez à un serveur en utilisant un certificat TLS (le grand frère de SSL depuis une quinzaine d'années), votre client en vérifie la signature. Celle-ci permet de vérifier que :&lt;/p&gt;
+propre point d'accès Wifi.&lt;/p&gt;</content><category term="wifi"></category><category term="raspberrypi"></category><category term="linux"></category><category term="iptables"></category></entry><entry><title>Utiliser un certificat signé par une autorité inconnue en Java</title><link href="//www.dericbourg.net/2015/06/22/utiliser-un-certificat-signe-par-une-autorite-inconnue-en-java/" rel="alternate"></link><published>2015-06-22T00:00:00+02:00</published><updated>2015-06-22T00:00:00+02:00</updated><author><name>Alban Dericbourg</name></author><id>tag:www.dericbourg.net,2015-06-22:/2015/06/22/utiliser-un-certificat-signe-par-une-autorite-inconnue-en-java/</id><summary type="html">&lt;p&gt;Lorsque vous vous connectez à un serveur en utilisant un certificat TLS (le grand frère de SSL depuis une quinzaine d'années), votre client en vérifie la signature. Celle-ci permet de vérifier que :&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;celui-ci provient bien d'un émetteur connu ;&lt;/li&gt;
+&lt;li&gt;qu'il n'a pas été modifié depuis son émission.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3&gt;Le doute&lt;/h3&gt;
+&lt;p&gt;Il arrive …&lt;/p&gt;</summary><content type="html">&lt;p&gt;Lorsque vous vous connectez à un serveur en utilisant un certificat TLS (le grand frère de SSL depuis une quinzaine d'années), votre client en vérifie la signature. Celle-ci permet de vérifier que :&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;celui-ci provient bien d'un émetteur connu ;&lt;/li&gt;
 &lt;li&gt;qu'il n'a pas été modifié depuis son émission.&lt;/li&gt;
@@ -1372,17 +1391,17 @@ propre point d'accès Wifi.&lt;/p&gt;</summary><category term="wifi"></category>
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ curl -v https://www.exemple.com
 * Rebuilt URL to: https://www.example.com/
 * Hostname was NOT found in DNS cache
-*   Trying 1.2.3.4...
-* Connected to www.example.com &lt;span class="o"&gt;(&lt;/span&gt;1.2.3.4&lt;span class="o"&gt;)&lt;/span&gt; port &lt;span class="m"&gt;443&lt;/span&gt; &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="c1"&gt;#0)&lt;/span&gt;
+*   Trying &lt;span class="m"&gt;1&lt;/span&gt;.2.3.4...
+* Connected to www.example.com &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="m"&gt;1&lt;/span&gt;.2.3.4&lt;span class="o"&gt;)&lt;/span&gt; port &lt;span class="m"&gt;443&lt;/span&gt; &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="c1"&gt;#0)&lt;/span&gt;
 * successfully &lt;span class="nb"&gt;set&lt;/span&gt; certificate verify locations:
 *   CAfile: none
     CApath: /etc/ssl/certs
-* SSLv3, TLS handshake, Client hello &lt;span class="o"&gt;(&lt;/span&gt;1&lt;span class="o"&gt;)&lt;/span&gt;:
-* SSLv3, TLS handshake, Server hello &lt;span class="o"&gt;(&lt;/span&gt;2&lt;span class="o"&gt;)&lt;/span&gt;:
-* SSLv3, TLS handshake, CERT &lt;span class="o"&gt;(&lt;/span&gt;11&lt;span class="o"&gt;)&lt;/span&gt;:
-* SSLv3, TLS alert, Server hello &lt;span class="o"&gt;(&lt;/span&gt;2&lt;span class="o"&gt;)&lt;/span&gt;:
+* SSLv3, TLS handshake, Client hello &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="m"&gt;1&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;:
+* SSLv3, TLS handshake, Server hello &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="m"&gt;2&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;:
+* SSLv3, TLS handshake, CERT &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="m"&gt;11&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;:
+* SSLv3, TLS alert, Server hello &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="m"&gt;2&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;:
 * SSL certificate problem: unable to get &lt;span class="nb"&gt;local&lt;/span&gt; issuer certificate
-* Closing connection 0
+* Closing connection &lt;span class="m"&gt;0&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
@@ -1451,7 +1470,8 @@ Certificat ajouté au fichier de clés
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;p&gt;Voilà qui devrait vous permettre de communiquer avec le reste du monde.&lt;/p&gt;</summary><category term="ssl"></category><category term="tls"></category><category term="java"></category><category term="certificat"></category><category term="signature"></category><category term="sécurité"></category></entry><entry><title>Qu'est-ce qui me motive en tant que développeur ?</title><link href="http://www.dericbourg.net/2015/02/16/quest-ce-qui-me-motive-en-tant-que-developpeur/" rel="alternate"></link><published>2015-02-16T00:00:00+01:00</published><author><name>Alban Dericbourg</name></author><id>tag:www.dericbourg.net,2015-02-16:2015/02/16/quest-ce-qui-me-motive-en-tant-que-developpeur/</id><summary type="html">&lt;p&gt;Je suis développeur. Je travaille pour l'ESN MaBoite et suis en mission depuis plusieurs mois chez MonClient. Il est 9h40, j'arrive chez MonClient en retard, déjà fatigué. Sans avoir fait la fête la veille, j'ai pourtant eu du mal à me lever ce matin, je n'avais pas envie.&lt;/p&gt;
+&lt;p&gt;Voilà qui devrait vous permettre de communiquer avec le reste du monde.&lt;/p&gt;</content><category term="ssl"></category><category term="tls"></category><category term="java"></category><category term="certificat"></category><category term="signature"></category><category term="sécurité"></category></entry><entry><title>Qu'est-ce qui me motive en tant que développeur ?</title><link href="//www.dericbourg.net/2015/02/16/quest-ce-qui-me-motive-en-tant-que-developpeur/" rel="alternate"></link><published>2015-02-16T00:00:00+01:00</published><updated>2015-02-16T00:00:00+01:00</updated><author><name>Alban Dericbourg</name></author><id>tag:www.dericbourg.net,2015-02-16:/2015/02/16/quest-ce-qui-me-motive-en-tant-que-developpeur/</id><summary type="html">&lt;p&gt;Je suis développeur. Je travaille pour l'ESN MaBoite et suis en mission depuis plusieurs mois chez MonClient. Il est 9h40, j'arrive chez MonClient en retard, déjà fatigué. Sans avoir fait la fête la veille, j'ai pourtant eu du mal à me lever ce matin, je n'avais pas envie.&lt;/p&gt;
+&lt;p&gt;Gérard passe …&lt;/p&gt;</summary><content type="html">&lt;p&gt;Je suis développeur. Je travaille pour l'ESN MaBoite et suis en mission depuis plusieurs mois chez MonClient. Il est 9h40, j'arrive chez MonClient en retard, déjà fatigué. Sans avoir fait la fête la veille, j'ai pourtant eu du mal à me lever ce matin, je n'avais pas envie.&lt;/p&gt;
 &lt;p&gt;Gérard passe à côté de moi sans même me regarder. Jérôme vient me demander d'implémenter une fonctionnalité en urgence. Je ne comprends pas l'objectif de sa demande et lui demande des précisions : « Ce n'est pas important, me répond-il, c'est pour les gogols du pôle métier qui ne comprennent rien à ce qu'ils font, comme d'habitude ». Lorsque j'envisage de leur demander directement les détails nécessaires, il me coupe : la fonctionnalité ne servira jamais, autant la réaliser comme ils l'imaginent, cela nous fera gagner du temps. S'il est sûr de lui, allons-y.&lt;/p&gt;
 &lt;p&gt;Avant de m'y mettre, je constate que les tests unitaires du module que j'ai réalisé la semaine dernière ne passent plus. Gérard étant à l'origine de la modification, je vais le voir. « Oui, j'ai repris des trucs, ça ne me plaisait pas et je voulais que ça marche », m'explique-t-il. Je repars avec l'injonction de remettre les tests d'aplomb en fonction de ce qu'il a écrit.&lt;/p&gt;
 &lt;p&gt;La journée passe, il est 18h. Au cours de la journée, je n'ai écrit que quelques lignes de code dont je ne suis pas satisfait. Je vois bien qu'il y a des choses à reprendre, que ça pourrait être plus « propre » mais j'ai du mal à identifier comment mieux faire. Je n'ai de toute façon pas l'énergie de m'y pencher. Qu'est-ce qui rend le travail si laborieux ? Pourquoi ma motivation est-elle si basse ?&lt;/p&gt;
@@ -1463,7 +1483,7 @@ Certificat ajouté au fichier de clés
 &lt;li&gt;le sens-signification qui, sans direction, devient une idéologie – pensez à des choses qui vous ont été imposées mais (du moins au premier contact) jamais justifiées : les tests unitaires, l'injection de dépendances… autant de choses, qui, présentées de façon dogmatique, resteront perçues comme des obligations empiriques.&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;On peut lui poser comme conditions deux pré-requis (Jacques Lecomte) : le lien et la loi. L'équilibre des deux va engendrer de la cohérence et donner du sens.&lt;/p&gt;
-&lt;p&gt;&lt;img alt="Triangle de la résilience" class="center" src="/images/2015-02-18-Quest_ce_qui_me_motive_en_tant_que_developpeur/triangle_resilience.png" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Triangle de la résilience" class="center" src="/images/2015-02-18-Quest_ce_qui_me_motive_en_tant_que_developpeur/triangle_resilience.png"&gt;&lt;/p&gt;
 &lt;p&gt;Le lien est en partie de ma responsabilité : un lien de qualité dépend directement de mon savoir-être. Dans un cadre professionnel, on peut décrire (de façon non exhaustive) mon savoir-être par :&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;ma connaissance de mes besoins ;&lt;/li&gt;
@@ -1496,7 +1516,7 @@ Certificat ajouté au fichier de clés
 &lt;li&gt;la compétence ;&lt;/li&gt;
 &lt;li&gt;la proximité (le lien).&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;&lt;img alt="Triangle de la paix durable" class="center" src="/images/2015-02-18-Quest_ce_qui_me_motive_en_tant_que_developpeur/triangle_paix_durable.png" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Triangle de la paix durable" class="center" src="/images/2015-02-18-Quest_ce_qui_me_motive_en_tant_que_developpeur/triangle_paix_durable.png"&gt;&lt;/p&gt;
 &lt;p&gt;Tout comme avec mes collègues du quotidien chez MonClient, un lien de qualité avec MaBoite (son image, ses salariés, sa direction) est également nécessaire à l'équilibre. Une ESN « classique » n'est pas un environnement propice à la proximité : les consultants sont « éclatés » chacun chez un client différent ou sur des missions différentes, ce qui peut entraîner un manque de lien. Néanmoins, cet éloignement peut être compensé : coding dojos, soirées d'équipe…&lt;/p&gt;
 &lt;p&gt;Une vigilance toute particulière est à apporter aux outils de communication numérique (e-mail, messagerie instantanée, réseau social d'entreprise…). Ceux-ci ne permettent d'échanger que des mots : on « perd » tout le pan non-verbal de la communication (gestuelle, attitude, mimiques…) mais aussi le ton de la voix. Ceux-ci représentant la plupart du temps la proportion la plus importante de la communication, leur absence crée un grand risque de quiproquos ou d'incompréhensions qui peuvent se révéler dévastateurs.&lt;/p&gt;
 &lt;p&gt;La transparence apporte honnêteté et clarté dans les échanges : « Plus j'en sais, même quand ça va mal, plus je fais confiance à l'autre ». Là aussi il s'agit du sentiment de sécurité : si on ne me cache rien, c'est que je suis digne de confiance, que je suis considéré comme un collaborateur et pas seulement comme un produit.
@@ -1516,7 +1536,7 @@ La réciproque est également applicable : je suis moi-même transparent pour ga
 &lt;h3&gt;Besoin d'autonomie et de reconnaissance&lt;/h3&gt;
 &lt;p&gt;Pour que ses salariés se sentent reconnus, l'employeur a notamment la responsabilité de leur permettre d'être autonomes. On est autonome lorsque l'on est en mesure de se débrouiller seul sans craindre de perdre son identité lorsque l'on demande de l'aide.&lt;/p&gt;
 &lt;p&gt;Vincent Lenhardt structure l'autonomie autour de quatre niveaux décrits par le schéma qui suit.&lt;/p&gt;
-&lt;p&gt;&lt;img alt="Structure de l'autonomie en quatre niveaux selon Vincent Lenhardt" class="center" src="/images/2015-02-18-Quest_ce_qui_me_motive_en_tant_que_developpeur/autonomie.png" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Structure de l'autonomie en quatre niveaux selon Vincent Lenhardt" class="center" src="/images/2015-02-18-Quest_ce_qui_me_motive_en_tant_que_developpeur/autonomie.png"&gt;&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;En situation de dépendance, on dit « oui » à tout. On est incapable de prendre une décision et on s'identifie à la relation avec l'autre (un collègue ou MaBoîte).&lt;/li&gt;
 &lt;li&gt;Progressivement, on se rebelle, on apprend à dire « non » à l'autre, on l'accuse : on est alors en situation de contre-dépendance.&lt;/li&gt;
@@ -1528,7 +1548,8 @@ La réciproque est également applicable : je suis moi-même transparent pour ga
 &lt;p&gt;Si les composantes de la paix durable sont solides et équilibrées, le cadre est suffisamment sécurisant pour que, associé aux liens que je trouve en mission chez MonClient aussi bien que dans MaBoite, j'y trouve du sens.&lt;/p&gt;
 &lt;p&gt;Si mon employeur prend ses responsabilités pour créer un cadre sécurisant en tant que garant de la loi (cf. triangle de la résilience), associé au lien de qualité, je trouve le sens qui me donne envie de me lever le matin.&lt;/p&gt;
 &lt;p&gt;« Ce dont l'humain a besoin, ce n'est pas de vivre sans tension mais bien de tendre vers un but valable, de réaliser une mission librement choisie. Il a besoin non de se libérer de sa tension, mais plutôt de se sentir appelé à accomplir quelque chose » (Viktor E. Frankl, Découvrir un sens à sa vie avec la logothérapie, 1959, édition J'ai lu, p. 129).&lt;/p&gt;
-&lt;p&gt;Finalement, j'ai besoin de la même chose que tout être humain, ce n'est pas spécifique au métier de développeur : ce qui me motive en tant que développeur, c'est ce qui me motive tout court.&lt;/p&gt;</summary><category term="quotidien"></category><category term="vivre ensemble"></category><category term="motivation"></category><category term="bien-être"></category></entry><entry><title>Shell shock : un obus dans les dents de bash</title><link href="http://www.dericbourg.net/2014/09/26/shell-shock-un-obus-dans-les-dents-de-bash/" rel="alternate"></link><published>2014-09-26T00:00:00+02:00</published><author><name>Alban Dericbourg</name></author><id>tag:www.dericbourg.net,2014-09-26:2014/09/26/shell-shock-un-obus-dans-les-dents-de-bash/</id><summary type="html">&lt;p&gt;Vous avez probablement entendu parler de Shell shock qui, outre l'association de troubles psychiques et physiques observés chez &lt;a href="http://fr.wikipedia.org/wiki/Obusite"&gt;certains soldats de la Première Guerre Mondiale&lt;/a&gt;, désigne également la vulnérabilité &lt;a href="http://www.cert.ssi.gouv.fr/site/CERTFR-2014-ALE-006/index.html"&gt;CVE-2014-6271&lt;/a&gt; touchant GNU bash. Elle permet à un attaquant de provoquer une exécution de code arbitraire à distance.&lt;/p&gt;
+&lt;p&gt;Finalement, j'ai besoin de la même chose que tout être humain, ce n'est pas spécifique au métier de développeur : ce qui me motive en tant que développeur, c'est ce qui me motive tout court.&lt;/p&gt;</content><category term="quotidien"></category><category term="vivre ensemble"></category><category term="motivation"></category><category term="bien-être"></category></entry><entry><title>Shell shock : un obus dans les dents de bash</title><link href="//www.dericbourg.net/2014/09/26/shell-shock-un-obus-dans-les-dents-de-bash/" rel="alternate"></link><published>2014-09-26T00:00:00+02:00</published><updated>2014-09-26T00:00:00+02:00</updated><author><name>Alban Dericbourg</name></author><id>tag:www.dericbourg.net,2014-09-26:/2014/09/26/shell-shock-un-obus-dans-les-dents-de-bash/</id><summary type="html">&lt;p&gt;Vous avez probablement entendu parler de Shell shock qui, outre l'association de troubles psychiques et physiques observés chez &lt;a href="http://fr.wikipedia.org/wiki/Obusite"&gt;certains soldats de la Première Guerre Mondiale&lt;/a&gt;, désigne également la vulnérabilité &lt;a href="http://www.cert.ssi.gouv.fr/site/CERTFR-2014-ALE-006/index.html"&gt;CVE-2014-6271&lt;/a&gt; touchant GNU bash. Elle permet à un attaquant de provoquer une exécution de code arbitraire à distance.&lt;/p&gt;
+&lt;h3&gt;Mon dieu, mais …&lt;/h3&gt;</summary><content type="html">&lt;p&gt;Vous avez probablement entendu parler de Shell shock qui, outre l'association de troubles psychiques et physiques observés chez &lt;a href="http://fr.wikipedia.org/wiki/Obusite"&gt;certains soldats de la Première Guerre Mondiale&lt;/a&gt;, désigne également la vulnérabilité &lt;a href="http://www.cert.ssi.gouv.fr/site/CERTFR-2014-ALE-006/index.html"&gt;CVE-2014-6271&lt;/a&gt; touchant GNU bash. Elle permet à un attaquant de provoquer une exécution de code arbitraire à distance.&lt;/p&gt;
 &lt;h3&gt;Mon dieu, mais c'est horrible !&lt;/h3&gt;
 &lt;p&gt;Il faut avouer que ça ne présage pas d'une franche partie de rigolade.&lt;/p&gt;
 &lt;p&gt;Tout d'abord, de nombreux programmes interagissent avec le shell. Nous savons que ce n'est généralement pas une bonne idée mais cela nous simplifie parfois grandement la tâche (on dit souvent qu'un bon développeur est un développeur fainéant). La surface d'attaque est donc très étendue.&lt;/p&gt;
@@ -1587,4 +1608,4 @@ Il ne peut plus rien nous arriver d'affreux maintenant&lt;/p&gt;
 
 
 &lt;p&gt;Si vous obtenez la date, votre système est vulnérable.&lt;/p&gt;
-&lt;p&gt;À suivre, donc.&lt;/p&gt;</summary><category term="bash"></category><category term="sécurité"></category><category term="cve"></category></entry></feed>
+&lt;p&gt;À suivre, donc.&lt;/p&gt;</content><category term="bash"></category><category term="sécurité"></category><category term="cve"></category></entry></feed>

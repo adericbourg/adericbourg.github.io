@@ -14,32 +14,32 @@
 <head>
         <meta charset="utf-8" />
         <title>Utiliser un certificat signé par une autorité inconnue en Java - Blog bloquant</title>
-        <link href="http://www.dericbourg.net/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Blog bloquant Full Atom Feed" />
-        <link href="http://www.dericbourg.net/feeds/blog.atom.xml" type="application/atom+xml" rel="alternate" title="Blog bloquant Categories Atom Feed" />
+        <link href="//www.dericbourg.net/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Blog bloquant Full Atom Feed" />
+        <link href="//www.dericbourg.net/feeds/blog.atom.xml" type="application/atom+xml" rel="alternate" title="Blog bloquant Categories Atom Feed" />
 
         <!-- Twitter card -->
         <meta name="twitter:card" content="summary" />
         <meta name="twitter:site" content="@adericbourg" />
         <meta name="twitter:creator" content="@adericbourg" />
         <meta name="twitter:title" content="Utiliser un certificat signé par une autorité inconnue en Java - Blog bloquant" />
-        <meta name="twitter:description" content="Lorsque vous vous connectez à un serveur en utilisant un certificat TLS (le grand frère de SSL depuis une quinzaine d'années), votre client en vérifie la signature. Celle-ci permet de vérifier que : celui-ci provient bien d'un émetteur connu ; qu'il n'a pas été modifié depuis son émission ..." />
-        <meta name="twitter:domain" content="http://www.dericbourg.net/2015/06/22/utiliser-un-certificat-signe-par-une-autorite-inconnue-en-java/" />
+        <meta name="twitter:description" content="Lorsque vous vous connectez à un serveur en utilisant un certificat TLS (le grand frère de SSL depuis une quinzaine d'années), votre client en vérifie la signature. Celle-ci permet de vérifier que : celui-ci provient bien d'un émetteur connu ; qu'il n'a pas été modifié depuis son émission. Le doute Il arrive …" />
+        <meta name="twitter:domain" content="//www.dericbourg.net/2015/06/22/utiliser-un-certificat-signe-par-une-autorite-inconnue-en-java/" />
 
         <!-- Facebook Open Graph Meta Tags -->
         <meta property="og:site_name" content="Blog bloquant"/>
         <meta property="og:title" content="Utiliser un certificat signé par une autorité inconnue en Java"/>
-        <meta property="og:url" content="http://www.dericbourg.net/2015/06/22/utiliser-un-certificat-signe-par-une-autorite-inconnue-en-java/index.html"/>
-        <meta property="og:description" content="Lorsque vous vous connectez à un serveur en utilisant un certificat TLS (le grand frère de SSL depuis une quinzaine d'années), votre client en vérifie la signature. Celle-ci permet de vérifier que : celui-ci provient bien d'un émetteur connu ; qu'il n'a pas été modifié depuis son émission ..."/>
+        <meta property="og:url" content="//www.dericbourg.net/2015/06/22/utiliser-un-certificat-signe-par-une-autorite-inconnue-en-java/index.html"/>
+        <meta property="og:description" content="Lorsque vous vous connectez à un serveur en utilisant un certificat TLS (le grand frère de SSL depuis une quinzaine d'années), votre client en vérifie la signature. Celle-ci permet de vérifier que : celui-ci provient bien d'un émetteur connu ; qu'il n'a pas été modifié depuis son émission. Le doute Il arrive …"/>
         <meta property="og:type" content="blog"/>
 
         <!-- Mobile viewport optimized: j.mp/bplateviewport -->
         <meta name="viewport" content="width=device-width,initial-scale=1, maximum-scale=1">
 
-        <link rel="stylesheet" type="text/css" href="http://www.dericbourg.net/theme/gumby.css" />
-        <link rel="stylesheet" type="text/css" href="http://www.dericbourg.net/theme/style.css" />
-        <link rel="stylesheet" type="text/css" href="http://www.dericbourg.net/theme/pygment.css" />
+        <link rel="stylesheet" type="text/css" href="//www.dericbourg.net/theme/gumby.css" />
+        <link rel="stylesheet" type="text/css" href="//www.dericbourg.net/theme/style.css" />
+        <link rel="stylesheet" type="text/css" href="//www.dericbourg.net/theme/pygment.css" />
 
-        <script src="http://www.dericbourg.net/theme/js/libs/modernizr-2.6.2.min.js"></script>
+        <script src="//www.dericbourg.net/theme/js/libs/modernizr-2.6.2.min.js"></script>
 
 
               <script>
@@ -64,14 +64,14 @@
         <div class="row">
 
           <header id="banner" class="body">
-                  <h1><a href="http://www.dericbourg.net/">Blog bloquant <strong></strong></a></h1>
+                  <h1><a href="//www.dericbourg.net/">Blog bloquant <strong></strong></a></h1>
           </header><!-- /#banner -->
 
             <div id="navigation" class="navbar row">
               <a href="#" data-trigger="#navigation &gt; ul" class="toggle"><i class="icon-menu"></i></a>
 
               <ul class="columns">
-                <li><a href="http://www.dericbourg.net/">Accueil</a></li>
+                <li><a href="//www.dericbourg.net/">Accueil</a></li>
 
               </ul>
 
@@ -87,23 +87,23 @@
               <h2 class="entry-title">Utiliser un certificat signé par une autorité inconnue en Java</h2>
            
               <div>
-                    <a class="info label" href="http://www.dericbourg.net/tag/ssl.html">ssl</a>
-                    <a class="info label" href="http://www.dericbourg.net/tag/tls.html">tls</a>
-                    <a class="info label" href="http://www.dericbourg.net/tag/java.html">java</a>
-                    <a class="info label" href="http://www.dericbourg.net/tag/certificat.html">certificat</a>
-                    <a class="info label" href="http://www.dericbourg.net/tag/signature.html">signature</a>
-                    <a class="info label" href="http://www.dericbourg.net/tag/securite.html">sécurité</a>
+                    <a class="info label" href="//www.dericbourg.net/tag/ssl.html">ssl</a>
+                    <a class="info label" href="//www.dericbourg.net/tag/tls.html">tls</a>
+                    <a class="info label" href="//www.dericbourg.net/tag/java.html">java</a>
+                    <a class="info label" href="//www.dericbourg.net/tag/certificat.html">certificat</a>
+                    <a class="info label" href="//www.dericbourg.net/tag/signature.html">signature</a>
+                    <a class="info label" href="//www.dericbourg.net/tag/securite.html">sécurité</a>
               </div>
             </header>
             <footer class="post-info">
 
               <abbr class="published" title="2015-06-22T00:00:00+02:00">
-                lun. 22 juin 2015
+                Mon 22 June 2015
               </abbr>
               &ndash;
-              <a href="http://www.dericbourg.net/2015/06/22/utiliser-un-certificat-signe-par-une-autorite-inconnue-en-java/" rel="bookmark" title="Lien permanent vers Utiliser un certificat signé par une autorité inconnue en Java">lien permanent</a>
+              <a href="//www.dericbourg.net/2015/06/22/utiliser-un-certificat-signe-par-une-autorite-inconnue-en-java/" rel="bookmark" title="Lien permanent vers Utiliser un certificat signé par une autorité inconnue en Java">lien permanent</a>
               <address class="vcard author">Par
-                <a class="url fn" href="http://www.dericbourg.net/author/alban-dericbourg.html"> Alban Dericbourg</a>
+                <a class="url fn" href="//www.dericbourg.net/author/alban-dericbourg.html"> Alban Dericbourg</a>
               </address>
 
             </footer><!-- /.post-info -->
@@ -123,17 +123,17 @@
 <div class="highlight"><pre><span></span>$ curl -v https://www.exemple.com
 * Rebuilt URL to: https://www.example.com/
 * Hostname was NOT found in DNS cache
-*   Trying 1.2.3.4...
-* Connected to www.example.com <span class="o">(</span>1.2.3.4<span class="o">)</span> port <span class="m">443</span> <span class="o">(</span><span class="c1">#0)</span>
+*   Trying <span class="m">1</span>.2.3.4...
+* Connected to www.example.com <span class="o">(</span><span class="m">1</span>.2.3.4<span class="o">)</span> port <span class="m">443</span> <span class="o">(</span><span class="c1">#0)</span>
 * successfully <span class="nb">set</span> certificate verify locations:
 *   CAfile: none
     CApath: /etc/ssl/certs
-* SSLv3, TLS handshake, Client hello <span class="o">(</span>1<span class="o">)</span>:
-* SSLv3, TLS handshake, Server hello <span class="o">(</span>2<span class="o">)</span>:
-* SSLv3, TLS handshake, CERT <span class="o">(</span>11<span class="o">)</span>:
-* SSLv3, TLS alert, Server hello <span class="o">(</span>2<span class="o">)</span>:
+* SSLv3, TLS handshake, Client hello <span class="o">(</span><span class="m">1</span><span class="o">)</span>:
+* SSLv3, TLS handshake, Server hello <span class="o">(</span><span class="m">2</span><span class="o">)</span>:
+* SSLv3, TLS handshake, CERT <span class="o">(</span><span class="m">11</span><span class="o">)</span>:
+* SSLv3, TLS alert, Server hello <span class="o">(</span><span class="m">2</span><span class="o">)</span>:
 * SSL certificate problem: unable to get <span class="nb">local</span> issuer certificate
-* Closing connection 0
+* Closing connection <span class="m">0</span>
 </pre></div>
 
 
@@ -247,7 +247,7 @@ Certificat ajouté au fichier de clés
 
 <h4>Catégories</h4>
 <ul>
-		<li><a href="http://www.dericbourg.net/category/blog.html">Blog</a></li>
+		<li><a href="//www.dericbourg.net/category/blog.html">Blog</a></li>
 </ul>
 
 -->
@@ -299,8 +299,8 @@ Certificat ajouté au fichier de clés
     }());
 </script>
 
-  <script src="http://www.dericbourg.net/theme/js/libs/jquery-1.9.1.min.js"></script>
-  <script src="http://www.dericbourg.net/theme/js/libs/gumby.min.js"></script>
-  <script src="http://www.dericbourg.net/theme/js/plugins.js"></script>
+  <script src="//www.dericbourg.net/theme/js/libs/jquery-1.9.1.min.js"></script>
+  <script src="//www.dericbourg.net/theme/js/libs/gumby.min.js"></script>
+  <script src="//www.dericbourg.net/theme/js/plugins.js"></script>
 </body>
 </html>
