@@ -51,8 +51,8 @@
 <h4>Tags</h4>
 {% if tags %}
 	<ul id="sidebar-tags">
-	{% for tag in tag_cloud %}
-	    <li class="tag tag-{{ tag.1 }}"><a href="{{ SITEURL }}/{{ tag.0.url }}">{{ tag.0|e }}</a></li>
+	{% for (tag, articles) in tags %}
+	    <li class="tag tag-{{ articles|length }}"><a href="{{ SITEURL }}/{{ tag.url }}">{{ tag|e }}</a></li>
 	{% endfor %}
 </ul>
 {% endif %}
