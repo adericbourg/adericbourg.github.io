@@ -250,6 +250,21 @@ h2.entry-title, h2.index-title {
   float: right;
   padding-left: 0.75em;
 }
+#sidebar-tags .tag {
+  font-size: 2em;
+}
+
+#sidebar-tags .tag-1, #sidebar-tags .tag-2 {
+  font-size: .8em;
+}
+
+#sidebar-tags .tag-3, #sidebar-tags .tag-4 {
+  font-size: 1em;
+}
+
+#sidebar-tags .tag-5, #sidebar-tags .tag-6 {
+  font-size: 1.5em;
+}
 
 /* Content titles */
 
