@@ -8,12 +8,27 @@ Date: 1970-01-01
 
 ### Définissez clairement le poste
 
-Un développeur qui croit savoir à quoi il postule en réponsant à une annonce
-de recherche d'un artisan charpentier du code a de grandes chances de se
-mettre la poutre dans l'œil jusqu'au coude.
+Quand je parcours des propositions de poste, je regarde deux choses :
+
+* le titre (intitulé du poste) ;
+* l'entreprise.
+
+Face à une annonce pour un artisan charpentier du code, si je crois
+savoir à quoi je postule, j'ai de grandes chances de me mettre
+la poutre dans l'œil jusqu'au coude.
+
+Le titre est ce qui apparaît... dans le titre de l'annonce ou de
+votre e-mail de contact. Face au (trop ?) grand nombre de propositions
+quasi-quotidiennes que reçoit un développeur, je comprends le besoin
+de se démarquer pour attiter l'attention. Je pense que cela doit se
+faire en amont du contact : par la visibilité de l'entreprise, son
+impact pour la communauté, etc. Je ne saurais trop vous conseiller
+d'être sobre dans le choix de cet intitulé.
 
 Utilisez également des termes qui ont du sens. Pour prendre un exemple
 courant, _devops_ est une pratique technique, pas un poste.
+
+> TODO: donner des exemples d'intitulés de postes
 
 Au delà du titre, c'est la fiche de poste qui définit le travail au
 quotidien. C'est le cadre qu'elle définit qui fera naître&nbsp;— ou
@@ -24,11 +39,16 @@ non&nbsp;!&nbsp;— mon intérêt pour le poste.
 >
 > — Nicolas Boileau
 
-C'est également le cas pour le fiche de poste.
+C'est également le cas pour le fiche de poste. J'en attends donc de
+me donner, sinon une vision exhaustive, au moins une vision claire de
+la façon dont le poste est pensé.
 
-### Annoncez les valeurs de l'entreprise
+* Quelles seront les missions ?
+* Quelles seront les responsabilités ?
+* Avec qui sera-t-on ammené à interagir ?
+* ...
 
-*TODO*
+> TODO: élargir
 
 ### Soyons transparents
 
@@ -57,13 +77,56 @@ c'est prendre le risque de le voir revenir plus tard plus gros et plus fort.
 Après discussions et explications, d'un côté comme de l'autre : s'il y a
 un doute, c'est non.
 
-### Explicitez les attentes lors de l'entretien
+### Explicitons nos attentes lors de l'entretien
 
-Un entretien n'a pas vocation à piéger un candidat.
+Un entretien n'a pas vocation à piéger un candidat. Si vous pensez qu'un
+candidat qui se renseigne à l'avance sur le contenu de vos entretiens est
+un candidat qui triche : vos entretiens sont probablement mal conçus.
 
-Si vous pensez qu'un candidat qui se renseigne à l'avance sur le contenu
-de vos entretiens est un candidat qui triche : vos entretiens sont
-probablement mal conçus.
+J'estime que les entretiens permettent :
+
+* au candidat de se faire une image fidèle de ce que sera son travail dans
+  l'entreprise, tant du point de vue opérationnel que du point de vue
+  relationnel ;
+* à l'entreprise (toute personne amenée à travailler de près ou de loin
+  avec lui) à apprendre à connaître le candidat et évaluer son savoir-faire
+  et son savoir-être.
+
+Dans cette optique, les entretiens doivent être pensés pour jouer ce rôle.
+Pour un système métier complexe qui n'est pas soumi à une forte charge,
+centrer un test technique sur sa capacité à modéliser les concepts métiers
+semble plus pertinent que d'évaluer sa maîtrise des algorithmes classiques
+et sa connaîssance de leurs complexité associée.
+
+Quoi qu'il en soit et quoi que vous ayiez choisi : annoncez au candidat ce
+sur quoi il sera évalué, comment et il sera évalué et pourquoi vous avez
+fait ces choix. Vous comme le candidat avez tout à y gagner.
+
+À titre d'illustration, j'ai postulé dans une entreprise où le responsable
+de mon équipe « cible » n'a pas clarifié ces attentes avec les ingénieurs
+qui m'ont fait passer le test technique. Ce test n'a pas été en phase
+avec sa vision de la personne à recruter et son contenu bien loin de mes
+compétences. J'ai donc été refusé par l'entreprise. J'avais pourtant déjà
+travaillé avec le responsable de cette équipe et nous savions l'un comme
+l'autre que mes compétences techniques n'étaient pas un problème pour le
+poste en question. Cette situation a été génératrice de frustration :
+
+* pour le responsable de l'équipe qui n'a pas pu recruter suffisamment
+  pour mener à bien ses projets ;
+* pour moi, pour avoir dépensé de l'énergie dans un processus long qui
+  n'a pas abouti pour un manque d'alignement en interne ;
+* pour les ingénieurs dont on a discuté les choix _a posteriori_, donc
+  avec plus d'enjeux que s'ils avaient été abordés _a priori_ ;
+* pour l'entreprise en général, car tout processus de recrutement a un
+  coût et toute expérience négative durant ce processus a un impact
+  sur son image.
+
+### Annonçons nos valeurs
+
+*TODO*
+
+> TODO Définition de valeur (~ « éléments sur lesquels il n'y a pas de
+> compromis possible »)
 
 ### Parlons d'argent
 
@@ -74,13 +137,11 @@ le développeur travaille _aussi_ pour percevoir un salaire. Un processus de
 recrutement demande du temps de de l'énergie au candidat ; il demande également
 du temps et de l'argent à l'entreprise. Même si vous êtes en face du candidat de
 vos rêves, si vous ne pouvez pas le payer à la hauteur de ses attentes,
-annoncez-le clairement.
+annoncez-le clairement et le plus tôt possible.
 
 Quelle issue espérer si, au terme d'un appel téléphonique, de deux visioconférences
 et de cinq entretiens sur site vous lui proposez un salaire très inférieur à ses
 attentes ?
-
-
 
 ### En cas d'approche directe
 
@@ -99,5 +160,5 @@ plupart du temps, je n'en termine même pas la lecture).
 
 ### tl;dr
 
-* Mieux vaut un faux négatif qu'un faux positif. Le moindre doute qui ne s'estompe pas
+* Mieux vaut un faux négatif qu'un faux positif. Le moindre doute qui persiste
   indique que nous ne sommes pas faits pour travailler ensemble.
