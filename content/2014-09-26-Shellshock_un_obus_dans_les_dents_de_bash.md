@@ -40,7 +40,8 @@ Ainsi, tout système utilisant bash est vulnérable, mais il est particulièreme
 Pour savoir si votre machine est vulnérable, vous pouvez lancer :
 
 ```bash
-$ env VAR='() { 0; }; echo danger' bash -c "echo bonjour"
+env VAR='() { 0; }; echo danger' bash -c "echo bonjour"
+```
 
 Si tout va bien, vous devriez observer ceci :
 
@@ -52,7 +53,6 @@ bonjour
 ```
 
 Si tout ne va pas bien, vous observerez :
-
 
 ```bash
 $ env VAR='() { 0; }; echo danger' bash -c "echo bonjour"
@@ -68,7 +68,6 @@ Moi – et probablement vous aussi – mais je ne pense pas que ce soit de la b�
 
 Pour l'instant, le vecteur de propagation semble être la requête HTTP à destination d'un script CGI. Le serveur web _Apache httpd_ utilise par exemple des scripts (donc potentiellement bash) pour certaines fonctions C, Python ou PHP (si ce dernier est lancé en mode CGI). C'est ainsi que quelques robots parcourent en ce moment même le web en positionnant leur en-tête _User-Agent_ comme suit afin de dresser leur annuaire des machines vulnérables : `User-Agent: () { :; } /bin/ping -c x.y.z.q`. Si vous souhaitez vérifier vos logs HTTP, vous pouvez lancer `egrep '\(\ *\)\ *\{' /var/log/nginx/*` par exemple.
 
-
 Ce n'est donc pas si rare et c'est sans compter les applications largement déployées qui utilisent CGI (cPanel par exemple).
 
 Enfin – et plus localement, certains clients DHCP utilisent également des scripts pour configurer le système. Si le serveur est corrompu (ou mal intentionné), cela permet d'exécuter des commandes – vraisemblablement en _root_ – sur la machine cliente.
@@ -79,7 +78,7 @@ Une fois le patch passé, vous devriez déjà être plus sereins. Néanmoins, [c
 Pour tester votre vulnérabilité à [CVE-2014-7169](https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2014-7169), vous pouvez lancer :
 
 ```bash
-$ env X='() { (a)=>\' sh -c "echo date"; cat echo
+env X='() { (a)=>\' sh -c "echo date"; cat echo
 ```
 
 Si vous obtenez la date, votre système est vulnérable.
