@@ -131,12 +131,12 @@
 <li>et que ce service lance bash pour un traitement quelconque.</li>
 </ul>
 <p>Pour savoir si votre machine est vulnérable, vous pouvez lancer :</p>
+<div class="highlight"><pre><span></span>env <span class="nv">VAR</span><span class="o">=</span><span class="s1">&#39;() { 0; }; echo danger&#39;</span> bash -c <span class="s2">&quot;echo bonjour&quot;</span>
+</pre></div>
+
+
+<p>Si tout va bien, vous devriez observer ceci :</p>
 <div class="highlight"><pre><span></span>$ env <span class="nv">VAR</span><span class="o">=</span><span class="s1">&#39;() { 0; }; echo danger&#39;</span> bash -c <span class="s2">&quot;echo bonjour&quot;</span>
-
-Si tout va bien, vous devriez observer ceci :
-
-<span class="sb">```</span>bash
-$ env <span class="nv">VAR</span><span class="o">=</span><span class="s1">&#39;() { 0; }; echo danger&#39;</span> bash -c <span class="s2">&quot;echo bonjour&quot;</span>
 bash: warning: VAR: ignoring <span class="k">function</span> definition attempt
 bash: error importing <span class="k">function</span> definition <span class="k">for</span> <span class="sb">`</span>VAR<span class="err">&#39;</span>
 bonjour
@@ -159,7 +159,7 @@ bonjour
 Il ne peut plus rien nous arriver d'affreux maintenant</p>
 <p>Une fois le patch passé, vous devriez déjà être plus sereins. Néanmoins, <a href="https://securityblog.redhat.com/2014/09/24/bash-specially-crafted-environment-variables-code-injection-attack/">comme l'indique RedHat</a>, le patch fourni laisse quelques trous dans la raquette. Il est notamment possible, sous certaines conditions, d'exécuter du code contenu dans des variables d'environnement (CVE-2014-7169). Reste à attendre le patch du patch.</p>
 <p>Pour tester votre vulnérabilité à <a href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2014-7169">CVE-2014-7169</a>, vous pouvez lancer :</p>
-<div class="highlight"><pre><span></span>$ env <span class="nv">X</span><span class="o">=</span><span class="s1">&#39;() { (a)=&gt;\&#39;</span> sh -c <span class="s2">&quot;echo date&quot;</span><span class="p">;</span> cat <span class="nb">echo</span>
+<div class="highlight"><pre><span></span>env <span class="nv">X</span><span class="o">=</span><span class="s1">&#39;() { (a)=&gt;\&#39;</span> sh -c <span class="s2">&quot;echo date&quot;</span><span class="p">;</span> cat <span class="nb">echo</span>
 </pre></div>
 
 

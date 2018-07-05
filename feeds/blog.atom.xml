@@ -1575,12 +1575,12 @@ La réciproque est également applicable : je suis moi-même transparent pour ga
 &lt;li&gt;et que ce service lance bash pour un traitement quelconque.&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;Pour savoir si votre machine est vulnérable, vous pouvez lancer :&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;env &lt;span class="nv"&gt;VAR&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;() { 0; }; echo danger&amp;#39;&lt;/span&gt; bash -c &lt;span class="s2"&gt;&amp;quot;echo bonjour&amp;quot;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Si tout va bien, vous devriez observer ceci :&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ env &lt;span class="nv"&gt;VAR&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;() { 0; }; echo danger&amp;#39;&lt;/span&gt; bash -c &lt;span class="s2"&gt;&amp;quot;echo bonjour&amp;quot;&lt;/span&gt;
-
-Si tout va bien, vous devriez observer ceci :
-
-&lt;span class="sb"&gt;```&lt;/span&gt;bash
-$ env &lt;span class="nv"&gt;VAR&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;() { 0; }; echo danger&amp;#39;&lt;/span&gt; bash -c &lt;span class="s2"&gt;&amp;quot;echo bonjour&amp;quot;&lt;/span&gt;
 bash: warning: VAR: ignoring &lt;span class="k"&gt;function&lt;/span&gt; definition attempt
 bash: error importing &lt;span class="k"&gt;function&lt;/span&gt; definition &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="sb"&gt;`&lt;/span&gt;VAR&lt;span class="err"&gt;&amp;#39;&lt;/span&gt;
 bonjour
@@ -1603,7 +1603,7 @@ bonjour
 Il ne peut plus rien nous arriver d'affreux maintenant&lt;/p&gt;
 &lt;p&gt;Une fois le patch passé, vous devriez déjà être plus sereins. Néanmoins, &lt;a href="https://securityblog.redhat.com/2014/09/24/bash-specially-crafted-environment-variables-code-injection-attack/"&gt;comme l'indique RedHat&lt;/a&gt;, le patch fourni laisse quelques trous dans la raquette. Il est notamment possible, sous certaines conditions, d'exécuter du code contenu dans des variables d'environnement (CVE-2014-7169). Reste à attendre le patch du patch.&lt;/p&gt;
 &lt;p&gt;Pour tester votre vulnérabilité à &lt;a href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2014-7169"&gt;CVE-2014-7169&lt;/a&gt;, vous pouvez lancer :&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ env &lt;span class="nv"&gt;X&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;() { (a)=&amp;gt;\&amp;#39;&lt;/span&gt; sh -c &lt;span class="s2"&gt;&amp;quot;echo date&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; cat &lt;span class="nb"&gt;echo&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;env &lt;span class="nv"&gt;X&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;() { (a)=&amp;gt;\&amp;#39;&lt;/span&gt; sh -c &lt;span class="s2"&gt;&amp;quot;echo date&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; cat &lt;span class="nb"&gt;echo&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
