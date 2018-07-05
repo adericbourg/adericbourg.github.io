@@ -123,10 +123,28 @@ poste en question. Cette situation a été génératrice de frustration :
 
 ### Annonçons nos valeurs
 
-*TODO*
+Les valeurs définissent des qualités qui illustrent un comportement estimé,
+admiré et recherché. Elles sont subjectives et peuvent n'être portées que
+par un individu ou un groupe d'individus. Ainsi, mes valeurs ne sont pas
+nécessairement vos valeurs.
 
-> TODO Définition de valeur (~ « éléments sur lesquels il n'y a pas de
-> compromis possible »)
+Pourtant, les valeurs sont les règles morales sur lequelles il n'y a pas
+de compromis possible : y déroger, c'est s'oublier soi-même, c'est agir
+en incohérence avec son identité. Lors d'un recrutement, j'accorde donc
+beaucoup d'importance à l'alignement des valeurs de l'entreprise avec les
+miennes propres : je sais que si elles ne sont pas compatibles — ou même,
+tout simplement, pas en phase — nous nous ferons violence mutuellement
+pour travailler ensemble. Ce n'est pour moi, pas une situation souhaitable
+que je fuis.
+
+Pour en donner quelques exemples, les miennes sont :
+
+* la confiance — j'ai besoin de sécurité ;
+* la transparence — je dis ce que je fais ;
+* la cohérence — je fais ce que je dis et j'applique à moi-même ce que
+  j'attends des autres.
+
+*TODO*
 
 ### Parlons d'argent
 
