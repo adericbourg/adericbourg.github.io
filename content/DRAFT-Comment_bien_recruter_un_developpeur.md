@@ -144,6 +144,7 @@ Pour en donner quelques exemples, les miennes sont :
 * la cohérence — je fais ce que je dis et j'applique à moi-même ce que
   j'attends des autres.
 
+
 *TODO*
 
 ### Parlons d'argent
@@ -160,6 +161,14 @@ annoncez-le clairement et le plus tôt possible.
 Quelle issue espérer si, au terme d'un appel téléphonique, de deux visioconférences
 et de cinq entretiens sur site vous lui proposez un salaire très inférieur à ses
 attentes ?
+
+Les avantages secondaires — baby-foot, goûters, _rooftop_, smartphone — sont et
+restent secondaires. Ils sont différenciants dans le sens où, en cas d'hésitation,
+ils peuvent aider à faire pencher la balance. Ils peuvent éventuellement aider à
+compenser certains inconvénients assumés : un jardin japonais sur le toît peut aider
+atténuer la grisaille d'un quartier bétonné. En revanche, lorsque ces avantages
+sont utilisés comme premier argument de recrutement, j'ai tendance à être méfiant.
+Qu'essaie-t-on de me cacher en ne me présentant que de ces bénéfices annexes ?
 
 ### En cas d'approche directe
 
