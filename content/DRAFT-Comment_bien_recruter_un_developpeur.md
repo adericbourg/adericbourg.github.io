@@ -26,9 +26,25 @@ impact pour la communauté, etc. Je ne saurais trop vous conseiller
 d'être sobre dans le choix de cet intitulé.
 
 Utilisez également des termes qui ont du sens. Pour prendre un exemple
-courant, _devops_ est une pratique technique, pas un poste.
+courant, _devops_ est une pratique technique, pas un poste. Ces derniers
+temps, j'ai observé que les intitulés de poste tendaient vers l'anglais :
+je n'ai pas d'avis fort sur ce point. Parmi ceux qui m'ont semblé avoir
+du sens et être compréhensibles :
+
+* Software engineer
+* Site reliability engineer (SRE)
+* Operations engineer
+
+Si le poste est _vraiment_ lié à une technologie, vous pouvez le préfixer
+(par exemple: Java software engineer). Dans ce cas, je m'attends à ce que
+vous cherchiez un expert du sujet, potentiellement avec un rôle transverse
+de support aux équipes. En aucun cas je ne m'attends à voir un tel intitulé
+pour développeur en début de carrière.
+
 
 > TODO: donner des exemples d'intitulés de postes
+
+### Décrivez clairement le poste
 
 Au delà du titre, c'est la fiche de poste qui définit le travail au
 quotidien. C'est le cadre qu'elle définit qui fera naître&nbsp;— ou
@@ -41,14 +57,19 @@ non&nbsp;!&nbsp;— mon intérêt pour le poste.
 
 C'est également le cas pour le fiche de poste. J'en attends donc de
 me donner, sinon une vision exhaustive, au moins une vision claire de
-la façon dont le poste est pensé.
+la façon dont le poste est pensé. En se référant aux
+[indications données par Pôle Emploi](https://www.pole-emploi.fr/employeur/la-fiche-de-poste-@/article.jspz?id=377642),
+on devrait trouver dans une fiche de poste :
 
-* Quelles seront les missions ?
-* Quelles seront les responsabilités ?
-* Avec qui sera-t-on ammené à interagir ?
-* ...
+* l’intitulé du poste,
+* la position dans l’organigramme,
+* l’environnement et les conditions de travail (lieu de travail, rythme de travail, organisation...)
+* l’accès au poste et les conditions d’engagements (salaire, type de contrat...)
+* la description des missions et activités (fréquence et importance),
+* les difficultés du poste (souvent appelées _challenges_),
+* les relations avec les autres postes.
 
-> TODO: élargir
+
 
 ### Soyons transparents
 
