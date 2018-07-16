@@ -168,6 +168,12 @@ Pour en donner quelques exemples, les miennes sont :
 
 *TODO*
 
+### Préférez le mouton à trois pattes plutôt que celui à cinq pattes
+
+> *TODO*
+
+![Laisser une marge de progression](/images/comment_recruter_un_developpeur/poste_vs_competences.png){.center}
+
 ### Parlons d'argent
 
 Le sujet de l'argent est parfois tabou et n'est abordé qu'au moment de
