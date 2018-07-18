@@ -39,10 +39,9 @@ Si le poste est _vraiment_ lié à une technologie, vous pouvez le préfixer
 (par exemple: Java software engineer). Dans ce cas, je m'attends à ce que
 vous cherchiez un expert du sujet, potentiellement avec un rôle transverse
 de support aux équipes. En aucun cas je ne m'attends à voir un tel intitulé
-pour développeur en début de carrière.
-
-
-> TODO: donner des exemples d'intitulés de postes
+pour développeur en début de carrière : recrutez un développeur pour ce qu'il
+est et pour ce qu'il sait (et veut) faire, pas pour
+[les outils qu'il utilise](https://en.wikipedia.org/wiki/Law_of_the_instrument).
 
 ### Décrivez clairement le poste
 
@@ -63,13 +62,33 @@ on devrait trouver dans une fiche de poste :
 
 * l’intitulé du poste,
 * la position dans l’organigramme,
-* l’environnement et les conditions de travail (lieu de travail, rythme de travail, organisation...)
-* l’accès au poste et les conditions d’engagements (salaire, type de contrat...)
+* l’environnement et les conditions de travail (lieu de travail, rythme
+  de travail, organisation...)
+* l’accès au poste et les conditions d’engagements (salaire, type de
+  contrat...)
 * la description des missions et activités (fréquence et importance),
 * les difficultés du poste (souvent appelées _challenges_),
-* les relations avec les autres postes.
+* les relations avec les autres personnes et les autres équipes.
 
+### Préférez le mouton à trois pattes plutôt que celui à cinq pattes
 
+J'ai vu beaucoup d'offres très précises et spécifiques. Ces offres me
+donnent l'impression qu'elles décrivent une personne qui quitte l'entreprise
+et que l'on cherche à remplacer l'identique. Si tel est le cas, les
+attentes ne sont probablement pas ajustées : l'offre est focalisée sur la
+personne et pas sur le poste.
+
+De façon plus générale, je recommande de limiter l'offre (et la fiche
+de poste) au strict minimum : la perfection est atteinte non pas lorsqu'il
+n'y a plus rien à ajouter mais au contraire rien à retirer. Cela inclut
+les attentes vis-à-vis de la personne que vous recrutez. J'estime ce point
+particulièrement important dans la mesure où il peut contribuer sur la
+« longévité » du salarié dans l'entreprise. S'il dispose déjà de toutes
+les compétences que requiert le poste, quelle est sa marge de progression ?
+
+![Laisser une marge de progression](/images/comment_recruter_un_developpeur/poste_vs_competences.png){.center}
+
+> *TODO*
 
 ### Soyons transparents
 
@@ -161,18 +180,11 @@ que je fuis.
 Pour en donner quelques exemples, les miennes sont :
 
 * la confiance — j'ai besoin de sécurité ;
-* la transparence — je dis ce que je fais ;
+* la transparence — je dis ce que je fais et ce que je pense ;
 * la cohérence — je fais ce que je dis et j'applique à moi-même ce que
   j'attends des autres.
 
-
 *TODO*
-
-### Préférez le mouton à trois pattes plutôt que celui à cinq pattes
-
-> *TODO*
-
-![Laisser une marge de progression](/images/comment_recruter_un_developpeur/poste_vs_competences.png){.center}
 
 ### Parlons d'argent
 
@@ -214,5 +226,10 @@ plupart du temps, je n'en termine même pas la lecture).
 
 ### tl;dr
 
+Il n'y a pas de recette ni de processus miracle pour recruter un développeur. C'est
+ce qui nous différencie de la machine. Gardons tout de même quelques points en tête :
+
+
 * Mieux vaut un faux négatif qu'un faux positif. Le moindre doute qui persiste
   indique que nous ne sommes pas faits pour travailler ensemble.
+*
