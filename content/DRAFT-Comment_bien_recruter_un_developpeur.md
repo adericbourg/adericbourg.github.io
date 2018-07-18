@@ -1,6 +1,6 @@
 Title: Comment (bien) recruter un développeur ?
 Category: Blog
-Tags: recrutement
+Tags: recrutement, motivation
 Status: draft
 Date: 1970-01-01
 
