@@ -205,6 +205,11 @@ poste en question. Cette situation a été génératrice de frustration :
   coût et toute expérience négative durant ce processus a un impact
   sur son image.
 
+À l'inverse, j'ai répondu à un annonce pour un poste de _tech lead_.
+L'entreprise m'a fait une proposition d'embauche alors même que mes
+compétences techniques n'avaient pas été évaluées de tout le processus.
+Là, c'est moi qui ai refusé le poste.
+
 ### Annonçons nos valeurs
 
 Les valeurs définissent des qualités qui illustrent un comportement estimé,
