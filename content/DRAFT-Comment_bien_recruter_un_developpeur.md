@@ -78,17 +78,27 @@ et que l'on cherche à remplacer l'identique. Si tel est le cas, les
 attentes ne sont probablement pas ajustées : l'offre est focalisée sur la
 personne et pas sur le poste.
 
+![Laisser une marge de progression](/images/comment_recruter_un_developpeur/poste_vs_competences.png){.center}
+
 De façon plus générale, je recommande de limiter l'offre (et la fiche
 de poste) au strict minimum : la perfection est atteinte non pas lorsqu'il
 n'y a plus rien à ajouter mais au contraire rien à retirer. Cela inclut
 les attentes vis-à-vis de la personne que vous recrutez. J'estime ce point
-particulièrement important dans la mesure où il peut contribuer sur la
-« longévité » du salarié dans l'entreprise. S'il dispose déjà de toutes
+particulièrement important dans la mesure où il peut contribuer à la
+« longévité » du salarié dans l'entreprise : s'il dispose déjà de toutes
 les compétences que requiert le poste, quelle est sa marge de progression ?
 
-![Laisser une marge de progression](/images/comment_recruter_un_developpeur/poste_vs_competences.png){.center}
+Je ne suis intéressé par mon travail — avec un impact fort sur ma
+motivation  — que lorsque j'apprends, que ce soit sur le plan technique,
+organisationnel ou humain. Lorsque je n'ai plus aucun des trois, c'est
+pour moi le signal du départ. Sur un poste « trop facile », ce signal
+retentira très tôt.
 
-> *TODO*
+Je ne sous-ententends à aucun moment qu'il faut préférer quelqu'un de
+sous qualifié et qu'il ne faut prendre que des débutants. Un écart trop
+important entre les savoirs actuels de la personne et les besoins du
+poste peut s'avérer destructeur (démotivation, perte d'estime de soi,
+_burn out_...).
 
 ### Soyons transparents
 
@@ -229,7 +239,10 @@ plupart du temps, je n'en termine même pas la lecture).
 Il n'y a pas de recette ni de processus miracle pour recruter un développeur. C'est
 ce qui nous différencie de la machine. Gardons tout de même quelques points en tête :
 
-
 * Mieux vaut un faux négatif qu'un faux positif. Le moindre doute qui persiste
   indique que nous ne sommes pas faits pour travailler ensemble.
-*
+* Personnalisez votre approche : les chances de succès du rectutement sont plus
+  grandes en approchant un faible nombre de personnes bien ciblées qu'en
+  arrosant massivement sans distinction. Si je reçois deux e-mails sans intérêt
+  pour moi par mois de votre part, je passerai à coup sûr à côté de celui qui
+  aurait pu m'intéresser.
