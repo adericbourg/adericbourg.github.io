@@ -161,7 +161,7 @@ c'est prendre le risque de le voir revenir plus tard plus gros et plus fort.
 Après discussions et explications, d'un côté comme de l'autre : s'il y a
 un doute, c'est non.
 
-### Explicitons nos attentes lors de l'entretien
+### Organisez des entretiens à votre image
 
 Un entretien n'a pas vocation à piéger un candidat. Si vous pensez qu'un
 candidat qui se renseigne à l'avance sur le contenu de vos entretiens est
