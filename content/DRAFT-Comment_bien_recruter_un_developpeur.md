@@ -4,7 +4,18 @@ Tags: recrutement
 Status: draft
 Date: 1970-01-01
 
-*TODO*
+En bientôt dix ans de carrière, j'ai déjà eu l'occasion de suivre
+un bon nombre de processus de recrutement. Je n'ai plus assez de doigts
+pour les compter. Si j'ai toujours fini par faire quelques pas avec
+certaines entreprises, j'aurais pu anticiper mon départ de celles-ci
+— ou de très mauvais moments en leur sein — dès les entretiens. Pas
+toujours, mais souvent. L'idée de cet article est de recenser, à ce
+jour, ce que j'aurais pu attendre de mes entretiens passés et ce que
+je peux attendre d'entretiens futurs. Je n'ai pas la prétention de
+fournir un manuel du recrutement d'un développeur : nous sommes tous
+différents, nous avons tous des attentes différentes. Certains points
+sont probablement partagés par beaucoup, d'autres me sont plus
+personnels.
 
 ### Définissez clairement le poste
 
@@ -20,7 +31,7 @@ la poutre dans l'œil jusqu'au coude.
 Le titre est ce qui apparaît... dans le titre de l'annonce ou de
 votre e-mail de contact. Face au (trop ?) grand nombre de propositions
 quasi-quotidiennes que reçoit un développeur, je comprends le besoin
-de se démarquer pour attiter l'attention. Je pense que cela doit se
+de se démarquer pour attirer l'attention. Je pense que cela doit se
 faire en amont du contact : par la visibilité de l'entreprise, son
 impact pour la communauté, etc. Je ne saurais trop vous conseiller
 d'être sobre dans le choix de cet intitulé.
@@ -70,6 +81,29 @@ on devrait trouver dans une fiche de poste :
 * les difficultés du poste (souvent appelées _challenges_),
 * les relations avec les autres personnes et les autres équipes.
 
+Pour donner un exemple, une « intégration en équipe produit » donne des
+indications mais pas suffisamment :
+
+* Qui porte la vision du produit ?
+* Qui porte la vision technique ?
+* Qui dirige cette équipe ?
+* De qui est constituée cette équipe ?
+* Quel est leur statut ? Sont-ils en CDI ? En CDD ? Prestataires ?
+* Où sont situés les membres de l'équipe ?
+* Où sont situés les membres de l'entreprise avec lesquels je serai
+  amené à travailler ? Les équipes distribuées autour du monde avec
+  un grand décalage horaire ne sont pas au goût de tous.
+* Quelle est la langue de l'équipe ?
+* Quelle est la langue de l'entreprise ?
+* Quelle est la répartition des rôles au sein de l'équipe ?
+* Qui utilise le produit de l'équipe ? Combien sont-ils ?
+* À quelles difficultés fait face l'équipe en ce moment ? Certaines
+  situations peuvent stimuler certaines personnes et en rebuter d'autres.
+
+Cette liste n'est ni exhaustive ni minimale : à vous de faire le point
+sur votre équipe et ses besoins. À vous de la décrire de la façon qui
+vous semble la plus juste et la plus complète.
+
 ### Préférez le mouton à trois pattes plutôt que celui à cinq pattes
 
 J'ai vu beaucoup d'offres très précises et spécifiques. Ces offres me
@@ -94,7 +128,7 @@ organisationnel ou humain. Lorsque je n'ai plus aucun des trois, c'est
 pour moi le signal du départ. Sur un poste « trop facile », ce signal
 retentira très tôt.
 
-Je ne sous-ententends à aucun moment qu'il faut préférer quelqu'un de
+Je ne sous-entends à aucun moment qu'il faut préférer quelqu'un de
 sous qualifié et qu'il ne faut prendre que des débutants. Un écart trop
 important entre les savoirs actuels de la personne et les besoins du
 poste peut s'avérer destructeur (démotivation, perte d'estime de soi,
@@ -143,12 +177,12 @@ J'estime que les entretiens permettent :
   et son savoir-être.
 
 Dans cette optique, les entretiens doivent être pensés pour jouer ce rôle.
-Pour un système métier complexe qui n'est pas soumi à une forte charge,
+Pour un système métier complexe qui n'est pas soumis à une forte charge,
 centrer un test technique sur sa capacité à modéliser les concepts métiers
 semble plus pertinent que d'évaluer sa maîtrise des algorithmes classiques
-et sa connaîssance de leurs complexité associée.
+et sa connaissance de leurs complexité associée.
 
-Quoi qu'il en soit et quoi que vous ayiez choisi : annoncez au candidat ce
+Quoi qu'il en soit et quoi que vous ayez choisi : annoncez au candidat ce
 sur quoi il sera évalué, comment et il sera évalué et pourquoi vous avez
 fait ces choix. Vous comme le candidat avez tout à y gagner.
 
@@ -178,14 +212,14 @@ admiré et recherché. Elles sont subjectives et peuvent n'être portées que
 par un individu ou un groupe d'individus. Ainsi, mes valeurs ne sont pas
 nécessairement vos valeurs.
 
-Pourtant, les valeurs sont les règles morales sur lequelles il n'y a pas
+Pourtant, les valeurs sont les règles morales sur lesquelles il n'y a pas
 de compromis possible : y déroger, c'est s'oublier soi-même, c'est agir
 en incohérence avec son identité. Lors d'un recrutement, j'accorde donc
 beaucoup d'importance à l'alignement des valeurs de l'entreprise avec les
 miennes propres : je sais que si elles ne sont pas compatibles — ou même,
 tout simplement, pas en phase — nous nous ferons violence mutuellement
-pour travailler ensemble. Ce n'est pour moi, pas une situation souhaitable
-que je fuis.
+pour travailler ensemble. C'est une situation que je ne souhaite pas et
+que je fuis à toutes jambes.
 
 Pour en donner quelques exemples, les miennes sont :
 
@@ -194,7 +228,19 @@ Pour en donner quelques exemples, les miennes sont :
 * la cohérence — je fais ce que je dis et j'applique à moi-même ce que
   j'attends des autres.
 
-*TODO*
+Ainsi, si vos valeurs sont _performance_, _profit_ et _dépassement de soi_,
+notre collaboration ne peut qu'être difficile. Ni vous ni moi d'avons raison :
+mettons nous d'accord sur le fait que nous ne sommes pas d'accord et que nous
+ne cherchons pas la même chose. Il n'y a pas d'obligation à ce que nous
+travaillions ensemble. Je serai plus heureux ailleurs et quelqu'un d'autre,
+plus en phase avec vos valeurs, sera bien plus heureux et motivé que moi.
+
+Si nos valeurs ne sont pas strictement identiques, ce n'est pas nécessairement
+mauvais signe. Si les vôtres sont, par exemple, _honnêteté_, _humilité_ et
+_dépassement de soi_, nous partons sur de bonnes bases : _confiance_ et
+_transparence_ sont « proches » de _honnêteté_ et _humilité_. Cela demande
+d'en parler, de creuser, de poser nos définitions mais rien d'incompatible
+à première vue.
 
 ### Parlons d'argent
 
@@ -212,7 +258,7 @@ et de cinq entretiens sur site vous lui proposez un salaire très inférieur à 
 attentes ?
 
 Les avantages secondaires — baby-foot, goûters, _rooftop_, smartphone — sont et
-restent secondaires. Ils sont différenciants dans le sens où, en cas d'hésitation,
+restent secondaires. Ils sont différenciant dans le sens où, en cas d'hésitation,
 ils peuvent aider à faire pencher la balance. Ils peuvent éventuellement aider à
 compenser certains inconvénients assumés : un jardin japonais sur le toît peut aider
 atténuer la grisaille d'un quartier bétonné. En revanche, lorsque ces avantages
@@ -239,9 +285,16 @@ plupart du temps, je n'en termine même pas la lecture).
 Il n'y a pas de recette ni de processus miracle pour recruter un développeur. C'est
 ce qui nous différencie de la machine. Gardons tout de même quelques points en tête :
 
+* Prenez le temps de faire le point sur le poste que vous ouvrez et sur l'équipe
+  qui accueillera la personne recrutée. Cela permet de mieux cerner les besoins :
+  la personne recrutée choisira en pleine connaissance de cause de vous rejoindre
+  et vous serez au clair quant à ce que vous attendez d'elle.
+* Soyons transparents : quoi de plus frustrant qu'un vice caché ? Affichons
+  clairement nos envies et nos vulnérabilités pour que notre collaboration
+  parte sur des bases saines.
 * Mieux vaut un faux négatif qu'un faux positif. Le moindre doute qui persiste
   indique que nous ne sommes pas faits pour travailler ensemble.
-* Personnalisez votre approche : les chances de succès du rectutement sont plus
+* Personnalisez votre approche : les chances de succès du recrutement sont plus
   grandes en approchant un faible nombre de personnes bien ciblées qu'en
   arrosant massivement sans distinction. Si je reçois deux e-mails sans intérêt
   pour moi par mois de votre part, je passerai à coup sûr à côté de celui qui
