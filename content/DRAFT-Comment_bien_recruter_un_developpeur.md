@@ -210,6 +210,18 @@ L'entreprise m'a fait une proposition d'embauche alors même que mes
 compétences techniques n'avaient pas été évaluées de tout le processus.
 Là, c'est moi qui ai refusé le poste.
 
+En tant que recruteur,
+[deux questions](http://blog.wesleyac.com/posts/two-interview-questions)
+peuvent vous aider à évaluer votre processus de recrutement :
+
+* Quel est mon objectif lors de cet entretien ?
+* Comment puis-je évaluer l'atteinte de cet objectif à l'issue de
+  l'entretien ?
+
+Vous pouvez vous attendre à ce que je vous pose ces questions en tant que
+candidat.
+
+
 ### Annonçons nos valeurs
 
 Les valeurs définissent des qualités qui illustrent un comportement estimé,
