@@ -139,7 +139,12 @@ _burn out_...).
 C'est lors des entretiens que le candidat et l'entreprise apprennent
 à se connaître. J'attends de ceux-ci qu'ils en soient représentatifs,
 qu'il me donnent envie de la rejoindre, ou, au contraire, qu'ils me
-permettent de savoir que je ne veux pas y travailler.
+permettent de savoir que je ne veux pas y travailler. Il est d'ailleurs
+difficile de choisir une entreprise _parce que_ elle remplit tous mes
+critères : l'entreprise parfaite n'existe pas. Il est plus simple de
+choisir une entreprise _malgré_ ses défauts. C'est une situation plus
+réaliste et cela permet d'accepter (et donc d'assumer !) _a priori_
+ses manques.
 
 Qu'avez-vous à gagner à ne montrer que ce qui est beau et valorisant ?
 Lorsque je choisis de travailler pour une entreprise en ayant conscience
