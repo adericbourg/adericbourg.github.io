@@ -187,7 +187,7 @@ sur quoi il sera évalué, comment et il sera évalué et pourquoi vous avez
 fait ces choix. Vous comme le candidat avez tout à y gagner.
 
 À titre d'illustration, j'ai postulé dans une entreprise où le responsable
-de mon équipe « cible » n'a pas clarifié ces attentes avec les ingénieurs
+de mon équipe « cible » n'a pas clarifié ses attentes avec les ingénieurs
 qui m'ont fait passer le test technique. Ce test n'a pas été en phase
 avec sa vision de la personne à recruter et son contenu bien loin de mes
 compétences. J'ai donc été refusé par l'entreprise. J'avais pourtant déjà
