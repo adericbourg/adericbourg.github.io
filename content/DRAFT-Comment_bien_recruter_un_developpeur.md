@@ -46,6 +46,18 @@ du sens et être compréhensibles :
 * Site reliability engineer (SRE)
 * Operations engineer
 
+Si le poste comprend des fonctions d'encadrement humain, _lead_ me semble
+être un qualificatif répandu et compréhensible. En revanche, s'il s'agit
+d'encadrement technique, on se réfère plutôt à la seniorité du développeur :
+dans ce cas, je préfère des qualificatifs qui s'y rapportent (junior,
+senior et staff par exemple).
+
+Dans un autre contexte, le terme
+d'[_artisan_](https://fr.wikipedia.org/wiki/Artisanat) peut lui aussi
+avoir du sens : il met « en œuvre des services grâce à un savoir-faire
+particulier et hors contexte industriel ». L'accent est, ici, mis sur
+la qualité du logiciel (au dessus de la « productivité » par exemple).
+
 Si le poste est _vraiment_ lié à une technologie, vous pouvez le préfixer
 (par exemple: Java software engineer). Dans ce cas, je m'attends à ce que
 vous cherchiez un expert du sujet, potentiellement avec un rôle transverse
