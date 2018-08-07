@@ -124,7 +124,9 @@ et que l'on cherche à remplacer l'identique. Si tel est le cas, les
 attentes ne sont probablement pas ajustées : l'offre est focalisée sur la
 personne et pas sur le poste.
 
-![Laisser une marge de progression](/images/comment_recruter_un_developpeur/poste_vs_competences.png){.center}
+![Laisser une marge de progression](/images/comment_recruter_un_developpeur/poste_vs_competences.svg){.center}
+
+![Laisser une marge de progression](/images/comment_recruter_un_developpeur/poste_vs_competences_rework.svg){.center}
 
 De façon plus générale, je recommande de limiter l'offre (et la fiche
 de poste) au strict minimum : la perfection est atteinte non pas lorsqu'il
