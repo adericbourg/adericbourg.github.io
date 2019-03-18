@@ -196,7 +196,7 @@ pre {
 
 figure * { border: none; margin: auto; padding: auto; }
 
-#post-content img {
+.post-content img {
     display: block;
     margin-left: auto;
     margin-right: auto;
