@@ -3,7 +3,7 @@
 from __future__ import unicode_literals
 
 AUTHOR = u'Alban Dericbourg'
-AUTHOR_LINK = u'http://www.dericbourg.net'
+AUTHOR_LINK = u'https://www.dericbourg.net'
 SITENAME = u'Blog bloquant'
 SITEURL = ''
 
@@ -29,8 +29,6 @@ AUTHOR_FEED_RSS = None
 GITHUB_URL = 'https://github.com/adericbourg'
 TWITTER_URL = 'https://twitter.com/adericbourg'
 
-# Social widget
-
 DEFAULT_PAGINATION = 10
 
 ARTICLE_URL = '{date:%Y}/{date:%m}/{date:%d}/{slug}/'
@@ -41,6 +39,3 @@ PAGE_SAVE_AS = '{slug}/index.html'
 
 ARCHIVES_SAVE_AS = 'archives/index.html'
 ARCHIVES_URL = 'archives/'
-
-# Uncomment following line if you want document-relative URLs when developing
-#RELATIVE_URLS = True
