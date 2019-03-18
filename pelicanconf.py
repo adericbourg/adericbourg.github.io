@@ -9,6 +9,12 @@ SITEURL = ''
 
 TWITTER_HANDLE = u'@adericbourg'
 
+LINKS = [
+    ('GitHub', 'https://github.com/adericbourg'),
+    ('LinkedIn', 'https://www.linkedin.com/in/adericbourg/'),
+    ('Twitter', 'https://twitter.com/adericbourg'),
+]
+
 PATH = 'content'
 STATIC_PATHS = ['extra/CNAME', 'images']
 EXTRA_PATH_METADATA = {'extra/CNAME': {'path': 'CNAME'},}
@@ -17,7 +23,7 @@ TIMEZONE = 'Europe/Paris'
 
 DEFAULT_LANG = u'fr'
 
-THEME = 'theme'
+THEME = 'dev-random2'
 
 # Feed generation is usually not desired when developing
 FEED_ALL_ATOM = None
@@ -25,9 +31,6 @@ CATEGORY_FEED_ATOM = None
 TRANSLATION_FEED_ATOM = None
 AUTHOR_FEED_ATOM = None
 AUTHOR_FEED_RSS = None
-
-GITHUB_URL = 'https://github.com/adericbourg'
-TWITTER_URL = 'https://twitter.com/adericbourg'
 
 DEFAULT_PAGINATION = 10
 

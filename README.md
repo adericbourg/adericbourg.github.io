@@ -1,11 +1,11 @@
 # https://www.dericbourg.net
 
-```
-source bootstrap.sh
+```bash
+./bootstrap.sh
 ```
 
-Install `virtualenv`: 
+Install `virtualenv`:
 
-```
+```bash
 pip3 install virtualenv
 ```
