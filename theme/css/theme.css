@@ -196,6 +196,12 @@ pre {
 
 figure * { border: none; margin: auto; padding: auto; }
 
+#post-content img {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
 @media screen and (max-width: 650px) {
     body {
         font-size: 15px;
