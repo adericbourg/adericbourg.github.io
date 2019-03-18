@@ -1,7 +1,7 @@
 # https://www.dericbourg.net
 
 ```bash
-./bootstrap.sh
+source bootstrap.sh
 ```
 
 Install `virtualenv`:
