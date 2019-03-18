@@ -32,7 +32,7 @@ h4, h5, h6,
 
 hr {
     visibility: hidden;
-    padding-bottom: 1em; 
+    padding-bottom: 1em;
 }
 
 hr:after,
@@ -53,7 +53,7 @@ article header h1 {
 }
 
 article header .meta {
-    font-size: .9em; 
+    font-size: .9em;
 }
 
 article header .meta a { text-decoration: none; }
@@ -191,6 +191,7 @@ pre {
     background-color: #F5F5F5;
     padding: 0.5em;
     max-width: 100%;
+    white-space: pre;
 }
 
 figure * { border: none; margin: auto; padding: auto; }
