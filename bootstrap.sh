@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 VENV="venv"
+PLUGINS="${VENV}/pelican-plugins"
 THEME="${VENV}/dev-random4"
 
 # Check prerequisites
@@ -25,11 +26,22 @@ source ${VENV}/bin/activate
 
 pip install -r requirements.txt
 
+# Install plugins
+if [ -d "${PLUGINS}" ]; then
+    cd ${PLUGINS}
+    git reset --hard
+    git pull --rebase
+    cd -
+else
+    git clone --recursive https://github.com/getpelican/pelican-plugins ${PLUGINS}
+fi
+
 # Install theme
 if [ -d "${THEME}" ]; then
     cd ${THEME}
     git reset --hard
     git pull --rebase
+    git submodule update
     cd -
 else
     git clone git@github.com:adericbourg/pelican-dev-random4.git ${THEME}

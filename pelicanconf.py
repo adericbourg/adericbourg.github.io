@@ -25,6 +25,13 @@ DEFAULT_LANG = u'fr'
 
 THEME = 'dev-random4'
 
+PLUGIN_PATHS = ['venv/pelican-plugins']
+PLUGINS = ['sitemap']
+
+SITEMAP = {
+    'format': 'xml'
+}
+
 # Feed generation is usually not desired when developing
 FEED_ALL_ATOM = None
 CATEGORY_FEED_ATOM = None
