@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 VENV="venv"
-THEMES="${VENV}/pelican-themes"
+THEME="${VENV}/dev-random4"
 
 # Check prerequisites
 prerequisites=(git virtualenv python3)
@@ -26,14 +26,14 @@ source ${VENV}/bin/activate
 pip install -r requirements.txt
 
 # Install theme
-if [ -d "${THEMES}" ]; then
-    cd ${THEMES}
+if [ -d "${THEME}" ]; then
+    cd ${THEME}
     git reset --hard
     git pull --rebase
     cd -
 else
-    git clone git@github.com:getpelican/pelican-themes.git ${THEMES}
+    git clone git@github.com:adericbourg/pelican-dev-random4.git ${THEME}
 fi
 echo "Installing theme"
 pelican-themes --clean
-pelican-themes --upgrade ${THEMES}/dev-random2
+pelican-themes --upgrade ${THEME}

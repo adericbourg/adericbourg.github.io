@@ -23,7 +23,7 @@ TIMEZONE = 'Europe/Paris'
 
 DEFAULT_LANG = u'fr'
 
-THEME = 'dev-random2'
+THEME = 'dev-random4'
 
 # Feed generation is usually not desired when developing
 FEED_ALL_ATOM = None
