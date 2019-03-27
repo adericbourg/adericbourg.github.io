@@ -38,7 +38,7 @@
         </h1>
         <div class="meta">
 <!-- includes/article_meta.html -->
-            Le <time datetime="2015-07-04T00:00:00+02:00">Sat 04 July 2015</time>
+            Le <time datetime="2015-07-04T00:00:00+02:00">sam. 04 juillet 2015</time>
             dans «<a href="https://www.dericbourg.net/category/blog.html">Blog</a>» 
             par <a href="https://www.dericbourg.net/author/alban-dericbourg.html">Alban Dericbourg</a>              <br />Mots-clés:              <a rel="tag" href="https://www.dericbourg.net/tag/wifi.html">wifi</a>,               <a rel="tag" href="https://www.dericbourg.net/tag/raspberrypi.html">raspberrypi</a>,               <a rel="tag" href="https://www.dericbourg.net/tag/linux.html">linux</a>,               <a rel="tag" href="https://www.dericbourg.net/tag/iptables.html">iptables</a>        </div>
       </header>
@@ -158,14 +158,14 @@ d'accès sans fil. Pour l'installer :</p>
 <p>Créez son fichier de configuration, <code>/etc/hostapd/hostapd.conf</code> :</p>
 <div class="highlight"><pre><span></span>interface=wlan0
 driver=nl80211
-ssid=&amp;lt;YOUR SSID&amp;gt;
+ssid=&lt;YOUR SSID&gt;
 hw_mode=g
 channel=6
 macaddr_acl=0
 auth_algs=1
 ignore_broadcast_ssid=0
 wpa=2
-wpa_passphrase=&amp;lt;YOUR PASSPHRASE&amp;gt;
+wpa_passphrase=&lt;YOUR PASSPHRASE&gt;
 wpa_key_mgmt=WPA-PSK
 wpa_pairwise=TKIP
 rsn_pairwise=CCMP
@@ -192,7 +192,7 @@ ligne suivante :</p>
 
 <p>Pour activer ce routage immédiatement (sans avoir besoin de redémarrer), lancez
 la commande :</p>
-<div class="highlight"><pre><span></span>sudo sh -c &quot;echo 1 &amp;gt; /proc/sys/net/ipv4/ip_forward&quot;
+<div class="highlight"><pre><span></span>sudo sh -c &quot;echo 1 &gt; /proc/sys/net/ipv4/ip_forward&quot;
 </pre></div>
 
 

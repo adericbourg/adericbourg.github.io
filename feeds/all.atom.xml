@@ -884,7 +884,7 @@ Le problème consiste à compter et identifier les différentes façons de place
 &lt;p&gt;&lt;img alt="Représentation de la modélisation" class="center" src="/images/eight_queens/modelisation.png"&gt;&lt;/p&gt;
 &lt;blockquote&gt;
 &lt;p&gt;&lt;strong&gt;Note :&lt;/strong&gt; en Python, la fonction &lt;a href="https://docs.python.org/2/library/functions.html#enumerate"&gt;&lt;code&gt;enumerate&lt;/code&gt;&lt;/a&gt; permet d'obtenir de façon immédiate ce résultat.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&amp;amp;gt;&amp;amp;gt;&amp;amp;gt; list(enumerate([3, 2, 1]))
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&amp;gt;&amp;gt;&amp;gt; list(enumerate([3, 2, 1]))
 [(0, 3), (1, 2), (2, 1)]
 &lt;/pre&gt;&lt;/div&gt;
 
@@ -1301,14 +1301,14 @@ d'accès sans fil. Pour l'installer :&lt;/p&gt;
 &lt;p&gt;Créez son fichier de configuration, &lt;code&gt;/etc/hostapd/hostapd.conf&lt;/code&gt; :&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;interface=wlan0
 driver=nl80211
-ssid=&amp;amp;lt;YOUR SSID&amp;amp;gt;
+ssid=&amp;lt;YOUR SSID&amp;gt;
 hw_mode=g
 channel=6
 macaddr_acl=0
 auth_algs=1
 ignore_broadcast_ssid=0
 wpa=2
-wpa_passphrase=&amp;amp;lt;YOUR PASSPHRASE&amp;amp;gt;
+wpa_passphrase=&amp;lt;YOUR PASSPHRASE&amp;gt;
 wpa_key_mgmt=WPA-PSK
 wpa_pairwise=TKIP
 rsn_pairwise=CCMP
@@ -1335,7 +1335,7 @@ ligne suivante :&lt;/p&gt;
 
 &lt;p&gt;Pour activer ce routage immédiatement (sans avoir besoin de redémarrer), lancez
 la commande :&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;sudo sh -c &amp;quot;echo 1 &amp;amp;gt; /proc/sys/net/ipv4/ip_forward&amp;quot;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;sudo sh -c &amp;quot;echo 1 &amp;gt; /proc/sys/net/ipv4/ip_forward&amp;quot;
 &lt;/pre&gt;&lt;/div&gt;
 
 
