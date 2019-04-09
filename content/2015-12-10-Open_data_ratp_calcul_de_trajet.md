@@ -1,11 +1,13 @@
+---
 Title: Calcul d'itinéraire à partir des données RATP
 Date: 2015-12-10
 Category: Blog
 Tags: opendata, ratp, gtfs, scala
+---
 
 La RATP progresse dans l'[ouverture de ses données](http://data.ratp.fr) et même si elle ne propose pas encore un accès à son [système SIEL](https://fr.wikipedia.org/wiki/Syst%C3%A8me_d'information_en_ligne), elle propose néanmoins les données de son offre de transport au [format GTFS](https://developers.google.com/transit/gtfs/). Une bonne occasion de s'initier au calcul d'itinéraire !
 
-L'histoire et le contexte des calculs d'itinéraires est très bien synthétisé par [Tristram Gräbener](https://twitter.com/tristramg) dans son [Petit historique du calcul d'itinéraire](http://blog.tristramg.eu/petit-historique-du-calcul-ditineraire.html). Probablement plus hipster que je ne veux bien l'admettre, j'ai choisi d'utiliser le plus récent : le *[Connection Scan Algorithm](http://i11www.iti.uni-karlsruhe.de/extra/publications/dpsw-isftr-13.pdf)*. 
+L'histoire et le contexte des calculs d'itinéraires est très bien synthétisé par [Tristram Gräbener](https://twitter.com/tristramg) dans son [Petit historique du calcul d'itinéraire](http://blog.tristramg.eu/petit-historique-du-calcul-ditineraire.html). Probablement plus hipster que je ne veux bien l'admettre, j'ai choisi d'utiliser le plus récent : le *[Connection Scan Algorithm](http://i11www.iti.uni-karlsruhe.de/extra/publications/dpsw-isftr-13.pdf)*.
 
 
 ### Connection scan algorithm
@@ -14,10 +16,10 @@ L'histoire et le contexte des calculs d'itinéraires est très bien synthétisé
 
 Cet algorithme, tenant en quelques lignes, se « contente » de parcourir une table horaire pré-calculée des connexions entre les stations et de retenir la solution optimale en temps de trajet. Une connexion représente une possibilité de trajet entre deux stations. On la modélise donc par un quadruplet contenant :
 
- * la station de départ, 
- * la station d'arrivée, 
+ * la station de départ,
+ * la station d'arrivée,
  * l'heure de départ,
- * l'heure d'arrivée. 
+ * l'heure d'arrivée.
 
 La table horaire devient alors simplement une liste de ces connexions triées par heure de départ croissante.
 
@@ -27,7 +29,7 @@ L'objectif est de se rendre d'un point de départ *o* à un point d'arrivée *d*
 
 #### Initialisation
 
-On initialise l'algorithme en attribuant une durée infinie au trajet vers tout point d'arrêt à l'exception de la gare de départ (on en part, on sait qu'on y est à *t0*). 
+On initialise l'algorithme en attribuant une durée infinie au trajet vers tout point d'arrêt à l'exception de la gare de départ (on en part, on sait qu'on y est à *t0*).
 
 ```
 Pour chaque station s
@@ -39,11 +41,11 @@ arrival_timestamp[o] ← t0
 
 #### Boucle de calcul
 
-On parcourt l'ensemble des connexions contenues dans la table et on considère l'amélioration qu'elle apporte sur le trajet. À la fin de la boucle, lorsque toutes les connexions on été parcourues, toutes les heures d'arrivée depuis *o* vers une autre station ont été calculées. 
+On parcourt l'ensemble des connexions contenues dans la table et on considère l'amélioration qu'elle apporte sur le trajet. À la fin de la boucle, lorsque toutes les connexions on été parcourues, toutes les heures d'arrivée depuis *o* vers une autre station ont été calculées.
 
 ```
 Pour chaque connexion c
-    Si arrival_timestamp[c.departure_station] ≤ c.departure_timestamp 
+    Si arrival_timestamp[c.departure_station] ≤ c.departure_timestamp
     et arrival_timestamp[c.arrival_station] > c.arrival_timestamp
         arrival_timestamp[c.arrival_station] ← c.arrival_timestamp
         in_connection[c.arrival_station] ← c
@@ -51,15 +53,15 @@ Pour chaque connexion c
 
 #### Résultat
 
-Pour obtenir le résultat, on parcourt le tableau des stations d'arrivée (`in_connections`) en partant de la destination *d* jusqu'à retrouver le point de départ *o*. 
+Pour obtenir le résultat, on parcourt le tableau des stations d'arrivée (`in_connections`) en partant de la destination *d* jusqu'à retrouver le point de départ *o*.
 
-#### Exemple 
+#### Exemple
 
-Prenons un exemple sur une ligne fictive : 
+Prenons un exemple sur une ligne fictive :
 
 ```
          -----o C
-       /  
+       /
 o-----o B
 A      \
          -----o D
@@ -87,7 +89,7 @@ On souhaite rejoindre `C` depuis `A` en partant à l'heure 2 avec la table horai
 </tbody>
 </table>
 
-Initialisons les données. 
+Initialisons les données.
 
 <table class="table table-condensed">
 <thead>
@@ -101,7 +103,7 @@ Initialisons les données.
 
 On parcours ensuite la table horaire dans l'ordre. Les deux premières lignes sont ignorées, elles ne passent pas la condition horaire.
 
-On arrive à (A, B, 2, 3) : 
+On arrive à (A, B, 2, 3) :
 
  * Heure(A) ≤ 2 (2 ≤ 2)
  * Heure(B) > 3 (&infin; > 3)
@@ -118,7 +120,7 @@ On met à jour les tables intermédiaires.
 </tbody>
 </table>
 
-On continue avec avec (B, C, 3, 4) qui satisfait également les conditions. 
+On continue avec avec (B, C, 3, 4) qui satisfait également les conditions.
 
 <table class="table table-condensed">
 <thead>
@@ -130,11 +132,11 @@ On continue avec avec (B, C, 3, 4) qui satisfait également les conditions.
 </tbody>
 </table>
 
-Un œil averti aura remarqué que le trajet est ici déterminé. L'algorithme se poursuit néanmoins. 
+Un œil averti aura remarqué que le trajet est ici déterminé. L'algorithme se poursuit néanmoins.
 
-On arrive sur (A, B, 4, 5). On n'a bien Heure(A) ≤ 3 mais en revanche on n'a pas Heure(B) > 4. On passe la connexion. De même pour (A, B, 5, 6). 
+On arrive sur (A, B, 4, 5). On n'a bien Heure(A) ≤ 3 mais en revanche on n'a pas Heure(B) > 4. On passe la connexion. De même pour (A, B, 5, 6).
 
-Vient (B, D, 5, 6) : 
+Vient (B, D, 5, 6) :
 
  * Heure(B) ≤ 5 (3 ≤ 5)
  * Heure(D) > 6 (&infin; > 6)
@@ -151,20 +153,20 @@ Les tableaux sont donc mis à jour.
 </tbody>
 </table>
 
-Il reste enfin la connexion (B, C, 6, 7) qui ne remplit par la condition Heure(C) > 7. On ne fait donc rien de cette connexion et les tableaux sont calculés. 
+Il reste enfin la connexion (B, C, 6, 7) qui ne remplit par la condition Heure(C) > 7. On ne fait donc rien de cette connexion et les tableaux sont calculés.
 
-Pour obtenir le trajet, on part de la destination, donc de l'entrée associée au point d'arrêt C dans le tableau des stations. On trouve (B, C, 3, 4). On va alors chercher l'entrée associée au départ de cette connexion, soit l'entrée associée à B. On trouve (A, B, 2, 3). Le point de départ de cette connexion est notre point de départ : la recherche est terminée. 
+Pour obtenir le trajet, on part de la destination, donc de l'entrée associée au point d'arrêt C dans le tableau des stations. On trouve (B, C, 3, 4). On va alors chercher l'entrée associée au départ de cette connexion, soit l'entrée associée à B. On trouve (A, B, 2, 3). Le point de départ de cette connexion est notre point de départ : la recherche est terminée.
 
-En dépilant (*Last in, first out*) ces connexions, on retrouve le trajet à parcourir : 
+En dépilant (*Last in, first out*) ces connexions, on retrouve le trajet à parcourir :
 
  0. (A, B, 2, 3)
  0. (B, C, 3, 4)
 
-L'algorithme nous a donc permis de déterminer le trajet pour aller de A à C en partant à l'heure 2 ainsi que l'heure d'arrivée. 
+L'algorithme nous a donc permis de déterminer le trajet pour aller de A à C en partant à l'heure 2 ainsi que l'heure d'arrivée.
 
 #### Analyse
 
-Cet algorithme présente l'avantage de s'exécuter en un temps proportionnel au nombre de connexions en occupant un espace mémoire lui aussi proportionnel au nombre de connexions. Dans le cas du métro parisien, on peut évaluer que le nombre de correspondances est du même ordre de grandeur que le nombre *N* de stations. Cela revient à avoir : 
+Cet algorithme présente l'avantage de s'exécuter en un temps proportionnel au nombre de connexions en occupant un espace mémoire lui aussi proportionnel au nombre de connexions. Dans le cas du métro parisien, on peut évaluer que le nombre de correspondances est du même ordre de grandeur que le nombre *N* de stations. Cela revient à avoir :
 
  * environ *N* connexions entre stations d'une même ligne (le chiffre est légèrement faussé par la présence de lignes en « fourche ») ;
  * environ *2N* connexions issues des correspondances (une connexion dans un sens, une connexion dans l'autre).
@@ -205,7 +207,7 @@ route_id,agency_id,route_short_name,route_long_name,route_desc,route_type,route_
 
 Ce fichier liste les arrêts avec, éventuellement, quelques informations complémentaires. La RATP fournit l'adresse la plus proche de l'arrêt ainsi que les coordonnées GPS de son centre (dans le cas d'une station qui dispose de plusieurs sorties). À noter que ce fichier n'est pas ordonné selon le sens de parcours des courses sur la ligne.
 
-> Une **mission** est un trajet parcouru par un ensemble de trains. Elle est décrite par : 
+> Une **mission** est un trajet parcouru par un ensemble de trains. Elle est décrite par :
 > <ul>
 >   <li> la gare de départ ;</li>
 >   <li> la gare d'arrivée ;</li>
@@ -527,16 +529,16 @@ val connections = (connectionsFromStopTimes ++ connectionsFromTransfers).
 
 ### Implémentation de l'algorithme
 
-Je propose ici une implémentation en Scala qui pourrait probablement être (largement, rien que par sa mutabilité) améliorée. Partons toujours de là. 
+Je propose ici une implémentation en Scala qui pourrait probablement être (largement, rien que par sa mutabilité) améliorée. Partons toujours de là.
 
 #### API
 
-Cette implémentation est paramétrée par : 
+Cette implémentation est paramétrée par :
 
  * la table horaire ;
  * un dictionnaire des arrêts indexés par leur identifiant.
 
-Le calcul d'itinéraire (méthode `compute`) prend en entrée : 
+Le calcul d'itinéraire (méthode `compute`) prend en entrée :
 
  * un arrêt de départ ;
  * un arrêt d'arrivée ;
@@ -561,14 +563,14 @@ val earliestArrival = Array.fill[Int](CSA.MaxStations)(Int.MaxValue)
 def compute(departureStation: Int, arrivalStation: Int, departureTime: Int): Seq[Connection] = {
   earliestArrival(departureStation) = departureTime
   // [...]
-}    
+}
 ```
 
 #### Calcul du trajet
 
 ##### Vue macroscopique
 
-On retrouve les deux étapes du calcul dans la méthode `compute` : 
+On retrouve les deux étapes du calcul dans la méthode `compute` :
 
  * la première qui parcourt les connexions et détermine l'heure d'arrivée optimale pour chaque station (`scanTimetable`) ;
  * la seconde qui, à partir de cette table des connexions optimales, reconstruit le trajet (`computeRoute`).
@@ -587,7 +589,7 @@ def compute(departureStation: Int, arrivalStation: Int, departureTime: Int): Seq
 
 ##### Parcours de la table horaire
 
-On utilise une fois de plus une récursion terminale. 
+On utilise une fois de plus une récursion terminale.
 
 ```scala
 private def scanTimetable(arrivalStation: Int): Unit = {
@@ -630,7 +632,7 @@ private def optimizesArrivalTime(connection: Connection): Boolean = {
 
 ##### Construction de l'itinéraire à partir de la table horaire
 
-Une fois la table horaire `inConnection` calculée, on reconsitue l'itinéraire inversé en partant de la station d'arrivée et en remontant jusqu'à la station de départ. 
+Une fois la table horaire `inConnection` calculée, on reconsitue l'itinéraire inversé en partant de la station d'arrivée et en remontant jusqu'à la station de départ.
 
 ```scala
 private def computeRoute(arrivalStation: Int): Seq[Connection] = {
@@ -692,13 +694,13 @@ Total transit time: 21 minutes
 
 ### Conclusion
 
-En comparaison, l'[algorithme de plus court chemin de Dijkstra](https://fr.wikipedia.org/wiki/Algorithme_de_Dijkstra) présente une complexité proportionnelle à *C.log(N)* où *N* est le nombre de stations et *C* le nombre de correspondances entre deux stations, soit environ *N.log(N)* dans notre évaluation, tout en occupant un espace mémoire de taille proportionnelle à *N*. 
+En comparaison, l'[algorithme de plus court chemin de Dijkstra](https://fr.wikipedia.org/wiki/Algorithme_de_Dijkstra) présente une complexité proportionnelle à *C.log(N)* où *N* est le nombre de stations et *C* le nombre de correspondances entre deux stations, soit environ *N.log(N)* dans notre évaluation, tout en occupant un espace mémoire de taille proportionnelle à *N*.
 
-Le métro parisien est constitué de 303 stations (*N = 303* et *N.log(N) = 752*) : on reste donc dans le même ordre de magnitude sur ces deux algorithmes au moment du calcul d'itinéraire. En revanche, le *Connexion scan algorithm* demande de pré-calculer la table horaire : il induit donc un coût préalable. Cette table pré-calculée le rend également moins souple : elle rend plus difficile le paramétrage de l'algorithme en fonction des préférences du voyageur. La facilité de marche du voyageur peut par exemple être utilisée pour pondérer la durée d'une correspondance : 
+Le métro parisien est constitué de 303 stations (*N = 303* et *N.log(N) = 752*) : on reste donc dans le même ordre de magnitude sur ces deux algorithmes au moment du calcul d'itinéraire. En revanche, le *Connexion scan algorithm* demande de pré-calculer la table horaire : il induit donc un coût préalable. Cette table pré-calculée le rend également moins souple : elle rend plus difficile le paramétrage de l'algorithme en fonction des préférences du voyageur. La facilité de marche du voyageur peut par exemple être utilisée pour pondérer la durée d'une correspondance :
 
  * avec le CSA, il est nécessaire de calculer une table prenant en compte ce paramètre (une correspondance étant une connexion comme une autre) ;
  * avec l'algorithme de Dijkstra, il « suffit » d'associer un poids plus fort aux arêtes représentant une correspondance lorsque le voyageur a des difficultés à se déplacer.
 
-Si le CSA est plus simple à implémenter, il l'est au détriment de la souplesse en première approche. Il est cependant possible de typer les connexions de correspondance pour leur attribuer différentes heures d'arrivée en fonction de la vélocité pédestre du voyageur. 
+Si le CSA est plus simple à implémenter, il l'est au détriment de la souplesse en première approche. Il est cependant possible de typer les connexions de correspondance pour leur attribuer différentes heures d'arrivée en fonction de la vélocité pédestre du voyageur.
 
-Enfin, si cet exemple a été mené sur le réseau ferré RATP d'Île de France, son extension au réseau de bus (347 lignes) n'est pas viable : la table horaire devient trop volumineuse pour tenir en mémoire et les performances s'en ressentent. Mon intuition est que cet algorithme est très pertinent sur de « petites » tables horaires (jusqu'à quelques centaines de stations). Dès que le réseau grossit, en revanche, il est préférable de chercher un autre algorithme moins gourmand en mémoire et en pré-calcul. 
+Enfin, si cet exemple a été mené sur le réseau ferré RATP d'Île de France, son extension au réseau de bus (347 lignes) n'est pas viable : la table horaire devient trop volumineuse pour tenir en mémoire et les performances s'en ressentent. Mon intuition est que cet algorithme est très pertinent sur de « petites » tables horaires (jusqu'à quelques centaines de stations). Dès que le réseau grossit, en revanche, il est préférable de chercher un autre algorithme moins gourmand en mémoire et en pré-calcul.

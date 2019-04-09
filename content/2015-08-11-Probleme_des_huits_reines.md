@@ -1,8 +1,9 @@
+---
 Title: Problème des huit reines
 Date: 2015-08-11
 Category: Blog
 Tags: algorithmique, python, jeu
-
+---
 
 J'ai rencontré le [problème des huits reines](https://fr.wikipedia.org/wiki/Probl%C3%A8me_des_huit_dames) lors d'un entretien d'embauche. Sans juger de la pertinence de cet exercice dans ce cadre (indépendamment du fait que j'aie lamentablement et honteusement échoué), la période estivale, propice à la détente, m'a incité à pousser le jeu plus en avant (mon orgueil a probablement contribué lui aussi).
 Le problème consiste à compter et identifier les différentes façons de placer sur un échiquier de 64 cases 8 reines de façon à ce que, relativement aux règles des échecs, elles ne se menacent pas mutuellement. Une reine peut se déplacer de façon rectiligne d'un nombre de cases arbitraire dans toutes les directions ; lorsqu'une reine est placée, la ligne, la colonne et les diagonales sur lesquelles elle se situe sont donc « condamnées ».

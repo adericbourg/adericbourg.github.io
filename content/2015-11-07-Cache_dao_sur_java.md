@@ -1,8 +1,9 @@
+---
 Title: Gestion des accès concurrents sur un cache de DAO
 Date: 2015-11-07
 Category: Blog
 Tags: java, guava, cache, dao, verrou, concurrence
-
+---
 
 L'ajout d'un cache sur un DAO est une opération courante et la bibliothèque Guava, très répandue, a par ailleurs énormément simplifié sa mise en œuvre. Néanmoins, il reste encore extrêmement facile de se tromper avec cette bibliothèque et... de réaliser un cache qui ne fonctionne pas.
 

@@ -1,7 +1,9 @@
+---
 Title: Utiliser un Raspberry Pi comme point d'accès Wifi
 Date: 2015-07-04
 Category: Blog
 Tags: wifi, raspberrypi, linux, iptables
+---
 
 Dans cet article, nous verrons comment configurer un Raspberry Pi en tant que
 point d'accès Wifi.
@@ -15,7 +17,7 @@ Je supposerai que vous avez à disposition :
    distribution Linux
  * Un *dongle* Wifi (déjà installé et détecté)
 
-Dans la suite, on considèrera que l'interface sans fil est nommée `wlan0`.  
+Dans la suite, on considèrera que l'interface sans fil est nommée `wlan0`.
 
 ### Définition d'une adresse IP statique
 
@@ -91,7 +93,7 @@ présentes sur ce réseau (ayant donc une IP entre 192.166.100.1 et
 
 Quant à elle, l'option *routers* indique l'adresse de la passerelle, c'est à
 dire la machine par laquelle passent tous les paquets sortants du réseau (en
-direction ou en provenance d'Internet par exemple). 
+direction ou en provenance d'Internet par exemple).
 
 On attribue ici un bail pour une durée de 600 secondes avec le paramètre
 *default-lease-time*. C'est cette durée qui sera utilisée si le client ne

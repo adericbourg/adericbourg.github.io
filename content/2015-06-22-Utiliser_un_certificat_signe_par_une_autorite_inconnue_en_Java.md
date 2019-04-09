@@ -1,7 +1,9 @@
+---
 Title: Utiliser un certificat signé par une autorité inconnue en Java
 Date: 2015-06-22
 Category: Blog
 Tags: ssl, tls, java, certificat, signature, sécurité
+---
 
 Lorsque vous vous connectez à un serveur en utilisant un certificat TLS (le grand frère de SSL depuis une quinzaine d'années), votre client en vérifie la signature. Celle-ci permet de vérifier que :
 
@@ -66,8 +68,8 @@ Pour créer ce conteneur, on utilise l'outil `keytool` fourni avec le JDK.
 
 ```bash
 $ keytool -importcert -file cert.cer -keystore keystore.jks
-Entrez le mot de passe du fichier de clés :  
-Ressaisissez le nouveau mot de passe :  
+Entrez le mot de passe du fichier de clés :
+Ressaisissez le nouveau mot de passe :
 # Ici s'affichent les détails du certificat que vous importez
 Faire confiance à ce certificat ? [non] :  oui
 Certificat ajouté au fichier de clés
@@ -102,7 +104,7 @@ Notez le mot de passe par défaut du *keystore*: « changeit ». Il s'agit du mo
 
 Cette opération est à réaliser sur votre machine de développement mais également sur l'intégralité des serveurs susceptibles d'exécuter vos applications. C'est là qu'une solution de déploiement automatique devient pertinente.
 
-Vous êtes maintenant capable de vous connecter depuis une application Java à l'ensemble des services exposés avec le certificat TLS de votre entreprise et ce sans nécessiter d'adaptation du code. 
+Vous êtes maintenant capable de vous connecter depuis une application Java à l'ensemble des services exposés avec le certificat TLS de votre entreprise et ce sans nécessiter d'adaptation du code.
 
 
 ### Depuis une application Java (bis)

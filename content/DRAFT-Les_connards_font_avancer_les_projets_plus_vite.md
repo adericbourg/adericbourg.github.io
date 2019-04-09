@@ -1,7 +1,9 @@
+---
 Title: Les connards font avancer les projets plus vite
 Category: Blog
 Status: draft
 Date: 1970-01-01
+---
 
 Certaines personnes font avancer les projets plus vite que d'autres. Sans généraliser, j'observe que parmi
 celles-ci,

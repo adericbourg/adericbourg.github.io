@@ -1,8 +1,10 @@
+---
 Title: Qu'est-ce qui me motive en tant que développeur ?
 Category: Blog
 Date: 2015-02-16
 Tags: quotidien, vivre ensemble, motivation, bien-être
 Sumary: Je suis développeur. Je travaille pour l'ESN MaBoite et suis en mission depuis plusieurs mois chez MonClient. Il est 9h40, j'arrive chez MonClient en retard, déjà fatigué. Sans avoir fait la fête la veille, j'ai pourtant eu du mal à me lever ce matin, je n'avais pas envie.
+---
 
 Je suis développeur. Je travaille pour l'ESN MaBoite et suis en mission depuis plusieurs mois chez MonClient. Il est 9h40, j'arrive chez MonClient en retard, déjà fatigué. Sans avoir fait la fête la veille, j'ai pourtant eu du mal à me lever ce matin, je n'avais pas envie.
 
