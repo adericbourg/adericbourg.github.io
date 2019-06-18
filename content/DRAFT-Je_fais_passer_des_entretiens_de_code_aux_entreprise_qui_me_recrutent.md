@@ -2,6 +2,7 @@
 Title: Je fais passer des entretiens de code aux entreprises qui me recrutent
 Category: Blog
 Tags: recrutement, qualité
+Status: draft
 Date: 2100-01-01
 ---
 

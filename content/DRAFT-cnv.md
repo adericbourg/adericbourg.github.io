@@ -2,6 +2,7 @@
 Title: J'ai (enfin) suivi une formation à la Communication NonViolente
 Category: Blog
 Tags: communication, vivre ensemble, bien-être
+Status: draft
 Date: 2100-01-01
 ---
 
@@ -79,7 +80,7 @@ tel changement. Gerald M. Weinberg écrit dans la préface de _Becoming a techni
 
 Cette formulation me rejoint pour évoquer ce stage et l'évolution qui s'est opérée chez moi.
 Le cadre sécurisant posé par le formateur et la garantie de confidentialité permet de prendre
-des risques, de s'ouvrir plus que d'usage. 
+des risques, de s'ouvrir plus que d'usage.
 
 ### Module 2 : à suivre
 
