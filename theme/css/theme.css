@@ -50,19 +50,6 @@ article header .meta {
 
 article header .meta a { text-decoration: none; }
 
-article:after {
-    content: '\00A7';
-    display: block;
-    text-align: center;
-    font-weight: lighter;
-    font-size: 1.5em;
-}
-
-article:last-of-type:after {
-    content: '';
-}
-
-
 #page-head {
     text-align: center;
     padding-top: .5em;
