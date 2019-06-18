@@ -35,14 +35,6 @@ hr {
     padding-bottom: 1em;
 }
 
-hr:after,
-#page-foot:before {
-    visibility: visible;
-    content: '\2042';
-    display: block;
-    text-align: center;
-}
-
 article {
     margin-bottom: 4em;
 }
