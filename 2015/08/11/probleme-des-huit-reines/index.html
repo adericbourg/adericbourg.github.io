@@ -38,7 +38,7 @@
         </h1>
         <div class="meta">
 <!-- includes/article_meta.html -->
-            Le <time datetime="2015-08-11T00:00:00+02:00">mar. 11 août 2015</time>
+            Le <time datetime="2015-08-11T00:00:00+02:00">Tue 11 August 2015</time>
             dans «<a href="https://www.dericbourg.net/category/blog.html">Blog</a>» 
             par <a href="https://www.dericbourg.net/author/alban-dericbourg.html">Alban Dericbourg</a>              <br />Mots-clés:              <a rel="tag" href="https://www.dericbourg.net/tag/algorithmique.html">algorithmique</a>,               <a rel="tag" href="https://www.dericbourg.net/tag/python.html">python</a>,               <a rel="tag" href="https://www.dericbourg.net/tag/jeu.html">jeu</a>        </div>
       </header>
@@ -51,8 +51,8 @@ Le problème consiste à compter et identifier les différentes façons de place
 <p><img alt="Représentation de la modélisation" class="center" src="/images/eight_queens/modelisation.png"></p>
 <blockquote>
 <p><strong>Note :</strong> en Python, la fonction <a href="https://docs.python.org/2/library/functions.html#enumerate"><code>enumerate</code></a> permet d'obtenir de façon immédiate ce résultat.</p>
-<div class="highlight"><pre><span></span>&gt;&gt;&gt; list(enumerate([3, 2, 1]))
-[(0, 3), (1, 2), (2, 1)]
+<div class="highlight"><pre><span></span><span class="o">&gt;&gt;&gt;</span> <span class="n">list</span><span class="p">(</span><span class="n">enumerate</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">]))</span>
+<span class="p">[(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)]</span>
 </pre></div>
 
 
@@ -107,17 +107,17 @@ Le problème consiste à compter et identifier les différentes façons de place
 </pre></div>
 
 
-<div class="highlight"><pre><span></span># Heap
-$ time python heaps.py
-real    0m42.860s
-user    0m42.832s
-sys     0m0.008s
+<div class="highlight"><pre><span></span><span class="o">#</span> <span class="n">Heap</span>
+<span class="err">$</span> <span class="n">time</span> <span class="n">python</span> <span class="n">heaps</span><span class="p">.</span><span class="n">py</span>
+<span class="nb">real</span>    <span class="mi">0</span><span class="n">m42</span><span class="p">.</span><span class="mi">860</span><span class="n">s</span>
+<span class="k">user</span>    <span class="mi">0</span><span class="n">m42</span><span class="p">.</span><span class="mi">832</span><span class="n">s</span>
+<span class="n">sys</span>     <span class="mi">0</span><span class="n">m0</span><span class="p">.</span><span class="mi">008</span><span class="n">s</span>
 
-# itertools
-$ time python itertools.py
-real    0m3.433s
-user    0m3.428s
-sys     0m0.000s
+<span class="o">#</span> <span class="n">itertools</span>
+<span class="err">$</span> <span class="n">time</span> <span class="n">python</span> <span class="n">itertools</span><span class="p">.</span><span class="n">py</span>
+<span class="nb">real</span>    <span class="mi">0</span><span class="n">m3</span><span class="p">.</span><span class="mi">433</span><span class="n">s</span>
+<span class="k">user</span>    <span class="mi">0</span><span class="n">m3</span><span class="p">.</span><span class="mi">428</span><span class="n">s</span>
+<span class="n">sys</span>     <span class="mi">0</span><span class="n">m0</span><span class="p">.</span><span class="mi">000</span><span class="n">s</span>
 </pre></div>
 
 
@@ -288,24 +288,24 @@ python brute-force.py  <span class="m">0</span>,06s user <span class="m">0</span
 
 
 <p>La proposition d'une solution est également très rapide :</p>
-<div class="highlight"><pre><span></span>+---+---+---+---+---+---+---+---+
-| Q |   |   |   |   |   |   |   |
-+---+---+---+---+---+---+---+---+
-|   |   |   |   | Q |   |   |   |
-+---+---+---+---+---+---+---+---+
-|   |   |   |   |   |   |   | Q |
-+---+---+---+---+---+---+---+---+
-|   |   |   |   |   | Q |   |   |
-+---+---+---+---+---+---+---+---+
-|   |   | Q |   |   |   |   |   |
-+---+---+---+---+---+---+---+---+
-|   |   |   |   |   |   | Q |   |
-+---+---+---+---+---+---+---+---+
-|   | Q |   |   |   |   |   |   |
-+---+---+---+---+---+---+---+---+
-|   |   |   | Q |   |   |   |   |
-+---+---+---+---+---+---+---+---+
-Nodes: 24  Time: 0.0
+<div class="highlight"><pre><span></span><span class="o">+</span><span class="c1">---+---+---+---+---+---+---+---+</span>
+<span class="o">|</span> <span class="n">Q</span> <span class="o">|</span>   <span class="o">|</span>   <span class="o">|</span>   <span class="o">|</span>   <span class="o">|</span>   <span class="o">|</span>   <span class="o">|</span>   <span class="o">|</span>
+<span class="o">+</span><span class="c1">---+---+---+---+---+---+---+---+</span>
+<span class="o">|</span>   <span class="o">|</span>   <span class="o">|</span>   <span class="o">|</span>   <span class="o">|</span> <span class="n">Q</span> <span class="o">|</span>   <span class="o">|</span>   <span class="o">|</span>   <span class="o">|</span>
+<span class="o">+</span><span class="c1">---+---+---+---+---+---+---+---+</span>
+<span class="o">|</span>   <span class="o">|</span>   <span class="o">|</span>   <span class="o">|</span>   <span class="o">|</span>   <span class="o">|</span>   <span class="o">|</span>   <span class="o">|</span> <span class="n">Q</span> <span class="o">|</span>
+<span class="o">+</span><span class="c1">---+---+---+---+---+---+---+---+</span>
+<span class="o">|</span>   <span class="o">|</span>   <span class="o">|</span>   <span class="o">|</span>   <span class="o">|</span>   <span class="o">|</span> <span class="n">Q</span> <span class="o">|</span>   <span class="o">|</span>   <span class="o">|</span>
+<span class="o">+</span><span class="c1">---+---+---+---+---+---+---+---+</span>
+<span class="o">|</span>   <span class="o">|</span>   <span class="o">|</span> <span class="n">Q</span> <span class="o">|</span>   <span class="o">|</span>   <span class="o">|</span>   <span class="o">|</span>   <span class="o">|</span>   <span class="o">|</span>
+<span class="o">+</span><span class="c1">---+---+---+---+---+---+---+---+</span>
+<span class="o">|</span>   <span class="o">|</span>   <span class="o">|</span>   <span class="o">|</span>   <span class="o">|</span>   <span class="o">|</span>   <span class="o">|</span> <span class="n">Q</span> <span class="o">|</span>   <span class="o">|</span>
+<span class="o">+</span><span class="c1">---+---+---+---+---+---+---+---+</span>
+<span class="o">|</span>   <span class="o">|</span> <span class="n">Q</span> <span class="o">|</span>   <span class="o">|</span>   <span class="o">|</span>   <span class="o">|</span>   <span class="o">|</span>   <span class="o">|</span>   <span class="o">|</span>
+<span class="o">+</span><span class="c1">---+---+---+---+---+---+---+---+</span>
+<span class="o">|</span>   <span class="o">|</span>   <span class="o">|</span>   <span class="o">|</span> <span class="n">Q</span> <span class="o">|</span>   <span class="o">|</span>   <span class="o">|</span>   <span class="o">|</span>   <span class="o">|</span>
+<span class="o">+</span><span class="c1">---+---+---+---+---+---+---+---+</span>
+<span class="n">Nodes</span><span class="p">:</span> <span class="mi">24</span>  <span class="n">Time</span><span class="p">:</span> <span class="mi">0</span><span class="p">.</span><span class="mi">0</span>
 </pre></div>
 
 

@@ -196,6 +196,11 @@ pre {
 
 figure * { border: none; margin: auto; padding: auto; }
 
+.post-content {
+    text-align: justify;
+    text-justify: auto;
+}
+
 .post-content img {
     display: block;
     margin-left: auto;

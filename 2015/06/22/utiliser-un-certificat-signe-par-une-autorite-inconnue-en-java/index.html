@@ -38,7 +38,7 @@
         </h1>
         <div class="meta">
 <!-- includes/article_meta.html -->
-            Le <time datetime="2015-06-22T00:00:00+02:00">lun. 22 juin 2015</time>
+            Le <time datetime="2015-06-22T00:00:00+02:00">Mon 22 June 2015</time>
             dans «<a href="https://www.dericbourg.net/category/blog.html">Blog</a>» 
             par <a href="https://www.dericbourg.net/author/alban-dericbourg.html">Alban Dericbourg</a>              <br />Mots-clés:              <a rel="tag" href="https://www.dericbourg.net/tag/ssl.html">ssl</a>,               <a rel="tag" href="https://www.dericbourg.net/tag/tls.html">tls</a>,               <a rel="tag" href="https://www.dericbourg.net/tag/java.html">java</a>,               <a rel="tag" href="https://www.dericbourg.net/tag/certificat.html">certificat</a>,               <a rel="tag" href="https://www.dericbourg.net/tag/signature.html">signature</a>,               <a rel="tag" href="https://www.dericbourg.net/tag/securite.html">sécurité</a>        </div>
       </header>
@@ -86,15 +86,15 @@
 
 <h3>Depuis une application Java</h3>
 <p>Le même mécanisme s'applique lorsque vous vous connectez à un service en utilisant une application Java. Si le certificat n'est pas sûr, vous vous verrez refuser la connexion :</p>
-<div class="highlight"><pre><span></span>sun.security.provider.certpath.SunCertPathBuilderException: unable to find valid certification path to requested target
+<div class="highlight"><pre><span></span><span class="n">sun</span><span class="p">.</span><span class="k">security</span><span class="p">.</span><span class="n">provider</span><span class="p">.</span><span class="n">certpath</span><span class="p">.</span><span class="n">SunCertPathBuilderException</span><span class="p">:</span> <span class="n">unable</span> <span class="k">to</span> <span class="n">find</span> <span class="k">valid</span> <span class="n">certification</span> <span class="n">path</span> <span class="k">to</span> <span class="n">requested</span> <span class="n">target</span>
 </pre></div>
 
 
 <p>Tout comme avec <code>curl</code>, il existe une option pour spécifier un certificat faisant autorité. Il faut avant tout le stocker dans un conteneur spéficique à la JVM puis de préciser son emplacement dans la propriété système <code>javax.net.ssl.trustStore</code>.</p>
 <p>Pour créer ce conteneur, on utilise l'outil <code>keytool</code> fourni avec le JDK.</p>
 <div class="highlight"><pre><span></span>$ keytool -importcert -file cert.cer -keystore keystore.jks
-Entrez le mot de passe du fichier de clés :  
-Ressaisissez le nouveau mot de passe :  
+Entrez le mot de passe du fichier de clés :
+Ressaisissez le nouveau mot de passe :
 <span class="c1"># Ici s&#39;affichent les détails du certificat que vous importez</span>
 Faire confiance à ce certificat ? <span class="o">[</span>non<span class="o">]</span> :  oui
 Certificat ajouté au fichier de clés
@@ -121,7 +121,7 @@ Certificat ajouté au fichier de clés
 
 <p>Notez le mot de passe par défaut du <em>keystore</em>: « changeit ». Il s'agit du mot de passe par défaut et je vous encourage, si ce n'est déjà fait, à le changer.</p>
 <p>Cette opération est à réaliser sur votre machine de développement mais également sur l'intégralité des serveurs susceptibles d'exécuter vos applications. C'est là qu'une solution de déploiement automatique devient pertinente.</p>
-<p>Vous êtes maintenant capable de vous connecter depuis une application Java à l'ensemble des services exposés avec le certificat TLS de votre entreprise et ce sans nécessiter d'adaptation du code. </p>
+<p>Vous êtes maintenant capable de vous connecter depuis une application Java à l'ensemble des services exposés avec le certificat TLS de votre entreprise et ce sans nécessiter d'adaptation du code.</p>
 <h3>Depuis une application Java (bis)</h3>
 <p>Si, par malheur, vous ne pouvez pas déposer de fichier sur la machine exécutant votre application (c'est le cas sur certains hébergement « cloud » que je n'aime pas utiliser), vous pouvez toujours « stocker » votre <em>keystore</em> dans votre livrable (jar, war...). Mais... vous ne pourrez pas l'utiliser directement : la propriété <code>javax.net.ssl.trustStore</code> ne permet pas de déclarer de référence à un fichier dans le <em>package</em>. On peut en revanche l'écrire « à la main » sur le disque. L'exemple qui suit utilise <a href="https://github.com/google/guava">Guava</a>.</p>
 <div class="highlight"><pre><span></span><span class="n">File</span> <span class="n">tempDir</span> <span class="o">=</span> <span class="n">Files</span><span class="o">.</span><span class="na">createTempDir</span><span class="o">();</span>

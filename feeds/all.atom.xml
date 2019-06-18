@@ -1,50 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom"><title>Blog bloquant</title><link href="https://www.dericbourg.net/" rel="alternate"></link><link href="https://www.dericbourg.net/feeds/all.atom.xml" rel="self"></link><id>https://www.dericbourg.net/</id><updated>2015-12-10T00:00:00+01:00</updated><entry><title>Calcul d'itinéraire à partir des données RATP</title><link href="https://www.dericbourg.net/2015/12/10/calcul-ditineraire-a-partir-des-donnees-ratp/" rel="alternate"></link><published>2015-12-10T00:00:00+01:00</published><updated>2015-12-10T00:00:00+01:00</updated><author><name>Alban Dericbourg</name></author><id>tag:www.dericbourg.net,2015-12-10:/2015/12/10/calcul-ditineraire-a-partir-des-donnees-ratp/</id><summary type="html">&lt;p&gt;La RATP progresse dans l'&lt;a href="http://data.ratp.fr"&gt;ouverture de ses données&lt;/a&gt; et même si elle ne propose pas encore un accès à son &lt;a href="https://fr.wikipedia.org/wiki/Syst%C3%A8me_d'information_en_ligne"&gt;système SIEL&lt;/a&gt;, elle propose néanmoins les données de son offre de transport au &lt;a href="https://developers.google.com/transit/gtfs/"&gt;format GTFS&lt;/a&gt;. Une bonne occasion de s'initier au calcul d'itinéraire !&lt;/p&gt;
 &lt;p&gt;L'histoire et le contexte des calculs …&lt;/p&gt;</summary><content type="html">&lt;p&gt;La RATP progresse dans l'&lt;a href="http://data.ratp.fr"&gt;ouverture de ses données&lt;/a&gt; et même si elle ne propose pas encore un accès à son &lt;a href="https://fr.wikipedia.org/wiki/Syst%C3%A8me_d'information_en_ligne"&gt;système SIEL&lt;/a&gt;, elle propose néanmoins les données de son offre de transport au &lt;a href="https://developers.google.com/transit/gtfs/"&gt;format GTFS&lt;/a&gt;. Une bonne occasion de s'initier au calcul d'itinéraire !&lt;/p&gt;
-&lt;p&gt;L'histoire et le contexte des calculs d'itinéraires est très bien synthétisé par &lt;a href="https://twitter.com/tristramg"&gt;Tristram Gräbener&lt;/a&gt; dans son &lt;a href="http://blog.tristramg.eu/petit-historique-du-calcul-ditineraire.html"&gt;Petit historique du calcul d'itinéraire&lt;/a&gt;. Probablement plus hipster que je ne veux bien l'admettre, j'ai choisi d'utiliser le plus récent : le &lt;em&gt;&lt;a href="http://i11www.iti.uni-karlsruhe.de/extra/publications/dpsw-isftr-13.pdf"&gt;Connection Scan Algorithm&lt;/a&gt;&lt;/em&gt;. &lt;/p&gt;
+&lt;p&gt;L'histoire et le contexte des calculs d'itinéraires est très bien synthétisé par &lt;a href="https://twitter.com/tristramg"&gt;Tristram Gräbener&lt;/a&gt; dans son &lt;a href="http://blog.tristramg.eu/petit-historique-du-calcul-ditineraire.html"&gt;Petit historique du calcul d'itinéraire&lt;/a&gt;. Probablement plus hipster que je ne veux bien l'admettre, j'ai choisi d'utiliser le plus récent : le &lt;em&gt;&lt;a href="http://i11www.iti.uni-karlsruhe.de/extra/publications/dpsw-isftr-13.pdf"&gt;Connection Scan Algorithm&lt;/a&gt;&lt;/em&gt;.&lt;/p&gt;
 &lt;h3&gt;Connection scan algorithm&lt;/h3&gt;
 &lt;blockquote&gt;
 &lt;p&gt;Cette explication est largement inspirée de l'explication de l'algorithme du &lt;a href="https://github.com/captaintrain/csa-challenge/blob/master/readme.md"&gt;csa-challenge de CaptainTrain&lt;/a&gt;.&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;p&gt;Cet algorithme, tenant en quelques lignes, se « contente » de parcourir une table horaire pré-calculée des connexions entre les stations et de retenir la solution optimale en temps de trajet. Une connexion représente une possibilité de trajet entre deux stations. On la modélise donc par un quadruplet contenant :&lt;/p&gt;
 &lt;ul&gt;
-&lt;li&gt;la station de départ, &lt;/li&gt;
-&lt;li&gt;la station d'arrivée, &lt;/li&gt;
+&lt;li&gt;la station de départ,&lt;/li&gt;
+&lt;li&gt;la station d'arrivée,&lt;/li&gt;
 &lt;li&gt;l'heure de départ,&lt;/li&gt;
-&lt;li&gt;l'heure d'arrivée. &lt;/li&gt;
+&lt;li&gt;l'heure d'arrivée.&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;La table horaire devient alors simplement une liste de ces connexions triées par heure de départ croissante.&lt;/p&gt;
 &lt;p&gt;Pour chaque station &lt;em&gt;s&lt;/em&gt;, on considère l'heure et la station d'arrivée. Si celles-ci sont optimales, on les conserve. Les stations étant identifiées par des entiers, on les conserve dans deux tableaux : &lt;code&gt;arrival_timestamp[s]&lt;/code&gt; et &lt;code&gt;in_connection[s]&lt;/code&gt;.&lt;/p&gt;
 &lt;p&gt;L'objectif est de se rendre d'un point de départ &lt;em&gt;o&lt;/em&gt; à un point d'arrivée &lt;em&gt;d&lt;/em&gt; en partant à l'heure &lt;em&gt;t0&lt;/em&gt;.&lt;/p&gt;
 &lt;h4&gt;Initialisation&lt;/h4&gt;
-&lt;p&gt;On initialise l'algorithme en attribuant une durée infinie au trajet vers tout point d'arrêt à l'exception de la gare de départ (on en part, on sait qu'on y est à &lt;em&gt;t0&lt;/em&gt;). &lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;Pour chaque station s
-    arrival_timestamp[s] ← infinite
-    in_connection[s] ← invalid_value
+&lt;p&gt;On initialise l'algorithme en attribuant une durée infinie au trajet vers tout point d'arrêt à l'exception de la gare de départ (on en part, on sait qu'on y est à &lt;em&gt;t0&lt;/em&gt;).&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;Pour&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;chaque&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;station&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="n"&gt;arrival_timestamp&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="err"&gt;←&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;infinite&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="n"&gt;in_connection&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="err"&gt;←&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;invalid_value&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
 
-arrival_timestamp[o] ← t0
+&lt;span class="n"&gt;arrival_timestamp&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="n"&gt;o&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="err"&gt;←&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;t0&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;h4&gt;Boucle de calcul&lt;/h4&gt;
-&lt;p&gt;On parcourt l'ensemble des connexions contenues dans la table et on considère l'amélioration qu'elle apporte sur le trajet. À la fin de la boucle, lorsque toutes les connexions on été parcourues, toutes les heures d'arrivée depuis &lt;em&gt;o&lt;/em&gt; vers une autre station ont été calculées. &lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;Pour chaque connexion c
-    Si arrival_timestamp[c.departure_station] ≤ c.departure_timestamp 
-    et arrival_timestamp[c.arrival_station] &amp;gt; c.arrival_timestamp
-        arrival_timestamp[c.arrival_station] ← c.arrival_timestamp
-        in_connection[c.arrival_station] ← c
+&lt;p&gt;On parcourt l'ensemble des connexions contenues dans la table et on considère l'amélioration qu'elle apporte sur le trajet. À la fin de la boucle, lorsque toutes les connexions on été parcourues, toutes les heures d'arrivée depuis &lt;em&gt;o&lt;/em&gt; vers une autre station ont été calculées.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;Pour&lt;/span&gt; &lt;span class="n"&gt;chaque&lt;/span&gt; &lt;span class="n"&gt;connexion&lt;/span&gt; &lt;span class="k"&gt;c&lt;/span&gt;
+    &lt;span class="n"&gt;Si&lt;/span&gt; &lt;span class="n"&gt;arrival_timestamp&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="k"&gt;c&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;departure_station&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="err"&gt;≤&lt;/span&gt; &lt;span class="k"&gt;c&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;departure_timestamp&lt;/span&gt;
+    &lt;span class="n"&gt;et&lt;/span&gt; &lt;span class="n"&gt;arrival_timestamp&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="k"&gt;c&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;arrival_station&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="k"&gt;c&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;arrival_timestamp&lt;/span&gt;
+        &lt;span class="n"&gt;arrival_timestamp&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="k"&gt;c&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;arrival_station&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="err"&gt;←&lt;/span&gt; &lt;span class="k"&gt;c&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;arrival_timestamp&lt;/span&gt;
+        &lt;span class="n"&gt;in_connection&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="k"&gt;c&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;arrival_station&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="err"&gt;←&lt;/span&gt; &lt;span class="k"&gt;c&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;h4&gt;Résultat&lt;/h4&gt;
-&lt;p&gt;Pour obtenir le résultat, on parcourt le tableau des stations d'arrivée (&lt;code&gt;in_connections&lt;/code&gt;) en partant de la destination &lt;em&gt;d&lt;/em&gt; jusqu'à retrouver le point de départ &lt;em&gt;o&lt;/em&gt;. &lt;/p&gt;
+&lt;p&gt;Pour obtenir le résultat, on parcourt le tableau des stations d'arrivée (&lt;code&gt;in_connections&lt;/code&gt;) en partant de la destination &lt;em&gt;d&lt;/em&gt; jusqu'à retrouver le point de départ &lt;em&gt;o&lt;/em&gt;.&lt;/p&gt;
 &lt;h4&gt;Exemple&lt;/h4&gt;
-&lt;p&gt;Prenons un exemple sur une ligne fictive : &lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;         -----o C
-       /  
-o-----o B
-A      \
-         -----o D
+&lt;p&gt;Prenons un exemple sur une ligne fictive :&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;         &lt;span class="c1"&gt;-----o C&lt;/span&gt;
+       &lt;span class="o"&gt;/&lt;/span&gt;
+&lt;span class="n"&gt;o&lt;/span&gt;&lt;span class="c1"&gt;-----o B&lt;/span&gt;
+&lt;span class="n"&gt;A&lt;/span&gt;      &lt;span class="err"&gt;\&lt;/span&gt;
+         &lt;span class="c1"&gt;-----o D&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
@@ -69,7 +69,7 @@ A      \
 &lt;/tbody&gt;
 &lt;/table&gt;
 
-&lt;p&gt;Initialisons les données. &lt;/p&gt;
+&lt;p&gt;Initialisons les données.&lt;/p&gt;
 &lt;table class="table table-condensed"&gt;
 &lt;thead&gt;
   &lt;tr&gt;&lt;th&gt;&lt;/th&gt; &lt;th&gt;A&lt;/th&gt;&lt;th&gt;B&lt;/th&gt;&lt;th&gt;C&lt;/th&gt;&lt;th&gt;D&lt;/th&gt;&lt;/tr&gt;
@@ -81,7 +81,7 @@ A      \
 &lt;/table&gt;
 
 &lt;p&gt;On parcours ensuite la table horaire dans l'ordre. Les deux premières lignes sont ignorées, elles ne passent pas la condition horaire.&lt;/p&gt;
-&lt;p&gt;On arrive à (A, B, 2, 3) : &lt;/p&gt;
+&lt;p&gt;On arrive à (A, B, 2, 3) :&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;Heure(A) ≤ 2 (2 ≤ 2)&lt;/li&gt;
 &lt;li&gt;Heure(B) &amp;gt; 3 (&amp;infin; &amp;gt; 3)&lt;/li&gt;
@@ -97,7 +97,7 @@ A      \
 &lt;/tbody&gt;
 &lt;/table&gt;
 
-&lt;p&gt;On continue avec avec (B, C, 3, 4) qui satisfait également les conditions. &lt;/p&gt;
+&lt;p&gt;On continue avec avec (B, C, 3, 4) qui satisfait également les conditions.&lt;/p&gt;
 &lt;table class="table table-condensed"&gt;
 &lt;thead&gt;
   &lt;tr&gt;&lt;th&gt;&lt;/th&gt; &lt;th&gt;A&lt;/th&gt;&lt;th&gt;B&lt;/th&gt;&lt;th&gt;C&lt;/th&gt;&lt;th&gt;D&lt;/th&gt;&lt;/tr&gt;
@@ -108,9 +108,9 @@ A      \
 &lt;/tbody&gt;
 &lt;/table&gt;
 
-&lt;p&gt;Un œil averti aura remarqué que le trajet est ici déterminé. L'algorithme se poursuit néanmoins. &lt;/p&gt;
-&lt;p&gt;On arrive sur (A, B, 4, 5). On n'a bien Heure(A) ≤ 3 mais en revanche on n'a pas Heure(B) &amp;gt; 4. On passe la connexion. De même pour (A, B, 5, 6). &lt;/p&gt;
-&lt;p&gt;Vient (B, D, 5, 6) : &lt;/p&gt;
+&lt;p&gt;Un œil averti aura remarqué que le trajet est ici déterminé. L'algorithme se poursuit néanmoins.&lt;/p&gt;
+&lt;p&gt;On arrive sur (A, B, 4, 5). On n'a bien Heure(A) ≤ 3 mais en revanche on n'a pas Heure(B) &amp;gt; 4. On passe la connexion. De même pour (A, B, 5, 6).&lt;/p&gt;
+&lt;p&gt;Vient (B, D, 5, 6) :&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;Heure(B) ≤ 5 (3 ≤ 5)&lt;/li&gt;
 &lt;li&gt;Heure(D) &amp;gt; 6 (&amp;infin; &amp;gt; 6)&lt;/li&gt;
@@ -126,16 +126,16 @@ A      \
 &lt;/tbody&gt;
 &lt;/table&gt;
 
-&lt;p&gt;Il reste enfin la connexion (B, C, 6, 7) qui ne remplit par la condition Heure(C) &amp;gt; 7. On ne fait donc rien de cette connexion et les tableaux sont calculés. &lt;/p&gt;
-&lt;p&gt;Pour obtenir le trajet, on part de la destination, donc de l'entrée associée au point d'arrêt C dans le tableau des stations. On trouve (B, C, 3, 4). On va alors chercher l'entrée associée au départ de cette connexion, soit l'entrée associée à B. On trouve (A, B, 2, 3). Le point de départ de cette connexion est notre point de départ : la recherche est terminée. &lt;/p&gt;
-&lt;p&gt;En dépilant (&lt;em&gt;Last in, first out&lt;/em&gt;) ces connexions, on retrouve le trajet à parcourir : &lt;/p&gt;
+&lt;p&gt;Il reste enfin la connexion (B, C, 6, 7) qui ne remplit par la condition Heure(C) &amp;gt; 7. On ne fait donc rien de cette connexion et les tableaux sont calculés.&lt;/p&gt;
+&lt;p&gt;Pour obtenir le trajet, on part de la destination, donc de l'entrée associée au point d'arrêt C dans le tableau des stations. On trouve (B, C, 3, 4). On va alors chercher l'entrée associée au départ de cette connexion, soit l'entrée associée à B. On trouve (A, B, 2, 3). Le point de départ de cette connexion est notre point de départ : la recherche est terminée.&lt;/p&gt;
+&lt;p&gt;En dépilant (&lt;em&gt;Last in, first out&lt;/em&gt;) ces connexions, on retrouve le trajet à parcourir :&lt;/p&gt;
 &lt;ol&gt;
 &lt;li&gt;(A, B, 2, 3)&lt;/li&gt;
 &lt;li&gt;(B, C, 3, 4)&lt;/li&gt;
 &lt;/ol&gt;
-&lt;p&gt;L'algorithme nous a donc permis de déterminer le trajet pour aller de A à C en partant à l'heure 2 ainsi que l'heure d'arrivée. &lt;/p&gt;
+&lt;p&gt;L'algorithme nous a donc permis de déterminer le trajet pour aller de A à C en partant à l'heure 2 ainsi que l'heure d'arrivée.&lt;/p&gt;
 &lt;h4&gt;Analyse&lt;/h4&gt;
-&lt;p&gt;Cet algorithme présente l'avantage de s'exécuter en un temps proportionnel au nombre de connexions en occupant un espace mémoire lui aussi proportionnel au nombre de connexions. Dans le cas du métro parisien, on peut évaluer que le nombre de correspondances est du même ordre de grandeur que le nombre &lt;em&gt;N&lt;/em&gt; de stations. Cela revient à avoir : &lt;/p&gt;
+&lt;p&gt;Cet algorithme présente l'avantage de s'exécuter en un temps proportionnel au nombre de connexions en occupant un espace mémoire lui aussi proportionnel au nombre de connexions. Dans le cas du métro parisien, on peut évaluer que le nombre de correspondances est du même ordre de grandeur que le nombre &lt;em&gt;N&lt;/em&gt; de stations. Cela revient à avoir :&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;environ &lt;em&gt;N&lt;/em&gt; connexions entre stations d'une même ligne (le chiffre est légèrement faussé par la présence de lignes en « fourche ») ;&lt;/li&gt;
 &lt;li&gt;environ &lt;em&gt;2N&lt;/em&gt; connexions issues des correspondances (une connexion dans un sens, une connexion dans l'autre).&lt;/li&gt;
@@ -166,7 +166,7 @@ A      \
 &lt;h5&gt;stops.txt&lt;/h5&gt;
 &lt;p&gt;Ce fichier liste les arrêts avec, éventuellement, quelques informations complémentaires. La RATP fournit l'adresse la plus proche de l'arrêt ainsi que les coordonnées GPS de son centre (dans le cas d'une station qui dispose de plusieurs sorties). À noter que ce fichier n'est pas ordonné selon le sens de parcours des courses sur la ligne.&lt;/p&gt;
 &lt;blockquote&gt;
-&lt;p&gt;Une &lt;strong&gt;mission&lt;/strong&gt; est un trajet parcouru par un ensemble de trains. Elle est décrite par : 
+&lt;p&gt;Une &lt;strong&gt;mission&lt;/strong&gt; est un trajet parcouru par un ensemble de trains. Elle est décrite par :
 &lt;ul&gt;
   &lt;li&gt; la gare de départ ;&lt;/li&gt;
   &lt;li&gt; la gare d'arrivée ;&lt;/li&gt;
@@ -175,22 +175,22 @@ A      \
 Lorsqu'un train suit une mission, il réalise une &lt;strong&gt;course&lt;/strong&gt;.&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;p&gt;Exemple des quatre premières stations de la ligne 13 :&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;stop_id,stop_code,stop_name,stop_desc,stop_lat,stop_lon,location_type,parent_station
-2397,,&amp;quot;Pernety&amp;quot;,&amp;quot;Raymond Losserand (72 rue) - 75114&amp;quot;,48.833933819810916,2.31790897216328,0,
-1969,,&amp;quot;Châtillon Montrouge&amp;quot;,&amp;quot;République (220 avenue de la) - 92020&amp;quot;,48.810283363510756,2.3012888709759522,0,
-2406,,&amp;quot;Place de Clichy&amp;quot;,&amp;quot;Clichy (terre-plein face au 7 place de) - 75109&amp;quot;,48.883203999876585,2.3272660246411383,0,
-...
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;stop_id&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;stop_code&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;stop_name&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;stop_desc&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;stop_lat&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;stop_lon&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;location_type&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;parent_station&lt;/span&gt;
+&lt;span class="mi"&gt;2397&lt;/span&gt;&lt;span class="p"&gt;,,&lt;/span&gt;&lt;span class="ss"&gt;&amp;quot;Pernety&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="ss"&gt;&amp;quot;Raymond Losserand (72 rue) - 75114&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="mi"&gt;48&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="mi"&gt;833933819810916&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="mi"&gt;31790897216328&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;span class="mi"&gt;1969&lt;/span&gt;&lt;span class="p"&gt;,,&lt;/span&gt;&lt;span class="ss"&gt;&amp;quot;Châtillon Montrouge&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="ss"&gt;&amp;quot;République (220 avenue de la) - 92020&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="mi"&gt;48&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="mi"&gt;810283363510756&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="mi"&gt;3012888709759522&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;span class="mi"&gt;2406&lt;/span&gt;&lt;span class="p"&gt;,,&lt;/span&gt;&lt;span class="ss"&gt;&amp;quot;Place de Clichy&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="ss"&gt;&amp;quot;Clichy (terre-plein face au 7 place de) - 75109&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="mi"&gt;48&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="mi"&gt;883203999876585&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="mi"&gt;3272660246411383&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;span class="p"&gt;...&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;h5&gt;trips.txt&lt;/h5&gt;
 &lt;p&gt;Ce fichier liste les courses et les associe à une route. Nous reviendrons sur son utilité en observant les horaires d'arrêt.&lt;/p&gt;
 &lt;p&gt;Exemple sur la ligne 13 :&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;route_id,service_id,trip_id,trip_headsign,trip_short_name,direction_id,shape_id
-1197620,1762288,10017622880912413,101,101,0,
-1197620,1762289,10017622890912413,101,101,0,
-1197620,1762292,10017622920912413,101,101,0,
-...
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;route_id&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;service_id&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;trip_id&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;trip_headsign&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;trip_short_name&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;direction_id&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;shape_id&lt;/span&gt;
+&lt;span class="mi"&gt;1197620&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="mi"&gt;1762288&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="mi"&gt;10017622880912413&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="mi"&gt;101&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="mi"&gt;101&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;span class="mi"&gt;1197620&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="mi"&gt;1762289&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="mi"&gt;10017622890912413&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="mi"&gt;101&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="mi"&gt;101&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;span class="mi"&gt;1197620&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="mi"&gt;1762292&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="mi"&gt;10017622920912413&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="mi"&gt;101&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="mi"&gt;101&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;span class="p"&gt;...&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
@@ -198,10 +198,10 @@ Lorsqu'un train suit une mission, il réalise une &lt;strong&gt;course&lt;/stron
 &lt;p&gt;Ce fichier présente les horaires des courses aux stations (points d'arrêt). Ce fichier est trié par course et par heure d'arrêt en station.&lt;/p&gt;
 &lt;p&gt;Un détail est à noter quant aux horaires : ceux-ci sont fournis pour la journée qui peut se terminer... le lendemain. Un métro circulant le dimanche à 1h du matin sera en réalité rattaché à la journée du samedi. Ainsi, son horaire ne sera pas « à 1h le dimanche » mais « à 25h le samedi ». Bien que cette astuce puisse sembler tordue, elle simplifie en pratique beaucoup de choses, notamment pour maintenir la continuité des courses : il serait absurde de scinder la course d'un train sous prétexte qu'il roule à cheval sur deux jours calendaires.&lt;/p&gt;
 &lt;p&gt;Exemple pour la ligne 13 :&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;trip_id,arrival_time,departure_time,stop_id,stop_sequence,stop_headsign,shape_dist_traveled
-10017622880912413,19:38:00,19:38:00,1969,1,,
-10017622880912413,19:40:00,19:40:00,1880,2,,
-10017622880912413,19:41:00,19:41:00,1879,3,,
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;trip_id&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;arrival_time&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;departure_time&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;stop_id&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;stop_sequence&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;stop_headsign&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;shape_dist_traveled&lt;/span&gt;
+&lt;span class="mi"&gt;10017622880912413&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="mi"&gt;19&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="mi"&gt;38&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="mi"&gt;00&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="mi"&gt;19&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="mi"&gt;38&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="mi"&gt;00&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="mi"&gt;1969&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,,&lt;/span&gt;
+&lt;span class="mi"&gt;10017622880912413&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="mi"&gt;19&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="mi"&gt;40&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="mi"&gt;00&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="mi"&gt;19&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="mi"&gt;40&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="mi"&gt;00&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="mi"&gt;1880&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;,,&lt;/span&gt;
+&lt;span class="mi"&gt;10017622880912413&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="mi"&gt;19&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="mi"&gt;41&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="mi"&gt;00&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="mi"&gt;19&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="mi"&gt;41&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="mi"&gt;00&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="mi"&gt;1879&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="p"&gt;,,&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
@@ -209,10 +209,10 @@ Lorsqu'un train suit une mission, il réalise une &lt;strong&gt;course&lt;/stron
 &lt;h5&gt;transfers.txt&lt;/h5&gt;
 &lt;p&gt;&lt;code&gt;transfers.txt&lt;/code&gt; regroupe les correspondances entre plusieurs points d'arrêt.&lt;/p&gt;
 &lt;p&gt;Ce fichier n'étant pas compréhensible par un humain, prenons un exemple et déroulons-le :&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;from_stop_id,to_stop_id,transfer_type,min_transfer_time
-4211780,2270,2,212
-4472773,1724,2,228
-3619167,2276,2,252
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;from_stop_id&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;to_stop_id&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;transfer_type&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;min_transfer_time&lt;/span&gt;
+&lt;span class="mi"&gt;4211780&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="mi"&gt;2270&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="mi"&gt;212&lt;/span&gt;
+&lt;span class="mi"&gt;4472773&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="mi"&gt;1724&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="mi"&gt;228&lt;/span&gt;
+&lt;span class="mi"&gt;3619167&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="mi"&gt;2276&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="mi"&gt;252&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
@@ -324,17 +324,17 @@ $ grep &lt;span class="m"&gt;1364288&lt;/span&gt; routes.txt
 &lt;/ol&gt;
 &lt;h5&gt;Connexions issues des courses&lt;/h5&gt;
 &lt;p&gt;On ingère les horaires des courses en les groupant par... course et en prenant soin de ne pas « mélanger » les horaires de deux courses. Prenons l'exemple ci-dessous : les ceux courses fréquentent la même ligne mais ne s'arrêtent pas aux mêmes arrêts. Il n'y a pas de correspondance entre les deux.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt; Course I : A (t1) --------------------&amp;gt; B (t3)
-Course II :               C (t2) --------------------&amp;gt; D (t4)
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt; &lt;span class="n"&gt;Course&lt;/span&gt; &lt;span class="n"&gt;I&lt;/span&gt; &lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;A&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;t1&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="c1"&gt;--------------------&amp;gt; B (t3)&lt;/span&gt;
+&lt;span class="n"&gt;Course&lt;/span&gt; &lt;span class="n"&gt;II&lt;/span&gt; &lt;span class="p"&gt;:&lt;/span&gt;               &lt;span class="k"&gt;C&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;t2&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="c1"&gt;--------------------&amp;gt; D (t4)&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;p&gt;Le fichier &lt;code&gt;stop_times.txt&lt;/code&gt; ressemblerait à :&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;trip_id,arrival_time,departure_time,stop_id,stop_sequence,stop_headsign,shape_dist_traveled
-I, t1, t1, A, 1, ,
-II, t2, t2, C, 1, ,
-I, t3, t3, B, 1, ,
-II, t4, t4, D, 1, ,
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;trip_id&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;arrival_time&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;departure_time&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;stop_id&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;stop_sequence&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;stop_headsign&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;shape_dist_traveled&lt;/span&gt;
+&lt;span class="n"&gt;I&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;t1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;t1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;A&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;,&lt;/span&gt;
+&lt;span class="n"&gt;II&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;t2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;t2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="k"&gt;C&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;,&lt;/span&gt;
+&lt;span class="n"&gt;I&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;t3&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;t3&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;B&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;,&lt;/span&gt;
+&lt;span class="n"&gt;II&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;t4&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;t4&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;D&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;,&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
@@ -450,14 +450,14 @@ II, t4, t4, D, 1, ,
 
 
 &lt;h3&gt;Implémentation de l'algorithme&lt;/h3&gt;
-&lt;p&gt;Je propose ici une implémentation en Scala qui pourrait probablement être (largement, rien que par sa mutabilité) améliorée. Partons toujours de là. &lt;/p&gt;
+&lt;p&gt;Je propose ici une implémentation en Scala qui pourrait probablement être (largement, rien que par sa mutabilité) améliorée. Partons toujours de là.&lt;/p&gt;
 &lt;h4&gt;API&lt;/h4&gt;
-&lt;p&gt;Cette implémentation est paramétrée par : &lt;/p&gt;
+&lt;p&gt;Cette implémentation est paramétrée par :&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;la table horaire ;&lt;/li&gt;
 &lt;li&gt;un dictionnaire des arrêts indexés par leur identifiant.&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;Le calcul d'itinéraire (méthode &lt;code&gt;compute&lt;/code&gt;) prend en entrée : &lt;/p&gt;
+&lt;p&gt;Le calcul d'itinéraire (méthode &lt;code&gt;compute&lt;/code&gt;) prend en entrée :&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;un arrêt de départ ;&lt;/li&gt;
 &lt;li&gt;un arrêt d'arrivée ;&lt;/li&gt;
@@ -478,13 +478,13 @@ II, t4, t4, D, 1, ,
 &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="n"&gt;compute&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;departureStation&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;Int&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="n"&gt;arrivalStation&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;Int&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="n"&gt;departureTime&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;Int&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;Seq&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="kt"&gt;Connection&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
   &lt;span class="n"&gt;earliestArrival&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;departureStation&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="n"&gt;departureTime&lt;/span&gt;
   &lt;span class="c1"&gt;// [...]&lt;/span&gt;
-&lt;span class="o"&gt;}&lt;/span&gt;    
+&lt;span class="o"&gt;}&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;h4&gt;Calcul du trajet&lt;/h4&gt;
 &lt;h5&gt;Vue macroscopique&lt;/h5&gt;
-&lt;p&gt;On retrouve les deux étapes du calcul dans la méthode &lt;code&gt;compute&lt;/code&gt; : &lt;/p&gt;
+&lt;p&gt;On retrouve les deux étapes du calcul dans la méthode &lt;code&gt;compute&lt;/code&gt; :&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;la première qui parcourt les connexions et détermine l'heure d'arrivée optimale pour chaque station (&lt;code&gt;scanTimetable&lt;/code&gt;) ;&lt;/li&gt;
 &lt;li&gt;la seconde qui, à partir de cette table des connexions optimales, reconstruit le trajet (&lt;code&gt;computeRoute&lt;/code&gt;).&lt;/li&gt;
@@ -502,7 +502,7 @@ II, t4, t4, D, 1, ,
 
 
 &lt;h5&gt;Parcours de la table horaire&lt;/h5&gt;
-&lt;p&gt;On utilise une fois de plus une récursion terminale. &lt;/p&gt;
+&lt;p&gt;On utilise une fois de plus une récursion terminale.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;private&lt;/span&gt; &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="n"&gt;scanTimetable&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;arrivalStation&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;Int&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;Unit&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
   &lt;span class="nd"&gt;@tailrec&lt;/span&gt;
   &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="n"&gt;inner&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;conns&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;Seq&lt;/span&gt;&lt;span class="o"&gt;[(&lt;/span&gt;&lt;span class="kt"&gt;Connection&lt;/span&gt;, &lt;span class="kt"&gt;Int&lt;/span&gt;&lt;span class="o"&gt;)],&lt;/span&gt; &lt;span class="n"&gt;earliest&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;Int&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;Unit&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
@@ -542,7 +542,7 @@ II, t4, t4, D, 1, ,
 
 
 &lt;h5&gt;Construction de l'itinéraire à partir de la table horaire&lt;/h5&gt;
-&lt;p&gt;Une fois la table horaire &lt;code&gt;inConnection&lt;/code&gt; calculée, on reconsitue l'itinéraire inversé en partant de la station d'arrivée et en remontant jusqu'à la station de départ. &lt;/p&gt;
+&lt;p&gt;Une fois la table horaire &lt;code&gt;inConnection&lt;/code&gt; calculée, on reconsitue l'itinéraire inversé en partant de la station d'arrivée et en remontant jusqu'à la station de départ.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;private&lt;/span&gt; &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="n"&gt;computeRoute&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;arrivalStation&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;Int&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;Seq&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="kt"&gt;Connection&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
   &lt;span class="n"&gt;inConnection&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;arrivalStation&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt; &lt;span class="k"&gt;match&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
     &lt;span class="k"&gt;case&lt;/span&gt; &lt;span class="nc"&gt;Int&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="nc"&gt;MaxValue&lt;/span&gt; &lt;span class="k"&gt;=&amp;gt;&lt;/span&gt;
@@ -577,35 +577,35 @@ II, t4, t4, D, 1, ,
 
 
 &lt;p&gt;On obtient le trajet (notez la présence des connexions de correspondance à Odéon et Strasbourg-Saint-Denis) :&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;Solution found with 15 connections
-  Maubert-Mutualité -&amp;gt; Cluny-La Sorbonne
-  Cluny-La Sorbonne -&amp;gt; Odéon
-  Odéon -&amp;gt; Odéon
-  Odéon -&amp;gt; Saint-Michel
-  Saint-Michel -&amp;gt; Cité
-  Cité -&amp;gt; Châtelet
-  Châtelet -&amp;gt; Les Halles
-  Les Halles -&amp;gt; Etienne Marcel
-  Etienne Marcel -&amp;gt; Réaumur-Sébastopol
-  Réaumur-Sébastopol -&amp;gt; Strasbourg-Saint-Denis
-  Strasbourg-Saint-Denis -&amp;gt; Strasbourg-Saint-Denis
-  Strasbourg-Saint-Denis -&amp;gt; République
-  République -&amp;gt; Oberkampf
-  Oberkampf -&amp;gt; Saint-Ambroise
-  Saint-Ambroise -&amp;gt; Voltaire (Léon Blum)
-Total transit time: 21 minutes
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;Solution&lt;/span&gt; &lt;span class="k"&gt;found&lt;/span&gt; &lt;span class="k"&gt;with&lt;/span&gt; &lt;span class="mi"&gt;15&lt;/span&gt; &lt;span class="n"&gt;connections&lt;/span&gt;
+  &lt;span class="n"&gt;Maubert&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;Mutualité&lt;/span&gt; &lt;span class="o"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;Cluny&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;La&lt;/span&gt; &lt;span class="n"&gt;Sorbonne&lt;/span&gt;
+  &lt;span class="n"&gt;Cluny&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;La&lt;/span&gt; &lt;span class="n"&gt;Sorbonne&lt;/span&gt; &lt;span class="o"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;Odéon&lt;/span&gt;
+  &lt;span class="n"&gt;Odéon&lt;/span&gt; &lt;span class="o"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;Odéon&lt;/span&gt;
+  &lt;span class="n"&gt;Odéon&lt;/span&gt; &lt;span class="o"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;Saint&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;Michel&lt;/span&gt;
+  &lt;span class="n"&gt;Saint&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;Michel&lt;/span&gt; &lt;span class="o"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;Cité&lt;/span&gt;
+  &lt;span class="n"&gt;Cité&lt;/span&gt; &lt;span class="o"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;Châtelet&lt;/span&gt;
+  &lt;span class="n"&gt;Châtelet&lt;/span&gt; &lt;span class="o"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;Les&lt;/span&gt; &lt;span class="n"&gt;Halles&lt;/span&gt;
+  &lt;span class="n"&gt;Les&lt;/span&gt; &lt;span class="n"&gt;Halles&lt;/span&gt; &lt;span class="o"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;Etienne&lt;/span&gt; &lt;span class="n"&gt;Marcel&lt;/span&gt;
+  &lt;span class="n"&gt;Etienne&lt;/span&gt; &lt;span class="n"&gt;Marcel&lt;/span&gt; &lt;span class="o"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;Réaumur&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;Sébastopol&lt;/span&gt;
+  &lt;span class="n"&gt;Réaumur&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;Sébastopol&lt;/span&gt; &lt;span class="o"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;Strasbourg&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;Saint&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;Denis&lt;/span&gt;
+  &lt;span class="n"&gt;Strasbourg&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;Saint&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;Denis&lt;/span&gt; &lt;span class="o"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;Strasbourg&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;Saint&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;Denis&lt;/span&gt;
+  &lt;span class="n"&gt;Strasbourg&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;Saint&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;Denis&lt;/span&gt; &lt;span class="o"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;République&lt;/span&gt;
+  &lt;span class="n"&gt;République&lt;/span&gt; &lt;span class="o"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;Oberkampf&lt;/span&gt;
+  &lt;span class="n"&gt;Oberkampf&lt;/span&gt; &lt;span class="o"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;Saint&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;Ambroise&lt;/span&gt;
+  &lt;span class="n"&gt;Saint&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;Ambroise&lt;/span&gt; &lt;span class="o"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;Voltaire&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;Léon&lt;/span&gt; &lt;span class="n"&gt;Blum&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;Total&lt;/span&gt; &lt;span class="n"&gt;transit&lt;/span&gt; &lt;span class="n"&gt;time&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="mi"&gt;21&lt;/span&gt; &lt;span class="n"&gt;minutes&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;h3&gt;Conclusion&lt;/h3&gt;
-&lt;p&gt;En comparaison, l'&lt;a href="https://fr.wikipedia.org/wiki/Algorithme_de_Dijkstra"&gt;algorithme de plus court chemin de Dijkstra&lt;/a&gt; présente une complexité proportionnelle à &lt;em&gt;C.log(N)&lt;/em&gt; où &lt;em&gt;N&lt;/em&gt; est le nombre de stations et &lt;em&gt;C&lt;/em&gt; le nombre de correspondances entre deux stations, soit environ &lt;em&gt;N.log(N)&lt;/em&gt; dans notre évaluation, tout en occupant un espace mémoire de taille proportionnelle à &lt;em&gt;N&lt;/em&gt;. &lt;/p&gt;
-&lt;p&gt;Le métro parisien est constitué de 303 stations (&lt;em&gt;N = 303&lt;/em&gt; et &lt;em&gt;N.log(N) = 752&lt;/em&gt;) : on reste donc dans le même ordre de magnitude sur ces deux algorithmes au moment du calcul d'itinéraire. En revanche, le &lt;em&gt;Connexion scan algorithm&lt;/em&gt; demande de pré-calculer la table horaire : il induit donc un coût préalable. Cette table pré-calculée le rend également moins souple : elle rend plus difficile le paramétrage de l'algorithme en fonction des préférences du voyageur. La facilité de marche du voyageur peut par exemple être utilisée pour pondérer la durée d'une correspondance : &lt;/p&gt;
+&lt;p&gt;En comparaison, l'&lt;a href="https://fr.wikipedia.org/wiki/Algorithme_de_Dijkstra"&gt;algorithme de plus court chemin de Dijkstra&lt;/a&gt; présente une complexité proportionnelle à &lt;em&gt;C.log(N)&lt;/em&gt; où &lt;em&gt;N&lt;/em&gt; est le nombre de stations et &lt;em&gt;C&lt;/em&gt; le nombre de correspondances entre deux stations, soit environ &lt;em&gt;N.log(N)&lt;/em&gt; dans notre évaluation, tout en occupant un espace mémoire de taille proportionnelle à &lt;em&gt;N&lt;/em&gt;.&lt;/p&gt;
+&lt;p&gt;Le métro parisien est constitué de 303 stations (&lt;em&gt;N = 303&lt;/em&gt; et &lt;em&gt;N.log(N) = 752&lt;/em&gt;) : on reste donc dans le même ordre de magnitude sur ces deux algorithmes au moment du calcul d'itinéraire. En revanche, le &lt;em&gt;Connexion scan algorithm&lt;/em&gt; demande de pré-calculer la table horaire : il induit donc un coût préalable. Cette table pré-calculée le rend également moins souple : elle rend plus difficile le paramétrage de l'algorithme en fonction des préférences du voyageur. La facilité de marche du voyageur peut par exemple être utilisée pour pondérer la durée d'une correspondance :&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;avec le CSA, il est nécessaire de calculer une table prenant en compte ce paramètre (une correspondance étant une connexion comme une autre) ;&lt;/li&gt;
 &lt;li&gt;avec l'algorithme de Dijkstra, il « suffit » d'associer un poids plus fort aux arêtes représentant une correspondance lorsque le voyageur a des difficultés à se déplacer.&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;Si le CSA est plus simple à implémenter, il l'est au détriment de la souplesse en première approche. Il est cependant possible de typer les connexions de correspondance pour leur attribuer différentes heures d'arrivée en fonction de la vélocité pédestre du voyageur. &lt;/p&gt;
-&lt;p&gt;Enfin, si cet exemple a été mené sur le réseau ferré RATP d'Île de France, son extension au réseau de bus (347 lignes) n'est pas viable : la table horaire devient trop volumineuse pour tenir en mémoire et les performances s'en ressentent. Mon intuition est que cet algorithme est très pertinent sur de « petites » tables horaires (jusqu'à quelques centaines de stations). Dès que le réseau grossit, en revanche, il est préférable de chercher un autre algorithme moins gourmand en mémoire et en pré-calcul. &lt;/p&gt;</content><category term="opendata"></category><category term="ratp"></category><category term="gtfs"></category><category term="scala"></category></entry><entry><title>Gestion des accès concurrents sur un cache de DAO</title><link href="https://www.dericbourg.net/2015/11/07/gestion-des-acces-concurrents-sur-un-cache-de-dao/" rel="alternate"></link><published>2015-11-07T00:00:00+01:00</published><updated>2015-11-07T00:00:00+01:00</updated><author><name>Alban Dericbourg</name></author><id>tag:www.dericbourg.net,2015-11-07:/2015/11/07/gestion-des-acces-concurrents-sur-un-cache-de-dao/</id><summary type="html">&lt;p&gt;L'ajout d'un cache sur un DAO est une opération courante et la bibliothèque Guava, très répandue, a par ailleurs énormément simplifié sa mise en œuvre. Néanmoins, il reste encore extrêmement facile de se tromper avec cette bibliothèque et... de réaliser un cache qui ne fonctionne pas.&lt;/p&gt;
+&lt;p&gt;Si le CSA est plus simple à implémenter, il l'est au détriment de la souplesse en première approche. Il est cependant possible de typer les connexions de correspondance pour leur attribuer différentes heures d'arrivée en fonction de la vélocité pédestre du voyageur.&lt;/p&gt;
+&lt;p&gt;Enfin, si cet exemple a été mené sur le réseau ferré RATP d'Île de France, son extension au réseau de bus (347 lignes) n'est pas viable : la table horaire devient trop volumineuse pour tenir en mémoire et les performances s'en ressentent. Mon intuition est que cet algorithme est très pertinent sur de « petites » tables horaires (jusqu'à quelques centaines de stations). Dès que le réseau grossit, en revanche, il est préférable de chercher un autre algorithme moins gourmand en mémoire et en pré-calcul.&lt;/p&gt;</content><category term="opendata"></category><category term="ratp"></category><category term="gtfs"></category><category term="scala"></category></entry><entry><title>Gestion des accès concurrents sur un cache de DAO</title><link href="https://www.dericbourg.net/2015/11/07/gestion-des-acces-concurrents-sur-un-cache-de-dao/" rel="alternate"></link><published>2015-11-07T00:00:00+01:00</published><updated>2015-11-07T00:00:00+01:00</updated><author><name>Alban Dericbourg</name></author><id>tag:www.dericbourg.net,2015-11-07:/2015/11/07/gestion-des-acces-concurrents-sur-un-cache-de-dao/</id><summary type="html">&lt;p&gt;L'ajout d'un cache sur un DAO est une opération courante et la bibliothèque Guava, très répandue, a par ailleurs énormément simplifié sa mise en œuvre. Néanmoins, il reste encore extrêmement facile de se tromper avec cette bibliothèque et... de réaliser un cache qui ne fonctionne pas.&lt;/p&gt;
 &lt;h3&gt;Contexte&lt;/h3&gt;
 &lt;p&gt;Partons d'une interface …&lt;/p&gt;</summary><content type="html">&lt;p&gt;L'ajout d'un cache sur un DAO est une opération courante et la bibliothèque Guava, très répandue, a par ailleurs énormément simplifié sa mise en œuvre. Néanmoins, il reste encore extrêmement facile de se tromper avec cette bibliothèque et... de réaliser un cache qui ne fonctionne pas.&lt;/p&gt;
 &lt;h3&gt;Contexte&lt;/h3&gt;
@@ -884,8 +884,8 @@ Le problème consiste à compter et identifier les différentes façons de place
 &lt;p&gt;&lt;img alt="Représentation de la modélisation" class="center" src="/images/eight_queens/modelisation.png"&gt;&lt;/p&gt;
 &lt;blockquote&gt;
 &lt;p&gt;&lt;strong&gt;Note :&lt;/strong&gt; en Python, la fonction &lt;a href="https://docs.python.org/2/library/functions.html#enumerate"&gt;&lt;code&gt;enumerate&lt;/code&gt;&lt;/a&gt; permet d'obtenir de façon immédiate ce résultat.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&amp;gt;&amp;gt;&amp;gt; list(enumerate([3, 2, 1]))
-[(0, 3), (1, 2), (2, 1)]
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;list&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;enumerate&lt;/span&gt;&lt;span class="p"&gt;([&lt;/span&gt;&lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;]))&lt;/span&gt;
+&lt;span class="p"&gt;[(&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;)]&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
@@ -940,17 +940,17 @@ Le problème consiste à compter et identifier les différentes façons de place
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;# Heap
-$ time python heaps.py
-real    0m42.860s
-user    0m42.832s
-sys     0m0.008s
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="o"&gt;#&lt;/span&gt; &lt;span class="n"&gt;Heap&lt;/span&gt;
+&lt;span class="err"&gt;$&lt;/span&gt; &lt;span class="n"&gt;time&lt;/span&gt; &lt;span class="n"&gt;python&lt;/span&gt; &lt;span class="n"&gt;heaps&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;py&lt;/span&gt;
+&lt;span class="nb"&gt;real&lt;/span&gt;    &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="n"&gt;m42&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="mi"&gt;860&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;
+&lt;span class="k"&gt;user&lt;/span&gt;    &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="n"&gt;m42&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="mi"&gt;832&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;
+&lt;span class="n"&gt;sys&lt;/span&gt;     &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="n"&gt;m0&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="mi"&gt;008&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;
 
-# itertools
-$ time python itertools.py
-real    0m3.433s
-user    0m3.428s
-sys     0m0.000s
+&lt;span class="o"&gt;#&lt;/span&gt; &lt;span class="n"&gt;itertools&lt;/span&gt;
+&lt;span class="err"&gt;$&lt;/span&gt; &lt;span class="n"&gt;time&lt;/span&gt; &lt;span class="n"&gt;python&lt;/span&gt; &lt;span class="n"&gt;itertools&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;py&lt;/span&gt;
+&lt;span class="nb"&gt;real&lt;/span&gt;    &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="n"&gt;m3&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="mi"&gt;433&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;
+&lt;span class="k"&gt;user&lt;/span&gt;    &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="n"&gt;m3&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="mi"&gt;428&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;
+&lt;span class="n"&gt;sys&lt;/span&gt;     &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="n"&gt;m0&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="mi"&gt;000&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
@@ -1121,24 +1121,24 @@ python brute-force.py  &lt;span class="m"&gt;0&lt;/span&gt;,06s user &lt;span cl
 
 
 &lt;p&gt;La proposition d'une solution est également très rapide :&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;+---+---+---+---+---+---+---+---+
-| Q |   |   |   |   |   |   |   |
-+---+---+---+---+---+---+---+---+
-|   |   |   |   | Q |   |   |   |
-+---+---+---+---+---+---+---+---+
-|   |   |   |   |   |   |   | Q |
-+---+---+---+---+---+---+---+---+
-|   |   |   |   |   | Q |   |   |
-+---+---+---+---+---+---+---+---+
-|   |   | Q |   |   |   |   |   |
-+---+---+---+---+---+---+---+---+
-|   |   |   |   |   |   | Q |   |
-+---+---+---+---+---+---+---+---+
-|   | Q |   |   |   |   |   |   |
-+---+---+---+---+---+---+---+---+
-|   |   |   | Q |   |   |   |   |
-+---+---+---+---+---+---+---+---+
-Nodes: 24  Time: 0.0
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="c1"&gt;---+---+---+---+---+---+---+---+&lt;/span&gt;
+&lt;span class="o"&gt;|&lt;/span&gt; &lt;span class="n"&gt;Q&lt;/span&gt; &lt;span class="o"&gt;|&lt;/span&gt;   &lt;span class="o"&gt;|&lt;/span&gt;   &lt;span class="o"&gt;|&lt;/span&gt;   &lt;span class="o"&gt;|&lt;/span&gt;   &lt;span class="o"&gt;|&lt;/span&gt;   &lt;span class="o"&gt;|&lt;/span&gt;   &lt;span class="o"&gt;|&lt;/span&gt;   &lt;span class="o"&gt;|&lt;/span&gt;
+&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="c1"&gt;---+---+---+---+---+---+---+---+&lt;/span&gt;
+&lt;span class="o"&gt;|&lt;/span&gt;   &lt;span class="o"&gt;|&lt;/span&gt;   &lt;span class="o"&gt;|&lt;/span&gt;   &lt;span class="o"&gt;|&lt;/span&gt;   &lt;span class="o"&gt;|&lt;/span&gt; &lt;span class="n"&gt;Q&lt;/span&gt; &lt;span class="o"&gt;|&lt;/span&gt;   &lt;span class="o"&gt;|&lt;/span&gt;   &lt;span class="o"&gt;|&lt;/span&gt;   &lt;span class="o"&gt;|&lt;/span&gt;
+&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="c1"&gt;---+---+---+---+---+---+---+---+&lt;/span&gt;
+&lt;span class="o"&gt;|&lt;/span&gt;   &lt;span class="o"&gt;|&lt;/span&gt;   &lt;span class="o"&gt;|&lt;/span&gt;   &lt;span class="o"&gt;|&lt;/span&gt;   &lt;span class="o"&gt;|&lt;/span&gt;   &lt;span class="o"&gt;|&lt;/span&gt;   &lt;span class="o"&gt;|&lt;/span&gt;   &lt;span class="o"&gt;|&lt;/span&gt; &lt;span class="n"&gt;Q&lt;/span&gt; &lt;span class="o"&gt;|&lt;/span&gt;
+&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="c1"&gt;---+---+---+---+---+---+---+---+&lt;/span&gt;
+&lt;span class="o"&gt;|&lt;/span&gt;   &lt;span class="o"&gt;|&lt;/span&gt;   &lt;span class="o"&gt;|&lt;/span&gt;   &lt;span class="o"&gt;|&lt;/span&gt;   &lt;span class="o"&gt;|&lt;/span&gt;   &lt;span class="o"&gt;|&lt;/span&gt; &lt;span class="n"&gt;Q&lt;/span&gt; &lt;span class="o"&gt;|&lt;/span&gt;   &lt;span class="o"&gt;|&lt;/span&gt;   &lt;span class="o"&gt;|&lt;/span&gt;
+&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="c1"&gt;---+---+---+---+---+---+---+---+&lt;/span&gt;
+&lt;span class="o"&gt;|&lt;/span&gt;   &lt;span class="o"&gt;|&lt;/span&gt;   &lt;span class="o"&gt;|&lt;/span&gt; &lt;span class="n"&gt;Q&lt;/span&gt; &lt;span class="o"&gt;|&lt;/span&gt;   &lt;span class="o"&gt;|&lt;/span&gt;   &lt;span class="o"&gt;|&lt;/span&gt;   &lt;span class="o"&gt;|&lt;/span&gt;   &lt;span class="o"&gt;|&lt;/span&gt;   &lt;span class="o"&gt;|&lt;/span&gt;
+&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="c1"&gt;---+---+---+---+---+---+---+---+&lt;/span&gt;
+&lt;span class="o"&gt;|&lt;/span&gt;   &lt;span class="o"&gt;|&lt;/span&gt;   &lt;span class="o"&gt;|&lt;/span&gt;   &lt;span class="o"&gt;|&lt;/span&gt;   &lt;span class="o"&gt;|&lt;/span&gt;   &lt;span class="o"&gt;|&lt;/span&gt;   &lt;span class="o"&gt;|&lt;/span&gt; &lt;span class="n"&gt;Q&lt;/span&gt; &lt;span class="o"&gt;|&lt;/span&gt;   &lt;span class="o"&gt;|&lt;/span&gt;
+&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="c1"&gt;---+---+---+---+---+---+---+---+&lt;/span&gt;
+&lt;span class="o"&gt;|&lt;/span&gt;   &lt;span class="o"&gt;|&lt;/span&gt; &lt;span class="n"&gt;Q&lt;/span&gt; &lt;span class="o"&gt;|&lt;/span&gt;   &lt;span class="o"&gt;|&lt;/span&gt;   &lt;span class="o"&gt;|&lt;/span&gt;   &lt;span class="o"&gt;|&lt;/span&gt;   &lt;span class="o"&gt;|&lt;/span&gt;   &lt;span class="o"&gt;|&lt;/span&gt;   &lt;span class="o"&gt;|&lt;/span&gt;
+&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="c1"&gt;---+---+---+---+---+---+---+---+&lt;/span&gt;
+&lt;span class="o"&gt;|&lt;/span&gt;   &lt;span class="o"&gt;|&lt;/span&gt;   &lt;span class="o"&gt;|&lt;/span&gt;   &lt;span class="o"&gt;|&lt;/span&gt; &lt;span class="n"&gt;Q&lt;/span&gt; &lt;span class="o"&gt;|&lt;/span&gt;   &lt;span class="o"&gt;|&lt;/span&gt;   &lt;span class="o"&gt;|&lt;/span&gt;   &lt;span class="o"&gt;|&lt;/span&gt;   &lt;span class="o"&gt;|&lt;/span&gt;
+&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="c1"&gt;---+---+---+---+---+---+---+---+&lt;/span&gt;
+&lt;span class="n"&gt;Nodes&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="mi"&gt;24&lt;/span&gt;  &lt;span class="n"&gt;Time&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
@@ -1196,24 +1196,24 @@ point d'accès Wifi.&lt;/p&gt;
    distribution Linux&lt;/li&gt;
 &lt;li&gt;Un &lt;em&gt;dongle&lt;/em&gt; Wifi (déjà installé et détecté)&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;Dans la suite, on considèrera que l'interface sans fil est nommée &lt;code&gt;wlan0&lt;/code&gt;.  &lt;/p&gt;
+&lt;p&gt;Dans la suite, on considèrera que l'interface sans fil est nommée &lt;code&gt;wlan0&lt;/code&gt;.&lt;/p&gt;
 &lt;h3&gt;Définition d'une adresse IP statique&lt;/h3&gt;
 &lt;p&gt;Dans le fichier &lt;code&gt;/etc/network/interfaces&lt;/code&gt;, supprimer les lignes suivantes :&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;iface wlan0 inet manual
-wpa-roam /etc/wpa_supplicant/wpa_supplicant.conf
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;iface&lt;/span&gt; &lt;span class="n"&gt;wlan0&lt;/span&gt; &lt;span class="n"&gt;inet&lt;/span&gt; &lt;span class="n"&gt;manual&lt;/span&gt;
+&lt;span class="n"&gt;wpa&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;roam&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;etc&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;wpa_supplicant&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;wpa_supplicant&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;conf&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;p&gt;Les remplacer par :&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;allow-hotplug wlan0
-iface wlan0 inet static
-address 192.168.100.1
-netmask 255.255.255.0
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;allow&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;hotplug&lt;/span&gt; &lt;span class="n"&gt;wlan0&lt;/span&gt;
+&lt;span class="n"&gt;iface&lt;/span&gt; &lt;span class="n"&gt;wlan0&lt;/span&gt; &lt;span class="n"&gt;inet&lt;/span&gt; &lt;span class="k"&gt;static&lt;/span&gt;
+&lt;span class="n"&gt;address&lt;/span&gt; &lt;span class="mi"&gt;192&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="mi"&gt;168&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="mi"&gt;100&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;
+&lt;span class="n"&gt;netmask&lt;/span&gt; &lt;span class="mi"&gt;255&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="mi"&gt;255&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="mi"&gt;255&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;p&gt;Redémarrez le réseau :&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;sudo service networking restart
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;sudo&lt;/span&gt; &lt;span class="n"&gt;service&lt;/span&gt; &lt;span class="n"&gt;networking&lt;/span&gt; &lt;span class="k"&gt;restart&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
@@ -1221,23 +1221,23 @@ netmask 255.255.255.0
 &lt;p&gt;Le serveur DHCP permet d'attribuer automatiquement une adresse IP aux machines
 qui se connecteront à votre réseau Wifi.&lt;/p&gt;
 &lt;p&gt;Installez le paquet &lt;em&gt;&lt;a href="https://packages.debian.org/isc-dhcp-server"&gt;isc-dhcp-server&lt;/a&gt;&lt;/em&gt; :&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;sudo apt-get install isc-dhcp-server
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;sudo&lt;/span&gt; &lt;span class="n"&gt;apt&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="k"&gt;get&lt;/span&gt; &lt;span class="n"&gt;install&lt;/span&gt; &lt;span class="n"&gt;isc&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;dhcp&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;server&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;p&gt;À ce stade, le service ne devrait pas démarrer correctement :&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;Generating /etc/default/isc-dhcp-server...
-[FAIL] Starting ISC DHCP server: dhcpd[....] check syslog for diagnostics. ... failed!
- failed!
-invoke-rc.d: initscript isc-dhcp-server, action &amp;quot;start&amp;quot; failed.
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nv"&gt;Generating&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="nv"&gt;etc&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="nv"&gt;default&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="nv"&gt;isc&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="nv"&gt;dhcp&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="nv"&gt;server&lt;/span&gt;...
+[&lt;span class="nv"&gt;FAIL&lt;/span&gt;] &lt;span class="nv"&gt;Starting&lt;/span&gt; &lt;span class="nv"&gt;ISC&lt;/span&gt; &lt;span class="nv"&gt;DHCP&lt;/span&gt; &lt;span class="nv"&gt;server&lt;/span&gt;: &lt;span class="nv"&gt;dhcpd&lt;/span&gt;[....] &lt;span class="nv"&gt;check&lt;/span&gt; &lt;span class="nv"&gt;syslog&lt;/span&gt; &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="nv"&gt;diagnostics&lt;/span&gt;. ... &lt;span class="nv"&gt;failed&lt;/span&gt;&lt;span class="o"&gt;!&lt;/span&gt;
+ &lt;span class="nv"&gt;failed&lt;/span&gt;&lt;span class="o"&gt;!&lt;/span&gt;
+&lt;span class="nv"&gt;invoke&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="nv"&gt;rc&lt;/span&gt;.&lt;span class="nv"&gt;d&lt;/span&gt;: &lt;span class="nv"&gt;initscript&lt;/span&gt; &lt;span class="nv"&gt;isc&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="nv"&gt;dhcp&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="nv"&gt;server&lt;/span&gt;, &lt;span class="nv"&gt;action&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="s"&gt;start&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt; &lt;span class="nv"&gt;failed&lt;/span&gt;.
 &lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;p&gt;Vous pouvez ignorer ces erreurs pour le moment.&lt;/p&gt;
 &lt;p&gt;Éditez le fichier de configuration du serveur : &lt;code&gt;/etc/dhcp/dhcpd.conf&lt;/code&gt; et
 commentez les options &lt;em&gt;domain-name&lt;/em&gt; et &lt;em&gt;domain-name-servers&lt;/em&gt; :&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;#option domain-name &amp;quot;example.org&amp;quot;;
-#option domain-name-servers ns1.example.org, ns2.example.org;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="o"&gt;#&lt;/span&gt;&lt;span class="k"&gt;option&lt;/span&gt; &lt;span class="k"&gt;domain&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;name&lt;/span&gt; &lt;span class="ss"&gt;&amp;quot;example.org&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="o"&gt;#&lt;/span&gt;&lt;span class="k"&gt;option&lt;/span&gt; &lt;span class="k"&gt;domain&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;servers&lt;/span&gt; &lt;span class="n"&gt;ns1&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;example&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;org&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;ns2&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;example&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;org&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
@@ -1245,22 +1245,22 @@ commentez les options &lt;em&gt;domain-name&lt;/em&gt; et &lt;em&gt;domain-name-
 DHCP qu'il est le seul à fournir des adresses IP sur ce réseau et donc possède
 la pleine connaissance des
 &lt;a href="http://www.linux-france.org/prj/edu/archinet/systeme/ch27s03.html"&gt;baux accordés&lt;/a&gt;.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;# If this DHCP server is the official DHCP server for the local
-# network, the authoritative directive should be uncommented.
-authoritative;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;# &lt;span class="k"&gt;If&lt;/span&gt; &lt;span class="nv"&gt;this&lt;/span&gt; &lt;span class="nv"&gt;DHCP&lt;/span&gt; &lt;span class="nv"&gt;server&lt;/span&gt; &lt;span class="nv"&gt;is&lt;/span&gt; &lt;span class="nv"&gt;the&lt;/span&gt; &lt;span class="nv"&gt;official&lt;/span&gt; &lt;span class="nv"&gt;DHCP&lt;/span&gt; &lt;span class="nv"&gt;server&lt;/span&gt; &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="nv"&gt;the&lt;/span&gt; &lt;span class="nv"&gt;local&lt;/span&gt;
+# &lt;span class="nv"&gt;network&lt;/span&gt;, &lt;span class="nv"&gt;the&lt;/span&gt; &lt;span class="nv"&gt;authoritative&lt;/span&gt; &lt;span class="nv"&gt;directive&lt;/span&gt; &lt;span class="nv"&gt;should&lt;/span&gt; &lt;span class="nv"&gt;be&lt;/span&gt; &lt;span class="nv"&gt;uncommented&lt;/span&gt;.
+&lt;span class="nv"&gt;authoritative&lt;/span&gt;&lt;span class="c1"&gt;;&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;p&gt;Enfin, configurez le comportement du serveur DHCP :&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;subnet 192.168.100.0 netmask 255.255.255.0 {
-  range 192.168.100.10 192.168.100.50;
-  option broadcast-address 192.168.100.255;
-  option routers 192.168.100.1;
-  default-lease-time 600;
-  max-lease-time 7200;
-  option domain-name &amp;quot;local&amp;quot;;
-  option domain-name-servers 80.67.169.12;
-}
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;subnet&lt;/span&gt; &lt;span class="mi"&gt;192&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="mi"&gt;168&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="mi"&gt;100&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt; &lt;span class="n"&gt;netmask&lt;/span&gt; &lt;span class="mi"&gt;255&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="mi"&gt;255&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="mi"&gt;255&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt; &lt;span class="err"&gt;{&lt;/span&gt;
+  &lt;span class="n"&gt;range&lt;/span&gt; &lt;span class="mi"&gt;192&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="mi"&gt;168&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="mi"&gt;100&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="mi"&gt;10&lt;/span&gt; &lt;span class="mi"&gt;192&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="mi"&gt;168&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="mi"&gt;100&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="mi"&gt;50&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+  &lt;span class="k"&gt;option&lt;/span&gt; &lt;span class="n"&gt;broadcast&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;address&lt;/span&gt; &lt;span class="mi"&gt;192&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="mi"&gt;168&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="mi"&gt;100&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="mi"&gt;255&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+  &lt;span class="k"&gt;option&lt;/span&gt; &lt;span class="n"&gt;routers&lt;/span&gt; &lt;span class="mi"&gt;192&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="mi"&gt;168&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="mi"&gt;100&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+  &lt;span class="k"&gt;default&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;lease&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;time&lt;/span&gt; &lt;span class="mi"&gt;600&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+  &lt;span class="k"&gt;max&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;lease&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;time&lt;/span&gt; &lt;span class="mi"&gt;7200&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+  &lt;span class="k"&gt;option&lt;/span&gt; &lt;span class="k"&gt;domain&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;name&lt;/span&gt; &lt;span class="ss"&gt;&amp;quot;local&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+  &lt;span class="k"&gt;option&lt;/span&gt; &lt;span class="k"&gt;domain&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;servers&lt;/span&gt; &lt;span class="mi"&gt;80&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="mi"&gt;67&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="mi"&gt;169&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="mi"&gt;12&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="err"&gt;}&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
@@ -1273,7 +1273,7 @@ présentes sur ce réseau (ayant donc une IP entre 192.166.100.1 et
 192.168.100.254 car le masque de sous réseau est 255.255.255.0).&lt;/p&gt;
 &lt;p&gt;Quant à elle, l'option &lt;em&gt;routers&lt;/em&gt; indique l'adresse de la passerelle, c'est à
 dire la machine par laquelle passent tous les paquets sortants du réseau (en
-direction ou en provenance d'Internet par exemple). &lt;/p&gt;
+direction ou en provenance d'Internet par exemple).&lt;/p&gt;
 &lt;p&gt;On attribue ici un bail pour une durée de 600 secondes avec le paramètre
 &lt;em&gt;default-lease-time&lt;/em&gt;. C'est cette durée qui sera utilisée si le client ne
 précise rien. S'il demande un bail en précisant une durée, celle-ci lui sera
@@ -1284,34 +1284,34 @@ Vous pouvez bien évidemment en utiliser d'autres (certains préfèrent
 &lt;a href="https://developers.google.com/speed/public-dns/"&gt;ceux de Google&lt;/a&gt;...).&lt;/p&gt;
 &lt;p&gt;Déclarez enfin l'interface sans fil comme l'interface par défaut pour répondre
 aux requêtes DHCP dans le fichier &lt;code&gt;/etc/default/isc-dhcp-server&lt;/code&gt; :&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;# On what interfaces should the DHCP server (dhcpd) serve DHCP requests?
-#       Separate multiple interfaces with spaces, e.g. &amp;quot;eth0 eth1&amp;quot;.
-#INTERFACES=&amp;quot;&amp;quot;
-INTERFACES=&amp;quot;wlan0&amp;quot;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="o"&gt;#&lt;/span&gt; &lt;span class="k"&gt;On&lt;/span&gt; &lt;span class="n"&gt;what&lt;/span&gt; &lt;span class="n"&gt;interfaces&lt;/span&gt; &lt;span class="n"&gt;should&lt;/span&gt; &lt;span class="n"&gt;the&lt;/span&gt; &lt;span class="n"&gt;DHCP&lt;/span&gt; &lt;span class="n"&gt;server&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;dhcpd&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="n"&gt;serve&lt;/span&gt; &lt;span class="n"&gt;DHCP&lt;/span&gt; &lt;span class="n"&gt;requests&lt;/span&gt;&lt;span class="o"&gt;?&lt;/span&gt;
+&lt;span class="o"&gt;#&lt;/span&gt;       &lt;span class="n"&gt;Separate&lt;/span&gt; &lt;span class="n"&gt;multiple&lt;/span&gt; &lt;span class="n"&gt;interfaces&lt;/span&gt; &lt;span class="k"&gt;with&lt;/span&gt; &lt;span class="n"&gt;spaces&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;e&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="k"&gt;g&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt; &lt;span class="ss"&gt;&amp;quot;eth0 eth1&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;
+&lt;span class="o"&gt;#&lt;/span&gt;&lt;span class="n"&gt;INTERFACES&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="ss"&gt;&amp;quot;&amp;quot;&lt;/span&gt;
+&lt;span class="n"&gt;INTERFACES&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="ss"&gt;&amp;quot;wlan0&amp;quot;&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;h3&gt;Installation de &lt;em&gt;hostapd&lt;/em&gt;&lt;/h3&gt;
 &lt;p&gt;&lt;a href="https://w1.fi/hostapd/"&gt;Hostapd&lt;/a&gt; est un démon permettant de créer un point
 d'accès sans fil. Pour l'installer :&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;sudo apt-get install hostapd
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;sudo&lt;/span&gt; &lt;span class="n"&gt;apt&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="k"&gt;get&lt;/span&gt; &lt;span class="n"&gt;install&lt;/span&gt; &lt;span class="n"&gt;hostapd&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;p&gt;Créez son fichier de configuration, &lt;code&gt;/etc/hostapd/hostapd.conf&lt;/code&gt; :&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;interface=wlan0
-driver=nl80211
-ssid=&amp;lt;YOUR SSID&amp;gt;
-hw_mode=g
-channel=6
-macaddr_acl=0
-auth_algs=1
-ignore_broadcast_ssid=0
-wpa=2
-wpa_passphrase=&amp;lt;YOUR PASSPHRASE&amp;gt;
-wpa_key_mgmt=WPA-PSK
-wpa_pairwise=TKIP
-rsn_pairwise=CCMP
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;interface&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;wlan0&lt;/span&gt;
+&lt;span class="n"&gt;driver&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;nl80211&lt;/span&gt;
+&lt;span class="n"&gt;ssid&lt;/span&gt;&lt;span class="o"&gt;=&amp;lt;&lt;/span&gt;&lt;span class="n"&gt;YOUR&lt;/span&gt; &lt;span class="n"&gt;SSID&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt;
+&lt;span class="n"&gt;hw_mode&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="k"&gt;g&lt;/span&gt;
+&lt;span class="n"&gt;channel&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;6&lt;/span&gt;
+&lt;span class="n"&gt;macaddr_acl&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;
+&lt;span class="n"&gt;auth_algs&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;
+&lt;span class="n"&gt;ignore_broadcast_ssid&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;
+&lt;span class="n"&gt;wpa&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;
+&lt;span class="n"&gt;wpa_passphrase&lt;/span&gt;&lt;span class="o"&gt;=&amp;lt;&lt;/span&gt;&lt;span class="n"&gt;YOUR&lt;/span&gt; &lt;span class="n"&gt;PASSPHRASE&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt;
+&lt;span class="n"&gt;wpa_key_mgmt&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;WPA&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;PSK&lt;/span&gt;
+&lt;span class="n"&gt;wpa_pairwise&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;TKIP&lt;/span&gt;
+&lt;span class="n"&gt;rsn_pairwise&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;CCMP&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
@@ -1322,28 +1322,28 @@ rsn_pairwise=CCMP
 &lt;/ul&gt;
 &lt;p&gt;Déclarez enfin ce fichier afin qu'il soit utilisé par hostapd dans
 &lt;code&gt;/etc/default/hostapd&lt;/code&gt; en ajoutant la ligne :&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;DAEMON_CONF=&amp;quot;/etc/hostapd/hostapd.conf&amp;quot;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;DAEMON_CONF&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="ss"&gt;&amp;quot;/etc/hostapd/hostapd.conf&amp;quot;&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;h3&gt;Configuration du routage entre l'interface sans fil et l'interface filaire&lt;/h3&gt;
 &lt;p&gt;Activer le routage IP dans le fichier &lt;code&gt;/etc/sysctl.conf&lt;/code&gt; en décommentant la
 ligne suivante :&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;net.ipv4.ip_forward=1
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;net&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ipv4&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ip_forward&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;p&gt;Pour activer ce routage immédiatement (sans avoir besoin de redémarrer), lancez
 la commande :&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;sudo sh -c &amp;quot;echo 1 &amp;gt; /proc/sys/net/ipv4/ip_forward&amp;quot;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;sudo&lt;/span&gt; &lt;span class="n"&gt;sh&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="k"&gt;c&lt;/span&gt; &lt;span class="ss"&gt;&amp;quot;echo 1 &amp;gt; /proc/sys/net/ipv4/ip_forward&amp;quot;&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;p&gt;Vous pouvez enfin configurer le routage en utilisant
 &lt;em&gt;&lt;a href="http://ipset.netfilter.org/iptables.man.html"&gt;iptables&lt;/a&gt;&lt;/em&gt; :&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;sudo iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
-sudo iptables -A FORWARD -i eth0 -o wlan0 -m state --state RELATED,ESTABLISHED -j ACCEPT
-sudo iptables -A FORWARD -i wlan0 -o eth0 -j ACCEPT
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;sudo&lt;/span&gt; &lt;span class="n"&gt;iptables&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;t&lt;/span&gt; &lt;span class="n"&gt;nat&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;A&lt;/span&gt; &lt;span class="n"&gt;POSTROUTING&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;o&lt;/span&gt; &lt;span class="n"&gt;eth0&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;j&lt;/span&gt; &lt;span class="n"&gt;MASQUERADE&lt;/span&gt;
+&lt;span class="n"&gt;sudo&lt;/span&gt; &lt;span class="n"&gt;iptables&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;A&lt;/span&gt; &lt;span class="k"&gt;FORWARD&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="n"&gt;eth0&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;o&lt;/span&gt; &lt;span class="n"&gt;wlan0&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;m&lt;/span&gt; &lt;span class="k"&gt;state&lt;/span&gt; &lt;span class="c1"&gt;--state RELATED,ESTABLISHED -j ACCEPT&lt;/span&gt;
+&lt;span class="n"&gt;sudo&lt;/span&gt; &lt;span class="n"&gt;iptables&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;A&lt;/span&gt; &lt;span class="k"&gt;FORWARD&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="n"&gt;wlan0&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;o&lt;/span&gt; &lt;span class="n"&gt;eth0&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;j&lt;/span&gt; &lt;span class="n"&gt;ACCEPT&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
@@ -1352,7 +1352,7 @@ sudo iptables -A FORWARD -i wlan0 -o eth0 -j ACCEPT
 les recharger à chaque lancement de la machine, vous pouvez utiliser le paquet
 &lt;em&gt;&lt;a href="https://packages.debian.org/iptables-persistent"&gt;iptables-persistent&lt;/a&gt;&lt;/em&gt;. Pour
 l'installer :&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;sudo apt-get install iptables-persistent
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;sudo&lt;/span&gt; &lt;span class="n"&gt;apt&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="k"&gt;get&lt;/span&gt; &lt;span class="n"&gt;install&lt;/span&gt; &lt;span class="n"&gt;iptables&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;persistent&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
@@ -1360,8 +1360,8 @@ l'installer :&lt;/p&gt;
 définies. Choisissez « oui ». Si vous souhaitez les redéfinir ultérieurement,
 vous pourrez les enregistrer en invoquant la cible &lt;em&gt;save&lt;/em&gt; et les recharger avec
 &lt;em&gt;reload&lt;/em&gt; :&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;sudo /etc/init.d/iptables-persistent save
-sudo /etc/init.d/iptables-persistent reload
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;sudo&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;etc&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;init&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;d&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;iptables&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;persistent&lt;/span&gt; &lt;span class="n"&gt;save&lt;/span&gt;
+&lt;span class="n"&gt;sudo&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;etc&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;init&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;d&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;iptables&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;persistent&lt;/span&gt; &lt;span class="n"&gt;reload&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
@@ -1419,15 +1419,15 @@ propre point d'accès Wifi.&lt;/p&gt;</content><category term="wifi"></category>
 
 &lt;h3&gt;Depuis une application Java&lt;/h3&gt;
 &lt;p&gt;Le même mécanisme s'applique lorsque vous vous connectez à un service en utilisant une application Java. Si le certificat n'est pas sûr, vous vous verrez refuser la connexion :&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;sun.security.provider.certpath.SunCertPathBuilderException: unable to find valid certification path to requested target
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;sun&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="k"&gt;security&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;provider&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;certpath&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;SunCertPathBuilderException&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;unable&lt;/span&gt; &lt;span class="k"&gt;to&lt;/span&gt; &lt;span class="n"&gt;find&lt;/span&gt; &lt;span class="k"&gt;valid&lt;/span&gt; &lt;span class="n"&gt;certification&lt;/span&gt; &lt;span class="n"&gt;path&lt;/span&gt; &lt;span class="k"&gt;to&lt;/span&gt; &lt;span class="n"&gt;requested&lt;/span&gt; &lt;span class="n"&gt;target&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;p&gt;Tout comme avec &lt;code&gt;curl&lt;/code&gt;, il existe une option pour spécifier un certificat faisant autorité. Il faut avant tout le stocker dans un conteneur spéficique à la JVM puis de préciser son emplacement dans la propriété système &lt;code&gt;javax.net.ssl.trustStore&lt;/code&gt;.&lt;/p&gt;
 &lt;p&gt;Pour créer ce conteneur, on utilise l'outil &lt;code&gt;keytool&lt;/code&gt; fourni avec le JDK.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ keytool -importcert -file cert.cer -keystore keystore.jks
-Entrez le mot de passe du fichier de clés :  
-Ressaisissez le nouveau mot de passe :  
+Entrez le mot de passe du fichier de clés :
+Ressaisissez le nouveau mot de passe :
 &lt;span class="c1"&gt;# Ici s&amp;#39;affichent les détails du certificat que vous importez&lt;/span&gt;
 Faire confiance à ce certificat ? &lt;span class="o"&gt;[&lt;/span&gt;non&lt;span class="o"&gt;]&lt;/span&gt; :  oui
 Certificat ajouté au fichier de clés
@@ -1454,7 +1454,7 @@ Certificat ajouté au fichier de clés
 
 &lt;p&gt;Notez le mot de passe par défaut du &lt;em&gt;keystore&lt;/em&gt;: « changeit ». Il s'agit du mot de passe par défaut et je vous encourage, si ce n'est déjà fait, à le changer.&lt;/p&gt;
 &lt;p&gt;Cette opération est à réaliser sur votre machine de développement mais également sur l'intégralité des serveurs susceptibles d'exécuter vos applications. C'est là qu'une solution de déploiement automatique devient pertinente.&lt;/p&gt;
-&lt;p&gt;Vous êtes maintenant capable de vous connecter depuis une application Java à l'ensemble des services exposés avec le certificat TLS de votre entreprise et ce sans nécessiter d'adaptation du code. &lt;/p&gt;
+&lt;p&gt;Vous êtes maintenant capable de vous connecter depuis une application Java à l'ensemble des services exposés avec le certificat TLS de votre entreprise et ce sans nécessiter d'adaptation du code.&lt;/p&gt;
 &lt;h3&gt;Depuis une application Java (bis)&lt;/h3&gt;
 &lt;p&gt;Si, par malheur, vous ne pouvez pas déposer de fichier sur la machine exécutant votre application (c'est le cas sur certains hébergement « cloud » que je n'aime pas utiliser), vous pouvez toujours « stocker » votre &lt;em&gt;keystore&lt;/em&gt; dans votre livrable (jar, war...). Mais... vous ne pourrez pas l'utiliser directement : la propriété &lt;code&gt;javax.net.ssl.trustStore&lt;/code&gt; ne permet pas de déclarer de référence à un fichier dans le &lt;em&gt;package&lt;/em&gt;. On peut en revanche l'écrire « à la main » sur le disque. L'exemple qui suit utilise &lt;a href="https://github.com/google/guava"&gt;Guava&lt;/a&gt;.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;File&lt;/span&gt; &lt;span class="n"&gt;tempDir&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;Files&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;createTempDir&lt;/span&gt;&lt;span class="o"&gt;();&lt;/span&gt;

@@ -38,7 +38,7 @@
         </h1>
         <div class="meta">
 <!-- includes/article_meta.html -->
-            Le <time datetime="2015-07-04T00:00:00+02:00">sam. 04 juillet 2015</time>
+            Le <time datetime="2015-07-04T00:00:00+02:00">Sat 04 July 2015</time>
             dans «<a href="https://www.dericbourg.net/category/blog.html">Blog</a>» 
             par <a href="https://www.dericbourg.net/author/alban-dericbourg.html">Alban Dericbourg</a>              <br />Mots-clés:              <a rel="tag" href="https://www.dericbourg.net/tag/wifi.html">wifi</a>,               <a rel="tag" href="https://www.dericbourg.net/tag/raspberrypi.html">raspberrypi</a>,               <a rel="tag" href="https://www.dericbourg.net/tag/linux.html">linux</a>,               <a rel="tag" href="https://www.dericbourg.net/tag/iptables.html">iptables</a>        </div>
       </header>
@@ -53,24 +53,24 @@ point d'accès Wifi.</p>
    distribution Linux</li>
 <li>Un <em>dongle</em> Wifi (déjà installé et détecté)</li>
 </ul>
-<p>Dans la suite, on considèrera que l'interface sans fil est nommée <code>wlan0</code>.  </p>
+<p>Dans la suite, on considèrera que l'interface sans fil est nommée <code>wlan0</code>.</p>
 <h3>Définition d'une adresse IP statique</h3>
 <p>Dans le fichier <code>/etc/network/interfaces</code>, supprimer les lignes suivantes :</p>
-<div class="highlight"><pre><span></span>iface wlan0 inet manual
-wpa-roam /etc/wpa_supplicant/wpa_supplicant.conf
+<div class="highlight"><pre><span></span><span class="n">iface</span> <span class="n">wlan0</span> <span class="n">inet</span> <span class="n">manual</span>
+<span class="n">wpa</span><span class="o">-</span><span class="n">roam</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">wpa_supplicant</span><span class="o">/</span><span class="n">wpa_supplicant</span><span class="p">.</span><span class="n">conf</span>
 </pre></div>
 
 
 <p>Les remplacer par :</p>
-<div class="highlight"><pre><span></span>allow-hotplug wlan0
-iface wlan0 inet static
-address 192.168.100.1
-netmask 255.255.255.0
+<div class="highlight"><pre><span></span><span class="n">allow</span><span class="o">-</span><span class="n">hotplug</span> <span class="n">wlan0</span>
+<span class="n">iface</span> <span class="n">wlan0</span> <span class="n">inet</span> <span class="k">static</span>
+<span class="n">address</span> <span class="mi">192</span><span class="p">.</span><span class="mi">168</span><span class="p">.</span><span class="mi">100</span><span class="p">.</span><span class="mi">1</span>
+<span class="n">netmask</span> <span class="mi">255</span><span class="p">.</span><span class="mi">255</span><span class="p">.</span><span class="mi">255</span><span class="p">.</span><span class="mi">0</span>
 </pre></div>
 
 
 <p>Redémarrez le réseau :</p>
-<div class="highlight"><pre><span></span>sudo service networking restart
+<div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">service</span> <span class="n">networking</span> <span class="k">restart</span>
 </pre></div>
 
 
@@ -78,23 +78,23 @@ netmask 255.255.255.0
 <p>Le serveur DHCP permet d'attribuer automatiquement une adresse IP aux machines
 qui se connecteront à votre réseau Wifi.</p>
 <p>Installez le paquet <em><a href="https://packages.debian.org/isc-dhcp-server">isc-dhcp-server</a></em> :</p>
-<div class="highlight"><pre><span></span>sudo apt-get install isc-dhcp-server
+<div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="k">get</span> <span class="n">install</span> <span class="n">isc</span><span class="o">-</span><span class="n">dhcp</span><span class="o">-</span><span class="n">server</span>
 </pre></div>
 
 
 <p>À ce stade, le service ne devrait pas démarrer correctement :</p>
-<div class="highlight"><pre><span></span>Generating /etc/default/isc-dhcp-server...
-[FAIL] Starting ISC DHCP server: dhcpd[....] check syslog for diagnostics. ... failed!
- failed!
-invoke-rc.d: initscript isc-dhcp-server, action &quot;start&quot; failed.
+<div class="highlight"><pre><span></span><span class="nv">Generating</span> <span class="o">/</span><span class="nv">etc</span><span class="o">/</span><span class="nv">default</span><span class="o">/</span><span class="nv">isc</span><span class="o">-</span><span class="nv">dhcp</span><span class="o">-</span><span class="nv">server</span>...
+[<span class="nv">FAIL</span>] <span class="nv">Starting</span> <span class="nv">ISC</span> <span class="nv">DHCP</span> <span class="nv">server</span>: <span class="nv">dhcpd</span>[....] <span class="nv">check</span> <span class="nv">syslog</span> <span class="k">for</span> <span class="nv">diagnostics</span>. ... <span class="nv">failed</span><span class="o">!</span>
+ <span class="nv">failed</span><span class="o">!</span>
+<span class="nv">invoke</span><span class="o">-</span><span class="nv">rc</span>.<span class="nv">d</span>: <span class="nv">initscript</span> <span class="nv">isc</span><span class="o">-</span><span class="nv">dhcp</span><span class="o">-</span><span class="nv">server</span>, <span class="nv">action</span> <span class="s2">&quot;</span><span class="s">start</span><span class="s2">&quot;</span> <span class="nv">failed</span>.
 </pre></div>
 
 
 <p>Vous pouvez ignorer ces erreurs pour le moment.</p>
 <p>Éditez le fichier de configuration du serveur : <code>/etc/dhcp/dhcpd.conf</code> et
 commentez les options <em>domain-name</em> et <em>domain-name-servers</em> :</p>
-<div class="highlight"><pre><span></span>#option domain-name &quot;example.org&quot;;
-#option domain-name-servers ns1.example.org, ns2.example.org;
+<div class="highlight"><pre><span></span><span class="o">#</span><span class="k">option</span> <span class="k">domain</span><span class="o">-</span><span class="n">name</span> <span class="ss">&quot;example.org&quot;</span><span class="p">;</span>
+<span class="o">#</span><span class="k">option</span> <span class="k">domain</span><span class="o">-</span><span class="n">name</span><span class="o">-</span><span class="n">servers</span> <span class="n">ns1</span><span class="p">.</span><span class="n">example</span><span class="p">.</span><span class="n">org</span><span class="p">,</span> <span class="n">ns2</span><span class="p">.</span><span class="n">example</span><span class="p">.</span><span class="n">org</span><span class="p">;</span>
 </pre></div>
 
 
@@ -102,22 +102,22 @@ commentez les options <em>domain-name</em> et <em>domain-name-servers</em> :</p>
 DHCP qu'il est le seul à fournir des adresses IP sur ce réseau et donc possède
 la pleine connaissance des
 <a href="http://www.linux-france.org/prj/edu/archinet/systeme/ch27s03.html">baux accordés</a>.</p>
-<div class="highlight"><pre><span></span># If this DHCP server is the official DHCP server for the local
-# network, the authoritative directive should be uncommented.
-authoritative;
+<div class="highlight"><pre><span></span># <span class="k">If</span> <span class="nv">this</span> <span class="nv">DHCP</span> <span class="nv">server</span> <span class="nv">is</span> <span class="nv">the</span> <span class="nv">official</span> <span class="nv">DHCP</span> <span class="nv">server</span> <span class="k">for</span> <span class="nv">the</span> <span class="nv">local</span>
+# <span class="nv">network</span>, <span class="nv">the</span> <span class="nv">authoritative</span> <span class="nv">directive</span> <span class="nv">should</span> <span class="nv">be</span> <span class="nv">uncommented</span>.
+<span class="nv">authoritative</span><span class="c1">;</span>
 </pre></div>
 
 
 <p>Enfin, configurez le comportement du serveur DHCP :</p>
-<div class="highlight"><pre><span></span>subnet 192.168.100.0 netmask 255.255.255.0 {
-  range 192.168.100.10 192.168.100.50;
-  option broadcast-address 192.168.100.255;
-  option routers 192.168.100.1;
-  default-lease-time 600;
-  max-lease-time 7200;
-  option domain-name &quot;local&quot;;
-  option domain-name-servers 80.67.169.12;
-}
+<div class="highlight"><pre><span></span><span class="n">subnet</span> <span class="mi">192</span><span class="p">.</span><span class="mi">168</span><span class="p">.</span><span class="mi">100</span><span class="p">.</span><span class="mi">0</span> <span class="n">netmask</span> <span class="mi">255</span><span class="p">.</span><span class="mi">255</span><span class="p">.</span><span class="mi">255</span><span class="p">.</span><span class="mi">0</span> <span class="err">{</span>
+  <span class="n">range</span> <span class="mi">192</span><span class="p">.</span><span class="mi">168</span><span class="p">.</span><span class="mi">100</span><span class="p">.</span><span class="mi">10</span> <span class="mi">192</span><span class="p">.</span><span class="mi">168</span><span class="p">.</span><span class="mi">100</span><span class="p">.</span><span class="mi">50</span><span class="p">;</span>
+  <span class="k">option</span> <span class="n">broadcast</span><span class="o">-</span><span class="n">address</span> <span class="mi">192</span><span class="p">.</span><span class="mi">168</span><span class="p">.</span><span class="mi">100</span><span class="p">.</span><span class="mi">255</span><span class="p">;</span>
+  <span class="k">option</span> <span class="n">routers</span> <span class="mi">192</span><span class="p">.</span><span class="mi">168</span><span class="p">.</span><span class="mi">100</span><span class="p">.</span><span class="mi">1</span><span class="p">;</span>
+  <span class="k">default</span><span class="o">-</span><span class="n">lease</span><span class="o">-</span><span class="n">time</span> <span class="mi">600</span><span class="p">;</span>
+  <span class="k">max</span><span class="o">-</span><span class="n">lease</span><span class="o">-</span><span class="n">time</span> <span class="mi">7200</span><span class="p">;</span>
+  <span class="k">option</span> <span class="k">domain</span><span class="o">-</span><span class="n">name</span> <span class="ss">&quot;local&quot;</span><span class="p">;</span>
+  <span class="k">option</span> <span class="k">domain</span><span class="o">-</span><span class="n">name</span><span class="o">-</span><span class="n">servers</span> <span class="mi">80</span><span class="p">.</span><span class="mi">67</span><span class="p">.</span><span class="mi">169</span><span class="p">.</span><span class="mi">12</span><span class="p">;</span>
+<span class="err">}</span>
 </pre></div>
 
 
@@ -130,7 +130,7 @@ présentes sur ce réseau (ayant donc une IP entre 192.166.100.1 et
 192.168.100.254 car le masque de sous réseau est 255.255.255.0).</p>
 <p>Quant à elle, l'option <em>routers</em> indique l'adresse de la passerelle, c'est à
 dire la machine par laquelle passent tous les paquets sortants du réseau (en
-direction ou en provenance d'Internet par exemple). </p>
+direction ou en provenance d'Internet par exemple).</p>
 <p>On attribue ici un bail pour une durée de 600 secondes avec le paramètre
 <em>default-lease-time</em>. C'est cette durée qui sera utilisée si le client ne
 précise rien. S'il demande un bail en précisant une durée, celle-ci lui sera
@@ -141,34 +141,34 @@ Vous pouvez bien évidemment en utiliser d'autres (certains préfèrent
 <a href="https://developers.google.com/speed/public-dns/">ceux de Google</a>...).</p>
 <p>Déclarez enfin l'interface sans fil comme l'interface par défaut pour répondre
 aux requêtes DHCP dans le fichier <code>/etc/default/isc-dhcp-server</code> :</p>
-<div class="highlight"><pre><span></span># On what interfaces should the DHCP server (dhcpd) serve DHCP requests?
-#       Separate multiple interfaces with spaces, e.g. &quot;eth0 eth1&quot;.
-#INTERFACES=&quot;&quot;
-INTERFACES=&quot;wlan0&quot;
+<div class="highlight"><pre><span></span><span class="o">#</span> <span class="k">On</span> <span class="n">what</span> <span class="n">interfaces</span> <span class="n">should</span> <span class="n">the</span> <span class="n">DHCP</span> <span class="n">server</span> <span class="p">(</span><span class="n">dhcpd</span><span class="p">)</span> <span class="n">serve</span> <span class="n">DHCP</span> <span class="n">requests</span><span class="o">?</span>
+<span class="o">#</span>       <span class="n">Separate</span> <span class="n">multiple</span> <span class="n">interfaces</span> <span class="k">with</span> <span class="n">spaces</span><span class="p">,</span> <span class="n">e</span><span class="p">.</span><span class="k">g</span><span class="p">.</span> <span class="ss">&quot;eth0 eth1&quot;</span><span class="p">.</span>
+<span class="o">#</span><span class="n">INTERFACES</span><span class="o">=</span><span class="ss">&quot;&quot;</span>
+<span class="n">INTERFACES</span><span class="o">=</span><span class="ss">&quot;wlan0&quot;</span>
 </pre></div>
 
 
 <h3>Installation de <em>hostapd</em></h3>
 <p><a href="https://w1.fi/hostapd/">Hostapd</a> est un démon permettant de créer un point
 d'accès sans fil. Pour l'installer :</p>
-<div class="highlight"><pre><span></span>sudo apt-get install hostapd
+<div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="k">get</span> <span class="n">install</span> <span class="n">hostapd</span>
 </pre></div>
 
 
 <p>Créez son fichier de configuration, <code>/etc/hostapd/hostapd.conf</code> :</p>
-<div class="highlight"><pre><span></span>interface=wlan0
-driver=nl80211
-ssid=&lt;YOUR SSID&gt;
-hw_mode=g
-channel=6
-macaddr_acl=0
-auth_algs=1
-ignore_broadcast_ssid=0
-wpa=2
-wpa_passphrase=&lt;YOUR PASSPHRASE&gt;
-wpa_key_mgmt=WPA-PSK
-wpa_pairwise=TKIP
-rsn_pairwise=CCMP
+<div class="highlight"><pre><span></span><span class="n">interface</span><span class="o">=</span><span class="n">wlan0</span>
+<span class="n">driver</span><span class="o">=</span><span class="n">nl80211</span>
+<span class="n">ssid</span><span class="o">=&lt;</span><span class="n">YOUR</span> <span class="n">SSID</span><span class="o">&gt;</span>
+<span class="n">hw_mode</span><span class="o">=</span><span class="k">g</span>
+<span class="n">channel</span><span class="o">=</span><span class="mi">6</span>
+<span class="n">macaddr_acl</span><span class="o">=</span><span class="mi">0</span>
+<span class="n">auth_algs</span><span class="o">=</span><span class="mi">1</span>
+<span class="n">ignore_broadcast_ssid</span><span class="o">=</span><span class="mi">0</span>
+<span class="n">wpa</span><span class="o">=</span><span class="mi">2</span>
+<span class="n">wpa_passphrase</span><span class="o">=&lt;</span><span class="n">YOUR</span> <span class="n">PASSPHRASE</span><span class="o">&gt;</span>
+<span class="n">wpa_key_mgmt</span><span class="o">=</span><span class="n">WPA</span><span class="o">-</span><span class="n">PSK</span>
+<span class="n">wpa_pairwise</span><span class="o">=</span><span class="n">TKIP</span>
+<span class="n">rsn_pairwise</span><span class="o">=</span><span class="n">CCMP</span>
 </pre></div>
 
 
@@ -179,28 +179,28 @@ rsn_pairwise=CCMP
 </ul>
 <p>Déclarez enfin ce fichier afin qu'il soit utilisé par hostapd dans
 <code>/etc/default/hostapd</code> en ajoutant la ligne :</p>
-<div class="highlight"><pre><span></span>DAEMON_CONF=&quot;/etc/hostapd/hostapd.conf&quot;
+<div class="highlight"><pre><span></span><span class="n">DAEMON_CONF</span><span class="o">=</span><span class="ss">&quot;/etc/hostapd/hostapd.conf&quot;</span>
 </pre></div>
 
 
 <h3>Configuration du routage entre l'interface sans fil et l'interface filaire</h3>
 <p>Activer le routage IP dans le fichier <code>/etc/sysctl.conf</code> en décommentant la
 ligne suivante :</p>
-<div class="highlight"><pre><span></span>net.ipv4.ip_forward=1
+<div class="highlight"><pre><span></span><span class="n">net</span><span class="p">.</span><span class="n">ipv4</span><span class="p">.</span><span class="n">ip_forward</span><span class="o">=</span><span class="mi">1</span>
 </pre></div>
 
 
 <p>Pour activer ce routage immédiatement (sans avoir besoin de redémarrer), lancez
 la commande :</p>
-<div class="highlight"><pre><span></span>sudo sh -c &quot;echo 1 &gt; /proc/sys/net/ipv4/ip_forward&quot;
+<div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">sh</span> <span class="o">-</span><span class="k">c</span> <span class="ss">&quot;echo 1 &gt; /proc/sys/net/ipv4/ip_forward&quot;</span>
 </pre></div>
 
 
 <p>Vous pouvez enfin configurer le routage en utilisant
 <em><a href="http://ipset.netfilter.org/iptables.man.html">iptables</a></em> :</p>
-<div class="highlight"><pre><span></span>sudo iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
-sudo iptables -A FORWARD -i eth0 -o wlan0 -m state --state RELATED,ESTABLISHED -j ACCEPT
-sudo iptables -A FORWARD -i wlan0 -o eth0 -j ACCEPT
+<div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">iptables</span> <span class="o">-</span><span class="n">t</span> <span class="n">nat</span> <span class="o">-</span><span class="n">A</span> <span class="n">POSTROUTING</span> <span class="o">-</span><span class="n">o</span> <span class="n">eth0</span> <span class="o">-</span><span class="n">j</span> <span class="n">MASQUERADE</span>
+<span class="n">sudo</span> <span class="n">iptables</span> <span class="o">-</span><span class="n">A</span> <span class="k">FORWARD</span> <span class="o">-</span><span class="n">i</span> <span class="n">eth0</span> <span class="o">-</span><span class="n">o</span> <span class="n">wlan0</span> <span class="o">-</span><span class="n">m</span> <span class="k">state</span> <span class="c1">--state RELATED,ESTABLISHED -j ACCEPT</span>
+<span class="n">sudo</span> <span class="n">iptables</span> <span class="o">-</span><span class="n">A</span> <span class="k">FORWARD</span> <span class="o">-</span><span class="n">i</span> <span class="n">wlan0</span> <span class="o">-</span><span class="n">o</span> <span class="n">eth0</span> <span class="o">-</span><span class="n">j</span> <span class="n">ACCEPT</span>
 </pre></div>
 
 
@@ -209,7 +209,7 @@ sudo iptables -A FORWARD -i wlan0 -o eth0 -j ACCEPT
 les recharger à chaque lancement de la machine, vous pouvez utiliser le paquet
 <em><a href="https://packages.debian.org/iptables-persistent">iptables-persistent</a></em>. Pour
 l'installer :</p>
-<div class="highlight"><pre><span></span>sudo apt-get install iptables-persistent
+<div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="k">get</span> <span class="n">install</span> <span class="n">iptables</span><span class="o">-</span><span class="n">persistent</span>
 </pre></div>
 
 
@@ -217,8 +217,8 @@ l'installer :</p>
 définies. Choisissez « oui ». Si vous souhaitez les redéfinir ultérieurement,
 vous pourrez les enregistrer en invoquant la cible <em>save</em> et les recharger avec
 <em>reload</em> :</p>
-<div class="highlight"><pre><span></span>sudo /etc/init.d/iptables-persistent save
-sudo /etc/init.d/iptables-persistent reload
+<div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">init</span><span class="p">.</span><span class="n">d</span><span class="o">/</span><span class="n">iptables</span><span class="o">-</span><span class="n">persistent</span> <span class="n">save</span>
+<span class="n">sudo</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">init</span><span class="p">.</span><span class="n">d</span><span class="o">/</span><span class="n">iptables</span><span class="o">-</span><span class="n">persistent</span> <span class="n">reload</span>
 </pre></div>
 
 

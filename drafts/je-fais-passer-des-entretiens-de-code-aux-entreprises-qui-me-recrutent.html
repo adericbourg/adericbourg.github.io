@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+        <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=endge, chrome=IE8" />
+    <meta name="viewport" content="initial-scale=1.0, width=device-width, user-scalable=no" />
+    <title>Je fais passer des entretiens de code aux entreprises qui me recrutent — Blog bloquant</title>
+    <!--[if lte IE 8]><script type="text/javascript" src="https://www.dericbourg.net/theme/js/html5shiv.js"></script><![endif]-->
+    <link rel="stylesheet" type="text/css" href="https://www.dericbourg.net/theme/css/skeleton.css" />
+    <link rel="stylesheet" type="text/css" href="https://www.dericbourg.net/theme/css/theme.css" />
+    <link rel="shortcut icon" type="image/png" href="https://www.dericbourg.net/favicon.png" />
+    <!--[if lte IE 8]><link rel="shortcut icon" type="image/x-icon" href="https://www.dericbourg.net/favicon.ico" /><![endif]-->
+    <link rel="alternate" type="application/atom+xml"
+                           title="Blog bloquant — Flux Atom"
+                           href="https://www.dericbourg.net/" /> 
+
+    <meta name="author"   content="Alban Dericbourg" />
+    <meta name="keywords" content="recrutement, qualité" />
+    <link rel="stylesheet" media="not print" type="text/css" href="https://www.dericbourg.net/theme/css/pygments.css" /> 
+  </head>
+  <body>
+    <div id="page">
+      <header id="page-head">
+        <h1>
+          <a href="https://www.dericbourg.net/index.html">Blog bloquant</a>
+        </h1>
+      </header>
+      
+      <div id="page-body">
+        <article class="post" id="page-main" role="main">
+      <header class="post-header">
+        <h1>
+          <a rel="bookmark"
+             href="https://www.dericbourg.net/drafts/je-fais-passer-des-entretiens-de-code-aux-entreprises-qui-me-recrutent.html"
+             title="Lien permanent vers «Je fais passer des entretiens de code aux entreprises qui me recrutent»">
+             Je fais passer des entretiens de code aux entreprises qui me recrutent
+          </a>
+        </h1>
+        <div class="meta">
+<!-- includes/article_meta.html -->
+            Le <time datetime="2100-01-01T00:00:00+01:00">Fri 01 January 2100</time>
+            dans «<a href="https://www.dericbourg.net/category/blog.html">Blog</a>» 
+            par <a href="https://www.dericbourg.net/author/alban-dericbourg.html">Alban Dericbourg</a>              <br />Mots-clés:              <a rel="tag" href="https://www.dericbourg.net/tag/recrutement.html">recrutement</a>,               <a rel="tag" href="https://www.dericbourg.net/tag/qualite.html">qualité</a>        </div>
+      </header>
+      <div class="post-content"> 
+        <p>La réalisation par le candidat d'un exercice de code est de plus en plus fréquent lors des
+entretiens de recrutement d'un développeur. Je trouve d'ailleurs cela plutôt rassurant
+quant aux critère de sélection : si l'exercice est bien conçu, cela permet de mettre le
+candidat en situation proche de ce qui lui sera demandé.</p>
+<p>Mais si le candidat est évalué, qu'en est-il de l'entreprise ? Le processus de recrutement
+est censé permettre à l'entprise de retenir ou non un candidat, mais aussi au candidat de
+retenir ou non une entreprise. Alors pourquoi ne pas évaluer ce qu'a produit l'équipe
+jusqu'alors ?</p>
+<p>J'ai passé quelques entretiens récemment et j'ai soumis les entreprises à cet exercice. La
+plupart a été surprise de cette demande mais toutes se sont prêtées au jeu.</p>
+<h3>(Absence de) Méthodologie</h3>
+<p>Mon premier objectif au cours d'un processus de recrutement est de déterminer si oui ou non
+j'ai envie de travailler pour cette entreprise. Je n'ai donc pas visé l'entreprise qui aurait
+le plus gros score au regard de critères subjectifs ou arbitraires et je n'ai pas défini de
+critères mesurables.</p>
+<p>Pour cette fois, même si j'ai dressé une liste de points à observer, seul mon ressenti
+lors de l'examen a compté dans la balance. Dans cette façon de procéder, j'ai très vite
+senti un biais : lorsque je ne « sentais » pas la personne en face de moi, mon impression
+vis-à-vis du code était plus négative qu'elle n'aurait pu. J'ai choisi de le négliger car
+même si cet exercice ne vise pas directement à évaluer mes éventuels futurs collègues, si
+un malaise avec eux lors de cet entretien est un signal à prendre en compte sur notre
+capacité à travailler ensemble. Lors de ces processus de recrutement, j'ai demandé à
+recontrer mon équipe d'accueil sur un temps informel : l'occasion de confirmer ou
+d'infirmer le ressenti inter-personnel.</p>
+<h3>Angles d'observation</h3>
+<p>J'ai abordé cet exercice en essayant de ne pas laisser d'angle mort tout en sachant qu'il
+y en aurait (sic). Dans ma demande, j'ai essayé de montrer des limites floues afin de laisser
+l'équipe ou mon interlocuteur aborder ce qui lui semble important. J'ai évoqué :</p>
+<ul>
+<li>l'aspect global du code ;</li>
+<li>les choix de <em>build</em>, test et déploiement ;</li>
+<li>l'installation d'un environnement de développement (poste du développeur) ;</li>
+<li>tout élément intéressant qui pourrait être abordé dans ce cadre.</li>
+</ul>
+<h4>Environnement de développement</h4>
+<p>Sur ces aspect, j'ai observé (consciemment) :</p>
+<ul>
+<li>les outils utilisés et leur adhérence au projet (s'il est légitime de n'avoir qu'un seul
+  outil de <em>build</em>, dans quelles circonstances un projet peut-il être adhérent à l'IDE ?) ;</li>
+<li>la complexité pour construire un projet de bout en bout (combien de commandes, quels outils),
+  en ayant l'intuition qu'un projet compliqué à construire est probablement mal conçu ou mal
+  entretenu ;</li>
+<li>le temps de construction d'un projet en local (la durée minimale avant d'avoir un retour sur
+  ce que l'on vient d'écrire) ;</li>
+<li>la présence et la qualité d'une documentation de démarrage, un « guide du nouvel arrivant ».</li>
+</ul>
+<p>J'essaie également de me faire une idée sur la complexité d'installer un environnement de
+développement. Mon expérience semble m'indiquer que plus cette installation est complexe ou
+compliquée, plus l'environnement est fragile et l'installation non-répétable.</p>
+<p>Un script d'installation peut-être un fort gain de temps s'il ne se fait pas au détriment de
+la connaissance de chacun de son environnement : qui sait comment fonctionne ce script
+d'installation ?</p>
+<h4>Gestion du code source</h4>
+<p>Je demande à voir l'historique du projet et quelques revues de code.</p>
+<ul>
+<li>Par quel système le code est-il géré ?</li>
+<li>Quel est le processus d'acceptation du code ?</li>
+<li>Qui est responsable des revues de code s'il y en a ?</li>
+<li>Quels sont les critères d'évaluation lors d'une revue de code ?</li>
+<li>Comment sont rédigés les messages de <em>commit</em> ?</li>
+<li>Quel contexte est donné dans un <em>commit</em> (à une éventuelle spécification, à un système de
+  suivi des bugs...) ?</li>
+</ul>
+<h4>Structure du projet</h4>
+<p>L'évaluation de la qualité d'un projet n'est pas toujours évidente, en particulier, pour moi,
+lorsque je ne maîtrise pas du tout la langage utilisé. Dans ce cas, c'est également l'occasion
+de mettre à l'épreuve les qualités de pédagogue de mon interlocuteur !</p>
+<p>Pour ce volet, j'essaie de partir d'une vue d'ensemble :</p>
+<ul>
+<li>Puis-je distinguer les responsabilité de cette application d'un coup d'œil ?</li>
+<li>Comment le projet est-il structuré ?</li>
+<li>Y a-t-il un découpage purement technique ? Purement fonctionnel ?</li>
+</ul>
+<h4>Qualité du code</h4>
+<p>Je demande ensuite à me montrer le jeu de tests d'une fonctionnalité « pas trop simple »
+mais « pas trop complexe » non plus et j'essaie de comprendre quelle est cette fonctionnalité
+à partir de ce que je vois des tests.</p>
+<ul>
+<li>Le nommage du test suffit-il à en comprendre l'objectif ?</li>
+<li>Faut-il regarder l'implémentation pour comprendre ce qui est vraiment testé ?</li>
+<li>L'implémentation du test est-elle elle-même à la portée de ma compréhension ?</li>
+<li>Le nom du test est-il en phase avec son implémentation ?</li>
+</ul>
+<p>Une fois les tests passés en revue et la fonctionnalité comprise, je passe à son implémentation.
+La simplicité des tests donne une première indication de la qualité de l'implémentation :
+complexité d'instanciation, nombre de fonctions ou de méthodes exposées, nombre d'instructions
+pour réaliser une opération... Sans qu'il soit possible de fixer un seuil pertinent, je fais
+confiance à ma perception et à mon jugement pour déterminer si les APIs et les abstractions
+sont pertinentes.</p>
+<p>Si le contept existe dans le langage utilisé, les imports des tests et de l'implémentation permettent
+de se faire une idée de la séparation des responsabilités et d'éventuelles fuites de détail
+d'implémentation.</p>
+<p>Certains IDEs affichent des avertissements quant à la qualité du code : observer leur présence
+(ou non) et leur nature peut indiquer le soin apporté à la qualité et à la lisibilité du code :</p>
+<ul>
+<li>un avertissement pertinent non-corrigé n'indique pas d'intérêt de l'équipe vis-à-vis de la
+  qualité du code ;</li>
+<li>un avertissement non-pertinent est signe de mauvais paramétrage de l'IDE (le bruit risque de cacher
+  des choses plus sérieuses).</li>
+</ul>
+<p>Enfin, à l'issue de cette lecture de code, je me pose la question : « Est-ce que je me projette à
+travailler sur cette base de code ? ». Un doute peut être éloquent.</p>
+<h4>Automatisation</h4>
+<p>Build, déploiement continu, feedback loop, rapports de qualité de code
+Tests d'intégration</p>
+<h4>Rendons à Joel ce qui est à Joel</h4>
+<p>Je ne m'en suis rendu compte qu'après-coup, mais cette demande s'approche d'un
+<em><a href="https://www.joelonsoftware.com/2000/08/09/the-joel-test-12-steps-to-better-code/">Joel Test</a></em>.
+Même si le contenu a pris de l'âge (20 ans !), il me semble toujours être un bon point de départ
+pour évaluer le potentiel de progression d'une entreprise ou d'une équipe.</p>
+<h3>Un premier exemple</h3>
+<p>TODO</p>
+<h3>Un second exemple</h3>
+<p>TODO</p>
+<h3>Un troisième exemple</h3>
+<p>TODO</p>
+<p>J'ai interrompu l'entretien au bout de 2h30.</p>
+      </div>
+      <footer class="post-footer">
+        <div class="meta">
+            Posté dans «<a href="https://www.dericbourg.net/category/blog.html">Blog</a>» 
+            par <a href="https://www.dericbourg.net/author/alban-dericbourg.html">Alban Dericbourg</a><br />
+            Mots-clés:  #<a href="https://www.dericbourg.net/tag/recrutement.html">recrutement</a> #<a href="https://www.dericbourg.net/tag/qualite.html">qualité</a>        </div>
+      </footer>
+      <hr />
+      <div id="disqus_thread"></div>
+        <script type="text/javascript">
+            /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+            var disqus_shortname = 'dericbourg'; // required: replace example with your forum shortname
+
+            /* * * DON'T EDIT BELOW THIS LINE * * */
+            (function() {
+                var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
+                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+            })();
+        </script>
+        <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+        <a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+      </article> <!-- /#page-main -->
+
+        <aside id="page-side">
+          <!-- begin includes/sidebar.html -->
+          <nav>
+            <h3>Liens</h3>
+            <ul>
+              <li><a href="https://github.com/adericbourg">GitHub</a></li>
+              <li><a href="https://www.linkedin.com/in/adericbourg/">LinkedIn</a></li>
+              <li><a href="https://twitter.com/adericbourg">Twitter</a></li>
+            </ul>
+          </nav>
+          <!-- end includes/sidebar.html --></aside> <!-- /#page-side -->
+      </div>  <!-- /#page-body -->
+
+      <footer id="page-foot">
+        <p> Powered by <a href="http://pelican.readthedocs.org">Pelican</a></p>
+      </footer>
+    </div> <!-- /#page -->
+  </body>
+</html>
