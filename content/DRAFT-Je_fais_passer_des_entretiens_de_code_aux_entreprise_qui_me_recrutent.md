@@ -12,14 +12,14 @@ quant aux critère de sélection : si l'exercice est bien conçu, cela permet de
 candidat en situation proche de ce qui lui sera demandé.
 
 Mais si le candidat est évalué, qu'en est-il de l'entreprise ? Le processus de recrutement
-est censé permettre à l'entprise de retenir ou non un candidat, mais aussi au candidat de
+est censé permettre à l'entreprise de retenir ou non un candidat, mais aussi au candidat de
 retenir ou non une entreprise. Alors pourquoi ne pas évaluer ce qu'a produit l'équipe
 jusqu'alors ?
 
 J'ai passé quelques entretiens récemment et j'ai soumis les entreprises à cet exercice. La
 plupart a été surprise de cette demande mais toutes se sont prêtées au jeu.
 
-### (Absence de) Méthodologie
+## (Absence de) Méthodologie
 
 Mon premier objectif au cours d'un processus de recrutement est de déterminer si oui ou non
 j'ai envie de travailler pour cette entreprise. Je n'ai donc pas visé l'entreprise qui aurait
@@ -33,10 +33,10 @@ vis-à-vis du code était plus négative qu'elle n'aurait pu. J'ai choisi de le 
 même si cet exercice ne vise pas directement à évaluer mes éventuels futurs collègues, si
 un malaise avec eux lors de cet entretien est un signal à prendre en compte sur notre
 capacité à travailler ensemble. Lors de ces processus de recrutement, j'ai demandé à
-recontrer mon équipe d'accueil sur un temps informel : l'occasion de confirmer ou
+rencontrer mon équipe d'accueil sur un temps informel : l'occasion de confirmer ou
 d'infirmer le ressenti inter-personnel.
 
-### Angles d'observation
+## Angles d'observation
 
 J'ai abordé cet exercice en essayant de ne pas laisser d'angle mort tout en sachant qu'il
 y en aurait (sic). Dans ma demande, j'ai essayé de montrer des limites floues afin de laisser
@@ -47,7 +47,7 @@ l'équipe ou mon interlocuteur aborder ce qui lui semble important. J'ai évoqu�
 * l'installation d'un environnement de développement (poste du développeur) ;
 * tout élément intéressant qui pourrait être abordé dans ce cadre.
 
-#### Environnement de développement
+### Environnement de développement
 
 Sur ces aspect, j'ai observé (consciemment) :
 
@@ -68,7 +68,7 @@ Un script d'installation peut-être un fort gain de temps s'il ne se fait pas au
 la connaissance de chacun de son environnement : qui sait comment fonctionne ce script
 d'installation ?
 
-#### Gestion du code source
+### Gestion du code source
 
 Je demande à voir l'historique du projet et quelques revues de code.
 
@@ -80,7 +80,7 @@ Je demande à voir l'historique du projet et quelques revues de code.
 * Quel contexte est donné dans un _commit_ (à une éventuelle spécification, à un système de
   suivi des bugs...) ?
 
-#### Structure du projet
+### Structure du projet
 
 L'évaluation de la qualité d'un projet n'est pas toujours évidente, en particulier, pour moi,
 lorsque je ne maîtrise pas du tout la langage utilisé. Dans ce cas, c'est également l'occasion
@@ -92,7 +92,7 @@ Pour ce volet, j'essaie de partir d'une vue d'ensemble :
 * Comment le projet est-il structuré ?
 * Y a-t-il un découpage purement technique ? Purement fonctionnel ?
 
-#### Qualité du code
+### Qualité du code
 
 Je demande ensuite à me montrer le jeu de tests d'une fonctionnalité « pas trop simple »
 mais « pas trop complexe » non plus et j'essaie de comprendre quelle est cette fonctionnalité
@@ -110,7 +110,7 @@ pour réaliser une opération... Sans qu'il soit possible de fixer un seuil pert
 confiance à ma perception et à mon jugement pour déterminer si les APIs et les abstractions
 sont pertinentes.
 
-Si le contept existe dans le langage utilisé, les imports des tests et de l'implémentation permettent
+Si le concept existe dans le langage utilisé, les imports des tests et de l'implémentation permettent
 de se faire une idée de la séparation des responsabilités et d'éventuelles fuites de détail
 d'implémentation.
 
@@ -125,28 +125,27 @@ Certains IDEs affichent des avertissements quant à la qualité du code : observ
 Enfin, à l'issue de cette lecture de code, je me pose la question : « Est-ce que je me projette à
 travailler sur cette base de code ? ». Un doute peut être éloquent.
 
-#### Automatisation
+### Automatisation
 
 Build, déploiement continu, feedback loop, rapports de qualité de code
 Tests d'intégration
 
-
-#### Rendons à Joel ce qui est à Joel
+### Rendons à Joel ce qui est à Joel
 
 Je ne m'en suis rendu compte qu'après-coup, mais cette demande s'approche d'un
 _[Joel Test](https://www.joelonsoftware.com/2000/08/09/the-joel-test-12-steps-to-better-code/)_.
 Même si le contenu a pris de l'âge (20 ans !), il me semble toujours être un bon point de départ
 pour évaluer le potentiel de progression d'une entreprise ou d'une équipe.
 
-### Un premier exemple
+## Un premier exemple
 
 TODO
 
-### Un second exemple
+## Un second exemple
 
 TODO
 
-### Un troisième exemple
+## Un troisième exemple
 
 TODO
 

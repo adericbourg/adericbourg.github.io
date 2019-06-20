@@ -14,7 +14,7 @@ Avant de m'y mettre, je constate que les tests unitaires du module que j'ai réa
 
 La journée passe, il est 18h. Au cours de la journée, je n'ai écrit que quelques lignes de code dont je ne suis pas satisfait. Je vois bien qu'il y a des choses à reprendre, que ça pourrait être plus « propre » mais j'ai du mal à identifier comment mieux faire. Je n'ai de toute façon pas l'énergie de m'y pencher. Qu'est-ce qui rend le travail si laborieux ? Pourquoi ma motivation est-elle si basse ?
 
-### Besoin de sens
+## Besoin de sens
 
 Le sens est un composant indispensable de la motivation. Pour quoi (en deux mots) suis-je ici ? Quel est mon objectif ? Quel est l'objectif de ma mission ? Le sens peut être vu suivant trois dimensions :
 
@@ -58,8 +58,7 @@ Quand la loi devient obsolète ou qu'un désaccord s'installe, quand il faut rem
 
 Si la loi est cohérente, si le lien est de qualité, l'environnement est serein et constructif.
 
-
-### Besoin de paix
+## Besoin de paix
 
 MaBoite est à l'origine de la paix durable que je vis au quotidien chez MonClient ainsi que son garde fou : c'est elle qui cadre mon travail par l'intermédiaire du contrat établi avec MonClient ; c'est ce que je me dois de respecter, mais c'est aussi ce qui me protège.
 
@@ -68,7 +67,6 @@ Le chercheur Markus Weingardt a étudié les conditions nécessaires à l'instau
 * la transparence (qui permet la confiance) ;
 * la compétence ;
 * la proximité (le lien).
-
 
 ![Triangle de la paix durable](/images/2015-02-18-Quest_ce_qui_me_motive_en_tant_que_developpeur/triangle_paix_durable.png){.center}
 
@@ -93,7 +91,7 @@ De façon générale, nos compétences sont interdépendantes :
 
 Mais encore faut-il qu'elles soient reconnues à leur juste place.
 
-### Besoin d'autonomie et de reconnaissance
+## Besoin d'autonomie et de reconnaissance
 
 Pour que ses salariés se sentent reconnus, l'employeur a notamment la responsabilité de leur permettre d'être autonomes. On est autonome lorsque l'on est en mesure de se débrouiller seul sans craindre de perdre son identité lorsque l'on demande de l'aide.
 
@@ -108,7 +106,7 @@ Vincent Lenhardt structure l'autonomie autour de quatre niveaux décrits par le 
 
 L'autonomie permet d'accéder au sens de son travail.
 
-### Comme un humain
+## Comme un humain
 
 Si les composantes de la paix durable sont solides et équilibrées, le cadre est suffisamment sécurisant pour que, associé aux liens que je trouve en mission chez MonClient aussi bien que dans MaBoite, j'y trouve du sens.
 

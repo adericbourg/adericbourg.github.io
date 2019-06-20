@@ -15,7 +15,7 @@ comme des formations professionnelles et être prises en charge par mon employeu
 Huit ans plus tard, j'ai fini par suivre ces stages sur mon temps personnel et sur mes
 fonds propres sans aucun regret. Retour.
 
-### Ceci n'est pas un article sur la Communication NonViolente
+## Ceci n'est pas un article sur la Communication NonViolente
 
 J'ai suivi les [trois modules de base de formation à la CNV](http://www.cnvformations.fr/).
 Je ne souhaite pas détailler le contenu de ces stages. Non par confidentialité du contenu.
@@ -31,7 +31,7 @@ souvent appris à étouffer avec la tête.
 Je vais donc axer ce retour ce la façon dont _j'ai_ vécu les choses et sur les déplacements
 intérieurs que j'ai pu observer chez moi.
 
-### Et moi, et moi, et moi
+## Et moi, et moi, et moi
 
 Je suis de nature discrète et je n'ai pas toujours suffisamment confiance en moi pour prendre
 la parole au sein d'un groupe. Lorsque je la prends, il est d'ailleurs fréquent qu'on me la
@@ -49,7 +49,7 @@ oreilles, il est trop tard. Je mets fin à la relation, je démissionne, je ferm
 sans retour possible tout en ayant conscience que j'ai ma part de responsabilité dans cette
 rupture qui aurait pu être évitée avec une communication de qualité.
 
-### Module 1 : le recul sur soi
+## Module 1 : le recul sur soi
 
 Le module 1 a été l'occasion d'une prise de recul. À l'issue de celui-ci, je me suis
 observé à plusieurs reprises me détacher d'une conversation pour constater que celle-ci
@@ -82,14 +82,14 @@ Cette formulation me rejoint pour évoquer ce stage et l'évolution qui s'est op
 Le cadre sécurisant posé par le formateur et la garantie de confidentialité permet de prendre
 des risques, de s'ouvrir plus que d'usage.
 
-### Module 2 : à suivre
+## Module 2 : à suivre
 
 TODO
 
-### Module 3 : à faire
+## Module 3 : à faire
 
 TODO
 
-### Et maintenant ?
+## Et maintenant ?
 
 TODO

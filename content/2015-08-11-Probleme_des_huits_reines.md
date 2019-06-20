@@ -8,8 +8,7 @@ Tags: algorithmique, python, jeu
 J'ai rencontré le [problème des huits reines](https://fr.wikipedia.org/wiki/Probl%C3%A8me_des_huit_dames) lors d'un entretien d'embauche. Sans juger de la pertinence de cet exercice dans ce cadre (indépendamment du fait que j'aie lamentablement et honteusement échoué), la période estivale, propice à la détente, m'a incité à pousser le jeu plus en avant (mon orgueil a probablement contribué lui aussi).
 Le problème consiste à compter et identifier les différentes façons de placer sur un échiquier de 64 cases 8 reines de façon à ce que, relativement aux règles des échecs, elles ne se menacent pas mutuellement. Une reine peut se déplacer de façon rectiligne d'un nombre de cases arbitraire dans toutes les directions ; lorsqu'une reine est placée, la ligne, la colonne et les diagonales sur lesquelles elle se situe sont donc « condamnées ».
 
-
-### Modélisation
+## Modélisation
 
 On ne peut pas placer plusieurs reines sur une même ligne. On peut donc simplifier la modélisation en ne travaillant que sur les colonnes. Ainsi, on cherchera à ne retourner qu'un tableau d'index de colonne, chacun de ces index correspondant à la ligne de son propre index dans le tableau. Pour illustrer, on produira en retour un tableau de la forme `[x, y, z]` qui correspond en pratique aux coordonnées `(0, x)`, `(1, y)` et `(2, z)` sur l'échiquier.
 
@@ -25,19 +24,19 @@ Représentons cette modélisation dans le cas de la résolution du problème ave
 
 Il est alors « facile » de déterminer si une reine est en sécurité connaissant la position des autres :
 
- * Par construction, aucune reine ne peut être sur la même ligne.
- * Deux reines sont sur la même colonne lorsque leur index de colonne est la même (`c[i] == c[j]`).
- * Deux reines sont sur la même diagonale lorsque leur différence d'index dans le tableau (donc leur différence d'index de ligne) est égal à leur différence d'index de colonne (`abs(c[i] - c[j]) == abs(i - j)`). La valeur absolue permet de traiter indifféremment les diagonales « montantes » et les diagonales « descendantes ».
+* Par construction, aucune reine ne peut être sur la même ligne.
+* Deux reines sont sur la même colonne lorsque leur index de colonne est la même (`c[i] == c[j]`).
+* Deux reines sont sur la même diagonale lorsque leur différence d'index dans le tableau (donc leur différence d'index de ligne) est égal à leur différence d'index de colonne (`abs(c[i] - c[j]) == abs(i - j)`). La valeur absolue permet de traiter indifféremment les diagonales « montantes » et les diagonales « descendantes ».
 
 Ainsi, les solutions, lorsqu'elles existent, forment un sous-ensemble des permutations de {1 ; 2 ; ... ; *n* - 1} (où *n* est le nombre de reines et la dimension de l'échiquier).
 
 ![Représentation de la modélisation](/images/eight_queens/diagonale.png){.center}
 
-### Approche naïve : examen de l'intégralité des permutations
+## Approche naïve : examen de l'intégralité des permutations
 
 Cette approche revient à essayer toutes les combinaisons de placement des reines et de retenir celles pour lesquelles toutes les reines sont en sécurité. Compte tenu du fait que deux reines ne peuvent être sur la même colonne, la solution est une permutation de la suite d'entiers de 0 à *n* - 1.
 
-#### Génération des permutations
+### Génération des permutations
 
 Il est possible de déterminer toutes les permutations possibles d'un tableau en utilisant — par exemple — l'[algorithme de Heap](https://en.wikipedia.org/wiki/Heap%27s_algorithm) qui minimise le nombre de mouvements nécessaires à l'obtention de l'intégralité des permutations. Une permutation est obtenue de la précédente en interchangeant la position de deux éléments (et seulement deux).
 
@@ -98,7 +97,7 @@ sys     0m0.000s
 
 La fonction de la blbliothèque standard est bien plus performante que l'implémentation proposée ci-dessus (et heureusement). On utilisera donc celle-ci pour la résolution du problème : autant ne pas tendre le bâton pour se faire battre.
 
-#### Résolution
+### Résolution
 
 On a vu que l'ensemble des solutions était contenu dans l'ensemble des permutations de {1 ; 2 ; ... ; *n* - 1}, soit l'ensemble des permutations de *n* entiers distincts. De par cette modélisation :
 
@@ -129,7 +128,7 @@ def solve(board_size):
     return solutions
 ```
 
-#### Représentation des solutions
+### Représentation des solutions
 
 Il est toujours plus simple de vérifier les solutions en les visualisant. [Le nombre de solutions en fonction du nombre de reines étant connu](https://en.wikipedia.org/wiki/Eight_queens_puzzle#Counting_solutions), on ajoute le nombre de solutions trouvées pour faciliter la validation de l'algorithme.
 
@@ -184,11 +183,11 @@ python brute-force.py  0,06s user 0,00s system 91% cpu 0,061 total
 
 Pour cette dimension, c'est tout à fait acceptable et on pourrait s'en contenter. On pourrait... mais ça ne serait pas satisfaisant pour la curiosité !
 
-### Seconde approche : algorithme de retour sur trace (*backtracking*)
+## Seconde approche : algorithme de retour sur trace (*backtracking*)
 
 Cette classe d'algorithmes parcourt toutes les possibilités en éliminant d'emblée toute solution partielle qui ne convient pas. Il permet donc d'éviter de n'avoir ne serait-ce qu'à considérer de nombreuses combinaisons : il est en ce sens plus économe que l'algorithme de force brute. La résolution du problème revient alors à un parcours de graphe.
 
-#### Exemple
+### Exemple
 
 Pour y voir plus clair, commençons par un exemple simple. On souhaite obtenir les combinaisons de nœuds permettant de former le mot « BLOG » en parcourant l'arbre. On continue de descendre dans l'arbre tant que la combinaison permet d'obtenir une solution (nœuds bleus). Dès que celle-ci ne le permet plus (nœud rouge), on ignore les branches suivantes (nœud gris).
 
@@ -196,7 +195,7 @@ Dans cet exemple, on n'obtient qu'une solution mais rien n'empêche d'en avoir p
 
 ![Exemple de backtracking](/images/eight_queens/backtracking.png){.center}
 
-#### Résolution
+### Résolution
 
 On conserve la même modélisation : les *n* reines sont réparties sur les *n* lignes à raison d'une par ligne. On place les reines une par une tant que cela est possible. Si le placement d'une reine échoue — donc qu'il n'existe pas de position telle que la reine puisse être en sécurité, on remet en question les choix précédents afin de sortir du blocage. On revient alors à un point où des alternatives étaient possibles et on essaie la possibilité suivante.
 
@@ -233,10 +232,9 @@ def solve(n):
 
 Pour mieux comprendre cet algorithme, il en existe une [version animée détaillant les étapes de la résolution](https://www.cs.usfca.edu/~galles/visualization/RecQueens.html).
 
+## Troisième approche : programmation par contraintes
 
-### Troisième approche : programmation par contraintes
-
-#### Principe
+### Principe
 
 Un problème de satisfaction de contraintes (ou CSP pour *Constraint Satisfaction Problem*) désigne l'ensemble des problèmes définis par... des contraintes. La résolution consiste à chercher *une* solution les respectant. Pour cela, on décrit un modèle définit par :
 
@@ -245,7 +243,7 @@ Un problème de satisfaction de contraintes (ou CSP pour *Constraint Satisfactio
 
 À partir de ce modèle, le système cherchera une solution et la proposera si elle existe. En revanche, il ne proposera qu'une seule solution : la résolution d'un problème par contraintes n'a pas vocation à chercher l'ensemble exhaustif des solutions.
 
-#### Implémentation
+### Implémentation
 
 En Python, la bibliothèque [Numberjack](http://numberjack.ucc.ie) facilite la programmation par contraintes. Les auteurs fournissent d'ailleurs à titre d'exemple une [solution pour le problème des *n* reines](http://numberjack.ucc.ie/examples/nqueens).
 
@@ -317,8 +315,7 @@ Nodes: 24  Time: 0.0
 
 Une mesure plus fine du temps d'exécution indique qu'il a fallu environ 20 millisecondes pour proposer cette solution (qui inclut le temps d'exécution total du programme Python).
 
-
-### Comparaison des approches
+## Comparaison des approches
 
 On a vu trois méthodes différentes de résolution du problème. Parmi elles, seules deux fournissent l'intégralité des solutions et donc répondent réellement au problème. La résolution par force brute est probablement la plus lisible mais égalment la moins efficace. La solution par retour arrière est légèrement plus complexe mais sa durée de résolution, bien plus faible, la rend nettement plus avantageuse pour un « grand » échiquier.
 

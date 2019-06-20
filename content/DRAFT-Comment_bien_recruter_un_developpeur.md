@@ -19,7 +19,7 @@ différents, nous avons tous des attentes différentes. Certains points
 sont probablement partagés par beaucoup, d'autres me sont plus
 personnels.
 
-### Définissez clairement le poste
+## Définissez clairement le poste
 
 Quand je parcours des propositions de poste, je regarde deux choses :
 
@@ -68,7 +68,7 @@ pour développeur en début de carrière : recrutez un développeur pour ce qu'i
 est et pour ce qu'il sait (et veut) faire, pas pour
 [les outils qu'il utilise](https://en.wikipedia.org/wiki/Law_of_the_instrument).
 
-### Décrivez clairement le poste
+## Décrivez clairement le poste
 
 Au delà du titre, c'est la fiche de poste qui définit le travail au
 quotidien. C'est le cadre qu'elle définit qui fera naître&nbsp;— ou
@@ -118,7 +118,7 @@ Cette liste n'est ni exhaustive ni minimale : à vous de faire le point
 sur votre équipe et ses besoins. À vous de la décrire de la façon qui
 vous semble la plus juste et la plus complète.
 
-### Préférez le mouton à trois pattes plutôt que celui à cinq pattes
+## Préférez le mouton à trois pattes plutôt que celui à cinq pattes
 
 J'ai vu beaucoup d'offres très précises et spécifiques. Ces offres me
 donnent l'impression qu'elles décrivent une personne qui quitte l'entreprise
@@ -150,7 +150,7 @@ important entre les savoirs actuels de la personne et les besoins du
 poste peut s'avérer destructeur (démotivation, perte d'estime de soi,
 _burn out_...).
 
-### Soyons transparents
+## Soyons transparents
 
 C'est lors des entretiens que le candidat et l'entreprise apprennent
 à se connaître. J'attends de ceux-ci qu'ils en soient représentatifs,
@@ -182,7 +182,7 @@ c'est prendre le risque de le voir revenir plus tard plus gros et plus fort.
 Après discussions et explications, d'un côté comme de l'autre : s'il y a
 un doute, c'est non.
 
-### Organisez des entretiens à votre image
+## Organisez des entretiens à votre image
 
 Un entretien n'a pas vocation à piéger un candidat. Si vous pensez qu'un
 candidat qui se renseigne à l'avance sur le contenu de vos entretiens est
@@ -242,8 +242,7 @@ peuvent vous aider à évaluer votre processus de recrutement :
 Vous pouvez vous attendre à ce que je vous pose ces questions en tant que
 candidat.
 
-
-### Annonçons nos valeurs
+## Annonçons nos valeurs
 
 Les valeurs définissent des qualités qui illustrent un comportement estimé,
 admiré et recherché. Elles sont subjectives et peuvent n'être portées que
@@ -280,7 +279,7 @@ _transparence_ sont « proches » de _honnêteté_ et _humilité_. Cela demande
 d'en parler, de creuser, de poser nos définitions mais rien d'incompatible
 à première vue.
 
-### Parlons d'argent
+## Parlons d'argent
 
 Le sujet de l'argent est parfois tabou et n'est abordé qu'au moment de
 l'entretien final, « l'entretien RH » : c'est à mon sens une erreur. Tout
@@ -303,7 +302,7 @@ atténuer la grisaille d'un quartier bétonné. En revanche, lorsque ces avantag
 sont utilisés comme premier argument de recrutement, j'ai tendance à être méfiant.
 Qu'essaie-t-on de me cacher en ne me présentant que de ces bénéfices annexes ?
 
-### En cas d'approche directe
+## En cas d'approche directe
 
 Soyez aussi direct que votre approche : pas besoin de tourner autour du pot, annoncez
 clairement vos intentions.
@@ -318,7 +317,7 @@ Pour ma part, je ne prends pas la peine de répondre à une proposition généri
 ne m'en sens pas destinataire et donc ne me sens pas concerné par son contenu (la
 plupart du temps, je n'en termine même pas la lecture).
 
-### tl;dr
+## tl;dr
 
 Il n'y a pas de recette ni de processus miracle pour recruter un développeur. C'est
 ce qui nous différencie de la machine. Gardons tout de même quelques points en tête :

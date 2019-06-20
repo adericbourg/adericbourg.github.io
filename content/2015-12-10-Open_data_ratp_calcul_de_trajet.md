@@ -9,8 +9,7 @@ La RATP progresse dans l'[ouverture de ses données](http://data.ratp.fr) et mê
 
 L'histoire et le contexte des calculs d'itinéraires est très bien synthétisé par [Tristram Gräbener](https://twitter.com/tristramg) dans son [Petit historique du calcul d'itinéraire](http://blog.tristramg.eu/petit-historique-du-calcul-ditineraire.html). Probablement plus hipster que je ne veux bien l'admettre, j'ai choisi d'utiliser le plus récent : le *[Connection Scan Algorithm](http://i11www.iti.uni-karlsruhe.de/extra/publications/dpsw-isftr-13.pdf)*.
 
-
-### Connection scan algorithm
+## Connection scan algorithm
 
 > Cette explication est largement inspirée de l'explication de l'algorithme du [csa-challenge de CaptainTrain](https://github.com/captaintrain/csa-challenge/blob/master/readme.md).
 
@@ -27,7 +26,7 @@ Pour chaque station *s*, on considère l'heure et la station d'arrivée. Si cell
 
 L'objectif est de se rendre d'un point de départ *o* à un point d'arrivée *d* en partant à l'heure *t0*.
 
-#### Initialisation
+### Initialisation
 
 On initialise l'algorithme en attribuant une durée infinie au trajet vers tout point d'arrêt à l'exception de la gare de départ (on en part, on sait qu'on y est à *t0*).
 
@@ -39,7 +38,7 @@ Pour chaque station s
 arrival_timestamp[o] ← t0
 ```
 
-#### Boucle de calcul
+### Boucle de calcul
 
 On parcourt l'ensemble des connexions contenues dans la table et on considère l'amélioration qu'elle apporte sur le trajet. À la fin de la boucle, lorsque toutes les connexions on été parcourues, toutes les heures d'arrivée depuis *o* vers une autre station ont été calculées.
 
@@ -51,11 +50,11 @@ Pour chaque connexion c
         in_connection[c.arrival_station] ← c
 ```
 
-#### Résultat
+### Résultat
 
 Pour obtenir le résultat, on parcourt le tableau des stations d'arrivée (`in_connections`) en partant de la destination *d* jusqu'à retrouver le point de départ *o*.
 
-#### Exemple
+### Exemple
 
 Prenons un exemple sur une ligne fictive :
 
@@ -164,7 +163,7 @@ En dépilant (*Last in, first out*) ces connexions, on retrouve le trajet à par
 
 L'algorithme nous a donc permis de déterminer le trajet pour aller de A à C en partant à l'heure 2 ainsi que l'heure d'arrivée.
 
-#### Analyse
+### Analyse
 
 Cet algorithme présente l'avantage de s'exécuter en un temps proportionnel au nombre de connexions en occupant un espace mémoire lui aussi proportionnel au nombre de connexions. Dans le cas du métro parisien, on peut évaluer que le nombre de correspondances est du même ordre de grandeur que le nombre *N* de stations. Cela revient à avoir :
 
@@ -173,14 +172,13 @@ Cet algorithme présente l'avantage de s'exécuter en un temps proportionnel au 
 
 L'algorithme a donc une complexité proportionnelle au nombre de stations.
 
+## Exploitation des données de la RATP
 
-### Exploitation des données de la RATP
-
-#### Format GTFS
+### Format GTFS
 
 Le format GTFS est un standard et la RATP se conforme à ce standard, simple et bien documenté. Les données sont réparties sur plusieurs fichiers dont nous n'en retiendrons que certains dans cet article.
 
-##### routes.txt
+#### routes.txt
 
 Le fichier décrit le nom et la direction des routes. Une route est assimilable à un trajet (origine - destination).
 
@@ -203,7 +201,7 @@ route_id,agency_id,route_short_name,route_long_name,route_desc,route_type,route_
 1197623,100,"13","(CHATILLON - MONTROUGE <-> ST-DENIS-UNIVERSITE/LES COURTILLES) - Retour",,1,,FFFFFF,000000
 ```
 
-##### stops.txt
+#### stops.txt
 
 Ce fichier liste les arrêts avec, éventuellement, quelques informations complémentaires. La RATP fournit l'adresse la plus proche de l'arrêt ainsi que les coordonnées GPS de son centre (dans le cas d'une station qui dispose de plusieurs sorties). À noter que ce fichier n'est pas ordonné selon le sens de parcours des courses sur la ligne.
 
@@ -225,7 +223,7 @@ stop_id,stop_code,stop_name,stop_desc,stop_lat,stop_lon,location_type,parent_sta
 ...
 ```
 
-##### trips.txt
+#### trips.txt
 
 Ce fichier liste les courses et les associe à une route. Nous reviendrons sur son utilité en observant les horaires d'arrêt.
 
@@ -239,7 +237,7 @@ route_id,service_id,trip_id,trip_headsign,trip_short_name,direction_id,shape_id
 ...
 ```
 
-##### stops_times.txt
+#### stops_times.txt
 
 Ce fichier présente les horaires des courses aux stations (points d'arrêt). Ce fichier est trié par course et par heure d'arrêt en station.
 
@@ -255,11 +253,12 @@ trip_id,arrival_time,departure_time,stop_id,stop_sequence,stop_headsign,shape_di
 
 Dans cet exemple, pour la course présentée, le véhicule s'arrête à 19:38:00 à l'arrêt 1969 (Châtillon - Montrouge) et en repart à la même heure. On en déduira qu'on ne prend vraisemblabement pas en compte le temps d'arrêt en station. Il arrive ensuite à la station 1880 (Malakoff - Rue Etienne Dolet) à 19:40:00, puis à la station 1879 (Malakoff - Plateau de Vanves) à 19:41:00, etc.
 
-##### transfers.txt
+#### transfers.txt
 
 `transfers.txt` regroupe les correspondances entre plusieurs points d'arrêt.
 
 Ce fichier n'étant pas compréhensible par un humain, prenons un exemple et déroulons-le :
+
 ```
 from_stop_id,to_stop_id,transfer_type,min_transfer_time
 4211780,2270,2,212
@@ -303,8 +302,7 @@ $ grep 1364288 routes.txt
 
 Il s'agit donc du [Noctilien N44](http://www.ratp.fr/informer/pdf/orienter/f_horaire.php?fm=gif&loc=noctilien&nompdf=n44) qui passe effectivement par « Mairie de Saint-Ouen ». La boucle est bouclée.
 
-
-#### Parsing des fichiers GTFS
+### Parsing des fichiers GTFS
 
 Les fichiers GTFS, bien que portant l'extension `.txt` sont manipulables comme des fichiers CSV. Dans la suite, on utilisera des structures qui sont (presque) calquées sur le format de ces fichiers. Sur le principe, leur parsing est immédiat. Prenons par exemple le cas des routes (on utilise ici [scala-csv](https://github.com/tototoshi/scala-csv)) :
 
@@ -368,7 +366,7 @@ val gtfsData = GtfsData(
 )
 ```
 
-#### Construction de la table horaire
+### Construction de la table horaire
 
 La table horaire est, comme nous l'avons vu, une séquence de connexions modélisées par des quadruplets contenants chacun la station de départ, la station d'arrivée, l'heure de départ et l'heure d'arrivée.
 
@@ -387,7 +385,7 @@ Sa construction se fait en deux étapes :
 0. en ingérant les connexions issues des courses (successions de points d'arrêts sur une même ligne) ;
 0. en ingérant les connexions issues des correspondances (« ponts » entre les courses).
 
-##### Connexions issues des courses
+#### Connexions issues des courses
 
 On ingère les horaires des courses en les groupant par... course et en prenant soin de ne pas « mélanger » les horaires de deux courses. Prenons l'exemple ci-dessous : les ceux courses fréquentent la même ligne mais ne s'arrêtent pas aux mêmes arrêts. Il n'y a pas de correspondance entre les deux.
 
@@ -448,7 +446,7 @@ def stopTimesToConnections(stopTimes: Iterable[StopTime]): Iterable[Connection] 
 
 Dans cet exemple de code, la fonction `durationToTimestamp` retourne un timestamp correspondant à l'heure effective pour la journée en cours à partir de l'heure seule fournie dans les données. Par exemple, le 01/01/2016, la durée `19h32min27s` permettra d'obtenir le timestamp équivalent à `2016-01-01T19:32:27.0Z`.
 
-##### Connexions issues des correspondances
+#### Connexions issues des correspondances
 
 Le fichier `transfers.txt` nous donne les correspondances disponibles sur une ligne. L'objectif de cette étape est :
 
@@ -506,7 +504,7 @@ def transfersToConnections(filteredTransfers: Iterable[Transfer]): Iterable[Conn
 }
 ```
 
-##### Fusion des deux tables horaires
+#### Fusion des deux tables horaires
 
 On a construit jusqu'ici deux tables horaires :
 
@@ -527,11 +525,11 @@ val connections = (connectionsFromStopTimes ++ connectionsFromTransfers).
   sortBy(_.departureTimestamp)
 ```
 
-### Implémentation de l'algorithme
+## Implémentation de l'algorithme
 
 Je propose ici une implémentation en Scala qui pourrait probablement être (largement, rien que par sa mutabilité) améliorée. Partons toujours de là.
 
-#### API
+### API
 
 Cette implémentation est paramétrée par :
 
@@ -552,7 +550,7 @@ class CSA(timetable: Timetable, stopsByStopId: Map[Int, Stop]) {
 }
 ```
 
-#### Initialisation
+### Initialisation
 
 On initialise les tableaux avec une valeur « virtuellement infinie » (valeur maximale qu'un entier peut représenter) à l'exception de l'heure d'arrivée optimale à la station de départ... puisque cette valeur est connue.
 
@@ -566,9 +564,9 @@ def compute(departureStation: Int, arrivalStation: Int, departureTime: Int): Seq
 }
 ```
 
-#### Calcul du trajet
+### Calcul du trajet
 
-##### Vue macroscopique
+#### Vue macroscopique
 
 On retrouve les deux étapes du calcul dans la méthode `compute` :
 
@@ -587,7 +585,7 @@ def compute(departureStation: Int, arrivalStation: Int, departureTime: Int): Seq
 }
 ```
 
-##### Parcours de la table horaire
+#### Parcours de la table horaire
 
 On utilise une fois de plus une récursion terminale.
 
@@ -629,10 +627,9 @@ private def optimizesArrivalTime(connection: Connection): Boolean = {
 }
 ```
 
+#### Construction de l'itinéraire à partir de la table horaire
 
-##### Construction de l'itinéraire à partir de la table horaire
-
-Une fois la table horaire `inConnection` calculée, on reconsitue l'itinéraire inversé en partant de la station d'arrivée et en remontant jusqu'à la station de départ.
+Une fois la table horaire `inConnection` calculée, on reconstitue l'itinéraire inversé en partant de la station d'arrivée et en remontant jusqu'à la station de départ.
 
 ```scala
 private def computeRoute(arrivalStation: Int): Seq[Connection] = {
@@ -655,7 +652,7 @@ private def computeRoute(arrivalStation: Int): Seq[Connection] = {
 
 Ce cas est volontairement écrit en « Java++ » plutôt qu'en « bon Scala » par simplicité de lecture. Saurez-vous écrire le cas général en une ligne (ou deux) ?
 
-#### Exemple
+### Exemple
 
 Partons d'un trajet entre Maubert-Mutualité et Voltaire en partant à 18h.
 
@@ -692,7 +689,7 @@ Solution found with 15 connections
 Total transit time: 21 minutes
 ```
 
-### Conclusion
+## Conclusion
 
 En comparaison, l'[algorithme de plus court chemin de Dijkstra](https://fr.wikipedia.org/wiki/Algorithme_de_Dijkstra) présente une complexité proportionnelle à *C.log(N)* où *N* est le nombre de stations et *C* le nombre de correspondances entre deux stations, soit environ *N.log(N)* dans notre évaluation, tout en occupant un espace mémoire de taille proportionnelle à *N*.
 

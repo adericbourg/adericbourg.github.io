@@ -8,18 +8,18 @@ Tags: wifi, raspberrypi, linux, iptables
 Dans cet article, nous verrons comment configurer un Raspberry Pi en tant que
 point d'accès Wifi.
 
-### Pré-requis
+## Pré-requis
 
 Je supposerai que vous avez à disposition :
 
- * [Un Raspberry Pi](https://www.raspberrypi.org/)
- * La distribution [Raspbian](https://www.raspbian.org/) ou toute autre
-   distribution Linux
- * Un *dongle* Wifi (déjà installé et détecté)
+* [Un Raspberry Pi](https://www.raspberrypi.org/)
+* La distribution [Raspbian](https://www.raspbian.org/) ou toute autre
+  distribution Linux
+* Un *dongle* Wifi (déjà installé et détecté)
 
 Dans la suite, on considèrera que l'interface sans fil est nommée `wlan0`.
 
-### Définition d'une adresse IP statique
+## Définition d'une adresse IP statique
 
 Dans le fichier `/etc/network/interfaces`, supprimer les lignes suivantes :
 
@@ -37,7 +37,7 @@ Redémarrez le réseau :
 
     sudo service networking restart
 
-### Installation d'un serveur DHCP
+## Installation d'un serveur DHCP
 
 Le serveur DHCP permet d'attribuer automatiquement une adresse IP aux machines
 qui se connecteront à votre réseau Wifi.
@@ -113,7 +113,7 @@ aux requêtes DHCP dans le fichier `/etc/default/isc-dhcp-server` :
     #INTERFACES=""
     INTERFACES="wlan0"
 
-### Installation de *hostapd*
+## Installation de *hostapd*
 
 [Hostapd](https://w1.fi/hostapd/) est un démon permettant de créer un point
 d'accès sans fil. Pour l'installer :
@@ -138,15 +138,15 @@ Créez son fichier de configuration, `/etc/hostapd/hostapd.conf` :
 
 Remplacez dans cet exemple :
 
- * `<YOUR SSID>` par le nom que vous souhaitez donner à votre réseau ;
- * `<YOUR PASSPHRASE>` par le mot de passer permettant l'accès au réseau.
+* `<YOUR SSID>` par le nom que vous souhaitez donner à votre réseau ;
+* `<YOUR PASSPHRASE>` par le mot de passer permettant l'accès au réseau.
 
 Déclarez enfin ce fichier afin qu'il soit utilisé par hostapd dans
 `/etc/default/hostapd` en ajoutant la ligne :
 
     DAEMON_CONF="/etc/hostapd/hostapd.conf"
 
-### Configuration du routage entre l'interface sans fil et l'interface filaire
+## Configuration du routage entre l'interface sans fil et l'interface filaire
 
 Activer le routage IP dans le fichier `/etc/sysctl.conf` en décommentant la
 ligne suivante :
@@ -165,7 +165,7 @@ Vous pouvez enfin configurer le routage en utilisant
     sudo iptables -A FORWARD -i eth0 -o wlan0 -m state --state RELATED,ESTABLISHED -j ACCEPT
     sudo iptables -A FORWARD -i wlan0 -o eth0 -j ACCEPT
 
-### Persistence des règles *iptables*
+## Persistence des règles *iptables*
 
 Les règles *iptables* définies précédemment sont perdues au au redémarrage. Pour
 les recharger à chaque lancement de la machine, vous pouvez utiliser le paquet
@@ -182,8 +182,7 @@ vous pourrez les enregistrer en invoquant la cible *save* et les recharger avec
     sudo /etc/init.d/iptables-persistent save
     sudo /etc/init.d/iptables-persistent reload
 
-
-### La voie est libre
+## La voie est libre
 
 À ce stade, vous deviez être en mesure de vous connecter au point d'accès de
 façon transparente. Étant donnée la richesse des matériels et leurs

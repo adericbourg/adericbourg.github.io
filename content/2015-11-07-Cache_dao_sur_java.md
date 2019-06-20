@@ -7,7 +7,7 @@ Tags: java, guava, cache, dao, verrou, concurrence
 
 L'ajout d'un cache sur un DAO est une opération courante et la bibliothèque Guava, très répandue, a par ailleurs énormément simplifié sa mise en œuvre. Néanmoins, il reste encore extrêmement facile de se tromper avec cette bibliothèque et... de réaliser un cache qui ne fonctionne pas.
 
-### Contexte
+## Contexte
 
 Partons d'une interface de DAO « classique » permettant de réaliser les opérations *CRUD*. On y ajoute une méthode `getAll` qui retourne l'intégralité des objets (vous allez voir, c'est pour votre bien).
 
@@ -22,8 +22,7 @@ public interface Dao {
 
 Sans accorder d'importance à l'implémentation du DAO accédant effectivement aux données persistées, contentons-nous de supposer que ses performances ne sont pas suffisantes pour répondre aux sollicitations auxquelles est soumise notre application.
 
-
-### Cache des données
+## Cache des données
 
 On se propose d'utiliser [Guava](https://github.com/google/guava) pour implémenter ce cache. On utilise dans cet exemple un [`LoadingCache`](https://github.com/google/guava/wiki/CachesExplained) qui ira chercher en base la donnée s'il n'a pas déjà été sollicité pour celle-ci : on charge les valeurs une à une à la demande. Il permet également de rafraîchir les données automatiquement à intervalle régulier.
 
@@ -44,7 +43,7 @@ LoadingCache<String, MyObject> cache = CacheBuilder.newBuilder()
     });
 ```
 
-### Implémentation naïve (et fausse)
+## Implémentation naïve (et fausse)
 
 En première approche, on peut supposer qu'il « suffit » de mettre à jour le cache pour chaque opération d'écriture sur la base de données. Une implémentation dans cette optique ressemblerait à ceci.
 
@@ -106,8 +105,7 @@ Dans le cas de multiples appels concurrents, des interruptions peuvent avoir lie
 
 Mais alors, pire : supposons qu'un appel à `getAll` provoque une interruption pendant un rafraîchissement du cache, au milieu de la boucle de rechargement de la méthode `initCache`. On retourne alors une version incohérente (partielle) des données. Cette situation n'est, elle, pas acceptable.
 
-
-### Le problème des lecteurs et des rédacteurs
+## Le problème des lecteurs et des rédacteurs
 
 Le cas de figure dans lequel nous nous trouvons correspond à un problème bien connu formulé par Edsger Dijkstra pour modéliser... les accès aux bases de données. Ceux-ci sont soumis à deux contraintes :
 
@@ -122,7 +120,6 @@ Une solution simple revient à attendre, lorsqu'un rédacteur se présente, d'at
  0. Le dernier lecteur à sortir débloque le sémaphore `db` et autorise alors un rédacteur en attente, s'il y en a un, à entrer.
 
 Sur notre exemple de DAO, la modification se ferait de la sorte (ce qui n'est pas explicitement redéfini n'a pas changé) :
-
 
 ```java
 public class CachedDao implements Dao {
@@ -199,7 +196,7 @@ readWriteLock.writeLock().lock();
 readWriteLock.writeLock().unlock();
 ```
 
-### Implémentation « sûre »
+## Implémentation « sûre »
 
 Nous pouvons réutiliser notre implémentation naïve : si elle n'était pas sûre, son intention restait valable. Pour l'adapter, on ajoute :
 
@@ -209,7 +206,7 @@ Nous pouvons réutiliser notre implémentation naïve : si elle n'était pas sû
 
 Il est en revanche nécessaire de « protéger » la libération des verrous. Si un traitement se passe mal — si par exemple si une exception est lancée — le verrou doit malgré tout être libéré. On encapsulera donc tout le code des sections critiques dans un bloc `try` / `finally`.
 
-Le code n'ayant pas changé pa rapport à la première version n'est pas représenté.
+Le code n'ayant pas changé par rapport à la première version n'est pas représenté.
 
 ```java
 import java.util.concurrent.locks.ReadWriteLock;
@@ -298,7 +295,7 @@ public class CachedDao implements Dao {
 
 ```
 
-### Pour aller plus loin
+## Pour aller plus loin
 
 Le DAO présenté ici est « sûr » dans la mesure où il garantit la cohérence avec la base des données retournées. En revanche, pour cela, un compromis sur les performances a du être fait. En effet, cette implémentation ne permet pas d'écritures simultanées : la modification de deux objets distincts n'est pas possible.
 

@@ -7,7 +7,7 @@ Tags: bash, sécurité, cve
 
 Vous avez probablement entendu parler de Shell shock qui, outre l'association de troubles psychiques et physiques observés chez [certains soldats de la Première Guerre Mondiale](http://fr.wikipedia.org/wiki/Obusite), désigne également la vulnérabilité [CVE-2014-6271](http://www.cert.ssi.gouv.fr/site/CERTFR-2014-ALE-006/index.html) touchant GNU bash. Elle permet à un attaquant de provoquer une exécution de code arbitraire à distance.
 
-### Mon dieu, mais c'est horrible !
+## Mon dieu, mais c'est horrible !
 
 Il faut avouer que ça ne présage pas d'une franche partie de rigolade.
 
@@ -15,7 +15,7 @@ Tout d'abord, de nombreux programmes interagissent avec le shell. Nous savons qu
 
 Par ailleurs, si les systèmes « évidents » seront patchés (un serveur web par exemple), certaines machines plus obscures ne le seront pas : pensez par exemple à des périphériques tels que les caméras connectées (ou plus largement tout ce que vous pouvez trouver sur l'Internet des objets). Rien n'exclut qu'elles exposent des services basés sur des scripts shell et si ce shell est bash, le périphérique devient vulnérable. Comme il y a fort à parier qu'aucune procédure de mise à jour de ces périphériques n'ait été définie, ces périphérques resteront vulnérables ad vitam aeternam.
 
-### J'exige des explications
+## J'exige des explications
 
 Bash permet d'exporter des variables mais aussi des fonctions à destination d'autres instances de bash. L'export de fonction utilise une variable d'environnement portant le nom de la-dite fonction dont la valeur commence par `() {` :
 
@@ -64,7 +64,7 @@ bonjour
 
 À noter que Linux n'est pas le seul système touché. Tous les systèmes Unix (ce qui inclut Mac OS) sont concernés.
 
-### M'enfin, qui serait assez bête pour exposer un machin bash sur Internet ?
+## M'enfin, qui serait assez bête pour exposer un machin bash sur Internet ?
 
 Moi – et probablement vous aussi – mais je ne pense pas que ce soit de la bêtise.
 

@@ -7,12 +7,12 @@ Tags: ssl, tls, java, certificat, signature, sécurité
 
 Lorsque vous vous connectez à un serveur en utilisant un certificat TLS (le grand frère de SSL depuis une quinzaine d'années), votre client en vérifie la signature. Celle-ci permet de vérifier que :
 
- * celui-ci provient bien d'un émetteur connu ;
- * qu'il n'a pas été modifié depuis son émission.
+* celui-ci provient bien d'un émetteur connu ;
+* qu'il n'a pas été modifié depuis son émission.
 
-### Le doute
+## Le doute
 
-Il arrive que le certificat soit signé en utilisant un certificat qui est lui-même signé par un autre certificat, lui-même encore signé par... bref : la signature peut remonter sur plusieurs niveaux hiérarchiques. Dans les faits, cela ne change pas grand chose : la vérification sera tout simplement récursive. Le tout est de rencontrer dans la chaîne, généralement « tout en haut » la signature issue d'un certificat faisant autorité. Ces autorités sont connues à l'avance et vous pouvez les vérifier dans les paramètres de votre natigateur ou, par exemple, dans le répertoire `/etc/ssl/certs` si vous êtes sous Linux.
+Il arrive que le certificat soit signé en utilisant un certificat qui est lui-même signé par un autre certificat, lui-même encore signé par... bref : la signature peut remonter sur plusieurs niveaux hiérarchiques. Dans les faits, cela ne change pas grand chose : la vérification sera tout simplement récursive. Le tout est de rencontrer dans la chaîne, généralement « tout en haut » la signature issue d'un certificat faisant autorité. Ces autorités sont connues à l'avance et vous pouvez les vérifier dans les paramètres de votre navigateur ou, par exemple, dans le répertoire `/etc/ssl/certs` si vous êtes sous Linux.
 
 Il s'agit donc d'une liste fermée qui vous a été fournie par un biais ou un autre mais surtout par en biais en lequel vous avez confiance (ou en lequel on vous a obligé à avoir confiance). Mais rien n'oblige qui que ce soit à utiliser l'une de ces autorités racines : on peut également utiliser un certificat auto-signé. Dans ce cas, rien ne permet de garantir avec certitude l'émetteur : au même titre que vous ferez confiance en l'identité de quelqu'un s'il vous présente sa carte d'identité éditée par l'État, vous aurez probablement des doutes si l'on ne vous présente qu'un papier signé par la-dite personne affirmant sa bonne foi.
 
@@ -20,49 +20,54 @@ Dans la « vraie vie », ce n'est pas parce qu'un individu n'est pas en mesure d
 
 Un certificat accepté et reconnu dans un environnement restreint est donc préférable à pas de certificat du tout.
 
-### L'arrivée des problèmes
+## L'arrivée des problèmes
 
 Mais, généralement, lorsque votre client ne connaît pas l'autorité de certification racine, il refuse par défaut la connexion :
 
-    $ curl -v https://www.exemple.com
-    * Rebuilt URL to: https://www.example.com/
-    * Hostname was NOT found in DNS cache
-    *   Trying 1.2.3.4...
-    * Connected to www.example.com (1.2.3.4) port 443 (#0)
-    * successfully set certificate verify locations:
-    *   CAfile: none
-        CApath: /etc/ssl/certs
-    * SSLv3, TLS handshake, Client hello (1):
-    * SSLv3, TLS handshake, Server hello (2):
-    * SSLv3, TLS handshake, CERT (11):
-    * SSLv3, TLS alert, Server hello (2):
-    * SSL certificate problem: unable to get local issuer certificate
-    * Closing connection 0
+```plain-text
+$ curl -v https://www.exemple.com
+* Rebuilt URL to: https://www.example.com/
+* Hostname was NOT found in DNS cache
+*   Trying 1.2.3.4...
+* Connected to www.example.com (1.2.3.4) port 443 (#0)
+* successfully set certificate verify locations:
+*   CAfile: none
+    CApath: /etc/ssl/certs
+* SSLv3, TLS handshake, Client hello (1):
+* SSLv3, TLS handshake, Server hello (2):
+* SSLv3, TLS handshake, CERT (11):
+* SSLv3, TLS alert, Server hello (2):
+* SSL certificate problem: unable to get local issuer certificate
+* Closing connection 0
+```
 
-### Comment se connecter, alors ?
+## Comment se connecter, alors ?
 
 Face à cela (ignorons la [référence à SSLv3](https://fr.wikipedia.org/wiki/POODLE) pour l'instant), deux options sont possibles (la troisième, refiler le bébé à votre collègue, n'étant pas traitée ici) :
 
- * ignorer les doutes quant au certificat et risquer de communiquer des informations sensibles à un tiers (c'est la porte ouverte à une [attaque de l'homme du milieu](https://fr.wikipedia.org/wiki/Attaque_de_l%27homme_du_milieu) puisque vous ne vérifiez plus du tout avec qui vous échangez des données) ;
- * indiquer que l'on connaît l'autorité racine ou l'une des autorités intermédiaires.
+* ignorer les doutes quant au certificat et risquer de communiquer des informations sensibles à un tiers
+  (c'est la porte ouverte à une
+  [attaque de l'homme du milieu](https://fr.wikipedia.org/wiki/Attaque_de_l%27homme_du_milieu)
+  puisque vous ne vérifiez plus du tout avec qui vous échangez des données) ;
+* indiquer que l'on connaît l'autorité racine ou l'une des autorités intermédiaires.
 
 Je ne peux que vous déconseiller avec toute la vigueur qui m'est donnée la première solution et vous apporter tout mon soutien pour la seconde.
 
 Pour reprendre l'exemple ci-dessus, l'appel avec `curl` est simplement complété avec l'option `--cacert` :
 
 ```bash
-$ curl -v https://www.example.com --cacert cert.pem
+curl -v https://www.example.com --cacert cert.pem
 ```
 
-### Depuis une application Java
+## Depuis une application Java
 
 Le même mécanisme s'applique lorsque vous vous connectez à un service en utilisant une application Java. Si le certificat n'est pas sûr, vous vous verrez refuser la connexion :
 
-```
+```plain-text
 sun.security.provider.certpath.SunCertPathBuilderException: unable to find valid certification path to requested target
 ```
 
-Tout comme avec `curl`, il existe une option pour spécifier un certificat faisant autorité. Il faut avant tout le stocker dans un conteneur spéficique à la JVM puis de préciser son emplacement dans la propriété système `javax.net.ssl.trustStore`.
+Tout comme avec `curl`, il existe une option pour spécifier un certificat faisant autorité. Il faut avant tout le stocker dans un conteneur spécifique à la JVM puis de préciser son emplacement dans la propriété système `javax.net.ssl.trustStore`.
 
 Pour créer ce conteneur, on utilise l'outil `keytool` fourni avec le JDK.
 
@@ -84,8 +89,7 @@ System.setProperty("javax.net.ssl.trustStorePassword", ******);
 
 La propriété `javax.net.ssl.trustStorePassword` correspond au mot de passe que vous avez saisi à l'import du certificat en utilisant `keytool`. Dès lors, vous pouvez vous connecter aux services sécurisés utilisant un certificat propre à votre entreprise.
 
-
-### Solution globale
+## Solution globale
 
 Il peut être pénible d'utiliser ce morceau de code dans chacune de vos applications, ou tout au moins fastidieux. Heureusement, il est également possible d'enregistrer un certificat au niveau de la JVM. On le déclare alors une bonne fois pour toutes.
 
@@ -106,8 +110,7 @@ Cette opération est à réaliser sur votre machine de développement mais égal
 
 Vous êtes maintenant capable de vous connecter depuis une application Java à l'ensemble des services exposés avec le certificat TLS de votre entreprise et ce sans nécessiter d'adaptation du code.
 
-
-### Depuis une application Java (bis)
+## Depuis une application Java (bis)
 
 Si, par malheur, vous ne pouvez pas déposer de fichier sur la machine exécutant votre application (c'est le cas sur certains hébergement « cloud » que je n'aime pas utiliser), vous pouvez toujours « stocker » votre *keystore* dans votre livrable (jar, war...). Mais... vous ne pourrez pas l'utiliser directement : la propriété `javax.net.ssl.trustStore` ne permet pas de déclarer de référence à un fichier dans le *package*. On peut en revanche l'écrire « à la main » sur le disque. L'exemple qui suit utilise [Guava](https://github.com/google/guava).
 
