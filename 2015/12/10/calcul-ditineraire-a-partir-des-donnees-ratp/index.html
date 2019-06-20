@@ -45,7 +45,7 @@
       <div class="post-content"> 
         <p>La RATP progresse dans l'<a href="http://data.ratp.fr">ouverture de ses données</a> et même si elle ne propose pas encore un accès à son <a href="https://fr.wikipedia.org/wiki/Syst%C3%A8me_d'information_en_ligne">système SIEL</a>, elle propose néanmoins les données de son offre de transport au <a href="https://developers.google.com/transit/gtfs/">format GTFS</a>. Une bonne occasion de s'initier au calcul d'itinéraire !</p>
 <p>L'histoire et le contexte des calculs d'itinéraires est très bien synthétisé par <a href="https://twitter.com/tristramg">Tristram Gräbener</a> dans son <a href="http://blog.tristramg.eu/petit-historique-du-calcul-ditineraire.html">Petit historique du calcul d'itinéraire</a>. Probablement plus hipster que je ne veux bien l'admettre, j'ai choisi d'utiliser le plus récent : le <em><a href="http://i11www.iti.uni-karlsruhe.de/extra/publications/dpsw-isftr-13.pdf">Connection Scan Algorithm</a></em>.</p>
-<h3>Connection scan algorithm</h3>
+<h2>Connection scan algorithm</h2>
 <blockquote>
 <p>Cette explication est largement inspirée de l'explication de l'algorithme du <a href="https://github.com/captaintrain/csa-challenge/blob/master/readme.md">csa-challenge de CaptainTrain</a>.</p>
 </blockquote>
@@ -59,7 +59,7 @@
 <p>La table horaire devient alors simplement une liste de ces connexions triées par heure de départ croissante.</p>
 <p>Pour chaque station <em>s</em>, on considère l'heure et la station d'arrivée. Si celles-ci sont optimales, on les conserve. Les stations étant identifiées par des entiers, on les conserve dans deux tableaux : <code>arrival_timestamp[s]</code> et <code>in_connection[s]</code>.</p>
 <p>L'objectif est de se rendre d'un point de départ <em>o</em> à un point d'arrivée <em>d</em> en partant à l'heure <em>t0</em>.</p>
-<h4>Initialisation</h4>
+<h3>Initialisation</h3>
 <p>On initialise l'algorithme en attribuant une durée infinie au trajet vers tout point d'arrêt à l'exception de la gare de départ (on en part, on sait qu'on y est à <em>t0</em>).</p>
 <div class="highlight"><pre><span></span><span class="n">Pour</span><span class="w"> </span><span class="n">chaque</span><span class="w"> </span><span class="n">station</span><span class="w"> </span><span class="n">s</span><span class="w"></span>
 <span class="w">    </span><span class="n">arrival_timestamp</span><span class="o">[</span><span class="n">s</span><span class="o">]</span><span class="w"> </span><span class="err">←</span><span class="w"> </span><span class="n">infinite</span><span class="w"></span>
@@ -69,7 +69,7 @@
 </pre></div>
 
 
-<h4>Boucle de calcul</h4>
+<h3>Boucle de calcul</h3>
 <p>On parcourt l'ensemble des connexions contenues dans la table et on considère l'amélioration qu'elle apporte sur le trajet. À la fin de la boucle, lorsque toutes les connexions on été parcourues, toutes les heures d'arrivée depuis <em>o</em> vers une autre station ont été calculées.</p>
 <div class="highlight"><pre><span></span><span class="n">Pour</span> <span class="n">chaque</span> <span class="n">connexion</span> <span class="k">c</span>
     <span class="n">Si</span> <span class="n">arrival_timestamp</span><span class="p">[</span><span class="k">c</span><span class="p">.</span><span class="n">departure_station</span><span class="p">]</span> <span class="err">≤</span> <span class="k">c</span><span class="p">.</span><span class="n">departure_timestamp</span>
@@ -79,9 +79,9 @@
 </pre></div>
 
 
-<h4>Résultat</h4>
+<h3>Résultat</h3>
 <p>Pour obtenir le résultat, on parcourt le tableau des stations d'arrivée (<code>in_connections</code>) en partant de la destination <em>d</em> jusqu'à retrouver le point de départ <em>o</em>.</p>
-<h4>Exemple</h4>
+<h3>Exemple</h3>
 <p>Prenons un exemple sur une ligne fictive :</p>
 <div class="highlight"><pre><span></span>         <span class="c1">-----o C</span>
        <span class="o">/</span>
@@ -177,17 +177,17 @@
 <li>(B, C, 3, 4)</li>
 </ol>
 <p>L'algorithme nous a donc permis de déterminer le trajet pour aller de A à C en partant à l'heure 2 ainsi que l'heure d'arrivée.</p>
-<h4>Analyse</h4>
+<h3>Analyse</h3>
 <p>Cet algorithme présente l'avantage de s'exécuter en un temps proportionnel au nombre de connexions en occupant un espace mémoire lui aussi proportionnel au nombre de connexions. Dans le cas du métro parisien, on peut évaluer que le nombre de correspondances est du même ordre de grandeur que le nombre <em>N</em> de stations. Cela revient à avoir :</p>
 <ul>
 <li>environ <em>N</em> connexions entre stations d'une même ligne (le chiffre est légèrement faussé par la présence de lignes en « fourche ») ;</li>
 <li>environ <em>2N</em> connexions issues des correspondances (une connexion dans un sens, une connexion dans l'autre).</li>
 </ul>
 <p>L'algorithme a donc une complexité proportionnelle au nombre de stations.</p>
-<h3>Exploitation des données de la RATP</h3>
-<h4>Format GTFS</h4>
+<h2>Exploitation des données de la RATP</h2>
+<h3>Format GTFS</h3>
 <p>Le format GTFS est un standard et la RATP se conforme à ce standard, simple et bien documenté. Les données sont réparties sur plusieurs fichiers dont nous n'en retiendrons que certains dans cet article.</p>
-<h5>routes.txt</h5>
+<h4>routes.txt</h4>
 <p>Le fichier décrit le nom et la direction des routes. Une route est assimilable à un trajet (origine - destination).</p>
 <p>Prenons l'exemple de la ligne 13 du métro parisien dont le plan simplifié est représenté sur la figure ci-dessous. Cette ligne est parcourue par quatre routes :</p>
 <ul>
@@ -206,7 +206,7 @@
 </pre></div>
 
 
-<h5>stops.txt</h5>
+<h4>stops.txt</h4>
 <p>Ce fichier liste les arrêts avec, éventuellement, quelques informations complémentaires. La RATP fournit l'adresse la plus proche de l'arrêt ainsi que les coordonnées GPS de son centre (dans le cas d'une station qui dispose de plusieurs sorties). À noter que ce fichier n'est pas ordonné selon le sens de parcours des courses sur la ligne.</p>
 <blockquote>
 <p>Une <strong>mission</strong> est un trajet parcouru par un ensemble de trains. Elle est décrite par :
@@ -226,7 +226,7 @@ Lorsqu'un train suit une mission, il réalise une <strong>course</strong>.</p>
 </pre></div>
 
 
-<h5>trips.txt</h5>
+<h4>trips.txt</h4>
 <p>Ce fichier liste les courses et les associe à une route. Nous reviendrons sur son utilité en observant les horaires d'arrêt.</p>
 <p>Exemple sur la ligne 13 :</p>
 <div class="highlight"><pre><span></span><span class="n">route_id</span><span class="p">,</span><span class="n">service_id</span><span class="p">,</span><span class="n">trip_id</span><span class="p">,</span><span class="n">trip_headsign</span><span class="p">,</span><span class="n">trip_short_name</span><span class="p">,</span><span class="n">direction_id</span><span class="p">,</span><span class="n">shape_id</span>
@@ -237,7 +237,7 @@ Lorsqu'un train suit une mission, il réalise une <strong>course</strong>.</p>
 </pre></div>
 
 
-<h5>stops_times.txt</h5>
+<h4>stops_times.txt</h4>
 <p>Ce fichier présente les horaires des courses aux stations (points d'arrêt). Ce fichier est trié par course et par heure d'arrêt en station.</p>
 <p>Un détail est à noter quant aux horaires : ceux-ci sont fournis pour la journée qui peut se terminer... le lendemain. Un métro circulant le dimanche à 1h du matin sera en réalité rattaché à la journée du samedi. Ainsi, son horaire ne sera pas « à 1h le dimanche » mais « à 25h le samedi ». Bien que cette astuce puisse sembler tordue, elle simplifie en pratique beaucoup de choses, notamment pour maintenir la continuité des courses : il serait absurde de scinder la course d'un train sous prétexte qu'il roule à cheval sur deux jours calendaires.</p>
 <p>Exemple pour la ligne 13 :</p>
@@ -249,7 +249,7 @@ Lorsqu'un train suit une mission, il réalise une <strong>course</strong>.</p>
 
 
 <p>Dans cet exemple, pour la course présentée, le véhicule s'arrête à 19:38:00 à l'arrêt 1969 (Châtillon - Montrouge) et en repart à la même heure. On en déduira qu'on ne prend vraisemblabement pas en compte le temps d'arrêt en station. Il arrive ensuite à la station 1880 (Malakoff - Rue Etienne Dolet) à 19:40:00, puis à la station 1879 (Malakoff - Plateau de Vanves) à 19:41:00, etc.</p>
-<h5>transfers.txt</h5>
+<h4>transfers.txt</h4>
 <p><code>transfers.txt</code> regroupe les correspondances entre plusieurs points d'arrêt.</p>
 <p>Ce fichier n'étant pas compréhensible par un humain, prenons un exemple et déroulons-le :</p>
 <div class="highlight"><pre><span></span><span class="n">from_stop_id</span><span class="p">,</span><span class="n">to_stop_id</span><span class="p">,</span><span class="n">transfer_type</span><span class="p">,</span><span class="n">min_transfer_time</span>
@@ -289,7 +289,7 @@ $ grep <span class="m">1364288</span> routes.txt
 
 
 <p>Il s'agit donc du <a href="http://www.ratp.fr/informer/pdf/orienter/f_horaire.php?fm=gif&amp;loc=noctilien&amp;nompdf=n44">Noctilien N44</a> qui passe effectivement par « Mairie de Saint-Ouen ». La boucle est bouclée.</p>
-<h4>Parsing des fichiers GTFS</h4>
+<h3>Parsing des fichiers GTFS</h3>
 <p>Les fichiers GTFS, bien que portant l'extension <code>.txt</code> sont manipulables comme des fichiers CSV. Dans la suite, on utilisera des structures qui sont (presque) calquées sur le format de ces fichiers. Sur le principe, leur parsing est immédiat. Prenons par exemple le cas des routes (on utilise ici <a href="https://github.com/tototoshi/scala-csv">scala-csv</a>) :</p>
 <div class="highlight"><pre><span></span><span class="k">import</span> <span class="nn">com.github.tototoshi.csv._</span>
 
@@ -348,7 +348,7 @@ $ grep <span class="m">1364288</span> routes.txt
 </pre></div>
 
 
-<h4>Construction de la table horaire</h4>
+<h3>Construction de la table horaire</h3>
 <p>La table horaire est, comme nous l'avons vu, une séquence de connexions modélisées par des quadruplets contenants chacun la station de départ, la station d'arrivée, l'heure de départ et l'heure d'arrivée.</p>
 <div class="highlight"><pre><span></span><span class="k">case</span> <span class="k">class</span> <span class="nc">Timetable</span><span class="o">(</span><span class="n">connections</span><span class="k">:</span> <span class="kt">Seq</span><span class="o">[</span><span class="kt">Connection</span><span class="o">])</span>
 <span class="k">case</span> <span class="k">class</span> <span class="nc">Connection</span><span class="o">(</span>
@@ -365,7 +365,7 @@ $ grep <span class="m">1364288</span> routes.txt
 <li>en ingérant les connexions issues des courses (successions de points d'arrêts sur une même ligne) ;</li>
 <li>en ingérant les connexions issues des correspondances (« ponts » entre les courses).</li>
 </ol>
-<h5>Connexions issues des courses</h5>
+<h4>Connexions issues des courses</h4>
 <p>On ingère les horaires des courses en les groupant par... course et en prenant soin de ne pas « mélanger » les horaires de deux courses. Prenons l'exemple ci-dessous : les ceux courses fréquentent la même ligne mais ne s'arrêtent pas aux mêmes arrêts. Il n'y a pas de correspondance entre les deux.</p>
 <div class="highlight"><pre><span></span> <span class="n">Course</span> <span class="n">I</span> <span class="p">:</span> <span class="n">A</span> <span class="p">(</span><span class="n">t1</span><span class="p">)</span> <span class="c1">--------------------&gt; B (t3)</span>
 <span class="n">Course</span> <span class="n">II</span> <span class="p">:</span>               <span class="k">C</span> <span class="p">(</span><span class="n">t2</span><span class="p">)</span> <span class="c1">--------------------&gt; D (t4)</span>
@@ -418,7 +418,7 @@ $ grep <span class="m">1364288</span> routes.txt
 
 
 <p>Dans cet exemple de code, la fonction <code>durationToTimestamp</code> retourne un timestamp correspondant à l'heure effective pour la journée en cours à partir de l'heure seule fournie dans les données. Par exemple, le 01/01/2016, la durée <code>19h32min27s</code> permettra d'obtenir le timestamp équivalent à <code>2016-01-01T19:32:27.0Z</code>.</p>
-<h5>Connexions issues des correspondances</h5>
+<h4>Connexions issues des correspondances</h4>
 <p>Le fichier <code>transfers.txt</code> nous donne les correspondances disponibles sur une ligne. L'objectif de cette étape est :</p>
 <ul>
 <li>de ne conserver que les correspondances de notre réseau (dans cet exemple, nous ne travaillons pas sur les bus, nous les éliminons donc) ;</li>
@@ -473,7 +473,7 @@ $ grep <span class="m">1364288</span> routes.txt
 </pre></div>
 
 
-<h5>Fusion des deux tables horaires</h5>
+<h4>Fusion des deux tables horaires</h4>
 <p>On a construit jusqu'ici deux tables horaires :</p>
 <ul>
 <li>l'une issue des horaires des trains en station ;</li>
@@ -492,9 +492,9 @@ $ grep <span class="m">1364288</span> routes.txt
 </pre></div>
 
 
-<h3>Implémentation de l'algorithme</h3>
+<h2>Implémentation de l'algorithme</h2>
 <p>Je propose ici une implémentation en Scala qui pourrait probablement être (largement, rien que par sa mutabilité) améliorée. Partons toujours de là.</p>
-<h4>API</h4>
+<h3>API</h3>
 <p>Cette implémentation est paramétrée par :</p>
 <ul>
 <li>la table horaire ;</li>
@@ -513,7 +513,7 @@ $ grep <span class="m">1364288</span> routes.txt
 </pre></div>
 
 
-<h4>Initialisation</h4>
+<h3>Initialisation</h3>
 <p>On initialise les tableaux avec une valeur « virtuellement infinie » (valeur maximale qu'un entier peut représenter) à l'exception de l'heure d'arrivée optimale à la station de départ... puisque cette valeur est connue.</p>
 <div class="highlight"><pre><span></span><span class="k">val</span> <span class="n">inConnection</span> <span class="k">=</span> <span class="nc">Array</span><span class="o">.</span><span class="n">fill</span><span class="o">[</span><span class="kt">Int</span><span class="o">](</span><span class="nc">CSA</span><span class="o">.</span><span class="nc">MaxStations</span><span class="o">)(</span><span class="nc">Int</span><span class="o">.</span><span class="nc">MaxValue</span><span class="o">)</span>
 <span class="k">val</span> <span class="n">earliestArrival</span> <span class="k">=</span> <span class="nc">Array</span><span class="o">.</span><span class="n">fill</span><span class="o">[</span><span class="kt">Int</span><span class="o">](</span><span class="nc">CSA</span><span class="o">.</span><span class="nc">MaxStations</span><span class="o">)(</span><span class="nc">Int</span><span class="o">.</span><span class="nc">MaxValue</span><span class="o">)</span>
@@ -525,8 +525,8 @@ $ grep <span class="m">1364288</span> routes.txt
 </pre></div>
 
 
-<h4>Calcul du trajet</h4>
-<h5>Vue macroscopique</h5>
+<h3>Calcul du trajet</h3>
+<h4>Vue macroscopique</h4>
 <p>On retrouve les deux étapes du calcul dans la méthode <code>compute</code> :</p>
 <ul>
 <li>la première qui parcourt les connexions et détermine l'heure d'arrivée optimale pour chaque station (<code>scanTimetable</code>) ;</li>
@@ -544,7 +544,7 @@ $ grep <span class="m">1364288</span> routes.txt
 </pre></div>
 
 
-<h5>Parcours de la table horaire</h5>
+<h4>Parcours de la table horaire</h4>
 <p>On utilise une fois de plus une récursion terminale.</p>
 <div class="highlight"><pre><span></span><span class="k">private</span> <span class="k">def</span> <span class="n">scanTimetable</span><span class="o">(</span><span class="n">arrivalStation</span><span class="k">:</span> <span class="kt">Int</span><span class="o">)</span><span class="k">:</span> <span class="kt">Unit</span> <span class="o">=</span> <span class="o">{</span>
   <span class="nd">@tailrec</span>
@@ -584,8 +584,8 @@ $ grep <span class="m">1364288</span> routes.txt
 </pre></div>
 
 
-<h5>Construction de l'itinéraire à partir de la table horaire</h5>
-<p>Une fois la table horaire <code>inConnection</code> calculée, on reconsitue l'itinéraire inversé en partant de la station d'arrivée et en remontant jusqu'à la station de départ.</p>
+<h4>Construction de l'itinéraire à partir de la table horaire</h4>
+<p>Une fois la table horaire <code>inConnection</code> calculée, on reconstitue l'itinéraire inversé en partant de la station d'arrivée et en remontant jusqu'à la station de départ.</p>
 <div class="highlight"><pre><span></span><span class="k">private</span> <span class="k">def</span> <span class="n">computeRoute</span><span class="o">(</span><span class="n">arrivalStation</span><span class="k">:</span> <span class="kt">Int</span><span class="o">)</span><span class="k">:</span> <span class="kt">Seq</span><span class="o">[</span><span class="kt">Connection</span><span class="o">]</span> <span class="k">=</span> <span class="o">{</span>
   <span class="n">inConnection</span><span class="o">(</span><span class="n">arrivalStation</span><span class="o">)</span> <span class="k">match</span> <span class="o">{</span>
     <span class="k">case</span> <span class="nc">Int</span><span class="o">.</span><span class="nc">MaxValue</span> <span class="k">=&gt;</span>
@@ -606,7 +606,7 @@ $ grep <span class="m">1364288</span> routes.txt
 
 
 <p>Ce cas est volontairement écrit en « Java++ » plutôt qu'en « bon Scala » par simplicité de lecture. Saurez-vous écrire le cas général en une ligne (ou deux) ?</p>
-<h4>Exemple</h4>
+<h3>Exemple</h3>
 <p>Partons d'un trajet entre Maubert-Mutualité et Voltaire en partant à 18h.</p>
 <div class="highlight"><pre><span></span><span class="k">val</span> <span class="n">maubert</span> <span class="k">=</span> <span class="mi">2350</span>
 <span class="k">val</span> <span class="n">voltaireLeonBlum</span> <span class="k">=</span> <span class="mi">1633</span>
@@ -640,7 +640,7 @@ $ grep <span class="m">1364288</span> routes.txt
 </pre></div>
 
 
-<h3>Conclusion</h3>
+<h2>Conclusion</h2>
 <p>En comparaison, l'<a href="https://fr.wikipedia.org/wiki/Algorithme_de_Dijkstra">algorithme de plus court chemin de Dijkstra</a> présente une complexité proportionnelle à <em>C.log(N)</em> où <em>N</em> est le nombre de stations et <em>C</em> le nombre de correspondances entre deux stations, soit environ <em>N.log(N)</em> dans notre évaluation, tout en occupant un espace mémoire de taille proportionnelle à <em>N</em>.</p>
 <p>Le métro parisien est constitué de 303 stations (<em>N = 303</em> et <em>N.log(N) = 752</em>) : on reste donc dans le même ordre de magnitude sur ces deux algorithmes au moment du calcul d'itinéraire. En revanche, le <em>Connexion scan algorithm</em> demande de pré-calculer la table horaire : il induit donc un coût préalable. Cette table pré-calculée le rend également moins souple : elle rend plus difficile le paramétrage de l'algorithme en fonction des préférences du voyageur. La facilité de marche du voyageur peut par exemple être utilisée pour pondérer la durée d'une correspondance :</p>
 <ul>

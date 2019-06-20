@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom"><title>Blog bloquant</title><link href="https://www.dericbourg.net/" rel="alternate"></link><link href="https://www.dericbourg.net/feeds/all.atom.xml" rel="self"></link><id>https://www.dericbourg.net/</id><updated>2015-12-10T00:00:00+01:00</updated><entry><title>Calcul d'itinéraire à partir des données RATP</title><link href="https://www.dericbourg.net/2015/12/10/calcul-ditineraire-a-partir-des-donnees-ratp/" rel="alternate"></link><published>2015-12-10T00:00:00+01:00</published><updated>2015-12-10T00:00:00+01:00</updated><author><name>Alban Dericbourg</name></author><id>tag:www.dericbourg.net,2015-12-10:/2015/12/10/calcul-ditineraire-a-partir-des-donnees-ratp/</id><summary type="html">&lt;p&gt;La RATP progresse dans l'&lt;a href="http://data.ratp.fr"&gt;ouverture de ses données&lt;/a&gt; et même si elle ne propose pas encore un accès à son &lt;a href="https://fr.wikipedia.org/wiki/Syst%C3%A8me_d'information_en_ligne"&gt;système SIEL&lt;/a&gt;, elle propose néanmoins les données de son offre de transport au &lt;a href="https://developers.google.com/transit/gtfs/"&gt;format GTFS&lt;/a&gt;. Une bonne occasion de s'initier au calcul d'itinéraire !&lt;/p&gt;
 &lt;p&gt;L'histoire et le contexte des calculs …&lt;/p&gt;</summary><content type="html">&lt;p&gt;La RATP progresse dans l'&lt;a href="http://data.ratp.fr"&gt;ouverture de ses données&lt;/a&gt; et même si elle ne propose pas encore un accès à son &lt;a href="https://fr.wikipedia.org/wiki/Syst%C3%A8me_d'information_en_ligne"&gt;système SIEL&lt;/a&gt;, elle propose néanmoins les données de son offre de transport au &lt;a href="https://developers.google.com/transit/gtfs/"&gt;format GTFS&lt;/a&gt;. Une bonne occasion de s'initier au calcul d'itinéraire !&lt;/p&gt;
 &lt;p&gt;L'histoire et le contexte des calculs d'itinéraires est très bien synthétisé par &lt;a href="https://twitter.com/tristramg"&gt;Tristram Gräbener&lt;/a&gt; dans son &lt;a href="http://blog.tristramg.eu/petit-historique-du-calcul-ditineraire.html"&gt;Petit historique du calcul d'itinéraire&lt;/a&gt;. Probablement plus hipster que je ne veux bien l'admettre, j'ai choisi d'utiliser le plus récent : le &lt;em&gt;&lt;a href="http://i11www.iti.uni-karlsruhe.de/extra/publications/dpsw-isftr-13.pdf"&gt;Connection Scan Algorithm&lt;/a&gt;&lt;/em&gt;.&lt;/p&gt;
-&lt;h3&gt;Connection scan algorithm&lt;/h3&gt;
+&lt;h2&gt;Connection scan algorithm&lt;/h2&gt;
 &lt;blockquote&gt;
 &lt;p&gt;Cette explication est largement inspirée de l'explication de l'algorithme du &lt;a href="https://github.com/captaintrain/csa-challenge/blob/master/readme.md"&gt;csa-challenge de CaptainTrain&lt;/a&gt;.&lt;/p&gt;
 &lt;/blockquote&gt;
@@ -16,7 +16,7 @@
 &lt;p&gt;La table horaire devient alors simplement une liste de ces connexions triées par heure de départ croissante.&lt;/p&gt;
 &lt;p&gt;Pour chaque station &lt;em&gt;s&lt;/em&gt;, on considère l'heure et la station d'arrivée. Si celles-ci sont optimales, on les conserve. Les stations étant identifiées par des entiers, on les conserve dans deux tableaux : &lt;code&gt;arrival_timestamp[s]&lt;/code&gt; et &lt;code&gt;in_connection[s]&lt;/code&gt;.&lt;/p&gt;
 &lt;p&gt;L'objectif est de se rendre d'un point de départ &lt;em&gt;o&lt;/em&gt; à un point d'arrivée &lt;em&gt;d&lt;/em&gt; en partant à l'heure &lt;em&gt;t0&lt;/em&gt;.&lt;/p&gt;
-&lt;h4&gt;Initialisation&lt;/h4&gt;
+&lt;h3&gt;Initialisation&lt;/h3&gt;
 &lt;p&gt;On initialise l'algorithme en attribuant une durée infinie au trajet vers tout point d'arrêt à l'exception de la gare de départ (on en part, on sait qu'on y est à &lt;em&gt;t0&lt;/em&gt;).&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;Pour&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;chaque&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;station&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
 &lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="n"&gt;arrival_timestamp&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="err"&gt;←&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;infinite&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
@@ -26,7 +26,7 @@
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;h4&gt;Boucle de calcul&lt;/h4&gt;
+&lt;h3&gt;Boucle de calcul&lt;/h3&gt;
 &lt;p&gt;On parcourt l'ensemble des connexions contenues dans la table et on considère l'amélioration qu'elle apporte sur le trajet. À la fin de la boucle, lorsque toutes les connexions on été parcourues, toutes les heures d'arrivée depuis &lt;em&gt;o&lt;/em&gt; vers une autre station ont été calculées.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;Pour&lt;/span&gt; &lt;span class="n"&gt;chaque&lt;/span&gt; &lt;span class="n"&gt;connexion&lt;/span&gt; &lt;span class="k"&gt;c&lt;/span&gt;
     &lt;span class="n"&gt;Si&lt;/span&gt; &lt;span class="n"&gt;arrival_timestamp&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="k"&gt;c&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;departure_station&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="err"&gt;≤&lt;/span&gt; &lt;span class="k"&gt;c&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;departure_timestamp&lt;/span&gt;
@@ -36,9 +36,9 @@
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;h4&gt;Résultat&lt;/h4&gt;
+&lt;h3&gt;Résultat&lt;/h3&gt;
 &lt;p&gt;Pour obtenir le résultat, on parcourt le tableau des stations d'arrivée (&lt;code&gt;in_connections&lt;/code&gt;) en partant de la destination &lt;em&gt;d&lt;/em&gt; jusqu'à retrouver le point de départ &lt;em&gt;o&lt;/em&gt;.&lt;/p&gt;
-&lt;h4&gt;Exemple&lt;/h4&gt;
+&lt;h3&gt;Exemple&lt;/h3&gt;
 &lt;p&gt;Prenons un exemple sur une ligne fictive :&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;         &lt;span class="c1"&gt;-----o C&lt;/span&gt;
        &lt;span class="o"&gt;/&lt;/span&gt;
@@ -134,17 +134,17 @@
 &lt;li&gt;(B, C, 3, 4)&lt;/li&gt;
 &lt;/ol&gt;
 &lt;p&gt;L'algorithme nous a donc permis de déterminer le trajet pour aller de A à C en partant à l'heure 2 ainsi que l'heure d'arrivée.&lt;/p&gt;
-&lt;h4&gt;Analyse&lt;/h4&gt;
+&lt;h3&gt;Analyse&lt;/h3&gt;
 &lt;p&gt;Cet algorithme présente l'avantage de s'exécuter en un temps proportionnel au nombre de connexions en occupant un espace mémoire lui aussi proportionnel au nombre de connexions. Dans le cas du métro parisien, on peut évaluer que le nombre de correspondances est du même ordre de grandeur que le nombre &lt;em&gt;N&lt;/em&gt; de stations. Cela revient à avoir :&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;environ &lt;em&gt;N&lt;/em&gt; connexions entre stations d'une même ligne (le chiffre est légèrement faussé par la présence de lignes en « fourche ») ;&lt;/li&gt;
 &lt;li&gt;environ &lt;em&gt;2N&lt;/em&gt; connexions issues des correspondances (une connexion dans un sens, une connexion dans l'autre).&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;L'algorithme a donc une complexité proportionnelle au nombre de stations.&lt;/p&gt;
-&lt;h3&gt;Exploitation des données de la RATP&lt;/h3&gt;
-&lt;h4&gt;Format GTFS&lt;/h4&gt;
+&lt;h2&gt;Exploitation des données de la RATP&lt;/h2&gt;
+&lt;h3&gt;Format GTFS&lt;/h3&gt;
 &lt;p&gt;Le format GTFS est un standard et la RATP se conforme à ce standard, simple et bien documenté. Les données sont réparties sur plusieurs fichiers dont nous n'en retiendrons que certains dans cet article.&lt;/p&gt;
-&lt;h5&gt;routes.txt&lt;/h5&gt;
+&lt;h4&gt;routes.txt&lt;/h4&gt;
 &lt;p&gt;Le fichier décrit le nom et la direction des routes. Une route est assimilable à un trajet (origine - destination).&lt;/p&gt;
 &lt;p&gt;Prenons l'exemple de la ligne 13 du métro parisien dont le plan simplifié est représenté sur la figure ci-dessous. Cette ligne est parcourue par quatre routes :&lt;/p&gt;
 &lt;ul&gt;
@@ -163,7 +163,7 @@
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;h5&gt;stops.txt&lt;/h5&gt;
+&lt;h4&gt;stops.txt&lt;/h4&gt;
 &lt;p&gt;Ce fichier liste les arrêts avec, éventuellement, quelques informations complémentaires. La RATP fournit l'adresse la plus proche de l'arrêt ainsi que les coordonnées GPS de son centre (dans le cas d'une station qui dispose de plusieurs sorties). À noter que ce fichier n'est pas ordonné selon le sens de parcours des courses sur la ligne.&lt;/p&gt;
 &lt;blockquote&gt;
 &lt;p&gt;Une &lt;strong&gt;mission&lt;/strong&gt; est un trajet parcouru par un ensemble de trains. Elle est décrite par :
@@ -183,7 +183,7 @@ Lorsqu'un train suit une mission, il réalise une &lt;strong&gt;course&lt;/stron
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;h5&gt;trips.txt&lt;/h5&gt;
+&lt;h4&gt;trips.txt&lt;/h4&gt;
 &lt;p&gt;Ce fichier liste les courses et les associe à une route. Nous reviendrons sur son utilité en observant les horaires d'arrêt.&lt;/p&gt;
 &lt;p&gt;Exemple sur la ligne 13 :&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;route_id&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;service_id&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;trip_id&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;trip_headsign&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;trip_short_name&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;direction_id&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;shape_id&lt;/span&gt;
@@ -194,7 +194,7 @@ Lorsqu'un train suit une mission, il réalise une &lt;strong&gt;course&lt;/stron
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;h5&gt;stops_times.txt&lt;/h5&gt;
+&lt;h4&gt;stops_times.txt&lt;/h4&gt;
 &lt;p&gt;Ce fichier présente les horaires des courses aux stations (points d'arrêt). Ce fichier est trié par course et par heure d'arrêt en station.&lt;/p&gt;
 &lt;p&gt;Un détail est à noter quant aux horaires : ceux-ci sont fournis pour la journée qui peut se terminer... le lendemain. Un métro circulant le dimanche à 1h du matin sera en réalité rattaché à la journée du samedi. Ainsi, son horaire ne sera pas « à 1h le dimanche » mais « à 25h le samedi ». Bien que cette astuce puisse sembler tordue, elle simplifie en pratique beaucoup de choses, notamment pour maintenir la continuité des courses : il serait absurde de scinder la course d'un train sous prétexte qu'il roule à cheval sur deux jours calendaires.&lt;/p&gt;
 &lt;p&gt;Exemple pour la ligne 13 :&lt;/p&gt;
@@ -206,7 +206,7 @@ Lorsqu'un train suit une mission, il réalise une &lt;strong&gt;course&lt;/stron
 
 
 &lt;p&gt;Dans cet exemple, pour la course présentée, le véhicule s'arrête à 19:38:00 à l'arrêt 1969 (Châtillon - Montrouge) et en repart à la même heure. On en déduira qu'on ne prend vraisemblabement pas en compte le temps d'arrêt en station. Il arrive ensuite à la station 1880 (Malakoff - Rue Etienne Dolet) à 19:40:00, puis à la station 1879 (Malakoff - Plateau de Vanves) à 19:41:00, etc.&lt;/p&gt;
-&lt;h5&gt;transfers.txt&lt;/h5&gt;
+&lt;h4&gt;transfers.txt&lt;/h4&gt;
 &lt;p&gt;&lt;code&gt;transfers.txt&lt;/code&gt; regroupe les correspondances entre plusieurs points d'arrêt.&lt;/p&gt;
 &lt;p&gt;Ce fichier n'étant pas compréhensible par un humain, prenons un exemple et déroulons-le :&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;from_stop_id&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;to_stop_id&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;transfer_type&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;min_transfer_time&lt;/span&gt;
@@ -246,7 +246,7 @@ $ grep &lt;span class="m"&gt;1364288&lt;/span&gt; routes.txt
 
 
 &lt;p&gt;Il s'agit donc du &lt;a href="http://www.ratp.fr/informer/pdf/orienter/f_horaire.php?fm=gif&amp;amp;loc=noctilien&amp;amp;nompdf=n44"&gt;Noctilien N44&lt;/a&gt; qui passe effectivement par « Mairie de Saint-Ouen ». La boucle est bouclée.&lt;/p&gt;
-&lt;h4&gt;Parsing des fichiers GTFS&lt;/h4&gt;
+&lt;h3&gt;Parsing des fichiers GTFS&lt;/h3&gt;
 &lt;p&gt;Les fichiers GTFS, bien que portant l'extension &lt;code&gt;.txt&lt;/code&gt; sont manipulables comme des fichiers CSV. Dans la suite, on utilisera des structures qui sont (presque) calquées sur le format de ces fichiers. Sur le principe, leur parsing est immédiat. Prenons par exemple le cas des routes (on utilise ici &lt;a href="https://github.com/tototoshi/scala-csv"&gt;scala-csv&lt;/a&gt;) :&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;com.github.tototoshi.csv._&lt;/span&gt;
 
@@ -305,7 +305,7 @@ $ grep &lt;span class="m"&gt;1364288&lt;/span&gt; routes.txt
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;h4&gt;Construction de la table horaire&lt;/h4&gt;
+&lt;h3&gt;Construction de la table horaire&lt;/h3&gt;
 &lt;p&gt;La table horaire est, comme nous l'avons vu, une séquence de connexions modélisées par des quadruplets contenants chacun la station de départ, la station d'arrivée, l'heure de départ et l'heure d'arrivée.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;case&lt;/span&gt; &lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;Timetable&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;connections&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;Seq&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="kt"&gt;Connection&lt;/span&gt;&lt;span class="o"&gt;])&lt;/span&gt;
 &lt;span class="k"&gt;case&lt;/span&gt; &lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;Connection&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;
@@ -322,7 +322,7 @@ $ grep &lt;span class="m"&gt;1364288&lt;/span&gt; routes.txt
 &lt;li&gt;en ingérant les connexions issues des courses (successions de points d'arrêts sur une même ligne) ;&lt;/li&gt;
 &lt;li&gt;en ingérant les connexions issues des correspondances (« ponts » entre les courses).&lt;/li&gt;
 &lt;/ol&gt;
-&lt;h5&gt;Connexions issues des courses&lt;/h5&gt;
+&lt;h4&gt;Connexions issues des courses&lt;/h4&gt;
 &lt;p&gt;On ingère les horaires des courses en les groupant par... course et en prenant soin de ne pas « mélanger » les horaires de deux courses. Prenons l'exemple ci-dessous : les ceux courses fréquentent la même ligne mais ne s'arrêtent pas aux mêmes arrêts. Il n'y a pas de correspondance entre les deux.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt; &lt;span class="n"&gt;Course&lt;/span&gt; &lt;span class="n"&gt;I&lt;/span&gt; &lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;A&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;t1&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="c1"&gt;--------------------&amp;gt; B (t3)&lt;/span&gt;
 &lt;span class="n"&gt;Course&lt;/span&gt; &lt;span class="n"&gt;II&lt;/span&gt; &lt;span class="p"&gt;:&lt;/span&gt;               &lt;span class="k"&gt;C&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;t2&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="c1"&gt;--------------------&amp;gt; D (t4)&lt;/span&gt;
@@ -375,7 +375,7 @@ $ grep &lt;span class="m"&gt;1364288&lt;/span&gt; routes.txt
 
 
 &lt;p&gt;Dans cet exemple de code, la fonction &lt;code&gt;durationToTimestamp&lt;/code&gt; retourne un timestamp correspondant à l'heure effective pour la journée en cours à partir de l'heure seule fournie dans les données. Par exemple, le 01/01/2016, la durée &lt;code&gt;19h32min27s&lt;/code&gt; permettra d'obtenir le timestamp équivalent à &lt;code&gt;2016-01-01T19:32:27.0Z&lt;/code&gt;.&lt;/p&gt;
-&lt;h5&gt;Connexions issues des correspondances&lt;/h5&gt;
+&lt;h4&gt;Connexions issues des correspondances&lt;/h4&gt;
 &lt;p&gt;Le fichier &lt;code&gt;transfers.txt&lt;/code&gt; nous donne les correspondances disponibles sur une ligne. L'objectif de cette étape est :&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;de ne conserver que les correspondances de notre réseau (dans cet exemple, nous ne travaillons pas sur les bus, nous les éliminons donc) ;&lt;/li&gt;
@@ -430,7 +430,7 @@ $ grep &lt;span class="m"&gt;1364288&lt;/span&gt; routes.txt
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;h5&gt;Fusion des deux tables horaires&lt;/h5&gt;
+&lt;h4&gt;Fusion des deux tables horaires&lt;/h4&gt;
 &lt;p&gt;On a construit jusqu'ici deux tables horaires :&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;l'une issue des horaires des trains en station ;&lt;/li&gt;
@@ -449,9 +449,9 @@ $ grep &lt;span class="m"&gt;1364288&lt;/span&gt; routes.txt
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;h3&gt;Implémentation de l'algorithme&lt;/h3&gt;
+&lt;h2&gt;Implémentation de l'algorithme&lt;/h2&gt;
 &lt;p&gt;Je propose ici une implémentation en Scala qui pourrait probablement être (largement, rien que par sa mutabilité) améliorée. Partons toujours de là.&lt;/p&gt;
-&lt;h4&gt;API&lt;/h4&gt;
+&lt;h3&gt;API&lt;/h3&gt;
 &lt;p&gt;Cette implémentation est paramétrée par :&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;la table horaire ;&lt;/li&gt;
@@ -470,7 +470,7 @@ $ grep &lt;span class="m"&gt;1364288&lt;/span&gt; routes.txt
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;h4&gt;Initialisation&lt;/h4&gt;
+&lt;h3&gt;Initialisation&lt;/h3&gt;
 &lt;p&gt;On initialise les tableaux avec une valeur « virtuellement infinie » (valeur maximale qu'un entier peut représenter) à l'exception de l'heure d'arrivée optimale à la station de départ... puisque cette valeur est connue.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;val&lt;/span&gt; &lt;span class="n"&gt;inConnection&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="nc"&gt;Array&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;fill&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="kt"&gt;Int&lt;/span&gt;&lt;span class="o"&gt;](&lt;/span&gt;&lt;span class="nc"&gt;CSA&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="nc"&gt;MaxStations&lt;/span&gt;&lt;span class="o"&gt;)(&lt;/span&gt;&lt;span class="nc"&gt;Int&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="nc"&gt;MaxValue&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
 &lt;span class="k"&gt;val&lt;/span&gt; &lt;span class="n"&gt;earliestArrival&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="nc"&gt;Array&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;fill&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="kt"&gt;Int&lt;/span&gt;&lt;span class="o"&gt;](&lt;/span&gt;&lt;span class="nc"&gt;CSA&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="nc"&gt;MaxStations&lt;/span&gt;&lt;span class="o"&gt;)(&lt;/span&gt;&lt;span class="nc"&gt;Int&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="nc"&gt;MaxValue&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
@@ -482,8 +482,8 @@ $ grep &lt;span class="m"&gt;1364288&lt;/span&gt; routes.txt
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;h4&gt;Calcul du trajet&lt;/h4&gt;
-&lt;h5&gt;Vue macroscopique&lt;/h5&gt;
+&lt;h3&gt;Calcul du trajet&lt;/h3&gt;
+&lt;h4&gt;Vue macroscopique&lt;/h4&gt;
 &lt;p&gt;On retrouve les deux étapes du calcul dans la méthode &lt;code&gt;compute&lt;/code&gt; :&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;la première qui parcourt les connexions et détermine l'heure d'arrivée optimale pour chaque station (&lt;code&gt;scanTimetable&lt;/code&gt;) ;&lt;/li&gt;
@@ -501,7 +501,7 @@ $ grep &lt;span class="m"&gt;1364288&lt;/span&gt; routes.txt
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;h5&gt;Parcours de la table horaire&lt;/h5&gt;
+&lt;h4&gt;Parcours de la table horaire&lt;/h4&gt;
 &lt;p&gt;On utilise une fois de plus une récursion terminale.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;private&lt;/span&gt; &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="n"&gt;scanTimetable&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;arrivalStation&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;Int&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;Unit&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
   &lt;span class="nd"&gt;@tailrec&lt;/span&gt;
@@ -541,8 +541,8 @@ $ grep &lt;span class="m"&gt;1364288&lt;/span&gt; routes.txt
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;h5&gt;Construction de l'itinéraire à partir de la table horaire&lt;/h5&gt;
-&lt;p&gt;Une fois la table horaire &lt;code&gt;inConnection&lt;/code&gt; calculée, on reconsitue l'itinéraire inversé en partant de la station d'arrivée et en remontant jusqu'à la station de départ.&lt;/p&gt;
+&lt;h4&gt;Construction de l'itinéraire à partir de la table horaire&lt;/h4&gt;
+&lt;p&gt;Une fois la table horaire &lt;code&gt;inConnection&lt;/code&gt; calculée, on reconstitue l'itinéraire inversé en partant de la station d'arrivée et en remontant jusqu'à la station de départ.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;private&lt;/span&gt; &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="n"&gt;computeRoute&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;arrivalStation&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;Int&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;Seq&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="kt"&gt;Connection&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
   &lt;span class="n"&gt;inConnection&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;arrivalStation&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt; &lt;span class="k"&gt;match&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
     &lt;span class="k"&gt;case&lt;/span&gt; &lt;span class="nc"&gt;Int&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="nc"&gt;MaxValue&lt;/span&gt; &lt;span class="k"&gt;=&amp;gt;&lt;/span&gt;
@@ -563,7 +563,7 @@ $ grep &lt;span class="m"&gt;1364288&lt;/span&gt; routes.txt
 
 
 &lt;p&gt;Ce cas est volontairement écrit en « Java++ » plutôt qu'en « bon Scala » par simplicité de lecture. Saurez-vous écrire le cas général en une ligne (ou deux) ?&lt;/p&gt;
-&lt;h4&gt;Exemple&lt;/h4&gt;
+&lt;h3&gt;Exemple&lt;/h3&gt;
 &lt;p&gt;Partons d'un trajet entre Maubert-Mutualité et Voltaire en partant à 18h.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;val&lt;/span&gt; &lt;span class="n"&gt;maubert&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;2350&lt;/span&gt;
 &lt;span class="k"&gt;val&lt;/span&gt; &lt;span class="n"&gt;voltaireLeonBlum&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;1633&lt;/span&gt;
@@ -597,7 +597,7 @@ $ grep &lt;span class="m"&gt;1364288&lt;/span&gt; routes.txt
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;h3&gt;Conclusion&lt;/h3&gt;
+&lt;h2&gt;Conclusion&lt;/h2&gt;
 &lt;p&gt;En comparaison, l'&lt;a href="https://fr.wikipedia.org/wiki/Algorithme_de_Dijkstra"&gt;algorithme de plus court chemin de Dijkstra&lt;/a&gt; présente une complexité proportionnelle à &lt;em&gt;C.log(N)&lt;/em&gt; où &lt;em&gt;N&lt;/em&gt; est le nombre de stations et &lt;em&gt;C&lt;/em&gt; le nombre de correspondances entre deux stations, soit environ &lt;em&gt;N.log(N)&lt;/em&gt; dans notre évaluation, tout en occupant un espace mémoire de taille proportionnelle à &lt;em&gt;N&lt;/em&gt;.&lt;/p&gt;
 &lt;p&gt;Le métro parisien est constitué de 303 stations (&lt;em&gt;N = 303&lt;/em&gt; et &lt;em&gt;N.log(N) = 752&lt;/em&gt;) : on reste donc dans le même ordre de magnitude sur ces deux algorithmes au moment du calcul d'itinéraire. En revanche, le &lt;em&gt;Connexion scan algorithm&lt;/em&gt; demande de pré-calculer la table horaire : il induit donc un coût préalable. Cette table pré-calculée le rend également moins souple : elle rend plus difficile le paramétrage de l'algorithme en fonction des préférences du voyageur. La facilité de marche du voyageur peut par exemple être utilisée pour pondérer la durée d'une correspondance :&lt;/p&gt;
 &lt;ul&gt;
@@ -606,9 +606,9 @@ $ grep &lt;span class="m"&gt;1364288&lt;/span&gt; routes.txt
 &lt;/ul&gt;
 &lt;p&gt;Si le CSA est plus simple à implémenter, il l'est au détriment de la souplesse en première approche. Il est cependant possible de typer les connexions de correspondance pour leur attribuer différentes heures d'arrivée en fonction de la vélocité pédestre du voyageur.&lt;/p&gt;
 &lt;p&gt;Enfin, si cet exemple a été mené sur le réseau ferré RATP d'Île de France, son extension au réseau de bus (347 lignes) n'est pas viable : la table horaire devient trop volumineuse pour tenir en mémoire et les performances s'en ressentent. Mon intuition est que cet algorithme est très pertinent sur de « petites » tables horaires (jusqu'à quelques centaines de stations). Dès que le réseau grossit, en revanche, il est préférable de chercher un autre algorithme moins gourmand en mémoire et en pré-calcul.&lt;/p&gt;</content><category term="opendata"></category><category term="ratp"></category><category term="gtfs"></category><category term="scala"></category></entry><entry><title>Gestion des accès concurrents sur un cache de DAO</title><link href="https://www.dericbourg.net/2015/11/07/gestion-des-acces-concurrents-sur-un-cache-de-dao/" rel="alternate"></link><published>2015-11-07T00:00:00+01:00</published><updated>2015-11-07T00:00:00+01:00</updated><author><name>Alban Dericbourg</name></author><id>tag:www.dericbourg.net,2015-11-07:/2015/11/07/gestion-des-acces-concurrents-sur-un-cache-de-dao/</id><summary type="html">&lt;p&gt;L'ajout d'un cache sur un DAO est une opération courante et la bibliothèque Guava, très répandue, a par ailleurs énormément simplifié sa mise en œuvre. Néanmoins, il reste encore extrêmement facile de se tromper avec cette bibliothèque et... de réaliser un cache qui ne fonctionne pas.&lt;/p&gt;
-&lt;h3&gt;Contexte&lt;/h3&gt;
+&lt;h2&gt;Contexte&lt;/h2&gt;
 &lt;p&gt;Partons d'une interface …&lt;/p&gt;</summary><content type="html">&lt;p&gt;L'ajout d'un cache sur un DAO est une opération courante et la bibliothèque Guava, très répandue, a par ailleurs énormément simplifié sa mise en œuvre. Néanmoins, il reste encore extrêmement facile de se tromper avec cette bibliothèque et... de réaliser un cache qui ne fonctionne pas.&lt;/p&gt;
-&lt;h3&gt;Contexte&lt;/h3&gt;
+&lt;h2&gt;Contexte&lt;/h2&gt;
 &lt;p&gt;Partons d'une interface de DAO « classique » permettant de réaliser les opérations &lt;em&gt;CRUD&lt;/em&gt;. On y ajoute une méthode &lt;code&gt;getAll&lt;/code&gt; qui retourne l'intégralité des objets (vous allez voir, c'est pour votre bien).&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kd"&gt;public&lt;/span&gt; &lt;span class="kd"&gt;interface&lt;/span&gt; &lt;span class="nc"&gt;Dao&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
   &lt;span class="n"&gt;Optional&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="n"&gt;MyObject&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="nf"&gt;get&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;String&lt;/span&gt; &lt;span class="n"&gt;id&lt;/span&gt;&lt;span class="o"&gt;);&lt;/span&gt;
@@ -620,7 +620,7 @@ $ grep &lt;span class="m"&gt;1364288&lt;/span&gt; routes.txt
 
 
 &lt;p&gt;Sans accorder d'importance à l'implémentation du DAO accédant effectivement aux données persistées, contentons-nous de supposer que ses performances ne sont pas suffisantes pour répondre aux sollicitations auxquelles est soumise notre application.&lt;/p&gt;
-&lt;h3&gt;Cache des données&lt;/h3&gt;
+&lt;h2&gt;Cache des données&lt;/h2&gt;
 &lt;p&gt;On se propose d'utiliser &lt;a href="https://github.com/google/guava"&gt;Guava&lt;/a&gt; pour implémenter ce cache. On utilise dans cet exemple un &lt;a href="https://github.com/google/guava/wiki/CachesExplained"&gt;&lt;code&gt;LoadingCache&lt;/code&gt;&lt;/a&gt; qui ira chercher en base la donnée s'il n'a pas déjà été sollicité pour celle-ci : on charge les valeurs une à une à la demande. Il permet également de rafraîchir les données automatiquement à intervalle régulier.&lt;/p&gt;
 &lt;p&gt;L'encapsulation des données de cache dans des &lt;code&gt;Optional&lt;/code&gt; est un parti pris. Deux choix étaient possibles :&lt;/p&gt;
 &lt;ul&gt;
@@ -638,7 +638,7 @@ $ grep &lt;span class="m"&gt;1364288&lt;/span&gt; routes.txt
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;h3&gt;Implémentation naïve (et fausse)&lt;/h3&gt;
+&lt;h2&gt;Implémentation naïve (et fausse)&lt;/h2&gt;
 &lt;p&gt;En première approche, on peut supposer qu'il « suffit » de mettre à jour le cache pour chaque opération d'écriture sur la base de données. Une implémentation dans cette optique ressemblerait à ceci.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kd"&gt;public&lt;/span&gt; &lt;span class="kd"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;CachedDao&lt;/span&gt; &lt;span class="kd"&gt;implements&lt;/span&gt; &lt;span class="n"&gt;Dao&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
 
@@ -695,7 +695,7 @@ $ grep &lt;span class="m"&gt;1364288&lt;/span&gt; routes.txt
 &lt;p&gt;Pourquoi cette implémentation ne fonctionne pas ?&lt;/p&gt;
 &lt;p&gt;Dans le cas de multiples appels concurrents, des interruptions peuvent avoir lieu à tout moment. L'appel à &lt;code&gt;delete&lt;/code&gt; peut être interrompu entre la mise à jour de la base (&lt;code&gt;dbDao.delete(id)&lt;/code&gt;) et le rafraîchissement du cache (&lt;code&gt;cache.refresh(id)&lt;/code&gt;). Si cette interruption se fait à la faveur d'une lecture (&lt;code&gt;get&lt;/code&gt;), cette dernière se fera sur un cache qui n'est pas encore mise à jour et donc renverra une donnée « périmée ». Rien ne dit qu'il est impératif de récupérer la dernière version de la donnée : suivant votre application, cela peut être acceptable.&lt;/p&gt;
 &lt;p&gt;Mais alors, pire : supposons qu'un appel à &lt;code&gt;getAll&lt;/code&gt; provoque une interruption pendant un rafraîchissement du cache, au milieu de la boucle de rechargement de la méthode &lt;code&gt;initCache&lt;/code&gt;. On retourne alors une version incohérente (partielle) des données. Cette situation n'est, elle, pas acceptable.&lt;/p&gt;
-&lt;h3&gt;Le problème des lecteurs et des rédacteurs&lt;/h3&gt;
+&lt;h2&gt;Le problème des lecteurs et des rédacteurs&lt;/h2&gt;
 &lt;p&gt;Le cas de figure dans lequel nous nous trouvons correspond à un problème bien connu formulé par Edsger Dijkstra pour modéliser... les accès aux bases de données. Ceux-ci sont soumis à deux contraintes :&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;plusieurs lecteurs doivent pouvoir lire dans la base simultanément ;&lt;/li&gt;
@@ -779,7 +779,7 @@ $ grep &lt;span class="m"&gt;1364288&lt;/span&gt; routes.txt
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;h3&gt;Implémentation « sûre »&lt;/h3&gt;
+&lt;h2&gt;Implémentation « sûre »&lt;/h2&gt;
 &lt;p&gt;Nous pouvons réutiliser notre implémentation naïve : si elle n'était pas sûre, son intention restait valable. Pour l'adapter, on ajoute :&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;des verrous en lecture sur les méthodes de lecture ;&lt;/li&gt;
@@ -787,7 +787,7 @@ $ grep &lt;span class="m"&gt;1364288&lt;/span&gt; routes.txt
 &lt;li&gt;et... c'est tout.&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;Il est en revanche nécessaire de « protéger » la libération des verrous. Si un traitement se passe mal — si par exemple si une exception est lancée — le verrou doit malgré tout être libéré. On encapsulera donc tout le code des sections critiques dans un bloc &lt;code&gt;try&lt;/code&gt; / &lt;code&gt;finally&lt;/code&gt;.&lt;/p&gt;
-&lt;p&gt;Le code n'ayant pas changé pa rapport à la première version n'est pas représenté.&lt;/p&gt;
+&lt;p&gt;Le code n'ayant pas changé par rapport à la première version n'est pas représenté.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;java.util.concurrent.locks.ReadWriteLock&lt;/span&gt;&lt;span class="o"&gt;;&lt;/span&gt;
 &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;java.util.concurrent.locks.ReentrantReadWriteLock&lt;/span&gt;&lt;span class="o"&gt;;&lt;/span&gt;
 
@@ -874,11 +874,11 @@ $ grep &lt;span class="m"&gt;1364288&lt;/span&gt; routes.txt
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;h3&gt;Pour aller plus loin&lt;/h3&gt;
+&lt;h2&gt;Pour aller plus loin&lt;/h2&gt;
 &lt;p&gt;Le DAO présenté ici est « sûr » dans la mesure où il garantit la cohérence avec la base des données retournées. En revanche, pour cela, un compromis sur les performances a du être fait. En effet, cette implémentation ne permet pas d'écritures simultanées : la modification de deux objets distincts n'est pas possible.&lt;/p&gt;
 &lt;p&gt;Peut-on faire mieux ? Si vous pensez que oui, quelle serait votre approche ?&lt;/p&gt;</content><category term="java"></category><category term="guava"></category><category term="cache"></category><category term="dao"></category><category term="verrou"></category><category term="concurrence"></category></entry><entry><title>Problème des huit reines</title><link href="https://www.dericbourg.net/2015/08/11/probleme-des-huit-reines/" rel="alternate"></link><published>2015-08-11T00:00:00+02:00</published><updated>2015-08-11T00:00:00+02:00</updated><author><name>Alban Dericbourg</name></author><id>tag:www.dericbourg.net,2015-08-11:/2015/08/11/probleme-des-huit-reines/</id><summary type="html">&lt;p&gt;J'ai rencontré le &lt;a href="https://fr.wikipedia.org/wiki/Probl%C3%A8me_des_huit_dames"&gt;problème des huits reines&lt;/a&gt; lors d'un entretien d'embauche. Sans juger de la pertinence de cet exercice dans ce cadre (indépendamment du fait que j'aie lamentablement et honteusement échoué), la période estivale, propice à la détente, m'a incité à pousser le jeu plus en avant (mon orgueil a …&lt;/p&gt;</summary><content type="html">&lt;p&gt;J'ai rencontré le &lt;a href="https://fr.wikipedia.org/wiki/Probl%C3%A8me_des_huit_dames"&gt;problème des huits reines&lt;/a&gt; lors d'un entretien d'embauche. Sans juger de la pertinence de cet exercice dans ce cadre (indépendamment du fait que j'aie lamentablement et honteusement échoué), la période estivale, propice à la détente, m'a incité à pousser le jeu plus en avant (mon orgueil a probablement contribué lui aussi).
 Le problème consiste à compter et identifier les différentes façons de placer sur un échiquier de 64 cases 8 reines de façon à ce que, relativement aux règles des échecs, elles ne se menacent pas mutuellement. Une reine peut se déplacer de façon rectiligne d'un nombre de cases arbitraire dans toutes les directions ; lorsqu'une reine est placée, la ligne, la colonne et les diagonales sur lesquelles elle se situe sont donc « condamnées ».&lt;/p&gt;
-&lt;h3&gt;Modélisation&lt;/h3&gt;
+&lt;h2&gt;Modélisation&lt;/h2&gt;
 &lt;p&gt;On ne peut pas placer plusieurs reines sur une même ligne. On peut donc simplifier la modélisation en ne travaillant que sur les colonnes. Ainsi, on cherchera à ne retourner qu'un tableau d'index de colonne, chacun de ces index correspondant à la ligne de son propre index dans le tableau. Pour illustrer, on produira en retour un tableau de la forme &lt;code&gt;[x, y, z]&lt;/code&gt; qui correspond en pratique aux coordonnées &lt;code&gt;(0, x)&lt;/code&gt;, &lt;code&gt;(1, y)&lt;/code&gt; et &lt;code&gt;(2, z)&lt;/code&gt; sur l'échiquier.&lt;/p&gt;
 &lt;p&gt;Représentons cette modélisation dans le cas de la résolution du problème avec huit reines.&lt;/p&gt;
 &lt;p&gt;&lt;img alt="Représentation de la modélisation" class="center" src="/images/eight_queens/modelisation.png"&gt;&lt;/p&gt;
@@ -898,9 +898,9 @@ Le problème consiste à compter et identifier les différentes façons de place
 &lt;/ul&gt;
 &lt;p&gt;Ainsi, les solutions, lorsqu'elles existent, forment un sous-ensemble des permutations de {1 ; 2 ; ... ; &lt;em&gt;n&lt;/em&gt; - 1} (où &lt;em&gt;n&lt;/em&gt; est le nombre de reines et la dimension de l'échiquier).&lt;/p&gt;
 &lt;p&gt;&lt;img alt="Représentation de la modélisation" class="center" src="/images/eight_queens/diagonale.png"&gt;&lt;/p&gt;
-&lt;h3&gt;Approche naïve : examen de l'intégralité des permutations&lt;/h3&gt;
+&lt;h2&gt;Approche naïve : examen de l'intégralité des permutations&lt;/h2&gt;
 &lt;p&gt;Cette approche revient à essayer toutes les combinaisons de placement des reines et de retenir celles pour lesquelles toutes les reines sont en sécurité. Compte tenu du fait que deux reines ne peuvent être sur la même colonne, la solution est une permutation de la suite d'entiers de 0 à &lt;em&gt;n&lt;/em&gt; - 1.&lt;/p&gt;
-&lt;h4&gt;Génération des permutations&lt;/h4&gt;
+&lt;h3&gt;Génération des permutations&lt;/h3&gt;
 &lt;p&gt;Il est possible de déterminer toutes les permutations possibles d'un tableau en utilisant — par exemple — l'&lt;a href="https://en.wikipedia.org/wiki/Heap%27s_algorithm"&gt;algorithme de Heap&lt;/a&gt; qui minimise le nombre de mouvements nécessaires à l'obtention de l'intégralité des permutations. Une permutation est obtenue de la précédente en interchangeant la position de deux éléments (et seulement deux).&lt;/p&gt;
 &lt;p&gt;J'en propose une implémentation récursive : compte tenu des dimensions des tableaux de notre problème, cela reste raisonnable ; on ne risque pas le dépassement de la capacité de la pile d'exécution.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;permutations&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;array&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
@@ -955,7 +955,7 @@ Le problème consiste à compter et identifier les différentes façons de place
 
 
 &lt;p&gt;La fonction de la blbliothèque standard est bien plus performante que l'implémentation proposée ci-dessus (et heureusement). On utilisera donc celle-ci pour la résolution du problème : autant ne pas tendre le bâton pour se faire battre.&lt;/p&gt;
-&lt;h4&gt;Résolution&lt;/h4&gt;
+&lt;h3&gt;Résolution&lt;/h3&gt;
 &lt;p&gt;On a vu que l'ensemble des solutions était contenu dans l'ensemble des permutations de {1 ; 2 ; ... ; &lt;em&gt;n&lt;/em&gt; - 1}, soit l'ensemble des permutations de &lt;em&gt;n&lt;/em&gt; entiers distincts. De par cette modélisation :&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;puisqu'on ne peut pas mettre deux valeurs au même index d'un tableau, les reines ne peuvent pas être sur la même ligne ;&lt;/li&gt;
@@ -983,7 +983,7 @@ Le problème consiste à compter et identifier les différentes façons de place
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;h4&gt;Représentation des solutions&lt;/h4&gt;
+&lt;h3&gt;Représentation des solutions&lt;/h3&gt;
 &lt;p&gt;Il est toujours plus simple de vérifier les solutions en les visualisant. &lt;a href="https://en.wikipedia.org/wiki/Eight_queens_puzzle#Counting_solutions"&gt;Le nombre de solutions en fonction du nombre de reines étant connu&lt;/a&gt;, on ajoute le nombre de solutions trouvées pour faciliter la validation de l'algorithme.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;print_solutions&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;solutions&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;board_size&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
     &lt;span class="n"&gt;separator&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;+---&amp;#39;&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="n"&gt;board_size&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;+&amp;#39;&lt;/span&gt;
@@ -1034,13 +1034,13 @@ python brute-force.py  &lt;span class="m"&gt;0&lt;/span&gt;,06s user &lt;span cl
 
 
 &lt;p&gt;Pour cette dimension, c'est tout à fait acceptable et on pourrait s'en contenter. On pourrait... mais ça ne serait pas satisfaisant pour la curiosité !&lt;/p&gt;
-&lt;h3&gt;Seconde approche : algorithme de retour sur trace (&lt;em&gt;backtracking&lt;/em&gt;)&lt;/h3&gt;
+&lt;h2&gt;Seconde approche : algorithme de retour sur trace (&lt;em&gt;backtracking&lt;/em&gt;)&lt;/h2&gt;
 &lt;p&gt;Cette classe d'algorithmes parcourt toutes les possibilités en éliminant d'emblée toute solution partielle qui ne convient pas. Il permet donc d'éviter de n'avoir ne serait-ce qu'à considérer de nombreuses combinaisons : il est en ce sens plus économe que l'algorithme de force brute. La résolution du problème revient alors à un parcours de graphe.&lt;/p&gt;
-&lt;h4&gt;Exemple&lt;/h4&gt;
+&lt;h3&gt;Exemple&lt;/h3&gt;
 &lt;p&gt;Pour y voir plus clair, commençons par un exemple simple. On souhaite obtenir les combinaisons de nœuds permettant de former le mot « BLOG » en parcourant l'arbre. On continue de descendre dans l'arbre tant que la combinaison permet d'obtenir une solution (nœuds bleus). Dès que celle-ci ne le permet plus (nœud rouge), on ignore les branches suivantes (nœud gris).&lt;/p&gt;
 &lt;p&gt;Dans cet exemple, on n'obtient qu'une solution mais rien n'empêche d'en avoir plusieurs.&lt;/p&gt;
 &lt;p&gt;&lt;img alt="Exemple de backtracking" class="center" src="/images/eight_queens/backtracking.png"&gt;&lt;/p&gt;
-&lt;h4&gt;Résolution&lt;/h4&gt;
+&lt;h3&gt;Résolution&lt;/h3&gt;
 &lt;p&gt;On conserve la même modélisation : les &lt;em&gt;n&lt;/em&gt; reines sont réparties sur les &lt;em&gt;n&lt;/em&gt; lignes à raison d'une par ligne. On place les reines une par une tant que cela est possible. Si le placement d'une reine échoue — donc qu'il n'existe pas de position telle que la reine puisse être en sécurité, on remet en question les choix précédents afin de sortir du blocage. On revient alors à un point où des alternatives étaient possibles et on essaie la possibilité suivante.&lt;/p&gt;
 &lt;p&gt;L'arbre qui sera parcouru contient toutes les positions des reines, valides ou non. On a donc un arbre de la forme de la figure ci-dessous (tronqué, dans l'exemple de 4 reines et d'un échiquier de 16 cases).&lt;/p&gt;
 &lt;p&gt;&lt;img alt="Application du backtracking au problème" class="center" src="/images/eight_queens/backtracking_queens.png"&gt;&lt;/p&gt;
@@ -1070,15 +1070,15 @@ python brute-force.py  &lt;span class="m"&gt;0&lt;/span&gt;,06s user &lt;span cl
 
 
 &lt;p&gt;Pour mieux comprendre cet algorithme, il en existe une &lt;a href="https://www.cs.usfca.edu/~galles/visualization/RecQueens.html"&gt;version animée détaillant les étapes de la résolution&lt;/a&gt;.&lt;/p&gt;
-&lt;h3&gt;Troisième approche : programmation par contraintes&lt;/h3&gt;
-&lt;h4&gt;Principe&lt;/h4&gt;
+&lt;h2&gt;Troisième approche : programmation par contraintes&lt;/h2&gt;
+&lt;h3&gt;Principe&lt;/h3&gt;
 &lt;p&gt;Un problème de satisfaction de contraintes (ou CSP pour &lt;em&gt;Constraint Satisfaction Problem&lt;/em&gt;) désigne l'ensemble des problèmes définis par... des contraintes. La résolution consiste à chercher &lt;em&gt;une&lt;/em&gt; solution les respectant. Pour cela, on décrit un modèle définit par :&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;un ensemble de variables ;&lt;/li&gt;
 &lt;li&gt;un ensemble de contraintes régissant ces variables.&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;À partir de ce modèle, le système cherchera une solution et la proposera si elle existe. En revanche, il ne proposera qu'une seule solution : la résolution d'un problème par contraintes n'a pas vocation à chercher l'ensemble exhaustif des solutions.&lt;/p&gt;
-&lt;h4&gt;Implémentation&lt;/h4&gt;
+&lt;h3&gt;Implémentation&lt;/h3&gt;
 &lt;p&gt;En Python, la bibliothèque &lt;a href="http://numberjack.ucc.ie"&gt;Numberjack&lt;/a&gt; facilite la programmation par contraintes. Les auteurs fournissent d'ailleurs à titre d'exemple une &lt;a href="http://numberjack.ucc.ie/examples/nqueens"&gt;solution pour le problème des &lt;em&gt;n&lt;/em&gt; reines&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;Dans le cas générique des &lt;em&gt;n&lt;/em&gt; reines, on définit dans notre ensemble de variables les reines. Chacun d'elles est de type &lt;code&gt;Variable(n)&lt;/code&gt;, soit une variable dans un domaine compris entre 0 et &lt;em&gt;n&lt;/em&gt;. La contrainte &lt;code&gt;AllDiff&lt;/code&gt; impose à toutes les expressions qui lui sont passées d'êtres différentes. On impose donc :&lt;/p&gt;
 &lt;ul&gt;
@@ -1143,7 +1143,7 @@ python brute-force.py  &lt;span class="m"&gt;0&lt;/span&gt;,06s user &lt;span cl
 
 
 &lt;p&gt;Une mesure plus fine du temps d'exécution indique qu'il a fallu environ 20 millisecondes pour proposer cette solution (qui inclut le temps d'exécution total du programme Python).&lt;/p&gt;
-&lt;h3&gt;Comparaison des approches&lt;/h3&gt;
+&lt;h2&gt;Comparaison des approches&lt;/h2&gt;
 &lt;p&gt;On a vu trois méthodes différentes de résolution du problème. Parmi elles, seules deux fournissent l'intégralité des solutions et donc répondent réellement au problème. La résolution par force brute est probablement la plus lisible mais égalment la moins efficace. La solution par retour arrière est légèrement plus complexe mais sa durée de résolution, bien plus faible, la rend nettement plus avantageuse pour un « grand » échiquier.&lt;/p&gt;
 &lt;table class="table"&gt;
   &lt;caption&gt;Comparaison des algorithmes pour une résolution avec 8 reines sur un échiquier de 64 cases&lt;/caption&gt;
@@ -1178,26 +1178,26 @@ python brute-force.py  &lt;span class="m"&gt;0&lt;/span&gt;,06s user &lt;span cl
 &lt;p&gt;Dès 10 reines et un échiquier de 100 cases, l'algorithme de force brute n'est plus utilisable : il lui faut plusieurs dizaines de minutes pour fournir les solutions. La solution implémentant l'algorithme de &lt;em&gt;backtracking&lt;/em&gt;, elle, retourne les 14&amp;nbsp;200 solutions en moins de 10 secondes.&lt;/p&gt;
 &lt;p&gt;La résolution par contraintes, reste très performante lorsque le problème de complexifie : elle permet d'obtenir une solution en moins de 150&amp;nbsp;ms pour 200 reines et un échiquier de 40&amp;nbsp;000 cases. Bien qu'elle ne propose qu'une et une seule solution, elle peut s'avérer pertinente lorsqu'on ne cherche pas un résultat particulier. L'implémentation présentée ici monte ses limites en dépassant les 500 reines et les 250 000 cases.&lt;/p&gt;</content><category term="algorithmique"></category><category term="python"></category><category term="jeu"></category></entry><entry><title>Utiliser un Raspberry Pi comme point d'accès Wifi</title><link href="https://www.dericbourg.net/2015/07/04/utiliser-un-raspberry-pi-comme-point-dacces-wifi/" rel="alternate"></link><published>2015-07-04T00:00:00+02:00</published><updated>2015-07-04T00:00:00+02:00</updated><author><name>Alban Dericbourg</name></author><id>tag:www.dericbourg.net,2015-07-04:/2015/07/04/utiliser-un-raspberry-pi-comme-point-dacces-wifi/</id><summary type="html">&lt;p&gt;Dans cet article, nous verrons comment configurer un Raspberry Pi en tant que
 point d'accès Wifi.&lt;/p&gt;
-&lt;h3&gt;Pré-requis&lt;/h3&gt;
+&lt;h2&gt;Pré-requis&lt;/h2&gt;
 &lt;p&gt;Je supposerai que vous avez à disposition :&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;a href="https://www.raspberrypi.org/"&gt;Un Raspberry Pi&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;La distribution &lt;a href="https://www.raspbian.org/"&gt;Raspbian&lt;/a&gt; ou toute autre
-   distribution Linux&lt;/li&gt;
+  distribution Linux&lt;/li&gt;
 &lt;li&gt;Un &lt;em&gt;dongle&lt;/em&gt; Wifi (déjà installé et détecté)&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;Dans la suite, on considèrera que l'interface sans …&lt;/p&gt;</summary><content type="html">&lt;p&gt;Dans cet article, nous verrons comment configurer un Raspberry Pi en tant que
 point d'accès Wifi.&lt;/p&gt;
-&lt;h3&gt;Pré-requis&lt;/h3&gt;
+&lt;h2&gt;Pré-requis&lt;/h2&gt;
 &lt;p&gt;Je supposerai que vous avez à disposition :&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;a href="https://www.raspberrypi.org/"&gt;Un Raspberry Pi&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;La distribution &lt;a href="https://www.raspbian.org/"&gt;Raspbian&lt;/a&gt; ou toute autre
-   distribution Linux&lt;/li&gt;
+  distribution Linux&lt;/li&gt;
 &lt;li&gt;Un &lt;em&gt;dongle&lt;/em&gt; Wifi (déjà installé et détecté)&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;Dans la suite, on considèrera que l'interface sans fil est nommée &lt;code&gt;wlan0&lt;/code&gt;.&lt;/p&gt;
-&lt;h3&gt;Définition d'une adresse IP statique&lt;/h3&gt;
+&lt;h2&gt;Définition d'une adresse IP statique&lt;/h2&gt;
 &lt;p&gt;Dans le fichier &lt;code&gt;/etc/network/interfaces&lt;/code&gt;, supprimer les lignes suivantes :&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;iface&lt;/span&gt; &lt;span class="n"&gt;wlan0&lt;/span&gt; &lt;span class="n"&gt;inet&lt;/span&gt; &lt;span class="n"&gt;manual&lt;/span&gt;
 &lt;span class="n"&gt;wpa&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;roam&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;etc&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;wpa_supplicant&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;wpa_supplicant&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;conf&lt;/span&gt;
@@ -1217,7 +1217,7 @@ point d'accès Wifi.&lt;/p&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;h3&gt;Installation d'un serveur DHCP&lt;/h3&gt;
+&lt;h2&gt;Installation d'un serveur DHCP&lt;/h2&gt;
 &lt;p&gt;Le serveur DHCP permet d'attribuer automatiquement une adresse IP aux machines
 qui se connecteront à votre réseau Wifi.&lt;/p&gt;
 &lt;p&gt;Installez le paquet &lt;em&gt;&lt;a href="https://packages.debian.org/isc-dhcp-server"&gt;isc-dhcp-server&lt;/a&gt;&lt;/em&gt; :&lt;/p&gt;
@@ -1291,7 +1291,7 @@ aux requêtes DHCP dans le fichier &lt;code&gt;/etc/default/isc-dhcp-server&lt;/
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;h3&gt;Installation de &lt;em&gt;hostapd&lt;/em&gt;&lt;/h3&gt;
+&lt;h2&gt;Installation de &lt;em&gt;hostapd&lt;/em&gt;&lt;/h2&gt;
 &lt;p&gt;&lt;a href="https://w1.fi/hostapd/"&gt;Hostapd&lt;/a&gt; est un démon permettant de créer un point
 d'accès sans fil. Pour l'installer :&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;sudo&lt;/span&gt; &lt;span class="n"&gt;apt&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="k"&gt;get&lt;/span&gt; &lt;span class="n"&gt;install&lt;/span&gt; &lt;span class="n"&gt;hostapd&lt;/span&gt;
@@ -1326,7 +1326,7 @@ d'accès sans fil. Pour l'installer :&lt;/p&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;h3&gt;Configuration du routage entre l'interface sans fil et l'interface filaire&lt;/h3&gt;
+&lt;h2&gt;Configuration du routage entre l'interface sans fil et l'interface filaire&lt;/h2&gt;
 &lt;p&gt;Activer le routage IP dans le fichier &lt;code&gt;/etc/sysctl.conf&lt;/code&gt; en décommentant la
 ligne suivante :&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;net&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ipv4&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ip_forward&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;
@@ -1347,7 +1347,7 @@ la commande :&lt;/p&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;h3&gt;Persistence des règles &lt;em&gt;iptables&lt;/em&gt;&lt;/h3&gt;
+&lt;h2&gt;Persistence des règles &lt;em&gt;iptables&lt;/em&gt;&lt;/h2&gt;
 &lt;p&gt;Les règles &lt;em&gt;iptables&lt;/em&gt; définies précédemment sont perdues au au redémarrage. Pour
 les recharger à chaque lancement de la machine, vous pouvez utiliser le paquet
 &lt;em&gt;&lt;a href="https://packages.debian.org/iptables-persistent"&gt;iptables-persistent&lt;/a&gt;&lt;/em&gt;. Pour
@@ -1365,7 +1365,7 @@ vous pourrez les enregistrer en invoquant la cible &lt;em&gt;save&lt;/em&gt; et 
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;h3&gt;La voie est libre&lt;/h3&gt;
+&lt;h2&gt;La voie est libre&lt;/h2&gt;
 &lt;p&gt;À ce stade, vous deviez être en mesure de vous connecter au point d'accès de
 façon transparente. Étant donnée la richesse des matériels et leurs
 spécificités, je ne garantis pas que ce « mode d'emploi » soit universel.
@@ -1375,18 +1375,18 @@ propre point d'accès Wifi.&lt;/p&gt;</content><category term="wifi"></category>
 &lt;li&gt;celui-ci provient bien d'un émetteur connu ;&lt;/li&gt;
 &lt;li&gt;qu'il n'a pas été modifié depuis son émission.&lt;/li&gt;
 &lt;/ul&gt;
-&lt;h3&gt;Le doute&lt;/h3&gt;
+&lt;h2&gt;Le doute&lt;/h2&gt;
 &lt;p&gt;Il arrive …&lt;/p&gt;</summary><content type="html">&lt;p&gt;Lorsque vous vous connectez à un serveur en utilisant un certificat TLS (le grand frère de SSL depuis une quinzaine d'années), votre client en vérifie la signature. Celle-ci permet de vérifier que :&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;celui-ci provient bien d'un émetteur connu ;&lt;/li&gt;
 &lt;li&gt;qu'il n'a pas été modifié depuis son émission.&lt;/li&gt;
 &lt;/ul&gt;
-&lt;h3&gt;Le doute&lt;/h3&gt;
-&lt;p&gt;Il arrive que le certificat soit signé en utilisant un certificat qui est lui-même signé par un autre certificat, lui-même encore signé par... bref : la signature peut remonter sur plusieurs niveaux hiérarchiques. Dans les faits, cela ne change pas grand chose : la vérification sera tout simplement récursive. Le tout est de rencontrer dans la chaîne, généralement « tout en haut » la signature issue d'un certificat faisant autorité. Ces autorités sont connues à l'avance et vous pouvez les vérifier dans les paramètres de votre natigateur ou, par exemple, dans le répertoire &lt;code&gt;/etc/ssl/certs&lt;/code&gt; si vous êtes sous Linux.&lt;/p&gt;
+&lt;h2&gt;Le doute&lt;/h2&gt;
+&lt;p&gt;Il arrive que le certificat soit signé en utilisant un certificat qui est lui-même signé par un autre certificat, lui-même encore signé par... bref : la signature peut remonter sur plusieurs niveaux hiérarchiques. Dans les faits, cela ne change pas grand chose : la vérification sera tout simplement récursive. Le tout est de rencontrer dans la chaîne, généralement « tout en haut » la signature issue d'un certificat faisant autorité. Ces autorités sont connues à l'avance et vous pouvez les vérifier dans les paramètres de votre navigateur ou, par exemple, dans le répertoire &lt;code&gt;/etc/ssl/certs&lt;/code&gt; si vous êtes sous Linux.&lt;/p&gt;
 &lt;p&gt;Il s'agit donc d'une liste fermée qui vous a été fournie par un biais ou un autre mais surtout par en biais en lequel vous avez confiance (ou en lequel on vous a obligé à avoir confiance). Mais rien n'oblige qui que ce soit à utiliser l'une de ces autorités racines : on peut également utiliser un certificat auto-signé. Dans ce cas, rien ne permet de garantir avec certitude l'émetteur : au même titre que vous ferez confiance en l'identité de quelqu'un s'il vous présente sa carte d'identité éditée par l'État, vous aurez probablement des doutes si l'on ne vous présente qu'un papier signé par la-dite personne affirmant sa bonne foi.&lt;/p&gt;
 &lt;p&gt;Dans la « vraie vie », ce n'est pas parce qu'un individu n'est pas en mesure de vous présenter un document officiel d'identité qu'il est malhonnête. S'il vous présente son badge d'accès à l'entreprise dans laquelle vous travaillez, vous lui ferez confiance et saurez que c'est l'un de vos collègues. Dans ce cas, c'est votre entreprise qui fait autorité et vous faites confiance à son processus d'attribution des badges. De la même façon, un serveur qui utilise un certificat qui n'est pas signé par une autorité reconnue peut tout à fait venir en paix avec de bonnes intentions.&lt;/p&gt;
 &lt;p&gt;Un certificat accepté et reconnu dans un environnement restreint est donc préférable à pas de certificat du tout.&lt;/p&gt;
-&lt;h3&gt;L'arrivée des problèmes&lt;/h3&gt;
+&lt;h2&gt;L'arrivée des problèmes&lt;/h2&gt;
 &lt;p&gt;Mais, généralement, lorsque votre client ne connaît pas l'autorité de certification racine, il refuse par défaut la connexion :&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ curl -v https://www.exemple.com
 * Rebuilt URL to: https://www.example.com/
@@ -1405,25 +1405,28 @@ propre point d'accès Wifi.&lt;/p&gt;</content><category term="wifi"></category>
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;h3&gt;Comment se connecter, alors ?&lt;/h3&gt;
+&lt;h2&gt;Comment se connecter, alors ?&lt;/h2&gt;
 &lt;p&gt;Face à cela (ignorons la &lt;a href="https://fr.wikipedia.org/wiki/POODLE"&gt;référence à SSLv3&lt;/a&gt; pour l'instant), deux options sont possibles (la troisième, refiler le bébé à votre collègue, n'étant pas traitée ici) :&lt;/p&gt;
 &lt;ul&gt;
-&lt;li&gt;ignorer les doutes quant au certificat et risquer de communiquer des informations sensibles à un tiers (c'est la porte ouverte à une &lt;a href="https://fr.wikipedia.org/wiki/Attaque_de_l%27homme_du_milieu"&gt;attaque de l'homme du milieu&lt;/a&gt; puisque vous ne vérifiez plus du tout avec qui vous échangez des données) ;&lt;/li&gt;
+&lt;li&gt;ignorer les doutes quant au certificat et risquer de communiquer des informations sensibles à un tiers
+  (c'est la porte ouverte à une
+  &lt;a href="https://fr.wikipedia.org/wiki/Attaque_de_l%27homme_du_milieu"&gt;attaque de l'homme du milieu&lt;/a&gt;
+  puisque vous ne vérifiez plus du tout avec qui vous échangez des données) ;&lt;/li&gt;
 &lt;li&gt;indiquer que l'on connaît l'autorité racine ou l'une des autorités intermédiaires.&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;Je ne peux que vous déconseiller avec toute la vigueur qui m'est donnée la première solution et vous apporter tout mon soutien pour la seconde.&lt;/p&gt;
 &lt;p&gt;Pour reprendre l'exemple ci-dessus, l'appel avec &lt;code&gt;curl&lt;/code&gt; est simplement complété avec l'option &lt;code&gt;--cacert&lt;/code&gt; :&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ curl -v https://www.example.com --cacert cert.pem
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;curl -v https://www.example.com --cacert cert.pem
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;h3&gt;Depuis une application Java&lt;/h3&gt;
+&lt;h2&gt;Depuis une application Java&lt;/h2&gt;
 &lt;p&gt;Le même mécanisme s'applique lorsque vous vous connectez à un service en utilisant une application Java. Si le certificat n'est pas sûr, vous vous verrez refuser la connexion :&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;sun&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="k"&gt;security&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;provider&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;certpath&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;SunCertPathBuilderException&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;unable&lt;/span&gt; &lt;span class="k"&gt;to&lt;/span&gt; &lt;span class="n"&gt;find&lt;/span&gt; &lt;span class="k"&gt;valid&lt;/span&gt; &lt;span class="n"&gt;certification&lt;/span&gt; &lt;span class="n"&gt;path&lt;/span&gt; &lt;span class="k"&gt;to&lt;/span&gt; &lt;span class="n"&gt;requested&lt;/span&gt; &lt;span class="n"&gt;target&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;p&gt;Tout comme avec &lt;code&gt;curl&lt;/code&gt;, il existe une option pour spécifier un certificat faisant autorité. Il faut avant tout le stocker dans un conteneur spéficique à la JVM puis de préciser son emplacement dans la propriété système &lt;code&gt;javax.net.ssl.trustStore&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;Tout comme avec &lt;code&gt;curl&lt;/code&gt;, il existe une option pour spécifier un certificat faisant autorité. Il faut avant tout le stocker dans un conteneur spécifique à la JVM puis de préciser son emplacement dans la propriété système &lt;code&gt;javax.net.ssl.trustStore&lt;/code&gt;.&lt;/p&gt;
 &lt;p&gt;Pour créer ce conteneur, on utilise l'outil &lt;code&gt;keytool&lt;/code&gt; fourni avec le JDK.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ keytool -importcert -file cert.cer -keystore keystore.jks
 Entrez le mot de passe du fichier de clés :
@@ -1441,7 +1444,7 @@ Certificat ajouté au fichier de clés
 
 
 &lt;p&gt;La propriété &lt;code&gt;javax.net.ssl.trustStorePassword&lt;/code&gt; correspond au mot de passe que vous avez saisi à l'import du certificat en utilisant &lt;code&gt;keytool&lt;/code&gt;. Dès lors, vous pouvez vous connecter aux services sécurisés utilisant un certificat propre à votre entreprise.&lt;/p&gt;
-&lt;h3&gt;Solution globale&lt;/h3&gt;
+&lt;h2&gt;Solution globale&lt;/h2&gt;
 &lt;p&gt;Il peut être pénible d'utiliser ce morceau de code dans chacune de vos applications, ou tout au moins fastidieux. Heureusement, il est également possible d'enregistrer un certificat au niveau de la JVM. On le déclare alors une bonne fois pour toutes.&lt;/p&gt;
 &lt;p&gt;Si vous avez parcouru le répertoire &lt;code&gt;/etc/ssl/certs&lt;/code&gt; évoqué au début de cet article, vous y aurez peut-être remarqué un répertoire &lt;code&gt;java&lt;/code&gt;. Il s'agit du portefeuille de certificats dédié à la JVM.&lt;/p&gt;
 &lt;p&gt;Pour y ajouter un certificat, lancez en tant qu'utilisateur privilégié (&lt;em&gt;root&lt;/em&gt;) :&lt;/p&gt;
@@ -1455,7 +1458,7 @@ Certificat ajouté au fichier de clés
 &lt;p&gt;Notez le mot de passe par défaut du &lt;em&gt;keystore&lt;/em&gt;: « changeit ». Il s'agit du mot de passe par défaut et je vous encourage, si ce n'est déjà fait, à le changer.&lt;/p&gt;
 &lt;p&gt;Cette opération est à réaliser sur votre machine de développement mais également sur l'intégralité des serveurs susceptibles d'exécuter vos applications. C'est là qu'une solution de déploiement automatique devient pertinente.&lt;/p&gt;
 &lt;p&gt;Vous êtes maintenant capable de vous connecter depuis une application Java à l'ensemble des services exposés avec le certificat TLS de votre entreprise et ce sans nécessiter d'adaptation du code.&lt;/p&gt;
-&lt;h3&gt;Depuis une application Java (bis)&lt;/h3&gt;
+&lt;h2&gt;Depuis une application Java (bis)&lt;/h2&gt;
 &lt;p&gt;Si, par malheur, vous ne pouvez pas déposer de fichier sur la machine exécutant votre application (c'est le cas sur certains hébergement « cloud » que je n'aime pas utiliser), vous pouvez toujours « stocker » votre &lt;em&gt;keystore&lt;/em&gt; dans votre livrable (jar, war...). Mais... vous ne pourrez pas l'utiliser directement : la propriété &lt;code&gt;javax.net.ssl.trustStore&lt;/code&gt; ne permet pas de déclarer de référence à un fichier dans le &lt;em&gt;package&lt;/em&gt;. On peut en revanche l'écrire « à la main » sur le disque. L'exemple qui suit utilise &lt;a href="https://github.com/google/guava"&gt;Guava&lt;/a&gt;.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;File&lt;/span&gt; &lt;span class="n"&gt;tempDir&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;Files&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;createTempDir&lt;/span&gt;&lt;span class="o"&gt;();&lt;/span&gt;
 &lt;span class="n"&gt;File&lt;/span&gt; &lt;span class="n"&gt;myStore&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="k"&gt;new&lt;/span&gt; &lt;span class="n"&gt;File&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;tempDir&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;keystore.jks&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;);&lt;/span&gt;
@@ -1475,7 +1478,7 @@ Certificat ajouté au fichier de clés
 &lt;p&gt;Gérard passe à côté de moi sans même me regarder. Jérôme vient me demander d'implémenter une fonctionnalité en urgence. Je ne comprends pas l'objectif de sa demande et lui demande des précisions : « Ce n'est pas important, me répond-il, c'est pour les gogols du pôle métier qui ne comprennent rien à ce qu'ils font, comme d'habitude ». Lorsque j'envisage de leur demander directement les détails nécessaires, il me coupe : la fonctionnalité ne servira jamais, autant la réaliser comme ils l'imaginent, cela nous fera gagner du temps. S'il est sûr de lui, allons-y.&lt;/p&gt;
 &lt;p&gt;Avant de m'y mettre, je constate que les tests unitaires du module que j'ai réalisé la semaine dernière ne passent plus. Gérard étant à l'origine de la modification, je vais le voir. « Oui, j'ai repris des trucs, ça ne me plaisait pas et je voulais que ça marche », m'explique-t-il. Je repars avec l'injonction de remettre les tests d'aplomb en fonction de ce qu'il a écrit.&lt;/p&gt;
 &lt;p&gt;La journée passe, il est 18h. Au cours de la journée, je n'ai écrit que quelques lignes de code dont je ne suis pas satisfait. Je vois bien qu'il y a des choses à reprendre, que ça pourrait être plus « propre » mais j'ai du mal à identifier comment mieux faire. Je n'ai de toute façon pas l'énergie de m'y pencher. Qu'est-ce qui rend le travail si laborieux ? Pourquoi ma motivation est-elle si basse ?&lt;/p&gt;
-&lt;h3&gt;Besoin de sens&lt;/h3&gt;
+&lt;h2&gt;Besoin de sens&lt;/h2&gt;
 &lt;p&gt;Le sens est un composant indispensable de la motivation. Pour quoi (en deux mots) suis-je ici ? Quel est mon objectif ? Quel est l'objectif de ma mission ? Le sens peut être vu suivant trois dimensions :&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;le sens-sensation, qui nous ancre dans le réel ;&lt;/li&gt;
@@ -1508,7 +1511,7 @@ Certificat ajouté au fichier de clés
 &lt;p&gt;Le sens va aussi être soutenu par la loi (ici synonyme de jalons ou de cadre) : la poursuite d'un objectif mène à se donner des règles de conduite mais surtout à adhérer à un cadre (au sein d'une entreprise, d'une équipe, d'un projet), de s'en sentir acteur et de ne pas le subir. Il est nécessaire de comprendre le cadre pour se l'approprier : comment se prennent les décisions ? Comment suis-je consulté ou informé lors de la reconduction ou non de ma mission ? C'est aussi de cette façon que la confiance et le sentiment de sécurité se construisent.&lt;/p&gt;
 &lt;p&gt;Quand la loi devient obsolète ou qu'un désaccord s'installe, quand il faut remettre la loi en question, le lien de qualité permet une plus grande liberté dans l'échange. Quand je suis en réunion avec Gérard, je suis très mal à l'aise pour le contredire ou pour remettre en question les idées que je n'approuve pas.&lt;/p&gt;
 &lt;p&gt;Si la loi est cohérente, si le lien est de qualité, l'environnement est serein et constructif.&lt;/p&gt;
-&lt;h3&gt;Besoin de paix&lt;/h3&gt;
+&lt;h2&gt;Besoin de paix&lt;/h2&gt;
 &lt;p&gt;MaBoite est à l'origine de la paix durable que je vis au quotidien chez MonClient ainsi que son garde fou : c'est elle qui cadre mon travail par l'intermédiaire du contrat établi avec MonClient ; c'est ce que je me dois de respecter, mais c'est aussi ce qui me protège.&lt;/p&gt;
 &lt;p&gt;Le chercheur Markus Weingardt a étudié les conditions nécessaires à l'instauration de la paix durable. Le « vivre ensemble » tel qu'il le décrit définit trois composantes qui permettent d'atteindre cette paix durable :&lt;/p&gt;
 &lt;ul&gt;
@@ -1533,7 +1536,7 @@ La réciproque est également applicable : je suis moi-même transparent pour ga
 &lt;li&gt;...&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;Mais encore faut-il qu'elles soient reconnues à leur juste place.&lt;/p&gt;
-&lt;h3&gt;Besoin d'autonomie et de reconnaissance&lt;/h3&gt;
+&lt;h2&gt;Besoin d'autonomie et de reconnaissance&lt;/h2&gt;
 &lt;p&gt;Pour que ses salariés se sentent reconnus, l'employeur a notamment la responsabilité de leur permettre d'être autonomes. On est autonome lorsque l'on est en mesure de se débrouiller seul sans craindre de perdre son identité lorsque l'on demande de l'aide.&lt;/p&gt;
 &lt;p&gt;Vincent Lenhardt structure l'autonomie autour de quatre niveaux décrits par le schéma qui suit.&lt;/p&gt;
 &lt;p&gt;&lt;img alt="Structure de l'autonomie en quatre niveaux selon Vincent Lenhardt" class="center" src="/images/2015-02-18-Quest_ce_qui_me_motive_en_tant_que_developpeur/autonomie.png"&gt;&lt;/p&gt;
@@ -1544,17 +1547,17 @@ La réciproque est également applicable : je suis moi-même transparent pour ga
 &lt;li&gt;Enfin, on peut atteindre une situation d'équilibre dans laquelle on sait se débrouiller seul ou en groupe. On ne s'identifie pas à la relation : il y a « soi », « l'autre » et « la relation entre l'autre et soi ». On est alors en mesure d'accepter la contrainte et de prendre en charge une autre personne.&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;L'autonomie permet d'accéder au sens de son travail.&lt;/p&gt;
-&lt;h3&gt;Comme un humain&lt;/h3&gt;
+&lt;h2&gt;Comme un humain&lt;/h2&gt;
 &lt;p&gt;Si les composantes de la paix durable sont solides et équilibrées, le cadre est suffisamment sécurisant pour que, associé aux liens que je trouve en mission chez MonClient aussi bien que dans MaBoite, j'y trouve du sens.&lt;/p&gt;
 &lt;p&gt;Si mon employeur prend ses responsabilités pour créer un cadre sécurisant en tant que garant de la loi (cf. triangle de la résilience), associé au lien de qualité, je trouve le sens qui me donne envie de me lever le matin.&lt;/p&gt;
 &lt;p&gt;« Ce dont l'humain a besoin, ce n'est pas de vivre sans tension mais bien de tendre vers un but valable, de réaliser une mission librement choisie. Il a besoin non de se libérer de sa tension, mais plutôt de se sentir appelé à accomplir quelque chose » (Viktor E. Frankl, Découvrir un sens à sa vie avec la logothérapie, 1959, édition J'ai lu, p. 129).&lt;/p&gt;
 &lt;p&gt;Finalement, j'ai besoin de la même chose que tout être humain, ce n'est pas spécifique au métier de développeur : ce qui me motive en tant que développeur, c'est ce qui me motive tout court.&lt;/p&gt;</content><category term="quotidien"></category><category term="vivre ensemble"></category><category term="motivation"></category><category term="bien-être"></category></entry><entry><title>Shell shock : un obus dans les dents de bash</title><link href="https://www.dericbourg.net/2014/09/26/shell-shock-un-obus-dans-les-dents-de-bash/" rel="alternate"></link><published>2014-09-26T00:00:00+02:00</published><updated>2014-09-26T00:00:00+02:00</updated><author><name>Alban Dericbourg</name></author><id>tag:www.dericbourg.net,2014-09-26:/2014/09/26/shell-shock-un-obus-dans-les-dents-de-bash/</id><summary type="html">&lt;p&gt;Vous avez probablement entendu parler de Shell shock qui, outre l'association de troubles psychiques et physiques observés chez &lt;a href="http://fr.wikipedia.org/wiki/Obusite"&gt;certains soldats de la Première Guerre Mondiale&lt;/a&gt;, désigne également la vulnérabilité &lt;a href="http://www.cert.ssi.gouv.fr/site/CERTFR-2014-ALE-006/index.html"&gt;CVE-2014-6271&lt;/a&gt; touchant GNU bash. Elle permet à un attaquant de provoquer une exécution de code arbitraire à distance.&lt;/p&gt;
-&lt;h3&gt;Mon dieu, mais …&lt;/h3&gt;</summary><content type="html">&lt;p&gt;Vous avez probablement entendu parler de Shell shock qui, outre l'association de troubles psychiques et physiques observés chez &lt;a href="http://fr.wikipedia.org/wiki/Obusite"&gt;certains soldats de la Première Guerre Mondiale&lt;/a&gt;, désigne également la vulnérabilité &lt;a href="http://www.cert.ssi.gouv.fr/site/CERTFR-2014-ALE-006/index.html"&gt;CVE-2014-6271&lt;/a&gt; touchant GNU bash. Elle permet à un attaquant de provoquer une exécution de code arbitraire à distance.&lt;/p&gt;
-&lt;h3&gt;Mon dieu, mais c'est horrible !&lt;/h3&gt;
+&lt;h2&gt;Mon dieu, mais …&lt;/h2&gt;</summary><content type="html">&lt;p&gt;Vous avez probablement entendu parler de Shell shock qui, outre l'association de troubles psychiques et physiques observés chez &lt;a href="http://fr.wikipedia.org/wiki/Obusite"&gt;certains soldats de la Première Guerre Mondiale&lt;/a&gt;, désigne également la vulnérabilité &lt;a href="http://www.cert.ssi.gouv.fr/site/CERTFR-2014-ALE-006/index.html"&gt;CVE-2014-6271&lt;/a&gt; touchant GNU bash. Elle permet à un attaquant de provoquer une exécution de code arbitraire à distance.&lt;/p&gt;
+&lt;h2&gt;Mon dieu, mais c'est horrible !&lt;/h2&gt;
 &lt;p&gt;Il faut avouer que ça ne présage pas d'une franche partie de rigolade.&lt;/p&gt;
 &lt;p&gt;Tout d'abord, de nombreux programmes interagissent avec le shell. Nous savons que ce n'est généralement pas une bonne idée mais cela nous simplifie parfois grandement la tâche (on dit souvent qu'un bon développeur est un développeur fainéant). La surface d'attaque est donc très étendue.&lt;/p&gt;
 &lt;p&gt;Par ailleurs, si les systèmes « évidents » seront patchés (un serveur web par exemple), certaines machines plus obscures ne le seront pas : pensez par exemple à des périphériques tels que les caméras connectées (ou plus largement tout ce que vous pouvez trouver sur l'Internet des objets). Rien n'exclut qu'elles exposent des services basés sur des scripts shell et si ce shell est bash, le périphérique devient vulnérable. Comme il y a fort à parier qu'aucune procédure de mise à jour de ces périphériques n'ait été définie, ces périphérques resteront vulnérables ad vitam aeternam.&lt;/p&gt;
-&lt;h3&gt;J'exige des explications&lt;/h3&gt;
+&lt;h2&gt;J'exige des explications&lt;/h2&gt;
 &lt;p&gt;Bash permet d'exporter des variables mais aussi des fonctions à destination d'autres instances de bash. L'export de fonction utilise une variable d'environnement portant le nom de la-dite fonction dont la valeur commence par &lt;code&gt;() {&lt;/code&gt; :&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nv"&gt;foo&lt;/span&gt;&lt;span class="o"&gt;=()&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
     du code
@@ -1595,7 +1598,7 @@ bonjour
 
 
 &lt;p&gt;À noter que Linux n'est pas le seul système touché. Tous les systèmes Unix (ce qui inclut Mac OS) sont concernés.&lt;/p&gt;
-&lt;h3&gt;M'enfin, qui serait assez bête pour exposer un machin bash sur Internet ?&lt;/h3&gt;
+&lt;h2&gt;M'enfin, qui serait assez bête pour exposer un machin bash sur Internet ?&lt;/h2&gt;
 &lt;p&gt;Moi – et probablement vous aussi – mais je ne pense pas que ce soit de la bêtise.&lt;/p&gt;
 &lt;p&gt;Pour l'instant, le vecteur de propagation semble être la requête HTTP à destination d'un script CGI. Le serveur web &lt;em&gt;Apache httpd&lt;/em&gt; utilise par exemple des scripts (donc potentiellement bash) pour certaines fonctions C, Python ou PHP (si ce dernier est lancé en mode CGI). C'est ainsi que quelques robots parcourent en ce moment même le web en positionnant leur en-tête &lt;em&gt;User-Agent&lt;/em&gt; comme suit afin de dresser leur annuaire des machines vulnérables : &lt;code&gt;User-Agent: () { :; } /bin/ping -c x.y.z.q&lt;/code&gt;. Si vous souhaitez vérifier vos logs HTTP, vous pouvez lancer &lt;code&gt;egrep '\(\ *\)\ *\{' /var/log/nginx/*&lt;/code&gt; par exemple.&lt;/p&gt;
 &lt;p&gt;Ce n'est donc pas si rare et c'est sans compter les applications largement déployées qui utilisent CGI (cPanel par exemple).&lt;/p&gt;

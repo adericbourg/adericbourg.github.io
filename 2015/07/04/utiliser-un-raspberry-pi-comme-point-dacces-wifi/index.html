@@ -45,16 +45,16 @@
       <div class="post-content"> 
         <p>Dans cet article, nous verrons comment configurer un Raspberry Pi en tant que
 point d'accès Wifi.</p>
-<h3>Pré-requis</h3>
+<h2>Pré-requis</h2>
 <p>Je supposerai que vous avez à disposition :</p>
 <ul>
 <li><a href="https://www.raspberrypi.org/">Un Raspberry Pi</a></li>
 <li>La distribution <a href="https://www.raspbian.org/">Raspbian</a> ou toute autre
-   distribution Linux</li>
+  distribution Linux</li>
 <li>Un <em>dongle</em> Wifi (déjà installé et détecté)</li>
 </ul>
 <p>Dans la suite, on considèrera que l'interface sans fil est nommée <code>wlan0</code>.</p>
-<h3>Définition d'une adresse IP statique</h3>
+<h2>Définition d'une adresse IP statique</h2>
 <p>Dans le fichier <code>/etc/network/interfaces</code>, supprimer les lignes suivantes :</p>
 <div class="highlight"><pre><span></span><span class="n">iface</span> <span class="n">wlan0</span> <span class="n">inet</span> <span class="n">manual</span>
 <span class="n">wpa</span><span class="o">-</span><span class="n">roam</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">wpa_supplicant</span><span class="o">/</span><span class="n">wpa_supplicant</span><span class="p">.</span><span class="n">conf</span>
@@ -74,7 +74,7 @@ point d'accès Wifi.</p>
 </pre></div>
 
 
-<h3>Installation d'un serveur DHCP</h3>
+<h2>Installation d'un serveur DHCP</h2>
 <p>Le serveur DHCP permet d'attribuer automatiquement une adresse IP aux machines
 qui se connecteront à votre réseau Wifi.</p>
 <p>Installez le paquet <em><a href="https://packages.debian.org/isc-dhcp-server">isc-dhcp-server</a></em> :</p>
@@ -148,7 +148,7 @@ aux requêtes DHCP dans le fichier <code>/etc/default/isc-dhcp-server</code> :</
 </pre></div>
 
 
-<h3>Installation de <em>hostapd</em></h3>
+<h2>Installation de <em>hostapd</em></h2>
 <p><a href="https://w1.fi/hostapd/">Hostapd</a> est un démon permettant de créer un point
 d'accès sans fil. Pour l'installer :</p>
 <div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="k">get</span> <span class="n">install</span> <span class="n">hostapd</span>
@@ -183,7 +183,7 @@ d'accès sans fil. Pour l'installer :</p>
 </pre></div>
 
 
-<h3>Configuration du routage entre l'interface sans fil et l'interface filaire</h3>
+<h2>Configuration du routage entre l'interface sans fil et l'interface filaire</h2>
 <p>Activer le routage IP dans le fichier <code>/etc/sysctl.conf</code> en décommentant la
 ligne suivante :</p>
 <div class="highlight"><pre><span></span><span class="n">net</span><span class="p">.</span><span class="n">ipv4</span><span class="p">.</span><span class="n">ip_forward</span><span class="o">=</span><span class="mi">1</span>
@@ -204,7 +204,7 @@ la commande :</p>
 </pre></div>
 
 
-<h3>Persistence des règles <em>iptables</em></h3>
+<h2>Persistence des règles <em>iptables</em></h2>
 <p>Les règles <em>iptables</em> définies précédemment sont perdues au au redémarrage. Pour
 les recharger à chaque lancement de la machine, vous pouvez utiliser le paquet
 <em><a href="https://packages.debian.org/iptables-persistent">iptables-persistent</a></em>. Pour
@@ -222,7 +222,7 @@ vous pourrez les enregistrer en invoquant la cible <em>save</em> et les recharge
 </pre></div>
 
 
-<h3>La voie est libre</h3>
+<h2>La voie est libre</h2>
 <p>À ce stade, vous deviez être en mesure de vous connecter au point d'accès de
 façon transparente. Étant donnée la richesse des matériels et leurs
 spécificités, je ne garantis pas que ce « mode d'emploi » soit universel.

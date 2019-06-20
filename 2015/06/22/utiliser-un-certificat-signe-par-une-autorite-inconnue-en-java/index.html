@@ -48,12 +48,12 @@
 <li>celui-ci provient bien d'un émetteur connu ;</li>
 <li>qu'il n'a pas été modifié depuis son émission.</li>
 </ul>
-<h3>Le doute</h3>
-<p>Il arrive que le certificat soit signé en utilisant un certificat qui est lui-même signé par un autre certificat, lui-même encore signé par... bref : la signature peut remonter sur plusieurs niveaux hiérarchiques. Dans les faits, cela ne change pas grand chose : la vérification sera tout simplement récursive. Le tout est de rencontrer dans la chaîne, généralement « tout en haut » la signature issue d'un certificat faisant autorité. Ces autorités sont connues à l'avance et vous pouvez les vérifier dans les paramètres de votre natigateur ou, par exemple, dans le répertoire <code>/etc/ssl/certs</code> si vous êtes sous Linux.</p>
+<h2>Le doute</h2>
+<p>Il arrive que le certificat soit signé en utilisant un certificat qui est lui-même signé par un autre certificat, lui-même encore signé par... bref : la signature peut remonter sur plusieurs niveaux hiérarchiques. Dans les faits, cela ne change pas grand chose : la vérification sera tout simplement récursive. Le tout est de rencontrer dans la chaîne, généralement « tout en haut » la signature issue d'un certificat faisant autorité. Ces autorités sont connues à l'avance et vous pouvez les vérifier dans les paramètres de votre navigateur ou, par exemple, dans le répertoire <code>/etc/ssl/certs</code> si vous êtes sous Linux.</p>
 <p>Il s'agit donc d'une liste fermée qui vous a été fournie par un biais ou un autre mais surtout par en biais en lequel vous avez confiance (ou en lequel on vous a obligé à avoir confiance). Mais rien n'oblige qui que ce soit à utiliser l'une de ces autorités racines : on peut également utiliser un certificat auto-signé. Dans ce cas, rien ne permet de garantir avec certitude l'émetteur : au même titre que vous ferez confiance en l'identité de quelqu'un s'il vous présente sa carte d'identité éditée par l'État, vous aurez probablement des doutes si l'on ne vous présente qu'un papier signé par la-dite personne affirmant sa bonne foi.</p>
 <p>Dans la « vraie vie », ce n'est pas parce qu'un individu n'est pas en mesure de vous présenter un document officiel d'identité qu'il est malhonnête. S'il vous présente son badge d'accès à l'entreprise dans laquelle vous travaillez, vous lui ferez confiance et saurez que c'est l'un de vos collègues. Dans ce cas, c'est votre entreprise qui fait autorité et vous faites confiance à son processus d'attribution des badges. De la même façon, un serveur qui utilise un certificat qui n'est pas signé par une autorité reconnue peut tout à fait venir en paix avec de bonnes intentions.</p>
 <p>Un certificat accepté et reconnu dans un environnement restreint est donc préférable à pas de certificat du tout.</p>
-<h3>L'arrivée des problèmes</h3>
+<h2>L'arrivée des problèmes</h2>
 <p>Mais, généralement, lorsque votre client ne connaît pas l'autorité de certification racine, il refuse par défaut la connexion :</p>
 <div class="highlight"><pre><span></span>$ curl -v https://www.exemple.com
 * Rebuilt URL to: https://www.example.com/
@@ -72,25 +72,28 @@
 </pre></div>
 
 
-<h3>Comment se connecter, alors ?</h3>
+<h2>Comment se connecter, alors ?</h2>
 <p>Face à cela (ignorons la <a href="https://fr.wikipedia.org/wiki/POODLE">référence à SSLv3</a> pour l'instant), deux options sont possibles (la troisième, refiler le bébé à votre collègue, n'étant pas traitée ici) :</p>
 <ul>
-<li>ignorer les doutes quant au certificat et risquer de communiquer des informations sensibles à un tiers (c'est la porte ouverte à une <a href="https://fr.wikipedia.org/wiki/Attaque_de_l%27homme_du_milieu">attaque de l'homme du milieu</a> puisque vous ne vérifiez plus du tout avec qui vous échangez des données) ;</li>
+<li>ignorer les doutes quant au certificat et risquer de communiquer des informations sensibles à un tiers
+  (c'est la porte ouverte à une
+  <a href="https://fr.wikipedia.org/wiki/Attaque_de_l%27homme_du_milieu">attaque de l'homme du milieu</a>
+  puisque vous ne vérifiez plus du tout avec qui vous échangez des données) ;</li>
 <li>indiquer que l'on connaît l'autorité racine ou l'une des autorités intermédiaires.</li>
 </ul>
 <p>Je ne peux que vous déconseiller avec toute la vigueur qui m'est donnée la première solution et vous apporter tout mon soutien pour la seconde.</p>
 <p>Pour reprendre l'exemple ci-dessus, l'appel avec <code>curl</code> est simplement complété avec l'option <code>--cacert</code> :</p>
-<div class="highlight"><pre><span></span>$ curl -v https://www.example.com --cacert cert.pem
+<div class="highlight"><pre><span></span>curl -v https://www.example.com --cacert cert.pem
 </pre></div>
 
 
-<h3>Depuis une application Java</h3>
+<h2>Depuis une application Java</h2>
 <p>Le même mécanisme s'applique lorsque vous vous connectez à un service en utilisant une application Java. Si le certificat n'est pas sûr, vous vous verrez refuser la connexion :</p>
 <div class="highlight"><pre><span></span><span class="n">sun</span><span class="p">.</span><span class="k">security</span><span class="p">.</span><span class="n">provider</span><span class="p">.</span><span class="n">certpath</span><span class="p">.</span><span class="n">SunCertPathBuilderException</span><span class="p">:</span> <span class="n">unable</span> <span class="k">to</span> <span class="n">find</span> <span class="k">valid</span> <span class="n">certification</span> <span class="n">path</span> <span class="k">to</span> <span class="n">requested</span> <span class="n">target</span>
 </pre></div>
 
 
-<p>Tout comme avec <code>curl</code>, il existe une option pour spécifier un certificat faisant autorité. Il faut avant tout le stocker dans un conteneur spéficique à la JVM puis de préciser son emplacement dans la propriété système <code>javax.net.ssl.trustStore</code>.</p>
+<p>Tout comme avec <code>curl</code>, il existe une option pour spécifier un certificat faisant autorité. Il faut avant tout le stocker dans un conteneur spécifique à la JVM puis de préciser son emplacement dans la propriété système <code>javax.net.ssl.trustStore</code>.</p>
 <p>Pour créer ce conteneur, on utilise l'outil <code>keytool</code> fourni avec le JDK.</p>
 <div class="highlight"><pre><span></span>$ keytool -importcert -file cert.cer -keystore keystore.jks
 Entrez le mot de passe du fichier de clés :
@@ -108,7 +111,7 @@ Certificat ajouté au fichier de clés
 
 
 <p>La propriété <code>javax.net.ssl.trustStorePassword</code> correspond au mot de passe que vous avez saisi à l'import du certificat en utilisant <code>keytool</code>. Dès lors, vous pouvez vous connecter aux services sécurisés utilisant un certificat propre à votre entreprise.</p>
-<h3>Solution globale</h3>
+<h2>Solution globale</h2>
 <p>Il peut être pénible d'utiliser ce morceau de code dans chacune de vos applications, ou tout au moins fastidieux. Heureusement, il est également possible d'enregistrer un certificat au niveau de la JVM. On le déclare alors une bonne fois pour toutes.</p>
 <p>Si vous avez parcouru le répertoire <code>/etc/ssl/certs</code> évoqué au début de cet article, vous y aurez peut-être remarqué un répertoire <code>java</code>. Il s'agit du portefeuille de certificats dédié à la JVM.</p>
 <p>Pour y ajouter un certificat, lancez en tant qu'utilisateur privilégié (<em>root</em>) :</p>
@@ -122,7 +125,7 @@ Certificat ajouté au fichier de clés
 <p>Notez le mot de passe par défaut du <em>keystore</em>: « changeit ». Il s'agit du mot de passe par défaut et je vous encourage, si ce n'est déjà fait, à le changer.</p>
 <p>Cette opération est à réaliser sur votre machine de développement mais également sur l'intégralité des serveurs susceptibles d'exécuter vos applications. C'est là qu'une solution de déploiement automatique devient pertinente.</p>
 <p>Vous êtes maintenant capable de vous connecter depuis une application Java à l'ensemble des services exposés avec le certificat TLS de votre entreprise et ce sans nécessiter d'adaptation du code.</p>
-<h3>Depuis une application Java (bis)</h3>
+<h2>Depuis une application Java (bis)</h2>
 <p>Si, par malheur, vous ne pouvez pas déposer de fichier sur la machine exécutant votre application (c'est le cas sur certains hébergement « cloud » que je n'aime pas utiliser), vous pouvez toujours « stocker » votre <em>keystore</em> dans votre livrable (jar, war...). Mais... vous ne pourrez pas l'utiliser directement : la propriété <code>javax.net.ssl.trustStore</code> ne permet pas de déclarer de référence à un fichier dans le <em>package</em>. On peut en revanche l'écrire « à la main » sur le disque. L'exemple qui suit utilise <a href="https://github.com/google/guava">Guava</a>.</p>
 <div class="highlight"><pre><span></span><span class="n">File</span> <span class="n">tempDir</span> <span class="o">=</span> <span class="n">Files</span><span class="o">.</span><span class="na">createTempDir</span><span class="o">();</span>
 <span class="n">File</span> <span class="n">myStore</span> <span class="o">=</span> <span class="k">new</span> <span class="n">File</span><span class="o">(</span><span class="n">tempDir</span><span class="o">,</span> <span class="s">&quot;keystore.jks&quot;</span><span class="o">);</span>
