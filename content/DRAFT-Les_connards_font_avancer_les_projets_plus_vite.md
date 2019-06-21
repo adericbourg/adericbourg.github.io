@@ -15,7 +15,7 @@ Celle-ci se définit comme
 
 > la capacité à s’exprimer et à défendre ses droits sans empiéter sur ceux des autres.
 
-Distingons ses deux facettes :
+Distinguons ses deux facettes :
 
 * le coté « capacité à s’exprimer et à défendre ses droits » de la définition est bien compris et appliqué ;
 * mais la suite, « sans empiéter sur ceux des autres » est un peu oublié.
@@ -25,7 +25,7 @@ L'atteinte de l'objectif, critère facilement mesurable et observable, est gén�
 voir impossible — à quantifier : le savoir-être se retrouve oublié de ces évaluations (il est parfois assimilé à une
 forme d'esprit d'équipe où l'on évaluera les _actions_ prises pour l'équipe).
 
-On obtient dopnc ce qu'on mesure : l'avancement du projet et en aucun cas l'impact humain de l'avancement du projet.
+On obtient donc ce qu'on mesure : l'avancement du projet et en aucun cas l'impact humain de l'avancement du projet.
 C'est logique, quelque part.
 
 Oui, les projets sont terminés plus rapidement. Avec quelles conséquences ?
