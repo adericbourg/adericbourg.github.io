@@ -20,6 +20,16 @@ un peu d'amusement à la personne en charge de la rédaction des offres.
 
 Et pourtant, je souhaite aborder ici l'idée de paysan-développeur.
 
-### C'est quoi un paysan au juste ?
+## C'est quoi un paysan au juste ?
 
 ![Du singe à l'exploitant agricole](/images/paysan-developpeur/agro.png){.center}
+
+
+
+---
+
+
+Pour en arriver là, cela demande de revoir la façon dont on travaille :
+
+* exode urbain => plus de télétravail
+* arrêter de considérer un 4/5 comme une fleur que fait l'entreprise au salarié

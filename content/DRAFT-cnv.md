@@ -82,14 +82,62 @@ Cette formulation me rejoint pour évoquer ce stage et l'évolution qui s'est op
 Le cadre sécurisant posé par le formateur et la garantie de confidentialité permet de prendre
 des risques, de s'ouvrir plus que d'usage.
 
-## Module 2 : à suivre
+## Module 2 : l'ouverture au dialogue
+
+Autant le premier module est tourné vers soi, autant le second est tourné vers l'autre (en
+conservant cette connexion à soi). J'ai suivi ce module 2 envion un mois après avoir suivi le
+précédent.
+
+Plutôt à l'aise en petit groupe, j'ai moins bien vécu ce module du fait du nombre de participants
+(17). J'ai également été déçu de constater que la Communication NonViolente ne pouvait pas tout
+résoudre : en travaillant sur une situation personnelle difficile et malgré l'aide du formateur,
+je n'ai pas réussi à trouver d'issue qui assurerait la continuité de la relation. Cela a été
+l'occasion pour moi de prendre conscience qu'une relation se construit et se maintient à deux :
+si l'autre ne souhaite pas cette relation ou considère qu'elle n'existe pas, tous mes efforts
+pour la construire ou la rétablir seront vains.
 
 TODO
 
 ## Module 3 : à faire
+
+J'ai suivi ce module quelques jours après le module 2.
 
 TODO
 
 ## Et maintenant ?
 
 TODO
+
+## La CNV en entreprise
+
+> *TODO chapitre pertinent ?*
+
+### Robot
+
+Lors de ces huit ans de déclaration d'intérêt à la Communication NonViolente au travail, j'ai eu
+l'occasion de recevoir les idées reçues à son sujet en milieu professionnel. Une personne initiée
+sur une demi-journée a reproché l'aspect « mécanique » du processus en caricaturant sa pratique :
+
+> Lorsque j'arrive le matin au travail, je me sens fatigué. J'ai besoin de vitalité.
+> Acceptes-tu de venir prendre un café avec moi ?
+
+Dans les faits, je n'ai rencontré personne d'expérimenté qui utilise la CNV ainsi. Si l'enchaînement
+« observation – ressenti – besoin – demande » aussi explicite est utile lors de son appropriation,
+un praticien expérimenté s'exprimera dans un langage naturel et ne dira que ce qui est nécessaire,
+quitte à éluder le ressenti ou le besoin. Pour aller plus loin, quelqu'un d'expérimenté ne fera pas
+un usage _permanent_ du processus de la CNV : il se réserve pour des situation où une précaution toute
+particulière est nécessaire pour maintenir la relation à l'autre (tension, conflit, situation
+inconfortable, situation nécessitant une attention à l'autre...).
+Inviter son collègue à aller prendre un café — sauf exception — n'en fait pas partie.
+
+### « Si on me force à exprimer mes émotions, je démissionne »
+
+Dans une équipe où je manquait de lien et de collaboration avec mes collègues directs, j'ai évoqué
+la CNV et les _[Core Protocols](https://www.mccarthyshow.com/online/)_ comme des pistes
+d'inspiration. Ces deux approches demandent, dans leurs principes, de s'intéresser à ses émotions.
+Un collègue a réagi à ce sujet :
+
+> Si on me force à faire ça, je démissionne !
+
+Il a précisé de lui-même qu'il se sentait mal à l'aise avec le fait d'exprimer ses émotions...
+et c'est pourtant ce qu'il a fait en disant cela !
