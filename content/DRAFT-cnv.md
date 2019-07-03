@@ -94,7 +94,8 @@ résoudre : en travaillant sur une situation personnelle difficile et malgré l'
 je n'ai pas réussi à trouver d'issue qui assurerait la continuité de la relation. Cela a été
 l'occasion pour moi de prendre conscience qu'une relation se construit et se maintient à deux :
 si l'autre ne souhaite pas cette relation ou considère qu'elle n'existe pas, tous mes efforts
-pour la construire ou la rétablir seront vains.
+pour la construire ou la rétablir seront vains. C'est d'ailleurs ce que met en évidence Jacques
+Salomé avec sa [métaphore de l'écharpe](https://blog-espere.com/decouvrez-lecharpe-relationnelle-un-outil-essentiel-de-la-methode-espere/).
 
 Prises de conscience peuvent mener à des situations inconfortables :
 
@@ -104,7 +105,7 @@ Prises de conscience peuvent mener à des situations inconfortables :
 
 TODO
 
-## Module 3 : à faire
+## Module 3 : la pratique du dialogue
 
 J'ai suivi ce module quelques jours après le module 2.
 
@@ -112,7 +113,16 @@ TODO
 
 ## Et maintenant ?
 
-TODO
+L'attitude d'auto-empathie, prise de recul sur soi, m'a permis d'identifier au début du troisième
+module que j'étais inquiet de voir ces trois modules se terminer, d'interrompre ces progrès que je
+me suis observé faire et l'intensité des échange qui ont eu lieu lors de ces six jours. J'ai ainsi
+pu prendre conscience qu'il était important pour moi d'ancrer mon intention, ma posture et mes acquis.
+J'ai ainsi pu prendre la décision de planifier dès la fin du stage ce qui serait la suite, que ce soit
+un [autre stage](http://www.cnvformations.fr/index.php?m=5&ms=101&tyf=1) ou rejoindre un
+[groupe de pratique](https://cnvfrance.fr/actualites/groupes-de-pratique/un-groupe-de-pratique-en-communication-non-violente/).
+
+Une fois cette décision prise, je me suis détendu et j'ai pu profiter pleinement des deux jours de
+stage sans inquiétude vis-à-vis de la suite.
 
 ## La CNV en entreprise
 
