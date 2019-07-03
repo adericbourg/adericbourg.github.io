@@ -96,6 +96,12 @@ l'occasion pour moi de prendre conscience qu'une relation se construit et se mai
 si l'autre ne souhaite pas cette relation ou considère qu'elle n'existe pas, tous mes efforts
 pour la construire ou la rétablir seront vains.
 
+Prises de conscience peuvent mener à des situations inconfortables :
+
+> « Je n'ai pas envie d'aller faire les courses demain...  
+> — Eh bien moi je n'ai pas envie d'aller travailler !  
+> — _(avec un petit sourire)_ Tiens, tu ramènes à toi... »
+
 TODO
 
 ## Module 3 : à faire
