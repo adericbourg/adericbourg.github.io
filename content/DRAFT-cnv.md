@@ -85,7 +85,7 @@ des risques, de s'ouvrir plus que d'usage.
 ## Module 2 : l'ouverture au dialogue
 
 Autant le premier module est tourné vers soi, autant le second est tourné vers l'autre (en
-conservant cette connexion à soi). J'ai suivi ce module 2 envion un mois après avoir suivi le
+conservant cette connexion à soi). J'ai suivi ce module 2 environ un mois après avoir suivi le
 précédent.
 
 Plutôt à l'aise en petit groupe, j'ai moins bien vécu ce module du fait du nombre de participants
@@ -97,17 +97,39 @@ si l'autre ne souhaite pas cette relation ou considère qu'elle n'existe pas, to
 pour la construire ou la rétablir seront vains. C'est d'ailleurs ce que met en évidence Jacques
 Salomé avec sa [métaphore de l'écharpe](https://blog-espere.com/decouvrez-lecharpe-relationnelle-un-outil-essentiel-de-la-methode-espere/).
 
-Prises de conscience peuvent mener à des situations inconfortables :
+Si je ne devais retenir qu'une expérience de ce deuxième module, je m'arrêterais sur l'écoute
+silencieuse. L'exercice consiste à former un binôme :
+un écoutant offre son attention sans intervenir à un écouté qui est libre de s'exprimer pendant
+six minutes. Jusque là, je percevais mon expression comme décousue et je me pensais incapable de
+tenir seul un sujet au-delà de quelques phrases. J'ai été très surpris de constater que j'en étais
+non seulement capable mais que l'expérience m'avait été agréable ! C'est ainsi que j'ai réalisé
+(au delà d'une compréhension intellectuelle) que la qualité d'un échange dépend autant de la
+qualité de l'écoute que de la qualité de la parole. Si j'avais déjà conscience de quelques travers
+de l'écoutant (ramener le sujet à soi, commenter ou juger les propos...), j'en ai découvert de
+beaucoup plus insidieux. J'ai été saisi par la rupture du flot de la pensée que provoque une question,
+aussi pertinente et bienveillante soit-elle.
+
+Si j'ai pris conscience de ces obstacles à la communication pour moi... j'en ai également pris
+conscience dans la communication des autres, avec qui j'ai commencé à les repérer :
 
 > « Je n'ai pas envie d'aller faire les courses demain...  
 > — Eh bien moi je n'ai pas envie d'aller travailler !  
 > — _(avec un petit sourire)_ Tiens, tu ramènes à toi... »
 
+Cela a conduit à des situations inconfortables.
+
+Encore une fois, ce que l'on peut observer sur les autres s'observe aussi sur soi-même. Ayant vécu
+et observé l'effet d'une interruption sur TODO
+
 TODO
 
 ## Module 3 : la pratique du dialogue
 
-J'ai suivi ce module quelques jours après le module 2.
+J'ai suivi ce module quelques jours après le module 2. Si un mois d'écart entre deux modules m'a
+semblé long, trois jours m'a semblé court : je me sentais encore en phase de digestion du précédent
+module. Si c'était à refaire sans aucune contrainte, je choisirais de les espacer de deux à trois semaines.
+Cela reste une perception personnelle : si cela convient à mon propre rythme, cela n'est pas une
+recommandation universelle.
 
 TODO
 
@@ -123,6 +145,10 @@ un [autre stage](http://www.cnvformations.fr/index.php?m=5&ms=101&tyf=1) ou rejo
 
 Une fois cette décision prise, je me suis détendu et j'ai pu profiter pleinement des deux jours de
 stage sans inquiétude vis-à-vis de la suite.
+
+TODO
+
+> « Qu'est-ce qui est important pour toi : être heureux ou avoir raison ? » (Rosenberg)
 
 ## La CNV en entreprise
 
