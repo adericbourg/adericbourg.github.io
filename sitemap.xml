@@ -5,22 +5,29 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
 <url>
 <loc>https://www.dericbourg.net/</loc>
-<lastmod>2019-06-20T22:06:18-00:00</lastmod>
+<lastmod>2019-08-26T16:43:47-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://www.dericbourg.net/tags.html</loc>
-<lastmod>2019-06-20T22:06:18-00:00</lastmod>
+<lastmod>2019-08-26T16:43:47-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://www.dericbourg.net/categories.html</loc>
-<lastmod>2019-06-20T22:06:18-00:00</lastmod>
+<lastmod>2019-08-26T16:43:47-00:00</lastmod>
 <changefreq>daily</changefreq>
+<priority>0.5</priority>
+</url>
+
+<url>
+<loc>https://www.dericbourg.net/2019/08/26/jai-enfin-suivi-une-formation-a-la-communication-nonviolente/</loc>
+<lastmod>2019-08-26T00:00:00+02:00</lastmod>
+<changefreq>monthly</changefreq>
 <priority>0.5</priority>
 </url>
 
@@ -75,7 +82,28 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
 <url>
 <loc>https://www.dericbourg.net/category/blog.html</loc>
-<lastmod>2015-12-10T00:00:00+00:09</lastmod>
+<lastmod>2019-08-26T00:00:00+00:09</lastmod>
+<changefreq>daily</changefreq>
+<priority>0.5</priority>
+</url>
+
+<url>
+<loc>https://www.dericbourg.net/tag/communication.html</loc>
+<lastmod>2019-08-26T00:00:00+00:09</lastmod>
+<changefreq>daily</changefreq>
+<priority>0.5</priority>
+</url>
+
+<url>
+<loc>https://www.dericbourg.net/tag/vivre-ensemble.html</loc>
+<lastmod>2019-08-26T00:00:00+00:09</lastmod>
+<changefreq>daily</changefreq>
+<priority>0.5</priority>
+</url>
+
+<url>
+<loc>https://www.dericbourg.net/tag/bien-etre.html</loc>
+<lastmod>2019-08-26T00:00:00+00:09</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
@@ -242,21 +270,7 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 </url>
 
 <url>
-<loc>https://www.dericbourg.net/tag/vivre-ensemble.html</loc>
-<lastmod>2015-02-16T00:00:00+00:09</lastmod>
-<changefreq>daily</changefreq>
-<priority>0.5</priority>
-</url>
-
-<url>
 <loc>https://www.dericbourg.net/tag/motivation.html</loc>
-<lastmod>2015-02-16T00:00:00+00:09</lastmod>
-<changefreq>daily</changefreq>
-<priority>0.5</priority>
-</url>
-
-<url>
-<loc>https://www.dericbourg.net/tag/bien-etre.html</loc>
 <lastmod>2015-02-16T00:00:00+00:09</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
@@ -278,7 +292,7 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
 <url>
 <loc>https://www.dericbourg.net/author/alban-dericbourg.html</loc>
-<lastmod>2015-12-10T00:00:00+00:09</lastmod>
+<lastmod>2019-08-26T00:00:00+00:09</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
