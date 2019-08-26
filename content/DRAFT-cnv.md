@@ -2,8 +2,7 @@
 Title: J'ai (enfin) suivi une formation à la Communication NonViolente
 Category: Blog
 Tags: communication, vivre ensemble, bien-être
-Status: draft
-Date: 2100-01-01
+Date: 2019-08-26
 ---
 
 J'ai découvert la Communication NonViolente il y a huit ans. Mes premières lectures
