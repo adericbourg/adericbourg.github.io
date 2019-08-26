@@ -33,9 +33,9 @@ intérieurs que j'ai pu observer chez moi.
 
 ## Et moi, et moi, et moi
 
-Je suis de nature discrète et je n'ai pas toujours suffisamment confiance en moi pour prendre
-la parole au sein d'un groupe. Lorsque je la prends, il est d'ailleurs fréquent qu'on me la
-coupe avant que j'aie terminé d'exprimer ce que j'avais à dire. Et dans ce cas, ça me coupe
+Je suis de nature discrète et il m'arrive de manquer de confiance en moi pour prendre
+la parole au sein d'un groupe. Lorsque je la prends, j'ai du mal à la garder jusqu'à ce
+que j'aie terminé d'exprimer ce que j'avais à dire. Lorsque ça arrive, ça me coupe
 doublement la chique puisque je me retrouve en état de sidération sans savoir quoi répondre
 pour faire remarquer que j'aurais légitimement aller au bout de mon idée. C'est également ce
 qui peut m'arriver lors d'une interaction inconfortable.
@@ -45,9 +45,9 @@ semble pas avoir compris ce que dis ou qui m'oppose des « oui, mais » sans la 
 reformulation, je peux sur-enchérir sur les arguments et bouillir de l'intérieur.
 
 Une fois à bout, quand je ne peux plus rien retenir et que la vapeur s'échappe par mes
-oreilles, il est trop tard. Je mets fin à la relation, je démissionne, je ferme la porte
-sans retour possible tout en ayant conscience que j'ai ma part de responsabilité dans cette
-rupture qui aurait pu être évitée avec une communication de qualité.
+oreilles, il est trop tard. Je mets fin à la relation, je démissionne (parfois avec fracas),
+je ferme la porte sans retour possible tout en ayant conscience que j'ai ma part de
+responsabilité dans cette rupture qui aurait pu être évitée avec une communication de qualité.
 
 ## Module 1 : le recul sur soi
 
@@ -55,20 +55,21 @@ Le module 1 a été l'occasion d'une prise de recul. À l'issue de celui-ci, je 
 observé à plusieurs reprises me détacher d'une conversation pour constater que celle-ci
 n'irait nulle part telle qu'elle était menée.
 
-J'ai par exemple évoqué comme un rêve que je ne réaliserais jamais une envie que j'ai depuis
-quelques années (et qu'il ne serait effectivement pas raisonnable de réaliser).
-Une personne de mon entourage proche a argumenté sur le manque de réalisme
+J'ai par exemple évoqué une envie, un rêve que je ne réaliserais jamais que j'ai depuis
+quelques années (et qu'il ne serait effectivement pas raisonnable de réaliser) avec une
+personne de mon entourage proche. Celle-ci a argumenté sur le manque de réalisme
 d'un tel projet. Après un court ping-pong d'arguments, j'en senti un déplacement intérieur
 qui m'a permis de réaliser que nous n'argumentions pas sur le même plan : mon interlocuteur
-était focalisé sur le réalisme du projet et moi sur mon droit à rêver. J'ai ainsi pu interrompre
-cet échange stérile avant que le ton ne monte simplement en cessant de contre-argumenter.
+était focalisé sur le réalisme du projet et moi sur mon droit à rêver et sur le pourquoi cela
+me fait rêver. J'ai ainsi pu interrompre cet échange stérile avant que le ton ne monte
+simplement en cessant de contre-argumenter.
 
 C'est quelque part assez rassurant : c'est justement l'objet de ce module, «&nbsp;clarifier
 puis exprimer ce qui se passe en nous&nbsp;». Il ne s'agit pas ici de l'exprimer à mes interlocuteurs
 mais de _me_ l'exprimer, de prendre connaissance et conscience de mon état ici et maintenant.
 
 Sans ingratitude de ma part, je ne pense pas que deux jours de formation soient à l'origine d'un
-tel changement. Gerald M. Weinberg écrit dans la préface de _Becoming a technical leader_ :
+tel changement. À un autre propos, Gerald M. Weinberg écrit dans la préface de _Becoming a technical leader_ :
 
 > «&nbsp;becoming a leader is not something that happens to you, but something that you do. [...]
 > Our workshops [...] give a boost to each person's unique experiential process of
@@ -79,7 +80,7 @@ tel changement. Gerald M. Weinberg écrit dans la préface de _Becoming a techni
 > propre développement personnel)
 
 Cette formulation me rejoint pour évoquer ce stage et l'évolution qui s'est opérée chez moi.
-Le cadre sécurisant posé par le formateur et la garantie de confidentialité permet de prendre
+Le cadre sécurisant posé par la formatrice et la garantie de confidentialité permet de prendre
 des risques, de s'ouvrir plus que d'usage.
 
 ## Module 2 : l'ouverture au dialogue
@@ -98,25 +99,30 @@ pour la construire ou la rétablir seront vains. C'est ce que met en évidence J
 Salomé avec sa [métaphore de l'écharpe](https://blog-espere.com/decouvrez-lecharpe-relationnelle-un-outil-essentiel-de-la-methode-espere/).
 
 Si je ne devais retenir qu'une expérience de ce deuxième module, je m'arrêterais sur l'écoute
-silencieuse. L'exercice consiste à former un binôme :
-un écoutant offre son attention sans intervenir à un écouté qui est libre de s'exprimer pendant
-six minutes. Jusque là, je percevais mon expression comme décousue et je me pensais incapable de
-tenir seul un sujet au-delà de quelques phrases. J'ai été très surpris de constater que j'en étais
-non seulement capable mais que l'expérience m'avait été agréable ! C'est ainsi que j'ai réalisé
-(au delà d'une compréhension intellectuelle) que la qualité d'un échange dépend autant de la
-qualité de l'écoute que de la qualité de la parole. Si j'avais déjà conscience de quelques travers
+silencieuse. L'exercice consiste à former un binôme : un écoutant offre son attention sans
+intervenir à un écouté qui est libre de s'exprimer pendant six minutes. Jusque là, je
+percevais mon expression comme décousue et je me pensais incapable de tenir seul un sujet
+au-delà de quelques phrases. J'ai été très surpris de constater que j'en étais non seulement
+capable mais que l'expérience m'avait été agréable ! C'est ainsi que j'ai réalisé (au delà
+d'une compréhension intellectuelle) que la qualité d'un échange dépend autant de la qualité
+de l'écoute que de la qualité de la parole. Si j'avais déjà conscience de quelques travers
 de l'écoutant (ramener le sujet à soi, commenter ou juger les propos...), j'en ai découvert de
-beaucoup plus insidieux. J'ai été saisi par la rupture du flot de la pensée que provoque une question,
-aussi pertinente et bienveillante soit-elle.
+beaucoup plus insidieux. En particulier, j'ai été saisi par la rupture du flot de la pensée que
+provoque une question impromptue, aussi pertinente et bienveillante soit-elle.
 
 Si j'ai pris conscience de ces obstacles à la communication pour moi... j'en ai également pris
 conscience dans la communication des autres, avec qui j'ai commencé à les repérer :
 
 > « Je n'ai pas envie d'aller faire les courses demain...  
 > — Eh bien moi je n'ai pas envie d'aller travailler !  
-> — _(avec un petit sourire)_ Tiens, tu ramènes à toi »
+> — _(avec un petit sourire)_ Tiens, tu ramènes les choses à toi »
 
 La suite de cette conversation a été ce qu'on pourrait appeler une situation inconfortable.
+Quelle était mon intention en faisant remarquer ce défaut de communication ? Certainement
+pas le maintien de la relation en tout cas. Ave plus de recul, j'aurais pu proposer une écoute
+empathique à mon interlocuteur, quitte à revenir à mon sujet initial par la suite. Dans tous les
+cas, que m'aurais apporter d'infliger un état d'âme à quelqu'un qui n'était pas en disposition
+de le recevoir ?
 
 ## Module 3 : la pratique du dialogue
 
@@ -128,7 +134,7 @@ recommandation universelle.
 
 Ce module a été moins pour moi une source de découverte qu'un approfondissement des premiers modules.
 S'il apporte de nouvelles notions, dont le travail autour du « non », je suis reparti avec un ancrage
-plus fort. C'est réellement le module où j'ai senti les fruits de ces sessions, où j'ai pu observer
+plus fort. C'est réellement le module où j'ai senti les fruits de ces formations, où j'ai pu observer
 que j'avais engrammé certaines attitudes. Je m'observe plus attentif lorsque j'écoute quelqu'un tout
 en étant attentif à ce que son discours provoque chez moi : je suis ainsi pleinement à la discussion
 lorsque je suis disponible pour l'être et je suis capable de remarquer lorsque je ne le suis pas,
@@ -151,7 +157,7 @@ un [autre stage](http://www.cnvformations.fr/index.php?m=5&ms=101&tyf=1) ou rejo
 [groupe de pratique](https://cnvfrance.fr/ac§tualites/groupes-de-pratique/un-groupe-de-pratique-en-communication-non-violente/).
 
 Une fois cette décision prise, je me suis détendu et j'ai pu profiter pleinement des deux jours de
-stage sans inquiétude vis-à-vis de la suite.
+stage sans inquiétude ni pensée parasite vis-à-vis de la suite.
 
 Six jours de formation ne m'ont pas suffi à devenir un expert de la Communication NonViolente. Pour
 autant, la graine est semée et a commencé à germer. Même si je n'y parviens pas toujours, je garde
@@ -175,17 +181,17 @@ l'expression en continu des besoins serait source d'agacement.
 
 Par taquinerie, je pourrais faire remarquer que ces deux points, lorsqu'ils sont formulés par la même
 personne, se contredisent. Si les émotions n'ont pas leur place au travail, pourquoi prendre en compte
-l'agacement que provoque chez certains l'expression des besoins ? Cette prise en compte serait justement...
-la prise en compte d'un besoin.
+l'agacement que provoque chez certains l'expression des besoins ? Et d'ailleurs, cette prise en compte
+serait justement... la prise en compte de l'expression d'un besoin.
 
 Je souhaite repartir de l'intention de la CNV : maintenir la relation. Ce n'est pas exprimer ses émotions,
 ce n'est pas faire respecter ses besoins : c'est entretenir ce qui nous relie à l'autre. Il s'agit vraiment
-de l'essentiel de la Communication NonViolente. Ainsi, si pour maintenir cette relation, j'utilise
-l'auto-empathie (« processus » silencieux de CNV de moi à moi-même pour identifier mon besoin et essayer
-d'y répondre) au travail, je ne rentre pas dans le cadre de ces critiques. Ainsi, la CNV me permet de
-travailler sur mon état intérieur, de le clarifier et de me rendre plus disponible et ouvert au dialogue.
+de l'essentiel de la Communication NonViolente. Si pour maintenir cette relation, j'utilise l'auto-empathie
+(« processus » silencieux de CNV de moi à moi-même pour identifier mon besoin et essayer d'y répondre) au
+travail, je ne rentre pas dans le cadre de ces critiques. Ainsi, la CNV me permet de travailler sur mon état
+intérieur, de le clarifier et de me rendre plus disponible et ouvert au dialogue avec mes collègues.
 
-Par ailleurs, un praticien expérimenté en CNV n'utilise pas le schéma d'expression avec de gros sabots :
+Par ailleurs, un praticien expérimenté en CNV n'utilise pas le schéma d'expression avec ses gros sabots :
 « Lorsque tu dis... je me sens... parce que j'ai besoin... donc pouvons-nous... ? ». Une pratique de la CNV
 maîtrisée peut passer inaperçue en utilisant des tournures de phrases plus naturelles, voire en éludant
 l'expression de l'émotion ou du besoin si celle-ci est trop « évidente ». Tout est question d'expérience et
@@ -197,7 +203,7 @@ Quant à la pertinence de former ses salariés à la Communication NonViolente..
 un travail sur soi, elle demande d'avoir envie de changer, quitte à aller creuser des choses qui ne sont
 pas toujours confortables. En ça, je pense qu'il n'est pas pertinent de former tout le monde. Sans
 l'envie préalable, ce serait du temps perdu... voire contre-productif. Les mécanismes de la CNV, lorsqu'ils
-ne sont pas bien intégrés, deviennent très vite de la CNVV (Communication NonViolente Violente).
+ne sont pas bien intégrés, deviennent très vite de la « CNVV » (Communication NonViolente Violente).
 L'exemple suivant semble mécaniquement correct mais est pourtant violent à l'égard du destinataire du message :
 
 > « La dernière fois que je suis allé en réunion avec toi, j'en suis ressorti en pleurant. Je suis fatigué
@@ -206,15 +212,19 @@ L'exemple suivant semble mécaniquement correct mais est pourtant violent à l'�
 
 Être volontaire pour travailler sur soi ne protège pas d'une telle formulation. J'ai d'ailleurs rencontré
 en formation des gens qui pouvaient s'exprimer ainsi — et c'est normal, cela demande du temps de bien
-intégrer les choses. L'envie est une condition nécessaire à un bon travail mais pas une condition suffisante.
+intégrer les choses. L'envie est une condition nécessaire mais pas une condition suffisante.
 
 Cependant, il suffit de quelques individus pour transformer tout un groupe. Lorsqu'une personne fait un pas
-de côté et change con comportement, elle va induire un changement dans tout le groupe. Et ce changement du
-groupe va induire un changement de chaque individu du groupe jusqu'à une situation d'équilibre. Ainsi,
-former quelques volontaires motivés peut avoir un impact fort sur tout un groupe. En cela, je pense que
-former les volontaires à la CNV peut être pertinent et bénéfique pour une entreprise.
+de côté et change con comportement, elle va induire un changement dans tout le groupe ; et ce changement du
+groupe va induire un changement de chaque individu du groupe jusqu'à une situation d'équilibre.
+
+> 💡_Ce mécanisme est illustré par l'[Université du Nous](http://universite-du-nous.org/) dans la vidéo_
+> _[Sociocratie, Holacracy... ou pas de modèle](https://gcs-vimeo.akamaized.net/exp=1566844521~acl=%2A%2F732247074.mp4%2A~hmac=75f349a64084fff8310917c7eba5b48bc8f4410090c6d1a832189afdca5582d3/vimeo-prod-skyfire-std-us/01/2599/8/212996890/732247074.mp4)_.
 
 ![Un changement personnel induit un changement du groupe, qui induit lui-même à nouveau un changement personnel](/images/cnv/changement.png){.center}
+
+Ainsi, former quelques volontaires motivés peut avoir un impact fort sur tout un groupe. En cela, je pense que
+former les volontaires à la CNV peut être pertinent et bénéfique pour une entreprise.
 
 ## Célébrer les petits pas
 
