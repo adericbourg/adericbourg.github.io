@@ -20,14 +20,14 @@ J'ai suivi les [trois modules de base de formation à la CNV](http://www.cnvform
 Je ne souhaite pas détailler le contenu de ces stages. Non par confidentialité du contenu.
 Non par paresse. Non parce que j'ai dormi durant six jours.
 
-J'ai perçu ces stages comme quelque chose qui se _vis_ et non comme quelque chose qui
+J'ai perçu ces stages comme quelque chose qui se _vit_ et non comme quelque chose qui
 _s'explique_ ou se _pense_. D'ailleurs, je n'ai jamais réussi à finir un livre traitant de la
 Communication NonViolente par ennui et par manque de vie. Et c'est là toute la différence
 entre les livres et les stages : les livres se lisent avec la tête de façon rationnelle
 tandis que les stages insistent sur le _ressenti_, sur l'attention à l'émotion que l'on a
 souvent appris à étouffer avec la tête.
 
-Je vais donc axer ce retour ce la façon dont _j'ai_ vécu les choses et sur les déplacements
+Je vais donc axer ce retour sur la façon dont _j'ai_ vécu les choses et sur les déplacements
 intérieurs que j'ai pu observer chez moi.
 
 ## Et moi, et moi, et moi
@@ -36,11 +36,11 @@ Je suis de nature discrète et il m'arrive de manquer de confiance en moi pour p
 la parole au sein d'un groupe. Lorsque je la prends, j'ai du mal à la garder jusqu'à ce
 que j'aie terminé d'exprimer ce que j'avais à dire. Lorsque ça arrive, ça me coupe
 doublement la chique puisque je me retrouve en état de sidération sans savoir quoi répondre
-pour faire remarquer que j'aurais légitimement aller au bout de mon idée. C'est également ce
+pour faire remarquer que j'aurais légitimement pu aller au bout de mon idée. C'est également ce
 qui peut m'arriver lors d'une interaction inconfortable.
 
 Lorsque je m'exprime, j'ai besoin d'être compris. Tant que je fais face à quelqu'un qui ne me
-semble pas avoir compris ce que dis ou qui m'oppose des « oui, mais » sans la moindre
+semble pas avoir compris ce que je dis ou qui m'oppose des « oui, mais » sans la moindre
 reformulation, je peux sur-enchérir sur les arguments et bouillir de l'intérieur.
 
 Une fois à bout, quand je ne peux plus rien retenir et que la vapeur s'échappe par mes
@@ -57,7 +57,7 @@ n'irait nulle part telle qu'elle était menée.
 J'ai par exemple évoqué une envie, un rêve que je ne réaliserais jamais que j'ai depuis
 quelques années (et qu'il ne serait effectivement pas raisonnable de réaliser) avec une
 personne de mon entourage proche. Celle-ci a argumenté sur le manque de réalisme
-d'un tel projet. Après un court ping-pong d'arguments, j'en senti un déplacement intérieur
+d'un tel projet. Après un court ping-pong d'arguments, j'ai senti un déplacement intérieur
 qui m'a permis de réaliser que nous n'argumentions pas sur le même plan : mon interlocuteur
 était focalisé sur le réalisme du projet et moi sur mon droit à rêver et sur le pourquoi cela
 me fait rêver. J'ai ainsi pu interrompre cet échange stérile avant que le ton ne monte
@@ -118,21 +118,18 @@ conscience dans la communication des autres, avec qui j'ai commencé à les rep�
 
 La suite de cette conversation a été ce qu'on pourrait appeler une situation inconfortable.
 Quelle était mon intention en faisant remarquer ce défaut de communication ? Certainement
-pas le maintien de la relation en tout cas. Ave plus de recul, j'aurais pu proposer une écoute
-empathique à mon interlocuteur, quitte à revenir à mon sujet initial par la suite. Dans tous les
-cas, que m'aurais apporter d'infliger un état d'âme à quelqu'un qui n'était pas en disposition
-de le recevoir ?
+pas le maintien de la relation en tout cas.
 
 ## Module 3 : la pratique du dialogue
 
-J'ai suivi ce module quelques jours après le module 2. Si un mois d'écart entre deux modules m'a
-semblé long, trois jours m'a semblé court : je me sentais encore en phase de digestion du précédent
+J'ai suivi ce module quelques jours après le module 2. Un mois d'écart entre deux modules m'a semblé
+trop long mais trois jours m'ont semblé trop courts : je me sentais encore en phase de digestion du précédent
 module. Si c'était à refaire sans aucune contrainte, je choisirais de les espacer de deux à trois semaines.
 Cela reste une perception personnelle : si cela répond à mon propre rythme, cela n'est pas une
 recommandation universelle.
 
 Ce module a été moins pour moi une source de découverte qu'un approfondissement des premiers modules.
-S'il apporte de nouvelles notions, dont le travail autour du « non », je suis reparti avec un ancrage
+Il apporte de nouvelles notions, dont le travail autour du « non », mais j'en ai surtout récolté un ancrage
 plus fort. C'est réellement le module où j'ai senti les fruits de ces formations, où j'ai pu observer
 que j'avais engrammé certaines attitudes. Je m'observe plus attentif lorsque j'écoute quelqu'un tout
 en étant attentif à ce que son discours provoque chez moi : je suis ainsi pleinement à la discussion
@@ -141,7 +138,7 @@ proposant ainsi d'interrompre ou de reporter l'échange.
 
 À l'issue de ce sixième jour, ma communication est encore loin d'être parfaite : il reste du travail.
 Certains sujets ou certaines façons de parler peuvent encore me faire bondir, je peux me retrouver dans
-une incapacité à accueillir pleinement ce que dis l'autre en quelques phrases seulement. Je note
+une incapacité à accueillir pleinement ce que dit l'autre en quelques phrases seulement. Je note
 cependant les petits pas, les petites réussites qui m'encouragent à poursuivre et à persévérer. Ce
 troisième module aura été, pour moi, le module de la confirmation.
 
@@ -160,7 +157,7 @@ stage sans inquiétude ni pensée parasite vis-à-vis de la suite.
 
 Six jours de formation ne m'ont pas suffi à devenir un expert de la Communication NonViolente. Pour
 autant, la graine est semée et a commencé à germer. Même si je n'y parviens pas toujours, je garde
-l'intention de la CNV avec moi, le maintient de la relation sans objectif caché. Et lorsque je perds
+l'intention de la CNV avec moi, le maintien de la relation sans objectif caché. Et lorsque je perds
 ce cap, je me pose (parfois longtemps après) la question que Marshall Rosenberg posait :
 
 > « Qu'est-ce qui est important pour toi : être heureux ou avoir raison ? »
@@ -214,11 +211,11 @@ en formation des gens qui pouvaient s'exprimer ainsi — et c'est normal, cela d
 intégrer les choses. L'envie est une condition nécessaire mais pas une condition suffisante.
 
 Cependant, il suffit de quelques individus pour transformer tout un groupe. Lorsqu'une personne fait un pas
-de côté et change con comportement, elle va induire un changement dans tout le groupe ; et ce changement du
+de côté et change son comportement, elle va induire un changement dans tout le groupe ; et ce changement du
 groupe va induire un changement de chaque individu du groupe jusqu'à une situation d'équilibre.
 
-> 💡_Ce mécanisme est illustré par l'[Université du Nous](http://universite-du-nous.org/) dans la vidéo_
-> _[Sociocratie, Holacracy... ou pas de modèle](https://gcs-vimeo.akamaized.net/exp=1566844521~acl=%2A%2F732247074.mp4%2A~hmac=75f349a64084fff8310917c7eba5b48bc8f4410090c6d1a832189afdca5582d3/vimeo-prod-skyfire-std-us/01/2599/8/212996890/732247074.mp4)_.
+> 💡_Ce mécanisme est illustré par l'[Université du Nous](http://universite-du-nous.org/) dans son MOOC sur_
+> _la gouvernance partagée_.
 
 ![Un changement personnel induit un changement du groupe, qui induit lui-même à nouveau un changement personnel](/images/cnv/changement.png){.center}
 
