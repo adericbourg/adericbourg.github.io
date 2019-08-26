@@ -19,7 +19,7 @@ fonds propres sans aucun regret. Retour.
 
 J'ai suivi les [trois modules de base de formation à la CNV](http://www.cnvformations.fr/).
 Je ne souhaite pas détailler le contenu de ces stages. Non par confidentialité du contenu.
-Non par paresse. Non pas parce que j'ai dormi durant six jours.
+Non par paresse. Non parce que j'ai dormi durant six jours.
 
 J'ai perçu ces stages comme quelque chose qui se _vis_ et non comme quelque chose qui
 _s'explique_ ou se _pense_. D'ailleurs, je n'ai jamais réussi à finir un livre traitant de la
@@ -94,7 +94,7 @@ résoudre : en travaillant sur une situation personnelle difficile et malgré l'
 je n'ai pas réussi à trouver d'issue qui assurerait la continuité de la relation. Cela a été
 l'occasion pour moi de prendre conscience qu'une relation se construit et se maintient à deux :
 si l'autre ne souhaite pas cette relation ou considère qu'elle n'existe pas, tous mes efforts
-pour la construire ou la rétablir seront vains. C'est d'ailleurs ce que met en évidence Jacques
+pour la construire ou la rétablir seront vains. C'est ce que met en évidence Jacques
 Salomé avec sa [métaphore de l'écharpe](https://blog-espere.com/decouvrez-lecharpe-relationnelle-un-outil-essentiel-de-la-methode-espere/).
 
 Si je ne devais retenir qu'une expérience de ce deuxième module, je m'arrêterais sur l'écoute
@@ -114,72 +114,109 @@ conscience dans la communication des autres, avec qui j'ai commencé à les rep�
 
 > « Je n'ai pas envie d'aller faire les courses demain...  
 > — Eh bien moi je n'ai pas envie d'aller travailler !  
-> — _(avec un petit sourire)_ Tiens, tu ramènes à toi... »
+> — _(avec un petit sourire)_ Tiens, tu ramènes à toi »
 
-Cela a conduit à des situations inconfortables.
-
-Encore une fois, ce que l'on peut observer sur les autres s'observe aussi sur soi-même. Ayant vécu
-et observé l'effet d'une interruption sur TODO
-
-TODO
+La suite de cette conversation a été ce qu'on pourrait appeler une situation inconfortable.
 
 ## Module 3 : la pratique du dialogue
 
 J'ai suivi ce module quelques jours après le module 2. Si un mois d'écart entre deux modules m'a
 semblé long, trois jours m'a semblé court : je me sentais encore en phase de digestion du précédent
 module. Si c'était à refaire sans aucune contrainte, je choisirais de les espacer de deux à trois semaines.
-Cela reste une perception personnelle : si cela convient à mon propre rythme, cela n'est pas une
+Cela reste une perception personnelle : si cela répond à mon propre rythme, cela n'est pas une
 recommandation universelle.
 
-TODO
+Ce module a été moins pour moi une source de découverte qu'un approfondissement des premiers modules.
+S'il apporte de nouvelles notions, dont le travail autour du « non », je suis reparti avec un ancrage
+plus fort. C'est réellement le module où j'ai senti les fruits de ces sessions, où j'ai pu observer
+que j'avais engrammé certaines attitudes. Je m'observe plus attentif lorsque j'écoute quelqu'un tout
+en étant attentif à ce que son discours provoque chez moi : je suis ainsi pleinement à la discussion
+lorsque je suis disponible pour l'être et je suis capable de remarquer lorsque je ne le suis pas,
+proposant ainsi d'interrompre ou de reporter l'échange.
+
+À l'issue de ce sixième jour, ma communication est encore loin d'être parfaite : il reste du travail.
+Certains sujets ou certaines façons de parler peuvent encore me faire bondir, je peux me retrouver dans
+une incapacité à accueillir pleinement ce que dis l'autre en quelques phrases seulement. Je note
+cependant les petits pas, les petites réussites qui m'encouragent à poursuivre et à persévérer. Ce
+troisième module aura été, pour moi, le module de la confirmation.
 
 ## Et maintenant ?
 
-L'attitude d'auto-empathie, prise de recul sur soi, m'a permis d'identifier au début du troisième
+L'attitude d'auto-empathie, outil de prise de recul sur soi, m'a permis d'identifier au début du troisième
 module que j'étais inquiet de voir ces trois modules se terminer, d'interrompre ces progrès que je
 me suis observé faire et l'intensité des échange qui ont eu lieu lors de ces six jours. J'ai ainsi
 pu prendre conscience qu'il était important pour moi d'ancrer mon intention, ma posture et mes acquis.
 J'ai ainsi pu prendre la décision de planifier dès la fin du stage ce qui serait la suite, que ce soit
 un [autre stage](http://www.cnvformations.fr/index.php?m=5&ms=101&tyf=1) ou rejoindre un
-[groupe de pratique](https://cnvfrance.fr/actualites/groupes-de-pratique/un-groupe-de-pratique-en-communication-non-violente/).
+[groupe de pratique](https://cnvfrance.fr/ac§tualites/groupes-de-pratique/un-groupe-de-pratique-en-communication-non-violente/).
 
 Une fois cette décision prise, je me suis détendu et j'ai pu profiter pleinement des deux jours de
 stage sans inquiétude vis-à-vis de la suite.
 
-TODO
+Six jours de formation ne m'ont pas suffi à devenir un expert de la Communication NonViolente. Pour
+autant, la graine est semée et a commencé à germer. Même si je n'y parviens pas toujours, je garde
+l'intention de la CNV avec moi, le maintient de la relation sans objectif caché. Et lorsque je perds
+ce cap, je me pose (parfois longtemps après) la question que Marshall Rosenberg posait :
 
-> « Qu'est-ce qui est important pour toi : être heureux ou avoir raison ? » (Rosenberg)
+> « Qu'est-ce qui est important pour toi : être heureux ou avoir raison ? »
 
 ## La CNV en entreprise
 
-> *TODO chapitre pertinent ?*
+Pour boucler cet article, revenons sur la CNV en entreprise :
 
-### Robot
+* Peut-on l'utiliser dans ce contexte ?
+* Est-ce pertinent de former ses salariés à la Communication NonViolente ?
 
-Lors de ces huit ans de déclaration d'intérêt à la Communication NonViolente au travail, j'ai eu
-l'occasion de recevoir les idées reçues à son sujet en milieu professionnel. Une personne initiée
-sur une demi-journée a reproché l'aspect « mécanique » du processus en caricaturant sa pratique :
+### Utiliser la CNV en entreprise
 
-> Lorsque j'arrive le matin au travail, je me sens fatigué. J'ai besoin de vitalité.
-> Acceptes-tu de venir prendre un café avec moi ?
+À plusieurs reprises, j'ai entendu dire que la CNV n'était pas adaptée à l'entreprise. Parmi les arguments
+contre, j'en ai retenu deux : d'une part les émotions n'auraient pas leur place au travail et d'autre part
+l'expression en continu des besoins serait source d'agacement.
 
-Dans les faits, je n'ai rencontré personne d'expérimenté qui utilise la CNV ainsi. Si l'enchaînement
-« observation – ressenti – besoin – demande » aussi explicite est utile lors de son appropriation,
-un praticien expérimenté s'exprimera dans un langage naturel et ne dira que ce qui est nécessaire,
-quitte à éluder le ressenti ou le besoin. Pour aller plus loin, quelqu'un d'expérimenté ne fera pas
-un usage _permanent_ du processus de la CNV : il se réserve pour des situation où une précaution toute
-particulière est nécessaire pour maintenir la relation à l'autre (tension, conflit, situation
-inconfortable, situation nécessitant une attention à l'autre...).
-Inviter son collègue à aller prendre un café — sauf exception — n'en fait pas partie.
+Par taquinerie, je pourrais faire remarquer que ces deux points, lorsqu'ils sont formulés par la même
+personne, se contredisent. Si les émotions n'ont pas leur place au travail, pourquoi prendre en compte
+l'agacement que provoque chez certains l'expression des besoins ? Cette prise en compte serait justement...
+la prise en compte d'un besoin.
 
-### « Si on me force à exprimer mes émotions, je démissionne »
+Je souhaite repartir de l'intention de la CNV : maintenir la relation. Ce n'est pas exprimer ses émotions,
+ce n'est pas faire respecter ses besoins : c'est entretenir ce qui nous relie à l'autre. Il s'agit vraiment
+de l'essentiel de la Communication NonViolente. Ainsi, si pour maintenir cette relation, j'utilise
+l'auto-empathie (« processus » silencieux de CNV de moi à moi-même pour identifier mon besoin et essayer
+d'y répondre) au travail, je ne rentre pas dans le cadre de ces critiques. Ainsi, la CNV me permet de
+travailler sur mon état intérieur, de le clarifier et de me rendre plus disponible et ouvert au dialogue.
 
-Dans une équipe où je manquait de lien et de collaboration avec mes collègues directs, j'ai évoqué
-la CNV et les _[Core Protocols](https://www.mccarthyshow.com/online/)_ comme des pistes
-d'inspiration. Ces deux approches demandent, dans leurs principes, de s'intéresser à ses émotions.
-Un collègue a réagi à ce sujet :
+Par ailleurs, un praticien expérimenté en CNV n'utilise pas le schéma d'expression avec de gros sabots :
+« Lorsque tu dis... je me sens... parce que j'ai besoin... donc pouvons-nous... ? ». Une pratique de la CNV
+maîtrisée peut passer inaperçue en utilisant des tournures de phrases plus naturelles, voire en éludant
+l'expression de l'émotion ou du besoin si celle-ci est trop « évidente ». Tout est question d'expérience et
+de pratique.
 
-> Si on me force à faire ça, je démissionne !
+### Former ses salariés à la CNV
 
-Il a précisé de lui-même qu'il se sentait mal à l'aise avec le fait d'exprimer ses émotions...
-et c'est pourtant ce qu'il a fait en disant cela !
+Quant à la pertinence de former ses salariés à la Communication NonViolente... ça dépend. La CNV demande
+un travail sur soi, elle demande d'avoir envie de changer, quitte à aller creuser des choses qui ne sont
+pas toujours confortables. En ça, je pense qu'il n'est pas pertinent de former tout le monde. Sans
+l'envie préalable, ce serait du temps perdu... voire contre-productif. Les mécanismes de la CNV, lorsqu'ils
+ne sont pas bien intégrés, deviennent très vite de la CNVV (Communication NonViolente Violente).
+L'exemple suivant semble mécaniquement correct mais est pourtant violent à l'égard du destinataire du message :
+
+> « La dernière fois que je suis allé en réunion avec toi, j'en suis ressorti en pleurant. Je suis fatigué
+> de tes frasques et j'ai besoin d'être écouté pendant les réunions. Alors est-ce que tu peux arrêter
+> de te comporter comme tu le fais à chaque fois ? »
+
+Être volontaire pour travailler sur soi ne protège pas d'une telle formulation. J'ai d'ailleurs rencontré
+en formation des gens qui pouvaient s'exprimer ainsi — et c'est normal, cela demande du temps de bien
+intégrer les choses. L'envie est une condition nécessaire à un bon travail mais pas une condition suffisante.
+
+Cependant, il suffit de quelques individus pour transformer tout un groupe. Lorsqu'une personne fait un pas
+de côté et change con comportement, elle va induire un changement dans tout le groupe. Et ce changement du
+groupe va induire un changement de chaque individu du groupe jusqu'à une situation d'équilibre. Ainsi,
+former quelques volontaires motivés peut avoir un impact fort sur tout un groupe. En cela, je pense que
+former les volontaires à la CNV peut être pertinent et bénéfique pour une entreprise.
+
+![Un changement personnel induit un changement du groupe, qui induit lui-même à nouveau un changement personnel](/images/cnv/changement.png){.center}
+
+## Célébrer les petits pas
+
+Vous êtes arrivés au bout de cet article et je m'en réjouis ! Partager ce qui est important pour
+moi me tient à cœur : seriez-vous d'accord pour [jeter un œil à mes autres articles](https://www.dericbourg.net) ?
