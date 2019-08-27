@@ -150,7 +150,7 @@ me suis observé faire et l'intensité des échange qui ont eu lieu lors de ces 
 pu prendre conscience qu'il était important pour moi d'ancrer mon intention, ma posture et mes acquis.
 J'ai ainsi pu prendre la décision de planifier dès la fin du stage ce qui serait la suite, que ce soit
 un [autre stage](http://www.cnvformations.fr/index.php?m=5&ms=101&tyf=1) ou rejoindre un
-[groupe de pratique](https://cnvfrance.fr/ac§tualites/groupes-de-pratique/un-groupe-de-pratique-en-communication-non-violente/).
+[groupe de pratique](https://cnvfrance.fr/actualites/groupes-de-pratique/un-groupe-de-pratique-en-communication-non-violente/).
 
 Une fois cette décision prise, je me suis détendu et j'ai pu profiter pleinement des deux jours de
 stage sans inquiétude ni pensée parasite vis-à-vis de la suite.
