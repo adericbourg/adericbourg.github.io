@@ -39,8 +39,8 @@ d'infirmer le ressenti inter-personnel.
 ## Angles d'observation
 
 J'ai abordé cet exercice en essayant de ne pas laisser d'angle mort tout en sachant qu'il
-y en aurait (sic). Dans ma demande, j'ai essayé de montrer des limites floues afin de laisser
-l'équipe ou mon interlocuteur aborder ce qui lui semble important. J'ai évoqué :
+y en aurait (sic). Dans ma demande, j'ai essayé de fixer des limites volontairement floues
+afin de laisser l'équipe ou mon interlocuteur aborder ce qui lui semble important. J'ai évoqué :
 
 * l'aspect global du code ;
 * les choix de _build_, test et déploiement ;
@@ -61,8 +61,10 @@ Sur ces aspect, j'ai observé (consciemment) :
 * la présence et la qualité d'une documentation de démarrage, un « guide du nouvel arrivant ».
 
 J'essaie également de me faire une idée sur la complexité d'installer un environnement de
-développement. Mon expérience semble m'indiquer que plus cette installation est complexe ou
-compliquée, plus l'environnement est fragile et l'installation non-répétable.
+développement. De mon expérience, il semble que plus cette installation est complexe ou
+compliquée, plus l'environnement est fragile et l'installation non-répétable. Cela présage
+de la même chose pour le déploiement : mise en production complexe, difficilement automatisable
+et possiblement instable.
 
 Un script d'installation peut-être un fort gain de temps s'il ne se fait pas au détriment de
 la connaissance de chacun de son environnement : qui sait comment fonctionne ce script
@@ -94,9 +96,10 @@ Pour ce volet, j'essaie de partir d'une vue d'ensemble :
 
 ### Qualité du code
 
-Je demande ensuite à me montrer le jeu de tests d'une fonctionnalité « pas trop simple »
-mais « pas trop complexe » non plus et j'essaie de comprendre quelle est cette fonctionnalité
-à partir de ce que je vois des tests.
+J'aborde cet aspect de la même façon que je réaliserais une revue de code. Je demande à voir
+une fonctionnalité « pas trop simple »mais « pas trop complexe » non plus et je pars de son jeu
+de tests. J'essaie de comprendre quelle est cette fonctionnalité à partir de ce qu'expriment les
+tests.
 
 * Le nommage du test suffit-il à en comprendre l'objectif ?
 * Faut-il regarder l'implémentation pour comprendre ce qui est vraiment testé ?
