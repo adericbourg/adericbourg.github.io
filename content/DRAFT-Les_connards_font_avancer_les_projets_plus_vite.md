@@ -5,6 +5,15 @@ Status: draft
 Date: 1970-01-01
 ---
 
+Vous managez une équipe. Lors des réunions, celle-ci est globalement silencieuse. Amorphe, même, auriez-vous
+envie de dire. Quelle frustration ! Heureusement, il y a Thomas. Thomas, c'est ce jeune ingénieur plein
+d'énergie qui, lui, participe, propose des idées, fait avancer les projets. Alors certes, il ne met pas
+toujours les formes pour s'exprimer mais au moins, quand on lui confie un projet, il l'emmène jusqu'au bout !
+Il est d'ailleurs très autonome : il n'a besoin de personne pour l'aider. Quel dommage que toute l'équipe ne
+soit pas comme lui !
+
+===
+
 Certaines personnes font avancer les projets plus vite que d'autres. Sans généraliser, j'observe que parmi
 celles-ci,
 
