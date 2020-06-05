@@ -5,22 +5,43 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
 <url>
 <loc>https://www.dericbourg.net/</loc>
-<lastmod>2019-08-27T09:10:00-00:00</lastmod>
+<lastmod>2020-06-05T15:53:54-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://www.dericbourg.net/tags.html</loc>
-<lastmod>2019-08-27T09:10:00-00:00</lastmod>
+<lastmod>2020-06-05T15:53:54-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://www.dericbourg.net/categories.html</loc>
-<lastmod>2019-08-27T09:10:00-00:00</lastmod>
+<lastmod>2020-06-05T15:53:54-00:00</lastmod>
 <changefreq>daily</changefreq>
+<priority>0.5</priority>
+</url>
+
+<url>
+<loc>https://www.dericbourg.net/authors.html</loc>
+<lastmod>2020-06-05T15:53:54-00:00</lastmod>
+<changefreq>daily</changefreq>
+<priority>0.5</priority>
+</url>
+
+<url>
+<loc>https://www.dericbourg.net/archives/</loc>
+<lastmod>2020-06-05T15:53:54-00:00</lastmod>
+<changefreq>daily</changefreq>
+<priority>0.5</priority>
+</url>
+
+<url>
+<loc>https://www.dericbourg.net/2100/01/01/comment-rendre-vos-utilisateurs-heureux-avec-vos-metriques/</loc>
+<lastmod>2100-01-01T00:00:00+01:00</lastmod>
+<changefreq>monthly</changefreq>
 <priority>0.5</priority>
 </url>
 
@@ -75,7 +96,35 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
 <url>
 <loc>https://www.dericbourg.net/category/blog.html</loc>
-<lastmod>2019-08-26T00:00:00+00:09</lastmod>
+<lastmod>2100-01-01T00:00:00+00:09</lastmod>
+<changefreq>daily</changefreq>
+<priority>0.5</priority>
+</url>
+
+<url>
+<loc>https://www.dericbourg.net/tag/sre.html</loc>
+<lastmod>2100-01-01T00:00:00+00:09</lastmod>
+<changefreq>daily</changefreq>
+<priority>0.5</priority>
+</url>
+
+<url>
+<loc>https://www.dericbourg.net/tag/metriques.html</loc>
+<lastmod>2100-01-01T00:00:00+00:09</lastmod>
+<changefreq>daily</changefreq>
+<priority>0.5</priority>
+</url>
+
+<url>
+<loc>https://www.dericbourg.net/tag/experience-utilisateur.html</loc>
+<lastmod>2100-01-01T00:00:00+00:09</lastmod>
+<changefreq>daily</changefreq>
+<priority>0.5</priority>
+</url>
+
+<url>
+<loc>https://www.dericbourg.net/tag/bonnes-pratiques.html</loc>
+<lastmod>2100-01-01T00:00:00+00:09</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
@@ -257,7 +306,7 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
 <url>
 <loc>https://www.dericbourg.net/author/alban-dericbourg.html</loc>
-<lastmod>2019-08-26T00:00:00+00:09</lastmod>
+<lastmod>2100-01-01T00:00:00+00:09</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
