@@ -1,69 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Blog bloquant - Blog</title><link href="https://www.dericbourg.net/" rel="alternate"></link><link href="https://www.dericbourg.net/feeds/blog.atom.xml" rel="self"></link><id>https://www.dericbourg.net/</id><updated>2100-01-01T00:00:00+01:00</updated><entry><title>Comment rendre vos utilisateurs heureux (avec vos métriques)</title><link href="https://www.dericbourg.net/2100/01/01/comment-rendre-vos-utilisateurs-heureux-avec-vos-metriques/" rel="alternate"></link><published>2100-01-01T00:00:00+01:00</published><updated>2100-01-01T00:00:00+01:00</updated><author><name>Alban Dericbourg</name></author><id>tag:www.dericbourg.net,2100-01-01:/2100/01/01/comment-rendre-vos-utilisateurs-heureux-avec-vos-metriques/</id><summary type="html">&lt;p&gt;Ça y est ! Mon application est déployée en production et reçoit du trafic ! C'est maintenant
-que les choses sérieuses commencent : les utilisateurs seront les meilleurs ambassadeurs pour
-en faire la promotion... ou pour en dire leur déception. Ce serait utile d'avoir des retours
-sur leur perception, de pouvoir mesurer leur …&lt;/p&gt;</summary><content type="html">&lt;p&gt;Ça y est ! Mon application est déployée en production et reçoit du trafic ! C'est maintenant
-que les choses sérieuses commencent : les utilisateurs seront les meilleurs ambassadeurs pour
-en faire la promotion... ou pour en dire leur déception. Ce serait utile d'avoir des retours
-sur leur perception, de pouvoir mesurer leur expérience mais je n'ai pas le budget pour lancer
-une étude.&lt;/p&gt;
-&lt;p&gt;Je fais donc avec les moyens du bord, et ils sont déjà riches ! Et si je commençais par utiliser
-mes métriques applicatives ?&lt;/p&gt;
-&lt;h2&gt;Adopter de justes proportions&lt;/h2&gt;
-&lt;p&gt;En me mettant à la place de mes utilisateurs, je me dis que ce qui peut arriver de pire serait
-de tomber sur une erreur bloquante. C'est quelque chose que je peux mesurer en utilisant  les
-codes HTTP des réponses de mon application.&lt;/p&gt;
-&lt;p&gt;Je ne suis pas parfait : je sais qu'il y en a et qu'il risque d'y en avoir toujours, ne serait-ce
-que parce que mon infrastructure n'est pas parfaite et que certains composants peuvent parfois
-tomber. Je ne vise pas le zéro absolu mais j'aimerais en avoir le moins possible. Quand soudain,
-j'observe une augmentation exponentielle du nombre « d'erreurs 500 » !&lt;/p&gt;
-&lt;p&gt;&lt;img alt="Augmentation exponentielle du nombre de réponses HTTP avec un statut 500" class="center" src="/images/utilisateurs_heureux_metriques/500_exp_increase.png"&gt;&lt;/p&gt;
-&lt;p&gt;Pourquoi cette augmentation subite ? Je n'ai pourtant pas déployé de nouvelle version depuis
-quelques jours. Je commence à paniquer. En regardant les logs, ce sont les mêmes erreurs que
-d'habitude. Je sais bien que j'aurais dû corriger ça avant mais il y en avait peu, ça n'était
-pas prioritaire. Là, c'est l'explosion !&lt;/p&gt;
-&lt;p&gt;L'explosion, vraiment ? Y en a-t-il vraiment plus qu'avant ? En quantité, c'est certain, mais
-qu'en est-il &lt;em&gt;proportionnellement&lt;/em&gt; au trafic de mon application ?&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;Si cette augmentation du nombre d'erreur s'observe à nombre constant de requêtes, il y a
-  effectivement un problème dont je veux être alerté, et vite.&lt;/li&gt;
-&lt;li&gt;En revanche, si le nombre de requêtes varie dans les mêmes proportions que le nombre d'erreurs,
-  cela semble plus cohérent. Être réveillé la nuit par une alerte qui indique que le trafic a
-  augmenté mais tout est normal me mettrait de mauvaise humeur.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;&lt;img alt="Deux profils du nombre de requêtes associé : nombre constant et croissance exponentielle" class="center" src="/images/utilisateurs_heureux_metriques/500_over_total_request.png"&gt;&lt;/p&gt;
-&lt;p&gt;Une façon d'éviter cette possible confusion est d'exprimer les indicateurs comme une &lt;em&gt;proportion&lt;/em&gt;
-&lt;em&gt;d'événements valides qui étaient bons&lt;/em&gt;. Si cette formulation peut sembler abstraite, sa mise en
-place est beaucoup plus simple. Dans notre exemple d'un système répondant à des requêtes, on
-peut mesurer la proportion de requêtes ayant abouti à une réponse de code HTTP de classe 200, 300
-ou 400 par rapport au nombre total de requêtes.&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;&lt;em&gt;Pourquoi prendre les codes HTTP de classe 400 comme des succès ?&lt;/em&gt;&lt;/p&gt;
-&lt;p&gt;S'ils sont perçus comme une erreur vis-à-vis de votre client, il représentent en réalité un
-cas prévu qui correspond à une action non-autorisée de votre utilisateur. Essayer d'accéder à
-une page nécessitant une authentification sans s'être préalablement connecté n'est pas autorisé :
-retourner autre chose qu'un code HTTP 403 serait probablement une erreur.&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;h2&gt;Prendre le temps, et le bon&lt;/h2&gt;
-&lt;p&gt;J'ai compris la leçon et j'ai exprimé une métrique importante de mon application comme une
-proportion. Le système d'alerte se comporte comme une guirlande de Noël. L'alerte sonne, tout
-est rouge, et le temps que je regarde, tout est revenu à la normale. Je pars me faire un café
-et en revenant, l'alerte a encore oscillé trois fois entre « tout va bien » et « tout brûle ».&lt;/p&gt;
-&lt;p&gt;En regardant la courbe, je reste circonspect.&lt;/p&gt;
-&lt;p&gt;&lt;img alt="Courbe d'une métrique quelconque présentant une forte variance sur des périodes de temps très courtes" class="center" src="/images/utilisateurs_heureux_metriques/whatever_short_time_window.png"&gt;&lt;/p&gt;
-&lt;p&gt;Je ne vois rien sur cette courbe. La variance est trop grande, je ne peux en dégager aucune tendance
-à l'œil nu. Une solution à cela est de lisser par une fonction d'agrégation sur une fenêtre du temps
-plus large que la période d'échantillonnage de vos métriques.&lt;/p&gt;
-&lt;p&gt;&lt;img alt="Courbe d'une métrique quelconque présentant une forte variance sur des périodes de temps très courtes avec en superposition la moyenne glissante sur quelques minutes, beaucoup plus stable" class="center" src="/images/utilisateurs_heureux_metriques/whatever_long_time_window.png"&gt;&lt;/p&gt;
-&lt;h2&gt;Dites 33&lt;/h2&gt;
-&lt;h2&gt;Partez en voyage&lt;/h2&gt;
-&lt;h2&gt;C'est pas tout mais...&lt;/h2&gt;
-&lt;p&gt;pas révélateur de l'ux&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;Cet article a également été décliné sous forme d'une présentation aux
-&lt;em&gt;Human Talks&lt;/em&gt; Paris le 14 janvier 2020 sous le titre
-&lt;a href="https://www.youtube.com/watch?v=gNMtIdWKfEg"&gt;How to make your users happy (with your metrics)&lt;/a&gt;.&lt;/p&gt;
-&lt;/blockquote&gt;</content><category term="Blog"></category><category term="sre"></category><category term="métriques"></category><category term="expérience utilisateur"></category><category term="bonnes pratiques"></category></entry><entry><title>J'ai (enfin) suivi une formation à la Communication NonViolente</title><link href="https://www.dericbourg.net/2019/08/26/jai-enfin-suivi-une-formation-a-la-communication-nonviolente/" rel="alternate"></link><published>2019-08-26T00:00:00+02:00</published><updated>2019-08-26T00:00:00+02:00</updated><author><name>Alban Dericbourg</name></author><id>tag:www.dericbourg.net,2019-08-26:/2019/08/26/jai-enfin-suivi-une-formation-a-la-communication-nonviolente/</id><summary type="html">&lt;p&gt;J'ai découvert la Communication NonViolente il y a huit ans. Mes premières lectures
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Blog bloquant - Blog</title><link href="https://www.dericbourg.net/" rel="alternate"></link><link href="https://www.dericbourg.net/feeds/blog.atom.xml" rel="self"></link><id>https://www.dericbourg.net/</id><updated>2019-08-26T00:00:00+02:00</updated><entry><title>J'ai (enfin) suivi une formation à la Communication NonViolente</title><link href="https://www.dericbourg.net/2019/08/26/jai-enfin-suivi-une-formation-a-la-communication-nonviolente/" rel="alternate"></link><published>2019-08-26T00:00:00+02:00</published><updated>2019-08-26T00:00:00+02:00</updated><author><name>Alban Dericbourg</name></author><id>tag:www.dericbourg.net,2019-08-26:/2019/08/26/jai-enfin-suivi-une-formation-a-la-communication-nonviolente/</id><summary type="html">&lt;p&gt;J'ai découvert la Communication NonViolente il y a huit ans. Mes premières lectures
 m'ont très vite donné envie d'aller plus loin, de creuser le sujet. J'y ai vu un outil
 « magique » qui résoudrait toutes les situations inconfortables au travail que je vivais
 plutôt mal. Avec cette optique, j'estimais que les …&lt;/p&gt;</summary><content type="html">&lt;p&gt;J'ai découvert la Communication NonViolente il y a huit ans. Mes premières lectures
@@ -273,7 +209,6 @@ moi me tient à cœur : seriez-vous d'accord pour &lt;a href="https://www.dericb
 &lt;span class="n"&gt;arrival_timestamp&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="n"&gt;o&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="err"&gt;←&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;t0&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
 &lt;h3&gt;Boucle de calcul&lt;/h3&gt;
 &lt;p&gt;On parcourt l'ensemble des connexions contenues dans la table et on considère l'amélioration qu'elle apporte sur le trajet. À la fin de la boucle, lorsque toutes les connexions on été parcourues, toutes les heures d'arrivée depuis &lt;em&gt;o&lt;/em&gt; vers une autre station ont été calculées.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="err"&gt;Pour chaque connexion c&lt;/span&gt;
@@ -282,7 +217,6 @@ moi me tient à cœur : seriez-vous d'accord pour &lt;a href="https://www.dericb
 &lt;span class="err"&gt;        arrival_timestamp[c.arrival_station] ← c.arrival_timestamp&lt;/span&gt;
 &lt;span class="err"&gt;        in_connection[c.arrival_station] ← c&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
 
 &lt;h3&gt;Résultat&lt;/h3&gt;
 &lt;p&gt;Pour obtenir le résultat, on parcourt le tableau des stations d'arrivée (&lt;code&gt;in_connections&lt;/code&gt;) en partant de la destination &lt;em&gt;d&lt;/em&gt; jusqu'à retrouver le point de départ &lt;em&gt;o&lt;/em&gt;.&lt;/p&gt;
@@ -294,7 +228,6 @@ moi me tient à cœur : seriez-vous d'accord pour &lt;a href="https://www.dericb
 &lt;span class="err"&gt;A      \&lt;/span&gt;
 &lt;span class="err"&gt;         -----o D&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
 
 &lt;p&gt;On souhaite rejoindre &lt;code&gt;C&lt;/code&gt; depuis &lt;code&gt;A&lt;/code&gt; en partant à l'heure 2 avec la table horaire suivante :&lt;/p&gt;
 &lt;table class="table table-bordered table-condensed table-striped"&gt;
@@ -410,7 +343,6 @@ moi me tient à cœur : seriez-vous d'accord pour &lt;a href="https://www.dericb
 &lt;span class="m"&gt;1197623&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="m"&gt;100&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;13&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;(CHATILLON - MONTROUGE &amp;lt;-&amp;gt; ST-DENIS-UNIVERSITE/LES COURTILLES) - Retour&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,,&lt;/span&gt;&lt;span class="m"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,,&lt;/span&gt;&lt;span class="n"&gt;FFFFFF&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="m"&gt;000000&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
 &lt;h4&gt;stops.txt&lt;/h4&gt;
 &lt;p&gt;Ce fichier liste les arrêts avec, éventuellement, quelques informations complémentaires. La RATP fournit l'adresse la plus proche de l'arrêt ainsi que les coordonnées GPS de son centre (dans le cas d'une station qui dispose de plusieurs sorties). À noter que ce fichier n'est pas ordonné selon le sens de parcours des courses sur la ligne.&lt;/p&gt;
 &lt;blockquote&gt;
@@ -430,7 +362,6 @@ Lorsqu'un train suit une mission, il réalise une &lt;strong&gt;course&lt;/stron
 &lt;span class="err"&gt;...&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
 &lt;h4&gt;trips.txt&lt;/h4&gt;
 &lt;p&gt;Ce fichier liste les courses et les associe à une route. Nous reviendrons sur son utilité en observant les horaires d'arrêt.&lt;/p&gt;
 &lt;p&gt;Exemple sur la ligne 13 :&lt;/p&gt;
@@ -440,7 +371,6 @@ Lorsqu'un train suit une mission, il réalise une &lt;strong&gt;course&lt;/stron
 &lt;span class="err"&gt;1197620,1762292,10017622920912413,101,101,0,&lt;/span&gt;
 &lt;span class="err"&gt;...&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
 
 &lt;h4&gt;stops_times.txt&lt;/h4&gt;
 &lt;p&gt;Ce fichier présente les horaires des courses aux stations (points d'arrêt). Ce fichier est trié par course et par heure d'arrêt en station.&lt;/p&gt;
@@ -452,7 +382,6 @@ Lorsqu'un train suit une mission, il réalise une &lt;strong&gt;course&lt;/stron
 &lt;span class="err"&gt;10017622880912413,19:41:00,19:41:00,1879,3,,&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
 &lt;p&gt;Dans cet exemple, pour la course présentée, le véhicule s'arrête à 19:38:00 à l'arrêt 1969 (Châtillon - Montrouge) et en repart à la même heure. On en déduira qu'on ne prend vraisemblabement pas en compte le temps d'arrêt en station. Il arrive ensuite à la station 1880 (Malakoff - Rue Etienne Dolet) à 19:40:00, puis à la station 1879 (Malakoff - Plateau de Vanves) à 19:41:00, etc.&lt;/p&gt;
 &lt;h4&gt;transfers.txt&lt;/h4&gt;
 &lt;p&gt;&lt;code&gt;transfers.txt&lt;/code&gt; regroupe les correspondances entre plusieurs points d'arrêt.&lt;/p&gt;
@@ -463,25 +392,21 @@ Lorsqu'un train suit une mission, il réalise une &lt;strong&gt;course&lt;/stron
 &lt;span class="err"&gt;3619167,2276,2,252&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
 &lt;p&gt;Sur la première ligne, la correspondance se fait entre l'arrêt « 4211780 » et l'arrêt « 2270 ». Un recherche dans le fichier &lt;code&gt;stops.txt&lt;/code&gt; permet de donner un nom humainement compréhensible à ces identifiants : ils correspondent ici tous les deux au point d'arrêt « Mairie de Saint-Ouen ».&lt;/p&gt;
 &lt;p&gt;À partir du l'identifiant d'un point d'arrêt, on peut également ressortir les identifiants de course (&lt;code&gt;trip_id&lt;/code&gt;). Prenons-en un au hasard :&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$ grep &lt;span class="m"&gt;2270&lt;/span&gt; stop_times.txt &lt;span class="p"&gt;|&lt;/span&gt; cut -d, -f1 &lt;span class="p"&gt;|&lt;/span&gt; head -n1
 &lt;span class="m"&gt;10017622880912417&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
 &lt;p&gt;À partir de cet identifiant, on peut retrouver la route associée (&lt;code&gt;route_id&lt;/code&gt;) :&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$ grep &lt;span class="m"&gt;10017622880912417&lt;/span&gt; trips.txt &lt;span class="p"&gt;|&lt;/span&gt; cut -d, -f1
 &lt;span class="m"&gt;1197623&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
 &lt;p&gt;On trouve donc qu'il s'agissait de la ligne 13 dans le sens « retour » :&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$ grep ^1197623, routes.txt
 &lt;span class="m"&gt;1197623&lt;/span&gt;,100,&lt;span class="s2"&gt;&amp;quot;13&amp;quot;&lt;/span&gt;,&lt;span class="s2"&gt;&amp;quot;(CHATILLON - MONTROUGE &amp;lt;-&amp;gt; ST-DENIS-UNIVERSITE/LES COURTILLES) - Retour&amp;quot;&lt;/span&gt;,,1,,FFFFFF,000000
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
 
 &lt;p&gt;Vérifions par acquit de conscience l'autre identifiant de point d'arrêt :&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$ grep &lt;span class="m"&gt;4211780&lt;/span&gt; stop_times.txt &lt;span class="p"&gt;|&lt;/span&gt; cut -d, -f1 &lt;span class="p"&gt;|&lt;/span&gt; head -n1
@@ -491,7 +416,6 @@ $ grep &lt;span class="m"&gt;119841521246955&lt;/span&gt; trips.txt
 $ grep &lt;span class="m"&gt;1364288&lt;/span&gt; routes.txt
 &lt;span class="m"&gt;1364288&lt;/span&gt;,100,&lt;span class="s2"&gt;&amp;quot;N44&amp;quot;&lt;/span&gt;,&lt;span class="s2"&gt;&amp;quot;(GARGES-SARCELLES RER &amp;lt;-&amp;gt; GARE DE L&amp;#39;EST) - Retour&amp;quot;&lt;/span&gt;,,3,,FFFFFF,000000
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
 
 &lt;p&gt;Il s'agit donc du &lt;a href="http://www.ratp.fr/informer/pdf/orienter/f_horaire.php?fm=gif&amp;amp;loc=noctilien&amp;amp;nompdf=n44"&gt;Noctilien N44&lt;/a&gt; qui passe effectivement par « Mairie de Saint-Ouen ». La boucle est bouclée.&lt;/p&gt;
 &lt;h3&gt;Parsing des fichiers GTFS&lt;/h3&gt;
@@ -517,7 +441,6 @@ $ grep &lt;span class="m"&gt;1364288&lt;/span&gt; routes.txt
   &lt;span class="n"&gt;map&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="nc"&gt;Route&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;parse&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
 &lt;p&gt;Dans la pratique, la volumétrie des horaires des courses rend l'opération plus complexe :&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$ wc -l *
         &lt;span class="m"&gt;2&lt;/span&gt; agency.txt
@@ -529,7 +452,6 @@ $ grep &lt;span class="m"&gt;1364288&lt;/span&gt; routes.txt
     &lt;span class="m"&gt;80338&lt;/span&gt; transfers.txt
    &lt;span class="m"&gt;417920&lt;/span&gt; trips.txt
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
 
 &lt;p&gt;Pour simplifier la suite de cet article, nous ne traiterons que les lignes ferrées (métro et RER) exploitées par la RATP. On regroupera les données ligne par ligne (au sens RATP) dans la structure &lt;code&gt;GtfsData&lt;/code&gt; pour ensuite les fusionner :&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="k"&gt;case&lt;/span&gt; &lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;GtfsData&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;
@@ -552,7 +474,6 @@ $ grep &lt;span class="m"&gt;1364288&lt;/span&gt; routes.txt
 &lt;span class="o"&gt;)&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
 &lt;h3&gt;Construction de la table horaire&lt;/h3&gt;
 &lt;p&gt;La table horaire est, comme nous l'avons vu, une séquence de connexions modélisées par des quadruplets contenants chacun la station de départ, la station d'arrivée, l'heure de départ et l'heure d'arrivée.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="k"&gt;case&lt;/span&gt; &lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;Timetable&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;connections&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;Seq&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="kt"&gt;Connection&lt;/span&gt;&lt;span class="o"&gt;])&lt;/span&gt;
@@ -563,7 +484,6 @@ $ grep &lt;span class="m"&gt;1364288&lt;/span&gt; routes.txt
   &lt;span class="n"&gt;arrivalTimestamp&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;Int&lt;/span&gt;
 &lt;span class="o"&gt;)&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
 
 &lt;p&gt;Sa construction se fait en deux étapes :&lt;/p&gt;
 &lt;ol&gt;
@@ -576,7 +496,6 @@ $ grep &lt;span class="m"&gt;1364288&lt;/span&gt; routes.txt
 &lt;span class="err"&gt;Course II :               C (t2) --------------------&amp;gt; D (t4)&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
 &lt;p&gt;Le fichier &lt;code&gt;stop_times.txt&lt;/code&gt; ressemblerait à :&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="err"&gt;trip_id,arrival_time,departure_time,stop_id,stop_sequence,stop_headsign,shape_dist_traveled&lt;/span&gt;
 &lt;span class="err"&gt;I, t1, t1, A, 1, ,&lt;/span&gt;
@@ -584,7 +503,6 @@ $ grep &lt;span class="m"&gt;1364288&lt;/span&gt; routes.txt
 &lt;span class="err"&gt;I, t3, t3, B, 1, ,&lt;/span&gt;
 &lt;span class="err"&gt;II, t4, t4, D, 1, ,&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
 
 &lt;p&gt;Une lecture indépendante de l'identifiant de course (&lt;code&gt;trip_id&lt;/code&gt;) amalgamerait donc ces deux courses et induirait de fausses correspondances.&lt;/p&gt;
 &lt;p&gt;La création de la table horaire se fait en groupant deux à deux les horaires d'arrêt au sein d'une même course. Pour chaque élément à l'indice &lt;code&gt;i&lt;/code&gt;, on créera une connexion partant de l'arrêt à cet indice et arrivant à l'arrêt de l'indice &lt;code&gt;i+1&lt;/code&gt;. On implémente cette construction avec une fonction récursive qui dépile un à un les horaires de course.&lt;/p&gt;
@@ -621,7 +539,6 @@ $ grep &lt;span class="m"&gt;1364288&lt;/span&gt; routes.txt
 &lt;span class="o"&gt;}&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
 &lt;p&gt;Dans cet exemple de code, la fonction &lt;code&gt;durationToTimestamp&lt;/code&gt; retourne un timestamp correspondant à l'heure effective pour la journée en cours à partir de l'heure seule fournie dans les données. Par exemple, le 01/01/2016, la durée &lt;code&gt;19h32min27s&lt;/code&gt; permettra d'obtenir le timestamp équivalent à &lt;code&gt;2016-01-01T19:32:27.0Z&lt;/code&gt;.&lt;/p&gt;
 &lt;h4&gt;Connexions issues des correspondances&lt;/h4&gt;
 &lt;p&gt;Le fichier &lt;code&gt;transfers.txt&lt;/code&gt; nous donne les correspondances disponibles sur une ligne. L'objectif de cette étape est :&lt;/p&gt;
@@ -641,7 +558,6 @@ $ grep &lt;span class="m"&gt;1364288&lt;/span&gt; routes.txt
     &lt;span class="n"&gt;gtfsData&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;stopsByStopId&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;contains&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;transfer&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;toStopId&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
 &lt;span class="o"&gt;)&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
 
 &lt;p&gt;Cela étant fait, pour chacune de ces correspondances, on créé dans la table horaire une connexion correspondant à chaque horaire de passage à cette station. On utilisera pour cela les données issues de &lt;code&gt;stop_times.txt&lt;/code&gt;. Cette fonction est très similaire dans son fonctionnement à &lt;code&gt;stopTimesToConnections&lt;/code&gt;.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="n"&gt;transfersToConnections&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;filteredTransfers&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;Iterable&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="kt"&gt;Transfer&lt;/span&gt;&lt;span class="o"&gt;])&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;Iterable&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="kt"&gt;Connection&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
@@ -677,7 +593,6 @@ $ grep &lt;span class="m"&gt;1364288&lt;/span&gt; routes.txt
 &lt;span class="o"&gt;}&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
 &lt;h4&gt;Fusion des deux tables horaires&lt;/h4&gt;
 &lt;p&gt;On a construit jusqu'ici deux tables horaires :&lt;/p&gt;
 &lt;ul&gt;
@@ -695,7 +610,6 @@ $ grep &lt;span class="m"&gt;1364288&lt;/span&gt; routes.txt
   &lt;span class="n"&gt;toList&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;
   &lt;span class="n"&gt;sortBy&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="k"&gt;_&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;departureTimestamp&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
 
 &lt;h2&gt;Implémentation de l'algorithme&lt;/h2&gt;
 &lt;p&gt;Je propose ici une implémentation en Scala qui pourrait probablement être (largement, rien que par sa mutabilité) améliorée. Partons toujours de là.&lt;/p&gt;
@@ -717,7 +631,6 @@ $ grep &lt;span class="m"&gt;1364288&lt;/span&gt; routes.txt
 &lt;span class="o"&gt;}&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
 &lt;h3&gt;Initialisation&lt;/h3&gt;
 &lt;p&gt;On initialise les tableaux avec une valeur « virtuellement infinie » (valeur maximale qu'un entier peut représenter) à l'exception de l'heure d'arrivée optimale à la station de départ... puisque cette valeur est connue.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="k"&gt;val&lt;/span&gt; &lt;span class="n"&gt;inConnection&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="nc"&gt;Array&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;fill&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="kt"&gt;Int&lt;/span&gt;&lt;span class="o"&gt;](&lt;/span&gt;&lt;span class="nc"&gt;CSA&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="nc"&gt;MaxStations&lt;/span&gt;&lt;span class="o"&gt;)(&lt;/span&gt;&lt;span class="nc"&gt;Int&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="nc"&gt;MaxValue&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
@@ -728,7 +641,6 @@ $ grep &lt;span class="m"&gt;1364288&lt;/span&gt; routes.txt
   &lt;span class="c1"&gt;// [...]&lt;/span&gt;
 &lt;span class="o"&gt;}&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
 
 &lt;h3&gt;Calcul du trajet&lt;/h3&gt;
 &lt;h4&gt;Vue macroscopique&lt;/h4&gt;
@@ -747,7 +659,6 @@ $ grep &lt;span class="m"&gt;1364288&lt;/span&gt; routes.txt
   &lt;span class="n"&gt;computeRoute&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;arrivalStation&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
 &lt;span class="o"&gt;}&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
 
 &lt;h4&gt;Parcours de la table horaire&lt;/h4&gt;
 &lt;p&gt;On utilise une fois de plus une récursion terminale.&lt;/p&gt;
@@ -788,7 +699,6 @@ $ grep &lt;span class="m"&gt;1364288&lt;/span&gt; routes.txt
 &lt;span class="o"&gt;}&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
 &lt;h4&gt;Construction de l'itinéraire à partir de la table horaire&lt;/h4&gt;
 &lt;p&gt;Une fois la table horaire &lt;code&gt;inConnection&lt;/code&gt; calculée, on reconstitue l'itinéraire inversé en partant de la station d'arrivée et en remontant jusqu'à la station de départ.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="k"&gt;private&lt;/span&gt; &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="n"&gt;computeRoute&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;arrivalStation&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;Int&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;Seq&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="kt"&gt;Connection&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
@@ -809,7 +719,6 @@ $ grep &lt;span class="m"&gt;1364288&lt;/span&gt; routes.txt
 &lt;span class="o"&gt;}&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
 &lt;p&gt;Ce cas est volontairement écrit en « Java++ » plutôt qu'en « bon Scala » par simplicité de lecture. Saurez-vous écrire le cas général en une ligne (ou deux) ?&lt;/p&gt;
 &lt;h3&gt;Exemple&lt;/h3&gt;
 &lt;p&gt;Partons d'un trajet entre Maubert-Mutualité et Voltaire en partant à 18h.&lt;/p&gt;
@@ -822,7 +731,6 @@ $ grep &lt;span class="m"&gt;1364288&lt;/span&gt; routes.txt
   &lt;span class="n"&gt;durationToTimestamp&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="nc"&gt;Duration&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ofHours&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;18&lt;/span&gt;&lt;span class="o"&gt;))&lt;/span&gt;
 &lt;span class="o"&gt;)&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
 
 &lt;p&gt;On obtient le trajet (notez la présence des connexions de correspondance à Odéon et Strasbourg-Saint-Denis) :&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="err"&gt;Solution found with 15 connections&lt;/span&gt;
@@ -843,7 +751,6 @@ $ grep &lt;span class="m"&gt;1364288&lt;/span&gt; routes.txt
 &lt;span class="err"&gt;  Saint-Ambroise -&amp;gt; Voltaire (Léon Blum)&lt;/span&gt;
 &lt;span class="err"&gt;Total transit time: 21 minutes&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
 
 &lt;h2&gt;Conclusion&lt;/h2&gt;
 &lt;p&gt;En comparaison, l'&lt;a href="https://fr.wikipedia.org/wiki/Algorithme_de_Dijkstra"&gt;algorithme de plus court chemin de Dijkstra&lt;/a&gt; présente une complexité proportionnelle à &lt;em&gt;C.log(N)&lt;/em&gt; où &lt;em&gt;N&lt;/em&gt; est le nombre de stations et &lt;em&gt;C&lt;/em&gt; le nombre de correspondances entre deux stations, soit environ &lt;em&gt;N.log(N)&lt;/em&gt; dans notre évaluation, tout en occupant un espace mémoire de taille proportionnelle à &lt;em&gt;N&lt;/em&gt;.&lt;/p&gt;
@@ -866,7 +773,6 @@ $ grep &lt;span class="m"&gt;1364288&lt;/span&gt; routes.txt
 &lt;span class="p"&gt;}&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
 &lt;p&gt;Sans accorder d'importance à l'implémentation du DAO accédant effectivement aux données persistées, contentons-nous de supposer que ses performances ne sont pas suffisantes pour répondre aux sollicitations auxquelles est soumise notre application.&lt;/p&gt;
 &lt;h2&gt;Cache des données&lt;/h2&gt;
 &lt;p&gt;On se propose d'utiliser &lt;a href="https://github.com/google/guava"&gt;Guava&lt;/a&gt; pour implémenter ce cache. On utilise dans cet exemple un &lt;a href="https://github.com/google/guava/wiki/CachesExplained"&gt;&lt;code&gt;LoadingCache&lt;/code&gt;&lt;/a&gt; qui ira chercher en base la donnée s'il n'a pas déjà été sollicité pour celle-ci : on charge les valeurs une à une à la demande. Il permet également de rafraîchir les données automatiquement à intervalle régulier.&lt;/p&gt;
@@ -884,7 +790,6 @@ $ grep &lt;span class="m"&gt;1364288&lt;/span&gt; routes.txt
       &lt;span class="p"&gt;}&lt;/span&gt;
     &lt;span class="p"&gt;});&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
 
 &lt;h2&gt;Implémentation naïve (et fausse)&lt;/h2&gt;
 &lt;p&gt;En première approche, on peut supposer qu'il « suffit » de mettre à jour le cache pour chaque opération d'écriture sur la base de données. Une implémentation dans cette optique ressemblerait à ceci.&lt;/p&gt;
@@ -938,7 +843,6 @@ $ grep &lt;span class="m"&gt;1364288&lt;/span&gt; routes.txt
   &lt;span class="p"&gt;}&lt;/span&gt;
 &lt;span class="p"&gt;}&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
 
 &lt;p&gt;Pourquoi cette implémentation ne fonctionne pas ?&lt;/p&gt;
 &lt;p&gt;Dans le cas de multiples appels concurrents, des interruptions peuvent avoir lieu à tout moment. L'appel à &lt;code&gt;delete&lt;/code&gt; peut être interrompu entre la mise à jour de la base (&lt;code&gt;dbDao.delete(id)&lt;/code&gt;) et le rafraîchissement du cache (&lt;code&gt;cache.refresh(id)&lt;/code&gt;). Si cette interruption se fait à la faveur d'une lecture (&lt;code&gt;get&lt;/code&gt;), cette dernière se fera sur un cache qui n'est pas encore mise à jour et donc renverra une donnée « périmée ». Rien ne dit qu'il est impératif de récupérer la dernière version de la donnée : suivant votre application, cela peut être acceptable.&lt;/p&gt;
@@ -995,7 +899,6 @@ $ grep &lt;span class="m"&gt;1364288&lt;/span&gt; routes.txt
 &lt;span class="p"&gt;}&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
 &lt;p&gt;Mais s'il rentre un lecteur toutes les deux millisecondes et qu'il faut cinq millisecondes à chaque lecteur pour terminer sa consultation, il y aura toujours des lecteurs présents et le rédacteur ne pourra jamais entrer.&lt;/p&gt;
 &lt;p&gt;Pour éviter cela, il faut que lorsqu'un rédacteur est en attente, tout lecteur qui se présente reste « derrière » le rédacteur et attende qu'il ait terminé.&lt;/p&gt;
 &lt;p&gt;En Java, &lt;a href="https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/locks/ReentrantReadWriteLock.html"&gt;la classe &lt;code&gt;ReentrantReadWriteLock&lt;/code&gt;&lt;/a&gt; permet de répondre à cette condition. Il encapsule deux types de verrous :&lt;/p&gt;
@@ -1014,7 +917,6 @@ $ grep &lt;span class="m"&gt;1364288&lt;/span&gt; routes.txt
 &lt;span class="n"&gt;readWriteLock&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="na"&gt;readLock&lt;/span&gt;&lt;span class="p"&gt;().&lt;/span&gt;&lt;span class="na"&gt;unlock&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
 &lt;p&gt;Exemple en écriture :&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="n"&gt;ReadWriteLock&lt;/span&gt; &lt;span class="n"&gt;readWriteLock&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="k"&gt;new&lt;/span&gt; &lt;span class="n"&gt;ReentrantReadWriteLock&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
 
@@ -1025,7 +927,6 @@ $ grep &lt;span class="m"&gt;1364288&lt;/span&gt; routes.txt
 
 &lt;span class="n"&gt;readWriteLock&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="na"&gt;writeLock&lt;/span&gt;&lt;span class="p"&gt;().&lt;/span&gt;&lt;span class="na"&gt;unlock&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
 
 &lt;h2&gt;Implémentation « sûre »&lt;/h2&gt;
 &lt;p&gt;Nous pouvons réutiliser notre implémentation naïve : si elle n'était pas sûre, son intention restait valable. Pour l'adapter, on ajoute :&lt;/p&gt;
@@ -1121,7 +1022,6 @@ $ grep &lt;span class="m"&gt;1364288&lt;/span&gt; routes.txt
 &lt;span class="p"&gt;}&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
 &lt;h2&gt;Pour aller plus loin&lt;/h2&gt;
 &lt;p&gt;Le DAO présenté ici est « sûr » dans la mesure où il garantit la cohérence avec la base des données retournées. En revanche, pour cela, un compromis sur les performances a du être fait. En effet, cette implémentation ne permet pas d'écritures simultanées : la modification de deux objets distincts n'est pas possible.&lt;/p&gt;
 &lt;p&gt;Peut-on faire mieux ? Si vous pensez que oui, quelle serait votre approche ?&lt;/p&gt;</content><category term="Blog"></category><category term="java"></category><category term="guava"></category><category term="cache"></category><category term="dao"></category><category term="verrou"></category><category term="concurrence"></category></entry><entry><title>Problème des huit reines</title><link href="https://www.dericbourg.net/2015/08/11/probleme-des-huit-reines/" rel="alternate"></link><published>2015-08-11T00:00:00+02:00</published><updated>2015-08-11T00:00:00+02:00</updated><author><name>Alban Dericbourg</name></author><id>tag:www.dericbourg.net,2015-08-11:/2015/08/11/probleme-des-huit-reines/</id><summary type="html">&lt;p&gt;J'ai rencontré le &lt;a href="https://fr.wikipedia.org/wiki/Probl%C3%A8me_des_huit_dames"&gt;problème des huits reines&lt;/a&gt; lors d'un entretien d'embauche. Sans juger de la pertinence de cet exercice dans ce cadre (indépendamment du fait que j'aie lamentablement et honteusement échoué), la période estivale, propice à la détente, m'a incité à pousser le jeu plus en avant (mon orgueil a …&lt;/p&gt;</summary><content type="html">&lt;p&gt;J'ai rencontré le &lt;a href="https://fr.wikipedia.org/wiki/Probl%C3%A8me_des_huit_dames"&gt;problème des huits reines&lt;/a&gt; lors d'un entretien d'embauche. Sans juger de la pertinence de cet exercice dans ce cadre (indépendamment du fait que j'aie lamentablement et honteusement échoué), la période estivale, propice à la détente, m'a incité à pousser le jeu plus en avant (mon orgueil a probablement contribué lui aussi).
@@ -1135,7 +1035,6 @@ Le problème consiste à compter et identifier les différentes façons de place
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="err"&gt;&amp;gt;&amp;gt;&amp;gt; list(enumerate([3, 2, 1]))&lt;/span&gt;
 &lt;span class="err"&gt;[(0, 3), (1, 2), (2, 1)]&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
 
 &lt;/blockquote&gt;
 &lt;p&gt;Il est alors « facile » de déterminer si une reine est en sécurité connaissant la position des autres :&lt;/p&gt;
@@ -1167,7 +1066,6 @@ Le problème consiste à compter et identifier les différentes façons de place
     &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;__permutations&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;array&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nb"&gt;len&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;array&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
 &lt;p&gt;Pour donner un exemple :&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="o"&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;perm&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;permutations&lt;/span&gt;&lt;span class="p"&gt;([&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;a&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;b&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;c&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]):&lt;/span&gt; &lt;span class="nb"&gt;print&lt;/span&gt; &lt;span class="n"&gt;perm&lt;/span&gt;
 &lt;span class="o"&gt;...&lt;/span&gt;
@@ -1179,14 +1077,12 @@ Le problème consiste à compter et identifier les différentes façons de place
 &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;c&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;b&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;a&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
 &lt;p&gt;En pratique, la bibliothèque standard Python propose dans le module &lt;a href="https://docs.python.org/3/library/itertools.html"&gt;&lt;code&gt;itertools&lt;/code&gt;&lt;/a&gt; une fonction générant ces permutations. Mesurons grossièrement le temps d'exécution de ce code avec les deux implémentations :&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="n"&gt;a&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;4&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;5&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;6&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
 &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="nb"&gt;range&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;10000&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
     &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;perm&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;permutations&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;a&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
         &lt;span class="n"&gt;perm&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
 
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="o"&gt;#&lt;/span&gt; &lt;span class="n"&gt;Heap&lt;/span&gt;
 &lt;span class="err"&gt;$&lt;/span&gt; &lt;span class="k"&gt;time&lt;/span&gt; &lt;span class="n"&gt;python&lt;/span&gt; &lt;span class="n"&gt;heaps&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;py&lt;/span&gt;
@@ -1200,7 +1096,6 @@ Le problème consiste à compter et identifier les différentes façons de place
 &lt;span class="k"&gt;user&lt;/span&gt;    &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="n"&gt;m3&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="mi"&gt;428&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;
 &lt;span class="n"&gt;sys&lt;/span&gt;     &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="n"&gt;m0&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="mi"&gt;000&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
 
 &lt;p&gt;La fonction de la blbliothèque standard est bien plus performante que l'implémentation proposée ci-dessus (et heureusement). On utilisera donc celle-ci pour la résolution du problème : autant ne pas tendre le bâton pour se faire battre.&lt;/p&gt;
 &lt;h3&gt;Résolution&lt;/h3&gt;
@@ -1219,7 +1114,6 @@ Le problème consiste à compter et identifier les différentes façons de place
     &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="kc"&gt;True&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
 &lt;p&gt;On initialise la première permutation à &lt;code&gt;[0, 1, 2, ..., n - 1]&lt;/code&gt; avec &lt;code&gt;range(n)&lt;/code&gt;. Une fois les permutations calculées, le câblage de l'ensemble est immédiat.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;solve&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;board_size&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
     &lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;itertools&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;permutations&lt;/span&gt;
@@ -1229,7 +1123,6 @@ Le problème consiste à compter et identifier les différentes façons de place
             &lt;span class="n"&gt;solutions&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;append&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;permutation&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
     &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;solutions&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
 
 &lt;h3&gt;Représentation des solutions&lt;/h3&gt;
 &lt;p&gt;Il est toujours plus simple de vérifier les solutions en les visualisant. &lt;a href="https://en.wikipedia.org/wiki/Eight_queens_puzzle#Counting_solutions"&gt;Le nombre de solutions en fonction du nombre de reines étant connu&lt;/a&gt;, on ajoute le nombre de solutions trouvées pour faciliter la validation de l'algorithme.&lt;/p&gt;
@@ -1248,7 +1141,6 @@ Le problème consiste à compter et identifier les différentes façons de place
 &lt;span class="n"&gt;solutions&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;solve&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;size&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;span class="n"&gt;print_solutions&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;solutions&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;size&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
 
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;# 91 autres solutions
 # [...]
@@ -1274,12 +1166,10 @@ Le problème consiste à compter et identifier les différentes façons de place
 Found 92 solutions
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
 &lt;p&gt;Il faut environ 60 ms pour obtenir l'intégralité des solutions et les représenter.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$ &lt;span class="nb"&gt;time&lt;/span&gt; python brute-force.py
 python brute-force.py  &lt;span class="m"&gt;0&lt;/span&gt;,06s user &lt;span class="m"&gt;0&lt;/span&gt;,00s system &lt;span class="m"&gt;91&lt;/span&gt;% cpu &lt;span class="m"&gt;0&lt;/span&gt;,061 total
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
 
 &lt;p&gt;Pour cette dimension, c'est tout à fait acceptable et on pourrait s'en contenter. On pourrait... mais ça ne serait pas satisfaisant pour la curiosité !&lt;/p&gt;
 &lt;h2&gt;Seconde approche : algorithme de retour sur trace (&lt;em&gt;backtracking&lt;/em&gt;)&lt;/h2&gt;
@@ -1304,7 +1194,6 @@ python brute-force.py  &lt;span class="m"&gt;0&lt;/span&gt;,06s user &lt;span cl
             &lt;span class="ow"&gt;not&lt;/span&gt; &lt;span class="nb"&gt;any&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;abs&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;col&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="n"&gt;line&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="nb"&gt;enumerate&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;queens&lt;/span&gt;&lt;span class="p"&gt;)))&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
 &lt;p&gt;Passons à la résolution en elle-même. Pour chaque nouvelle ligne, nous allons tester l'intégralité des colonnes au regard des solutions obtenues jusqu'à la ligne précédente. Cela donne :&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;solve&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;n&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
     &lt;span class="c1"&gt;# Initialisation des solutions pour une taille 0 (tableau contenant un tableau vide)&lt;/span&gt;
@@ -1315,7 +1204,6 @@ python brute-force.py  &lt;span class="m"&gt;0&lt;/span&gt;,06s user &lt;span cl
                                     &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;is_safe&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;solution&lt;/span&gt;&lt;span class="p"&gt;)]&lt;/span&gt;
     &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;solutions&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
 
 &lt;p&gt;Pour mieux comprendre cet algorithme, il en existe une &lt;a href="https://www.cs.usfca.edu/~galles/visualization/RecQueens.html"&gt;version animée détaillant les étapes de la résolution&lt;/a&gt;.&lt;/p&gt;
 &lt;h2&gt;Troisième approche : programmation par contraintes&lt;/h2&gt;
@@ -1347,7 +1235,6 @@ python brute-force.py  &lt;span class="m"&gt;0&lt;/span&gt;,06s user &lt;span cl
     &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;queens&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;model&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
 &lt;p&gt;La résolution du problème est alors immédiate :&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;solve_queens&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;param&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
     &lt;span class="n"&gt;n&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;param&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;n&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
@@ -1366,7 +1253,6 @@ python brute-force.py  &lt;span class="m"&gt;0&lt;/span&gt;,06s user &lt;span cl
 
 &lt;span class="n"&gt;solve_queens&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;input&lt;/span&gt;&lt;span class="p"&gt;({&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;solver&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;Mistral&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;n&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="mi"&gt;8&lt;/span&gt; &lt;span class="p"&gt;}))&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
 
 &lt;p&gt;La proposition d'une solution est également très rapide :&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="err"&gt;+---+---+---+---+---+---+---+---+&lt;/span&gt;
@@ -1388,7 +1274,6 @@ python brute-force.py  &lt;span class="m"&gt;0&lt;/span&gt;,06s user &lt;span cl
 &lt;span class="err"&gt;+---+---+---+---+---+---+---+---+&lt;/span&gt;
 &lt;span class="c"&gt;Nodes: 24  Time: 0.0&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
 
 &lt;p&gt;Une mesure plus fine du temps d'exécution indique qu'il a fallu environ 20 millisecondes pour proposer cette solution (qui inclut le temps d'exécution total du programme Python).&lt;/p&gt;
 &lt;h2&gt;Comparaison des approches&lt;/h2&gt;
@@ -1458,7 +1343,6 @@ python brute-force.py  &lt;span class="m"&gt;0&lt;/span&gt;,06s user &lt;span cl
 * Closing connection &lt;span class="m"&gt;0&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
 &lt;h2&gt;Comment se connecter, alors ?&lt;/h2&gt;
 &lt;p&gt;Face à cela (ignorons la &lt;a href="https://fr.wikipedia.org/wiki/POODLE"&gt;référence à SSLv3&lt;/a&gt; pour l'instant), deux options sont possibles (la troisième, refiler le bébé à votre collègue, n'étant pas traitée ici) :&lt;/p&gt;
 &lt;ul&gt;
@@ -1473,12 +1357,10 @@ python brute-force.py  &lt;span class="m"&gt;0&lt;/span&gt;,06s user &lt;span cl
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;curl -v https://www.example.com --cacert cert.pem
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
 &lt;h2&gt;Depuis une application Java&lt;/h2&gt;
 &lt;p&gt;Le même mécanisme s'applique lorsque vous vous connectez à un service en utilisant une application Java. Si le certificat n'est pas sûr, vous vous verrez refuser la connexion :&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="err"&gt;sun.security.provider.certpath.SunCertPathBuilderException: unable to find valid certification path to requested target&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
 
 &lt;p&gt;Tout comme avec &lt;code&gt;curl&lt;/code&gt;, il existe une option pour spécifier un certificat faisant autorité. Il faut avant tout le stocker dans un conteneur spécifique à la JVM puis de préciser son emplacement dans la propriété système &lt;code&gt;javax.net.ssl.trustStore&lt;/code&gt;.&lt;/p&gt;
 &lt;p&gt;Pour créer ce conteneur, on utilise l'outil &lt;code&gt;keytool&lt;/code&gt; fourni avec le JDK.&lt;/p&gt;
@@ -1490,12 +1372,10 @@ Faire confiance à ce certificat ? &lt;span class="o"&gt;[&lt;/span&gt;non&lt;sp
 Certificat ajouté au fichier de clés
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
 &lt;p&gt;Reste à le déclarer dans votre application :&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="n"&gt;System&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="na"&gt;setProperty&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;javax.net.ssl.trustStore&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;/path/to/keystore.jks&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
 &lt;span class="n"&gt;System&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="na"&gt;setProperty&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;javax.net.ssl.trustStorePassword&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;******&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
 
 &lt;p&gt;La propriété &lt;code&gt;javax.net.ssl.trustStorePassword&lt;/code&gt; correspond au mot de passe que vous avez saisi à l'import du certificat en utilisant &lt;code&gt;keytool&lt;/code&gt;. Dès lors, vous pouvez vous connecter aux services sécurisés utilisant un certificat propre à votre entreprise.&lt;/p&gt;
 &lt;h2&gt;Solution globale&lt;/h2&gt;
@@ -1507,7 +1387,6 @@ Certificat ajouté au fichier de clés
   -keystore &lt;span class="nv"&gt;$JAVA_HOME&lt;/span&gt;/jre/lib/security/cacerts &lt;span class="se"&gt;\&lt;/span&gt;
   -file cert.pem
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
 
 &lt;p&gt;Notez le mot de passe par défaut du &lt;em&gt;keystore&lt;/em&gt;: « changeit ». Il s'agit du mot de passe par défaut et je vous encourage, si ce n'est déjà fait, à le changer.&lt;/p&gt;
 &lt;p&gt;Cette opération est à réaliser sur votre machine de développement mais également sur l'intégralité des serveurs susceptibles d'exécuter vos applications. C'est là qu'une solution de déploiement automatique devient pertinente.&lt;/p&gt;
@@ -1525,7 +1404,6 @@ Certificat ajouté au fichier de clés
         &lt;span class="n"&gt;logger&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="na"&gt;error&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;Cannot set trust store&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;e&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
 &lt;span class="p"&gt;}&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
 
 &lt;p&gt;Voilà qui devrait vous permettre de communiquer avec le reste du monde.&lt;/p&gt;</content><category term="Blog"></category><category term="ssl"></category><category term="tls"></category><category term="java"></category><category term="certificat"></category><category term="signature"></category><category term="sécurité"></category></entry><entry><title>Qu'est-ce qui me motive en tant que développeur ?</title><link href="https://www.dericbourg.net/2015/02/16/quest-ce-qui-me-motive-en-tant-que-developpeur/" rel="alternate"></link><published>2015-02-16T00:00:00+01:00</published><updated>2015-02-16T00:00:00+01:00</updated><author><name>Alban Dericbourg</name></author><id>tag:www.dericbourg.net,2015-02-16:/2015/02/16/quest-ce-qui-me-motive-en-tant-que-developpeur/</id><summary type="html">&lt;p&gt;Je suis développeur. Je travaille pour l'ESN MaBoite et suis en mission depuis plusieurs mois chez MonClient. Il est 9h40, j'arrive chez MonClient en retard, déjà fatigué. Sans avoir fait la fête la veille, j'ai pourtant eu du mal à me lever ce matin, je n'avais pas envie.&lt;/p&gt;
 &lt;p&gt;Gérard passe …&lt;/p&gt;</summary><content type="html">&lt;p&gt;Je suis développeur. Je travaille pour l'ESN MaBoite et suis en mission depuis plusieurs mois chez MonClient. Il est 9h40, j'arrive chez MonClient en retard, déjà fatigué. Sans avoir fait la fête la veille, j'ai pourtant eu du mal à me lever ce matin, je n'avais pas envie.&lt;/p&gt;
@@ -1618,11 +1496,9 @@ La réciproque est également applicable : je suis moi-même transparent pour ga
 &lt;span class="o"&gt;}&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
 &lt;p&gt;À l'import, il se contente aveuglément d'interpréter cela en remplaçant le signe « = » par une espace. C'est ainsi que bash ne se limite pas à interpréter le corps de la fonction mais qu'il poursuit le parsing et exécute les commandes qui suivent la définition de la fonction. Par exemple, définir une variable d'environnement de cette sorte :&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="nv"&gt;FOO&lt;/span&gt;&lt;span class="o"&gt;=()&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt; ignored&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="o"&gt;}&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; /bin/yolo
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
 
 &lt;p&gt;exécutera &lt;code&gt;/bin/yolo&lt;/code&gt; quand l'environnement sera importé par bash.&lt;/p&gt;
 &lt;p&gt;Ainsi, tout système utilisant bash est vulnérable, mais il est particulièrement vulnérable :&lt;/p&gt;
@@ -1635,7 +1511,6 @@ La réciproque est également applicable : je suis moi-même transparent pour ga
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;env &lt;span class="nv"&gt;VAR&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;() { 0; }; echo danger&amp;#39;&lt;/span&gt; bash -c &lt;span class="s2"&gt;&amp;quot;echo bonjour&amp;quot;&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
 &lt;p&gt;Si tout va bien, vous devriez observer ceci :&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$ env &lt;span class="nv"&gt;VAR&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;() { 0; }; echo danger&amp;#39;&lt;/span&gt; bash -c &lt;span class="s2"&gt;&amp;quot;echo bonjour&amp;quot;&lt;/span&gt;
 bash: warning: VAR: ignoring &lt;span class="k"&gt;function&lt;/span&gt; definition attempt
@@ -1643,13 +1518,11 @@ bash: error importing &lt;span class="k"&gt;function&lt;/span&gt; definition &lt
 bonjour
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
 &lt;p&gt;Si tout ne va pas bien, vous observerez :&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$ env &lt;span class="nv"&gt;VAR&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;() { 0; }; echo danger&amp;#39;&lt;/span&gt; bash -c &lt;span class="s2"&gt;&amp;quot;echo bonjour&amp;quot;&lt;/span&gt;
 danger
 bonjour
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
 
 &lt;p&gt;À noter que Linux n'est pas le seul système touché. Tous les systèmes Unix (ce qui inclut Mac OS) sont concernés.&lt;/p&gt;
 &lt;h2&gt;M'enfin, qui serait assez bête pour exposer un machin bash sur Internet ?&lt;/h2&gt;
@@ -1662,7 +1535,6 @@ Il ne peut plus rien nous arriver d'affreux maintenant&lt;/p&gt;
 &lt;p&gt;Pour tester votre vulnérabilité à &lt;a href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2014-7169"&gt;CVE-2014-7169&lt;/a&gt;, vous pouvez lancer :&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;env &lt;span class="nv"&gt;X&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;() { (a)=&amp;gt;\&amp;#39;&lt;/span&gt; sh -c &lt;span class="s2"&gt;&amp;quot;echo date&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; cat &lt;span class="nb"&gt;echo&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
 
 &lt;p&gt;Si vous obtenez la date, votre système est vulnérable.&lt;/p&gt;
 &lt;p&gt;À suivre, donc.&lt;/p&gt;</content><category term="Blog"></category><category term="bash"></category><category term="sécurité"></category><category term="cve"></category></entry></feed>

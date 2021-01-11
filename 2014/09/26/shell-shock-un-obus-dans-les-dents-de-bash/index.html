@@ -55,11 +55,9 @@
 <span class="o">}</span>
 </code></pre></div>
 
-
 <p>À l'import, il se contente aveuglément d'interpréter cela en remplaçant le signe « = » par une espace. C'est ainsi que bash ne se limite pas à interpréter le corps de la fonction mais qu'il poursuit le parsing et exécute les commandes qui suivent la définition de la fonction. Par exemple, définir une variable d'environnement de cette sorte :</p>
 <div class="highlight"><pre><span></span><code><span class="nv">FOO</span><span class="o">=()</span> <span class="o">{</span> ignored<span class="p">;</span> <span class="o">}</span><span class="p">;</span> /bin/yolo
 </code></pre></div>
-
 
 <p>exécutera <code>/bin/yolo</code> quand l'environnement sera importé par bash.</p>
 <p>Ainsi, tout système utilisant bash est vulnérable, mais il est particulièrement vulnérable :</p>
@@ -72,7 +70,6 @@
 <div class="highlight"><pre><span></span><code>env <span class="nv">VAR</span><span class="o">=</span><span class="s1">&#39;() { 0; }; echo danger&#39;</span> bash -c <span class="s2">&quot;echo bonjour&quot;</span>
 </code></pre></div>
 
-
 <p>Si tout va bien, vous devriez observer ceci :</p>
 <div class="highlight"><pre><span></span><code>$ env <span class="nv">VAR</span><span class="o">=</span><span class="s1">&#39;() { 0; }; echo danger&#39;</span> bash -c <span class="s2">&quot;echo bonjour&quot;</span>
 bash: warning: VAR: ignoring <span class="k">function</span> definition attempt
@@ -80,13 +77,11 @@ bash: error importing <span class="k">function</span> definition <span class="k"
 bonjour
 </code></pre></div>
 
-
 <p>Si tout ne va pas bien, vous observerez :</p>
 <div class="highlight"><pre><span></span><code>$ env <span class="nv">VAR</span><span class="o">=</span><span class="s1">&#39;() { 0; }; echo danger&#39;</span> bash -c <span class="s2">&quot;echo bonjour&quot;</span>
 danger
 bonjour
 </code></pre></div>
-
 
 <p>À noter que Linux n'est pas le seul système touché. Tous les systèmes Unix (ce qui inclut Mac OS) sont concernés.</p>
 <h2>M'enfin, qui serait assez bête pour exposer un machin bash sur Internet ?</h2>
@@ -99,7 +94,6 @@ Il ne peut plus rien nous arriver d'affreux maintenant</p>
 <p>Pour tester votre vulnérabilité à <a href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2014-7169">CVE-2014-7169</a>, vous pouvez lancer :</p>
 <div class="highlight"><pre><span></span><code>env <span class="nv">X</span><span class="o">=</span><span class="s1">&#39;() { (a)=&gt;\&#39;</span> sh -c <span class="s2">&quot;echo date&quot;</span><span class="p">;</span> cat <span class="nb">echo</span>
 </code></pre></div>
-
 
 <p>Si vous obtenez la date, votre système est vulnérable.</p>
 <p>À suivre, donc.</p>

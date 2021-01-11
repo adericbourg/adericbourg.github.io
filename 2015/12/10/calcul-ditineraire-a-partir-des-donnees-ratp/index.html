@@ -68,7 +68,6 @@
 <span class="n">arrival_timestamp</span><span class="o">[</span><span class="n">o</span><span class="o">]</span><span class="w"> </span><span class="err">←</span><span class="w"> </span><span class="n">t0</span><span class="w"></span>
 </code></pre></div>
 
-
 <h3>Boucle de calcul</h3>
 <p>On parcourt l'ensemble des connexions contenues dans la table et on considère l'amélioration qu'elle apporte sur le trajet. À la fin de la boucle, lorsque toutes les connexions on été parcourues, toutes les heures d'arrivée depuis <em>o</em> vers une autre station ont été calculées.</p>
 <div class="highlight"><pre><span></span><code><span class="err">Pour chaque connexion c</span>
@@ -77,7 +76,6 @@
 <span class="err">        arrival_timestamp[c.arrival_station] ← c.arrival_timestamp</span>
 <span class="err">        in_connection[c.arrival_station] ← c</span>
 </code></pre></div>
-
 
 <h3>Résultat</h3>
 <p>Pour obtenir le résultat, on parcourt le tableau des stations d'arrivée (<code>in_connections</code>) en partant de la destination <em>d</em> jusqu'à retrouver le point de départ <em>o</em>.</p>
@@ -89,7 +87,6 @@
 <span class="err">A      \</span>
 <span class="err">         -----o D</span>
 </code></pre></div>
-
 
 <p>On souhaite rejoindre <code>C</code> depuis <code>A</code> en partant à l'heure 2 avec la table horaire suivante :</p>
 <table class="table table-bordered table-condensed table-striped">
@@ -205,7 +202,6 @@
 <span class="m">1197623</span><span class="p">,</span><span class="m">100</span><span class="p">,</span><span class="s">&quot;13&quot;</span><span class="p">,</span><span class="s">&quot;(CHATILLON - MONTROUGE &lt;-&gt; ST-DENIS-UNIVERSITE/LES COURTILLES) - Retour&quot;</span><span class="p">,,</span><span class="m">1</span><span class="p">,,</span><span class="n">FFFFFF</span><span class="p">,</span><span class="m">000000</span>
 </code></pre></div>
 
-
 <h4>stops.txt</h4>
 <p>Ce fichier liste les arrêts avec, éventuellement, quelques informations complémentaires. La RATP fournit l'adresse la plus proche de l'arrêt ainsi que les coordonnées GPS de son centre (dans le cas d'une station qui dispose de plusieurs sorties). À noter que ce fichier n'est pas ordonné selon le sens de parcours des courses sur la ligne.</p>
 <blockquote>
@@ -225,7 +221,6 @@ Lorsqu'un train suit une mission, il réalise une <strong>course</strong>.</p>
 <span class="err">...</span>
 </code></pre></div>
 
-
 <h4>trips.txt</h4>
 <p>Ce fichier liste les courses et les associe à une route. Nous reviendrons sur son utilité en observant les horaires d'arrêt.</p>
 <p>Exemple sur la ligne 13 :</p>
@@ -235,7 +230,6 @@ Lorsqu'un train suit une mission, il réalise une <strong>course</strong>.</p>
 <span class="err">1197620,1762292,10017622920912413,101,101,0,</span>
 <span class="err">...</span>
 </code></pre></div>
-
 
 <h4>stops_times.txt</h4>
 <p>Ce fichier présente les horaires des courses aux stations (points d'arrêt). Ce fichier est trié par course et par heure d'arrêt en station.</p>
@@ -247,7 +241,6 @@ Lorsqu'un train suit une mission, il réalise une <strong>course</strong>.</p>
 <span class="err">10017622880912413,19:41:00,19:41:00,1879,3,,</span>
 </code></pre></div>
 
-
 <p>Dans cet exemple, pour la course présentée, le véhicule s'arrête à 19:38:00 à l'arrêt 1969 (Châtillon - Montrouge) et en repart à la même heure. On en déduira qu'on ne prend vraisemblabement pas en compte le temps d'arrêt en station. Il arrive ensuite à la station 1880 (Malakoff - Rue Etienne Dolet) à 19:40:00, puis à la station 1879 (Malakoff - Plateau de Vanves) à 19:41:00, etc.</p>
 <h4>transfers.txt</h4>
 <p><code>transfers.txt</code> regroupe les correspondances entre plusieurs points d'arrêt.</p>
@@ -258,25 +251,21 @@ Lorsqu'un train suit une mission, il réalise une <strong>course</strong>.</p>
 <span class="err">3619167,2276,2,252</span>
 </code></pre></div>
 
-
 <p>Sur la première ligne, la correspondance se fait entre l'arrêt « 4211780 » et l'arrêt « 2270 ». Un recherche dans le fichier <code>stops.txt</code> permet de donner un nom humainement compréhensible à ces identifiants : ils correspondent ici tous les deux au point d'arrêt « Mairie de Saint-Ouen ».</p>
 <p>À partir du l'identifiant d'un point d'arrêt, on peut également ressortir les identifiants de course (<code>trip_id</code>). Prenons-en un au hasard :</p>
 <div class="highlight"><pre><span></span><code>$ grep <span class="m">2270</span> stop_times.txt <span class="p">|</span> cut -d, -f1 <span class="p">|</span> head -n1
 <span class="m">10017622880912417</span>
 </code></pre></div>
 
-
 <p>À partir de cet identifiant, on peut retrouver la route associée (<code>route_id</code>) :</p>
 <div class="highlight"><pre><span></span><code>$ grep <span class="m">10017622880912417</span> trips.txt <span class="p">|</span> cut -d, -f1
 <span class="m">1197623</span>
 </code></pre></div>
 
-
 <p>On trouve donc qu'il s'agissait de la ligne 13 dans le sens « retour » :</p>
 <div class="highlight"><pre><span></span><code>$ grep ^1197623, routes.txt
 <span class="m">1197623</span>,100,<span class="s2">&quot;13&quot;</span>,<span class="s2">&quot;(CHATILLON - MONTROUGE &lt;-&gt; ST-DENIS-UNIVERSITE/LES COURTILLES) - Retour&quot;</span>,,1,,FFFFFF,000000
 </code></pre></div>
-
 
 <p>Vérifions par acquit de conscience l'autre identifiant de point d'arrêt :</p>
 <div class="highlight"><pre><span></span><code>$ grep <span class="m">4211780</span> stop_times.txt <span class="p">|</span> cut -d, -f1 <span class="p">|</span> head -n1
@@ -286,7 +275,6 @@ $ grep <span class="m">119841521246955</span> trips.txt
 $ grep <span class="m">1364288</span> routes.txt
 <span class="m">1364288</span>,100,<span class="s2">&quot;N44&quot;</span>,<span class="s2">&quot;(GARGES-SARCELLES RER &lt;-&gt; GARE DE L&#39;EST) - Retour&quot;</span>,,3,,FFFFFF,000000
 </code></pre></div>
-
 
 <p>Il s'agit donc du <a href="http://www.ratp.fr/informer/pdf/orienter/f_horaire.php?fm=gif&amp;loc=noctilien&amp;nompdf=n44">Noctilien N44</a> qui passe effectivement par « Mairie de Saint-Ouen ». La boucle est bouclée.</p>
 <h3>Parsing des fichiers GTFS</h3>
@@ -312,7 +300,6 @@ $ grep <span class="m">1364288</span> routes.txt
   <span class="n">map</span><span class="o">(</span><span class="nc">Route</span><span class="o">.</span><span class="n">parse</span><span class="o">)</span>
 </code></pre></div>
 
-
 <p>Dans la pratique, la volumétrie des horaires des courses rend l'opération plus complexe :</p>
 <div class="highlight"><pre><span></span><code>$ wc -l *
         <span class="m">2</span> agency.txt
@@ -324,7 +311,6 @@ $ grep <span class="m">1364288</span> routes.txt
     <span class="m">80338</span> transfers.txt
    <span class="m">417920</span> trips.txt
 </code></pre></div>
-
 
 <p>Pour simplifier la suite de cet article, nous ne traiterons que les lignes ferrées (métro et RER) exploitées par la RATP. On regroupera les données ligne par ligne (au sens RATP) dans la structure <code>GtfsData</code> pour ensuite les fusionner :</p>
 <div class="highlight"><pre><span></span><code><span class="k">case</span> <span class="k">class</span> <span class="nc">GtfsData</span><span class="o">(</span>
@@ -347,7 +333,6 @@ $ grep <span class="m">1364288</span> routes.txt
 <span class="o">)</span>
 </code></pre></div>
 
-
 <h3>Construction de la table horaire</h3>
 <p>La table horaire est, comme nous l'avons vu, une séquence de connexions modélisées par des quadruplets contenants chacun la station de départ, la station d'arrivée, l'heure de départ et l'heure d'arrivée.</p>
 <div class="highlight"><pre><span></span><code><span class="k">case</span> <span class="k">class</span> <span class="nc">Timetable</span><span class="o">(</span><span class="n">connections</span><span class="k">:</span> <span class="kt">Seq</span><span class="o">[</span><span class="kt">Connection</span><span class="o">])</span>
@@ -358,7 +343,6 @@ $ grep <span class="m">1364288</span> routes.txt
   <span class="n">arrivalTimestamp</span><span class="k">:</span> <span class="kt">Int</span>
 <span class="o">)</span>
 </code></pre></div>
-
 
 <p>Sa construction se fait en deux étapes :</p>
 <ol>
@@ -371,7 +355,6 @@ $ grep <span class="m">1364288</span> routes.txt
 <span class="err">Course II :               C (t2) --------------------&gt; D (t4)</span>
 </code></pre></div>
 
-
 <p>Le fichier <code>stop_times.txt</code> ressemblerait à :</p>
 <div class="highlight"><pre><span></span><code><span class="err">trip_id,arrival_time,departure_time,stop_id,stop_sequence,stop_headsign,shape_dist_traveled</span>
 <span class="err">I, t1, t1, A, 1, ,</span>
@@ -379,7 +362,6 @@ $ grep <span class="m">1364288</span> routes.txt
 <span class="err">I, t3, t3, B, 1, ,</span>
 <span class="err">II, t4, t4, D, 1, ,</span>
 </code></pre></div>
-
 
 <p>Une lecture indépendante de l'identifiant de course (<code>trip_id</code>) amalgamerait donc ces deux courses et induirait de fausses correspondances.</p>
 <p>La création de la table horaire se fait en groupant deux à deux les horaires d'arrêt au sein d'une même course. Pour chaque élément à l'indice <code>i</code>, on créera une connexion partant de l'arrêt à cet indice et arrivant à l'arrêt de l'indice <code>i+1</code>. On implémente cette construction avec une fonction récursive qui dépile un à un les horaires de course.</p>
@@ -416,7 +398,6 @@ $ grep <span class="m">1364288</span> routes.txt
 <span class="o">}</span>
 </code></pre></div>
 
-
 <p>Dans cet exemple de code, la fonction <code>durationToTimestamp</code> retourne un timestamp correspondant à l'heure effective pour la journée en cours à partir de l'heure seule fournie dans les données. Par exemple, le 01/01/2016, la durée <code>19h32min27s</code> permettra d'obtenir le timestamp équivalent à <code>2016-01-01T19:32:27.0Z</code>.</p>
 <h4>Connexions issues des correspondances</h4>
 <p>Le fichier <code>transfers.txt</code> nous donne les correspondances disponibles sur une ligne. L'objectif de cette étape est :</p>
@@ -436,7 +417,6 @@ $ grep <span class="m">1364288</span> routes.txt
     <span class="n">gtfsData</span><span class="o">.</span><span class="n">stopsByStopId</span><span class="o">.</span><span class="n">contains</span><span class="o">(</span><span class="n">transfer</span><span class="o">.</span><span class="n">toStopId</span><span class="o">)</span>
 <span class="o">)</span>
 </code></pre></div>
-
 
 <p>Cela étant fait, pour chacune de ces correspondances, on créé dans la table horaire une connexion correspondant à chaque horaire de passage à cette station. On utilisera pour cela les données issues de <code>stop_times.txt</code>. Cette fonction est très similaire dans son fonctionnement à <code>stopTimesToConnections</code>.</p>
 <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="n">transfersToConnections</span><span class="o">(</span><span class="n">filteredTransfers</span><span class="k">:</span> <span class="kt">Iterable</span><span class="o">[</span><span class="kt">Transfer</span><span class="o">])</span><span class="k">:</span> <span class="kt">Iterable</span><span class="o">[</span><span class="kt">Connection</span><span class="o">]</span> <span class="k">=</span> <span class="o">{</span>
@@ -472,7 +452,6 @@ $ grep <span class="m">1364288</span> routes.txt
 <span class="o">}</span>
 </code></pre></div>
 
-
 <h4>Fusion des deux tables horaires</h4>
 <p>On a construit jusqu'ici deux tables horaires :</p>
 <ul>
@@ -490,7 +469,6 @@ $ grep <span class="m">1364288</span> routes.txt
   <span class="n">toList</span><span class="o">.</span>
   <span class="n">sortBy</span><span class="o">(</span><span class="k">_</span><span class="o">.</span><span class="n">departureTimestamp</span><span class="o">)</span>
 </code></pre></div>
-
 
 <h2>Implémentation de l'algorithme</h2>
 <p>Je propose ici une implémentation en Scala qui pourrait probablement être (largement, rien que par sa mutabilité) améliorée. Partons toujours de là.</p>
@@ -512,7 +490,6 @@ $ grep <span class="m">1364288</span> routes.txt
 <span class="o">}</span>
 </code></pre></div>
 
-
 <h3>Initialisation</h3>
 <p>On initialise les tableaux avec une valeur « virtuellement infinie » (valeur maximale qu'un entier peut représenter) à l'exception de l'heure d'arrivée optimale à la station de départ... puisque cette valeur est connue.</p>
 <div class="highlight"><pre><span></span><code><span class="k">val</span> <span class="n">inConnection</span> <span class="k">=</span> <span class="nc">Array</span><span class="o">.</span><span class="n">fill</span><span class="o">[</span><span class="kt">Int</span><span class="o">](</span><span class="nc">CSA</span><span class="o">.</span><span class="nc">MaxStations</span><span class="o">)(</span><span class="nc">Int</span><span class="o">.</span><span class="nc">MaxValue</span><span class="o">)</span>
@@ -523,7 +500,6 @@ $ grep <span class="m">1364288</span> routes.txt
   <span class="c1">// [...]</span>
 <span class="o">}</span>
 </code></pre></div>
-
 
 <h3>Calcul du trajet</h3>
 <h4>Vue macroscopique</h4>
@@ -542,7 +518,6 @@ $ grep <span class="m">1364288</span> routes.txt
   <span class="n">computeRoute</span><span class="o">(</span><span class="n">arrivalStation</span><span class="o">)</span>
 <span class="o">}</span>
 </code></pre></div>
-
 
 <h4>Parcours de la table horaire</h4>
 <p>On utilise une fois de plus une récursion terminale.</p>
@@ -583,7 +558,6 @@ $ grep <span class="m">1364288</span> routes.txt
 <span class="o">}</span>
 </code></pre></div>
 
-
 <h4>Construction de l'itinéraire à partir de la table horaire</h4>
 <p>Une fois la table horaire <code>inConnection</code> calculée, on reconstitue l'itinéraire inversé en partant de la station d'arrivée et en remontant jusqu'à la station de départ.</p>
 <div class="highlight"><pre><span></span><code><span class="k">private</span> <span class="k">def</span> <span class="n">computeRoute</span><span class="o">(</span><span class="n">arrivalStation</span><span class="k">:</span> <span class="kt">Int</span><span class="o">)</span><span class="k">:</span> <span class="kt">Seq</span><span class="o">[</span><span class="kt">Connection</span><span class="o">]</span> <span class="k">=</span> <span class="o">{</span>
@@ -604,7 +578,6 @@ $ grep <span class="m">1364288</span> routes.txt
 <span class="o">}</span>
 </code></pre></div>
 
-
 <p>Ce cas est volontairement écrit en « Java++ » plutôt qu'en « bon Scala » par simplicité de lecture. Saurez-vous écrire le cas général en une ligne (ou deux) ?</p>
 <h3>Exemple</h3>
 <p>Partons d'un trajet entre Maubert-Mutualité et Voltaire en partant à 18h.</p>
@@ -617,7 +590,6 @@ $ grep <span class="m">1364288</span> routes.txt
   <span class="n">durationToTimestamp</span><span class="o">(</span><span class="nc">Duration</span><span class="o">.</span><span class="n">ofHours</span><span class="o">(</span><span class="mi">18</span><span class="o">))</span>
 <span class="o">)</span>
 </code></pre></div>
-
 
 <p>On obtient le trajet (notez la présence des connexions de correspondance à Odéon et Strasbourg-Saint-Denis) :</p>
 <div class="highlight"><pre><span></span><code><span class="err">Solution found with 15 connections</span>
@@ -638,7 +610,6 @@ $ grep <span class="m">1364288</span> routes.txt
 <span class="err">  Saint-Ambroise -&gt; Voltaire (Léon Blum)</span>
 <span class="err">Total transit time: 21 minutes</span>
 </code></pre></div>
-
 
 <h2>Conclusion</h2>
 <p>En comparaison, l'<a href="https://fr.wikipedia.org/wiki/Algorithme_de_Dijkstra">algorithme de plus court chemin de Dijkstra</a> présente une complexité proportionnelle à <em>C.log(N)</em> où <em>N</em> est le nombre de stations et <em>C</em> le nombre de correspondances entre deux stations, soit environ <em>N.log(N)</em> dans notre évaluation, tout en occupant un espace mémoire de taille proportionnelle à <em>N</em>.</p>

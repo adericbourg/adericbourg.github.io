@@ -71,7 +71,6 @@
 * Closing connection <span class="m">0</span>
 </code></pre></div>
 
-
 <h2>Comment se connecter, alors ?</h2>
 <p>Face à cela (ignorons la <a href="https://fr.wikipedia.org/wiki/POODLE">référence à SSLv3</a> pour l'instant), deux options sont possibles (la troisième, refiler le bébé à votre collègue, n'étant pas traitée ici) :</p>
 <ul>
@@ -86,12 +85,10 @@
 <div class="highlight"><pre><span></span><code>curl -v https://www.example.com --cacert cert.pem
 </code></pre></div>
 
-
 <h2>Depuis une application Java</h2>
 <p>Le même mécanisme s'applique lorsque vous vous connectez à un service en utilisant une application Java. Si le certificat n'est pas sûr, vous vous verrez refuser la connexion :</p>
 <div class="highlight"><pre><span></span><code><span class="err">sun.security.provider.certpath.SunCertPathBuilderException: unable to find valid certification path to requested target</span>
 </code></pre></div>
-
 
 <p>Tout comme avec <code>curl</code>, il existe une option pour spécifier un certificat faisant autorité. Il faut avant tout le stocker dans un conteneur spécifique à la JVM puis de préciser son emplacement dans la propriété système <code>javax.net.ssl.trustStore</code>.</p>
 <p>Pour créer ce conteneur, on utilise l'outil <code>keytool</code> fourni avec le JDK.</p>
@@ -103,12 +100,10 @@ Faire confiance à ce certificat ? <span class="o">[</span>non<span class="o">]<
 Certificat ajouté au fichier de clés
 </code></pre></div>
 
-
 <p>Reste à le déclarer dans votre application :</p>
 <div class="highlight"><pre><span></span><code><span class="n">System</span><span class="p">.</span><span class="na">setProperty</span><span class="p">(</span><span class="s">&quot;javax.net.ssl.trustStore&quot;</span><span class="p">,</span> <span class="s">&quot;/path/to/keystore.jks&quot;</span><span class="p">);</span>
 <span class="n">System</span><span class="p">.</span><span class="na">setProperty</span><span class="p">(</span><span class="s">&quot;javax.net.ssl.trustStorePassword&quot;</span><span class="p">,</span> <span class="o">******</span><span class="p">);</span>
 </code></pre></div>
-
 
 <p>La propriété <code>javax.net.ssl.trustStorePassword</code> correspond au mot de passe que vous avez saisi à l'import du certificat en utilisant <code>keytool</code>. Dès lors, vous pouvez vous connecter aux services sécurisés utilisant un certificat propre à votre entreprise.</p>
 <h2>Solution globale</h2>
@@ -120,7 +115,6 @@ Certificat ajouté au fichier de clés
   -keystore <span class="nv">$JAVA_HOME</span>/jre/lib/security/cacerts <span class="se">\</span>
   -file cert.pem
 </code></pre></div>
-
 
 <p>Notez le mot de passe par défaut du <em>keystore</em>: « changeit ». Il s'agit du mot de passe par défaut et je vous encourage, si ce n'est déjà fait, à le changer.</p>
 <p>Cette opération est à réaliser sur votre machine de développement mais également sur l'intégralité des serveurs susceptibles d'exécuter vos applications. C'est là qu'une solution de déploiement automatique devient pertinente.</p>
@@ -138,7 +132,6 @@ Certificat ajouté au fichier de clés
         <span class="n">logger</span><span class="p">.</span><span class="na">error</span><span class="p">(</span><span class="s">&quot;Cannot set trust store&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">);</span>
 <span class="p">}</span>
 </code></pre></div>
-
 
 <p>Voilà qui devrait vous permettre de communiquer avec le reste du monde.</p>
       </div>

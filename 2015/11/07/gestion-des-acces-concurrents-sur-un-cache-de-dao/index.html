@@ -54,7 +54,6 @@
 <span class="p">}</span>
 </code></pre></div>
 
-
 <p>Sans accorder d'importance à l'implémentation du DAO accédant effectivement aux données persistées, contentons-nous de supposer que ses performances ne sont pas suffisantes pour répondre aux sollicitations auxquelles est soumise notre application.</p>
 <h2>Cache des données</h2>
 <p>On se propose d'utiliser <a href="https://github.com/google/guava">Guava</a> pour implémenter ce cache. On utilise dans cet exemple un <a href="https://github.com/google/guava/wiki/CachesExplained"><code>LoadingCache</code></a> qui ira chercher en base la donnée s'il n'a pas déjà été sollicité pour celle-ci : on charge les valeurs une à une à la demande. Il permet également de rafraîchir les données automatiquement à intervalle régulier.</p>
@@ -72,7 +71,6 @@
       <span class="p">}</span>
     <span class="p">});</span>
 </code></pre></div>
-
 
 <h2>Implémentation naïve (et fausse)</h2>
 <p>En première approche, on peut supposer qu'il « suffit » de mettre à jour le cache pour chaque opération d'écriture sur la base de données. Une implémentation dans cette optique ressemblerait à ceci.</p>
@@ -126,7 +124,6 @@
   <span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
-
 
 <p>Pourquoi cette implémentation ne fonctionne pas ?</p>
 <p>Dans le cas de multiples appels concurrents, des interruptions peuvent avoir lieu à tout moment. L'appel à <code>delete</code> peut être interrompu entre la mise à jour de la base (<code>dbDao.delete(id)</code>) et le rafraîchissement du cache (<code>cache.refresh(id)</code>). Si cette interruption se fait à la faveur d'une lecture (<code>get</code>), cette dernière se fera sur un cache qui n'est pas encore mise à jour et donc renverra une donnée « périmée ». Rien ne dit qu'il est impératif de récupérer la dernière version de la donnée : suivant votre application, cela peut être acceptable.</p>
@@ -183,7 +180,6 @@
 <span class="p">}</span>
 </code></pre></div>
 
-
 <p>Mais s'il rentre un lecteur toutes les deux millisecondes et qu'il faut cinq millisecondes à chaque lecteur pour terminer sa consultation, il y aura toujours des lecteurs présents et le rédacteur ne pourra jamais entrer.</p>
 <p>Pour éviter cela, il faut que lorsqu'un rédacteur est en attente, tout lecteur qui se présente reste « derrière » le rédacteur et attende qu'il ait terminé.</p>
 <p>En Java, <a href="https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/locks/ReentrantReadWriteLock.html">la classe <code>ReentrantReadWriteLock</code></a> permet de répondre à cette condition. Il encapsule deux types de verrous :</p>
@@ -202,7 +198,6 @@
 <span class="n">readWriteLock</span><span class="p">.</span><span class="na">readLock</span><span class="p">().</span><span class="na">unlock</span><span class="p">();</span>
 </code></pre></div>
 
-
 <p>Exemple en écriture :</p>
 <div class="highlight"><pre><span></span><code><span class="n">ReadWriteLock</span> <span class="n">readWriteLock</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ReentrantReadWriteLock</span><span class="p">();</span>
 
@@ -213,7 +208,6 @@
 
 <span class="n">readWriteLock</span><span class="p">.</span><span class="na">writeLock</span><span class="p">().</span><span class="na">unlock</span><span class="p">();</span>
 </code></pre></div>
-
 
 <h2>Implémentation « sûre »</h2>
 <p>Nous pouvons réutiliser notre implémentation naïve : si elle n'était pas sûre, son intention restait valable. Pour l'adapter, on ajoute :</p>
@@ -308,7 +302,6 @@
   <span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
-
 
 <h2>Pour aller plus loin</h2>
 <p>Le DAO présenté ici est « sûr » dans la mesure où il garantit la cohérence avec la base des données retournées. En revanche, pour cela, un compromis sur les performances a du être fait. En effet, cette implémentation ne permet pas d'écritures simultanées : la modification de deux objets distincts n'est pas possible.</p>
