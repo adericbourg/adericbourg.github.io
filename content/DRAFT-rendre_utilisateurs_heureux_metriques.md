@@ -3,6 +3,7 @@ Title: Comment rendre vos utilisateurs heureux (avec vos métriques)
 Category: Blog
 Tags: sre, métriques, expérience utilisateur, bonnes pratiques
 Date: 2100-01-01
+Status: draft
 ---
 
 Ça y est ! Mon application est déployée en production et reçoit du trafic ! C'est maintenant
