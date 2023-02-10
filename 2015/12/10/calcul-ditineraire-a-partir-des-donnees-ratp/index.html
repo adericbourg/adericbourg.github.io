@@ -61,35 +61,32 @@
 <p>L'objectif est de se rendre d'un point de départ <em>o</em> à un point d'arrivée <em>d</em> en partant à l'heure <em>t0</em>.</p>
 <h3>Initialisation</h3>
 <p>On initialise l'algorithme en attribuant une durée infinie au trajet vers tout point d'arrêt à l'exception de la gare de départ (on en part, on sait qu'on y est à <em>t0</em>).</p>
-<div class="highlight"><pre><span></span><code><span class="n">Pour</span><span class="w"> </span><span class="n">chaque</span><span class="w"> </span><span class="n">station</span><span class="w"> </span><span class="n">s</span><span class="w"></span>
-<span class="w">    </span><span class="n">arrival_timestamp</span><span class="o">[</span><span class="n">s</span><span class="o">]</span><span class="w"> </span><span class="err">←</span><span class="w"> </span><span class="n">infinite</span><span class="w"></span>
-<span class="w">    </span><span class="n">in_connection</span><span class="o">[</span><span class="n">s</span><span class="o">]</span><span class="w"> </span><span class="err">←</span><span class="w"> </span><span class="n">invalid_value</span><span class="w"></span>
+<div class="highlight"><pre><span></span><code><span class="n">Pour</span><span class="w"> </span><span class="n">chaque</span><span class="w"> </span><span class="n">station</span><span class="w"> </span><span class="n">s</span>
+<span class="w">    </span><span class="n">arrival_timestamp</span><span class="o">[</span><span class="n">s</span><span class="o">]</span><span class="w"> </span><span class="err">←</span><span class="w"> </span><span class="n">infinite</span>
+<span class="w">    </span><span class="n">in_connection</span><span class="o">[</span><span class="n">s</span><span class="o">]</span><span class="w"> </span><span class="err">←</span><span class="w"> </span><span class="n">invalid_value</span>
 
-<span class="n">arrival_timestamp</span><span class="o">[</span><span class="n">o</span><span class="o">]</span><span class="w"> </span><span class="err">←</span><span class="w"> </span><span class="n">t0</span><span class="w"></span>
+<span class="n">arrival_timestamp</span><span class="o">[</span><span class="n">o</span><span class="o">]</span><span class="w"> </span><span class="err">←</span><span class="w"> </span><span class="n">t0</span>
 </code></pre></div>
-
 
 <h3>Boucle de calcul</h3>
 <p>On parcourt l'ensemble des connexions contenues dans la table et on considère l'amélioration qu'elle apporte sur le trajet. À la fin de la boucle, lorsque toutes les connexions on été parcourues, toutes les heures d'arrivée depuis <em>o</em> vers une autre station ont été calculées.</p>
-<div class="highlight"><pre><span></span><code><span class="err">Pour chaque connexion c</span>
-<span class="err">    Si arrival_timestamp[c.departure_station] ≤ c.departure_timestamp</span>
-<span class="err">    et arrival_timestamp[c.arrival_station] &gt; c.arrival_timestamp</span>
-<span class="err">        arrival_timestamp[c.arrival_station] ← c.arrival_timestamp</span>
-<span class="err">        in_connection[c.arrival_station] ← c</span>
+<div class="highlight"><pre><span></span><code>Pour chaque connexion c
+    Si arrival_timestamp[c.departure_station] ≤ c.departure_timestamp
+    et arrival_timestamp[c.arrival_station] &gt; c.arrival_timestamp
+        arrival_timestamp[c.arrival_station] ← c.arrival_timestamp
+        in_connection[c.arrival_station] ← c
 </code></pre></div>
-
 
 <h3>Résultat</h3>
 <p>Pour obtenir le résultat, on parcourt le tableau des stations d'arrivée (<code>in_connections</code>) en partant de la destination <em>d</em> jusqu'à retrouver le point de départ <em>o</em>.</p>
 <h3>Exemple</h3>
 <p>Prenons un exemple sur une ligne fictive :</p>
-<div class="highlight"><pre><span></span><code><span class="err">         -----o C</span>
-<span class="err">       /</span>
-<span class="err">o-----o B</span>
-<span class="err">A      \</span>
-<span class="err">         -----o D</span>
+<div class="highlight"><pre><span></span><code>         -----o C
+       /
+o-----o B
+A      \
+         -----o D
 </code></pre></div>
-
 
 <p>On souhaite rejoindre <code>C</code> depuis <code>A</code> en partant à l'heure 2 avec la table horaire suivante :</p>
 <table class="table table-bordered table-condensed table-striped">
@@ -205,7 +202,6 @@
 <span class="m">1197623</span><span class="p">,</span><span class="m">100</span><span class="p">,</span><span class="s">&quot;13&quot;</span><span class="p">,</span><span class="s">&quot;(CHATILLON - MONTROUGE &lt;-&gt; ST-DENIS-UNIVERSITE/LES COURTILLES) - Retour&quot;</span><span class="p">,,</span><span class="m">1</span><span class="p">,,</span><span class="n">FFFFFF</span><span class="p">,</span><span class="m">000000</span>
 </code></pre></div>
 
-
 <h4>stops.txt</h4>
 <p>Ce fichier liste les arrêts avec, éventuellement, quelques informations complémentaires. La RATP fournit l'adresse la plus proche de l'arrêt ainsi que les coordonnées GPS de son centre (dans le cas d'une station qui dispose de plusieurs sorties). À noter que ce fichier n'est pas ordonné selon le sens de parcours des courses sur la ligne.</p>
 <blockquote>
@@ -218,147 +214,135 @@
 Lorsqu'un train suit une mission, il réalise une <strong>course</strong>.</p>
 </blockquote>
 <p>Exemple des quatre premières stations de la ligne 13 :</p>
-<div class="highlight"><pre><span></span><code><span class="err">stop_id,stop_code,stop_name,stop_desc,stop_lat,stop_lon,location_type,parent_station</span>
-<span class="err">2397,,&quot;Pernety&quot;,&quot;Raymond Losserand (72 rue) - 75114&quot;,48.833933819810916,2.31790897216328,0,</span>
-<span class="err">1969,,&quot;Châtillon Montrouge&quot;,&quot;République (220 avenue de la) - 92020&quot;,48.810283363510756,2.3012888709759522,0,</span>
-<span class="err">2406,,&quot;Place de Clichy&quot;,&quot;Clichy (terre-plein face au 7 place de) - 75109&quot;,48.883203999876585,2.3272660246411383,0,</span>
-<span class="err">...</span>
+<div class="highlight"><pre><span></span><code>stop_id,stop_code,stop_name,stop_desc,stop_lat,stop_lon,location_type,parent_station
+2397,,&quot;Pernety&quot;,&quot;Raymond Losserand (72 rue) - 75114&quot;,48.833933819810916,2.31790897216328,0,
+1969,,&quot;Châtillon Montrouge&quot;,&quot;République (220 avenue de la) - 92020&quot;,48.810283363510756,2.3012888709759522,0,
+2406,,&quot;Place de Clichy&quot;,&quot;Clichy (terre-plein face au 7 place de) - 75109&quot;,48.883203999876585,2.3272660246411383,0,
+...
 </code></pre></div>
-
 
 <h4>trips.txt</h4>
 <p>Ce fichier liste les courses et les associe à une route. Nous reviendrons sur son utilité en observant les horaires d'arrêt.</p>
 <p>Exemple sur la ligne 13 :</p>
-<div class="highlight"><pre><span></span><code><span class="err">route_id,service_id,trip_id,trip_headsign,trip_short_name,direction_id,shape_id</span>
-<span class="err">1197620,1762288,10017622880912413,101,101,0,</span>
-<span class="err">1197620,1762289,10017622890912413,101,101,0,</span>
-<span class="err">1197620,1762292,10017622920912413,101,101,0,</span>
-<span class="err">...</span>
+<div class="highlight"><pre><span></span><code>route_id,service_id,trip_id,trip_headsign,trip_short_name,direction_id,shape_id
+1197620,1762288,10017622880912413,101,101,0,
+1197620,1762289,10017622890912413,101,101,0,
+1197620,1762292,10017622920912413,101,101,0,
+...
 </code></pre></div>
-
 
 <h4>stops_times.txt</h4>
 <p>Ce fichier présente les horaires des courses aux stations (points d'arrêt). Ce fichier est trié par course et par heure d'arrêt en station.</p>
 <p>Un détail est à noter quant aux horaires : ceux-ci sont fournis pour la journée qui peut se terminer... le lendemain. Un métro circulant le dimanche à 1h du matin sera en réalité rattaché à la journée du samedi. Ainsi, son horaire ne sera pas « à 1h le dimanche » mais « à 25h le samedi ». Bien que cette astuce puisse sembler tordue, elle simplifie en pratique beaucoup de choses, notamment pour maintenir la continuité des courses : il serait absurde de scinder la course d'un train sous prétexte qu'il roule à cheval sur deux jours calendaires.</p>
 <p>Exemple pour la ligne 13 :</p>
-<div class="highlight"><pre><span></span><code><span class="err">trip_id,arrival_time,departure_time,stop_id,stop_sequence,stop_headsign,shape_dist_traveled</span>
-<span class="err">10017622880912413,19:38:00,19:38:00,1969,1,,</span>
-<span class="err">10017622880912413,19:40:00,19:40:00,1880,2,,</span>
-<span class="err">10017622880912413,19:41:00,19:41:00,1879,3,,</span>
+<div class="highlight"><pre><span></span><code>trip_id,arrival_time,departure_time,stop_id,stop_sequence,stop_headsign,shape_dist_traveled
+10017622880912413,19:38:00,19:38:00,1969,1,,
+10017622880912413,19:40:00,19:40:00,1880,2,,
+10017622880912413,19:41:00,19:41:00,1879,3,,
 </code></pre></div>
-
 
 <p>Dans cet exemple, pour la course présentée, le véhicule s'arrête à 19:38:00 à l'arrêt 1969 (Châtillon - Montrouge) et en repart à la même heure. On en déduira qu'on ne prend vraisemblabement pas en compte le temps d'arrêt en station. Il arrive ensuite à la station 1880 (Malakoff - Rue Etienne Dolet) à 19:40:00, puis à la station 1879 (Malakoff - Plateau de Vanves) à 19:41:00, etc.</p>
 <h4>transfers.txt</h4>
 <p><code>transfers.txt</code> regroupe les correspondances entre plusieurs points d'arrêt.</p>
 <p>Ce fichier n'étant pas compréhensible par un humain, prenons un exemple et déroulons-le :</p>
-<div class="highlight"><pre><span></span><code><span class="err">from_stop_id,to_stop_id,transfer_type,min_transfer_time</span>
-<span class="err">4211780,2270,2,212</span>
-<span class="err">4472773,1724,2,228</span>
-<span class="err">3619167,2276,2,252</span>
+<div class="highlight"><pre><span></span><code>from_stop_id,to_stop_id,transfer_type,min_transfer_time
+4211780,2270,2,212
+4472773,1724,2,228
+3619167,2276,2,252
 </code></pre></div>
-
 
 <p>Sur la première ligne, la correspondance se fait entre l'arrêt « 4211780 » et l'arrêt « 2270 ». Un recherche dans le fichier <code>stops.txt</code> permet de donner un nom humainement compréhensible à ces identifiants : ils correspondent ici tous les deux au point d'arrêt « Mairie de Saint-Ouen ».</p>
 <p>À partir du l'identifiant d'un point d'arrêt, on peut également ressortir les identifiants de course (<code>trip_id</code>). Prenons-en un au hasard :</p>
-<div class="highlight"><pre><span></span><code>$ grep <span class="m">2270</span> stop_times.txt <span class="p">|</span> cut -d, -f1 <span class="p">|</span> head -n1
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>grep<span class="w"> </span><span class="m">2270</span><span class="w"> </span>stop_times.txt<span class="w"> </span><span class="p">|</span><span class="w"> </span>cut<span class="w"> </span>-d,<span class="w"> </span>-f1<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-n1
 <span class="m">10017622880912417</span>
 </code></pre></div>
 
-
 <p>À partir de cet identifiant, on peut retrouver la route associée (<code>route_id</code>) :</p>
-<div class="highlight"><pre><span></span><code>$ grep <span class="m">10017622880912417</span> trips.txt <span class="p">|</span> cut -d, -f1
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>grep<span class="w"> </span><span class="m">10017622880912417</span><span class="w"> </span>trips.txt<span class="w"> </span><span class="p">|</span><span class="w"> </span>cut<span class="w"> </span>-d,<span class="w"> </span>-f1
 <span class="m">1197623</span>
 </code></pre></div>
 
-
 <p>On trouve donc qu'il s'agissait de la ligne 13 dans le sens « retour » :</p>
-<div class="highlight"><pre><span></span><code>$ grep ^1197623, routes.txt
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>grep<span class="w"> </span>^1197623,<span class="w"> </span>routes.txt
 <span class="m">1197623</span>,100,<span class="s2">&quot;13&quot;</span>,<span class="s2">&quot;(CHATILLON - MONTROUGE &lt;-&gt; ST-DENIS-UNIVERSITE/LES COURTILLES) - Retour&quot;</span>,,1,,FFFFFF,000000
 </code></pre></div>
 
-
 <p>Vérifions par acquit de conscience l'autre identifiant de point d'arrêt :</p>
-<div class="highlight"><pre><span></span><code>$ grep <span class="m">4211780</span> stop_times.txt <span class="p">|</span> cut -d, -f1 <span class="p">|</span> head -n1
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>grep<span class="w"> </span><span class="m">4211780</span><span class="w"> </span>stop_times.txt<span class="w"> </span><span class="p">|</span><span class="w"> </span>cut<span class="w"> </span>-d,<span class="w"> </span>-f1<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-n1
 <span class="m">119841521246955</span>
-$ grep <span class="m">119841521246955</span> trips.txt
+$<span class="w"> </span>grep<span class="w"> </span><span class="m">119841521246955</span><span class="w"> </span>trips.txt
 <span class="m">1364288</span>,1984152,119841521246955,,1,1,
-$ grep <span class="m">1364288</span> routes.txt
+$<span class="w"> </span>grep<span class="w"> </span><span class="m">1364288</span><span class="w"> </span>routes.txt
 <span class="m">1364288</span>,100,<span class="s2">&quot;N44&quot;</span>,<span class="s2">&quot;(GARGES-SARCELLES RER &lt;-&gt; GARE DE L&#39;EST) - Retour&quot;</span>,,3,,FFFFFF,000000
 </code></pre></div>
-
 
 <p>Il s'agit donc du <a href="http://www.ratp.fr/informer/pdf/orienter/f_horaire.php?fm=gif&amp;loc=noctilien&amp;nompdf=n44">Noctilien N44</a> qui passe effectivement par « Mairie de Saint-Ouen ». La boucle est bouclée.</p>
 <h3>Parsing des fichiers GTFS</h3>
 <p>Les fichiers GTFS, bien que portant l'extension <code>.txt</code> sont manipulables comme des fichiers CSV. Dans la suite, on utilisera des structures qui sont (presque) calquées sur le format de ces fichiers. Sur le principe, leur parsing est immédiat. Prenons par exemple le cas des routes (on utilise ici <a href="https://github.com/tototoshi/scala-csv">scala-csv</a>) :</p>
-<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="nn">com.github.tototoshi.csv._</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="nn">com</span><span class="p">.</span><span class="nn">github</span><span class="p">.</span><span class="nn">tototoshi</span><span class="p">.</span><span class="nn">csv</span><span class="p">.</span><span class="n">_</span>
 
-<span class="k">case</span> <span class="k">class</span> <span class="nc">Route</span><span class="o">(</span><span class="n">routeId</span><span class="k">:</span> <span class="kt">Long</span><span class="o">,</span> <span class="n">routeShortName</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> <span class="n">routeLongName</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> <span class="n">routeDesc</span><span class="k">:</span> <span class="kt">String</span><span class="o">)</span>
+<span class="k">case</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">Route</span><span class="p">(</span><span class="n">routeId</span><span class="p">:</span><span class="w"> </span><span class="nc">Long</span><span class="p">,</span><span class="w"> </span><span class="n">routeShortName</span><span class="p">:</span><span class="w"> </span><span class="nc">String</span><span class="p">,</span><span class="w"> </span><span class="n">routeLongName</span><span class="p">:</span><span class="w"> </span><span class="nc">String</span><span class="p">,</span><span class="w"> </span><span class="n">routeDesc</span><span class="p">:</span><span class="w"> </span><span class="nc">String</span><span class="p">)</span>
 
-<span class="k">object</span> <span class="nc">Route</span> <span class="o">{</span>
-  <span class="k">def</span> <span class="n">parse</span><span class="o">(</span><span class="n">fields</span><span class="k">:</span> <span class="kt">Map</span><span class="o">[</span><span class="kt">String</span><span class="p">,</span> <span class="kt">String</span><span class="o">])</span> <span class="k">=</span> <span class="o">{</span>
-    <span class="nc">Route</span><span class="o">(</span>
-      <span class="n">fields</span><span class="o">(</span><span class="s">&quot;route_id&quot;</span><span class="o">).</span><span class="n">toLong</span><span class="o">,</span>
-      <span class="n">fields</span><span class="o">(</span><span class="s">&quot;route_short_name&quot;</span><span class="o">),</span>
-      <span class="n">fields</span><span class="o">(</span><span class="s">&quot;route_long_name&quot;</span><span class="o">),</span>
-      <span class="n">fields</span><span class="o">(</span><span class="s">&quot;route_desc&quot;</span><span class="o">)</span>
-    <span class="o">)</span>
-  <span class="o">}</span>
-<span class="o">}</span>
+<span class="k">object</span><span class="w"> </span><span class="nc">Route</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">def</span><span class="w"> </span><span class="nf">parse</span><span class="p">(</span><span class="n">fields</span><span class="p">:</span><span class="w"> </span><span class="nc">Map</span><span class="p">[</span><span class="nc">String</span><span class="p">,</span><span class="w"> </span><span class="nc">String</span><span class="p">])</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nc">Route</span><span class="p">(</span>
+<span class="w">      </span><span class="n">fields</span><span class="p">(</span><span class="s">&quot;route_id&quot;</span><span class="p">).</span><span class="n">toLong</span><span class="p">,</span>
+<span class="w">      </span><span class="n">fields</span><span class="p">(</span><span class="s">&quot;route_short_name&quot;</span><span class="p">),</span>
+<span class="w">      </span><span class="n">fields</span><span class="p">(</span><span class="s">&quot;route_long_name&quot;</span><span class="p">),</span>
+<span class="w">      </span><span class="n">fields</span><span class="p">(</span><span class="s">&quot;route_desc&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="p">)</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
 
-<span class="k">val</span> <span class="n">routes</span><span class="k">:</span> <span class="kt">List</span><span class="o">[</span><span class="kt">Route</span><span class="o">]</span> <span class="k">=</span> <span class="nc">CSVReader</span><span class="o">.</span>
-  <span class="n">open</span><span class="o">(</span><span class="k">new</span> <span class="nc">File</span><span class="o">(</span><span class="s">&quot;routes.txt&quot;</span><span class="o">)).</span>
-  <span class="n">allWithHeaders</span><span class="o">().</span>
-  <span class="n">map</span><span class="o">(</span><span class="nc">Route</span><span class="o">.</span><span class="n">parse</span><span class="o">)</span>
+<span class="kd">val</span><span class="w"> </span><span class="n">routes</span><span class="p">:</span><span class="w"> </span><span class="nc">List</span><span class="p">[</span><span class="nc">Route</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">CSVReader</span><span class="p">.</span>
+<span class="w">  </span><span class="n">open</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="nc">File</span><span class="p">(</span><span class="s">&quot;routes.txt&quot;</span><span class="p">)).</span>
+<span class="w">  </span><span class="n">allWithHeaders</span><span class="p">().</span>
+<span class="w">  </span><span class="n">map</span><span class="p">(</span><span class="nc">Route</span><span class="p">.</span><span class="n">parse</span><span class="p">)</span>
 </code></pre></div>
-
 
 <p>Dans la pratique, la volumétrie des horaires des courses rend l'opération plus complexe :</p>
-<div class="highlight"><pre><span></span><code>$ wc -l *
-        <span class="m">2</span> agency.txt
-    <span class="m">65937</span> calendar_dates.txt
-     <span class="m">4578</span> calendar.txt
-     <span class="m">1067</span> routes.txt
-    <span class="m">26653</span> stops.txt
- <span class="m">10402381</span> stop_times.txt
-    <span class="m">80338</span> transfers.txt
-   <span class="m">417920</span> trips.txt
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>wc<span class="w"> </span>-l<span class="w"> </span>*
+<span class="w">        </span><span class="m">2</span><span class="w"> </span>agency.txt
+<span class="w">    </span><span class="m">65937</span><span class="w"> </span>calendar_dates.txt
+<span class="w">     </span><span class="m">4578</span><span class="w"> </span>calendar.txt
+<span class="w">     </span><span class="m">1067</span><span class="w"> </span>routes.txt
+<span class="w">    </span><span class="m">26653</span><span class="w"> </span>stops.txt
+<span class="w"> </span><span class="m">10402381</span><span class="w"> </span>stop_times.txt
+<span class="w">    </span><span class="m">80338</span><span class="w"> </span>transfers.txt
+<span class="w">   </span><span class="m">417920</span><span class="w"> </span>trips.txt
 </code></pre></div>
-
 
 <p>Pour simplifier la suite de cet article, nous ne traiterons que les lignes ferrées (métro et RER) exploitées par la RATP. On regroupera les données ligne par ligne (au sens RATP) dans la structure <code>GtfsData</code> pour ensuite les fusionner :</p>
-<div class="highlight"><pre><span></span><code><span class="k">case</span> <span class="k">class</span> <span class="nc">GtfsData</span><span class="o">(</span>
-  <span class="n">name</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span>
-  <span class="n">routes</span><span class="k">:</span> <span class="kt">Iterable</span><span class="o">[</span><span class="kt">Route</span><span class="o">],</span>
-  <span class="n">trips</span><span class="k">:</span> <span class="kt">Iterable</span><span class="o">[</span><span class="kt">Trip</span><span class="o">],</span>
-  <span class="n">stops</span><span class="k">:</span> <span class="kt">Iterable</span><span class="o">[</span><span class="kt">Stop</span><span class="o">],</span>
-  <span class="n">stopTimes</span><span class="k">:</span> <span class="kt">Iterable</span><span class="o">[</span><span class="kt">StopTime</span><span class="o">],</span>
-  <span class="n">transfers</span><span class="k">:</span> <span class="kt">Iterable</span><span class="o">[</span><span class="kt">Transfer</span><span class="o">]</span>
-<span class="o">)</span>
+<div class="highlight"><pre><span></span><code><span class="k">case</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">GtfsData</span><span class="p">(</span>
+<span class="w">  </span><span class="n">name</span><span class="p">:</span><span class="w"> </span><span class="nc">String</span><span class="p">,</span>
+<span class="w">  </span><span class="n">routes</span><span class="p">:</span><span class="w"> </span><span class="nc">Iterable</span><span class="p">[</span><span class="nc">Route</span><span class="p">],</span>
+<span class="w">  </span><span class="n">trips</span><span class="p">:</span><span class="w"> </span><span class="nc">Iterable</span><span class="p">[</span><span class="nc">Trip</span><span class="p">],</span>
+<span class="w">  </span><span class="n">stops</span><span class="p">:</span><span class="w"> </span><span class="nc">Iterable</span><span class="p">[</span><span class="nc">Stop</span><span class="p">],</span>
+<span class="w">  </span><span class="n">stopTimes</span><span class="p">:</span><span class="w"> </span><span class="nc">Iterable</span><span class="p">[</span><span class="nc">StopTime</span><span class="p">],</span>
+<span class="w">  </span><span class="n">transfers</span><span class="p">:</span><span class="w"> </span><span class="nc">Iterable</span><span class="p">[</span><span class="nc">Transfer</span><span class="p">]</span>
+<span class="p">)</span>
 
-<span class="k">val</span> <span class="n">lines</span><span class="k">:</span> <span class="kt">Iterable</span><span class="o">[</span><span class="kt">GtfsData</span><span class="o">]</span> <span class="k">=</span> <span class="n">parseGtfsDataByLine</span><span class="o">()</span>
-<span class="k">val</span> <span class="n">gtfsData</span> <span class="k">=</span> <span class="nc">GtfsData</span><span class="o">(</span>
-  <span class="s">&quot;RATP&quot;</span><span class="o">,</span>
-  <span class="n">lines</span><span class="o">.</span><span class="n">flatMap</span><span class="o">(</span><span class="k">_</span><span class="o">.</span><span class="n">routes</span><span class="o">),</span>
-  <span class="n">lines</span><span class="o">.</span><span class="n">flatMap</span><span class="o">(</span><span class="k">_</span><span class="o">.</span><span class="n">trips</span><span class="o">),</span>
-  <span class="n">lines</span><span class="o">.</span><span class="n">flatMap</span><span class="o">(</span><span class="k">_</span><span class="o">.</span><span class="n">stops</span><span class="o">),</span>
-  <span class="n">lines</span><span class="o">.</span><span class="n">flatMap</span><span class="o">(</span><span class="k">_</span><span class="o">.</span><span class="n">stopTimes</span><span class="o">),</span>
-  <span class="n">lines</span><span class="o">.</span><span class="n">flatMap</span><span class="o">(</span><span class="k">_</span><span class="o">.</span><span class="n">transfers</span><span class="o">)</span>
-<span class="o">)</span>
+<span class="kd">val</span><span class="w"> </span><span class="n">lines</span><span class="p">:</span><span class="w"> </span><span class="nc">Iterable</span><span class="p">[</span><span class="nc">GtfsData</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">parseGtfsDataByLine</span><span class="p">()</span>
+<span class="kd">val</span><span class="w"> </span><span class="n">gtfsData</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">GtfsData</span><span class="p">(</span>
+<span class="w">  </span><span class="s">&quot;RATP&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="n">lines</span><span class="p">.</span><span class="n">flatMap</span><span class="p">(</span><span class="n">_</span><span class="p">.</span><span class="n">routes</span><span class="p">),</span>
+<span class="w">  </span><span class="n">lines</span><span class="p">.</span><span class="n">flatMap</span><span class="p">(</span><span class="n">_</span><span class="p">.</span><span class="n">trips</span><span class="p">),</span>
+<span class="w">  </span><span class="n">lines</span><span class="p">.</span><span class="n">flatMap</span><span class="p">(</span><span class="n">_</span><span class="p">.</span><span class="n">stops</span><span class="p">),</span>
+<span class="w">  </span><span class="n">lines</span><span class="p">.</span><span class="n">flatMap</span><span class="p">(</span><span class="n">_</span><span class="p">.</span><span class="n">stopTimes</span><span class="p">),</span>
+<span class="w">  </span><span class="n">lines</span><span class="p">.</span><span class="n">flatMap</span><span class="p">(</span><span class="n">_</span><span class="p">.</span><span class="n">transfers</span><span class="p">)</span>
+<span class="p">)</span>
 </code></pre></div>
-
 
 <h3>Construction de la table horaire</h3>
 <p>La table horaire est, comme nous l'avons vu, une séquence de connexions modélisées par des quadruplets contenants chacun la station de départ, la station d'arrivée, l'heure de départ et l'heure d'arrivée.</p>
-<div class="highlight"><pre><span></span><code><span class="k">case</span> <span class="k">class</span> <span class="nc">Timetable</span><span class="o">(</span><span class="n">connections</span><span class="k">:</span> <span class="kt">Seq</span><span class="o">[</span><span class="kt">Connection</span><span class="o">])</span>
-<span class="k">case</span> <span class="k">class</span> <span class="nc">Connection</span><span class="o">(</span>
-  <span class="n">departureStation</span><span class="k">:</span> <span class="kt">Int</span><span class="o">,</span>
-  <span class="n">arrivalStation</span><span class="k">:</span> <span class="kt">Int</span><span class="o">,</span>
-  <span class="n">departureTimestamp</span><span class="k">:</span> <span class="kt">Int</span><span class="o">,</span>
-  <span class="n">arrivalTimestamp</span><span class="k">:</span> <span class="kt">Int</span>
-<span class="o">)</span>
+<div class="highlight"><pre><span></span><code><span class="k">case</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">Timetable</span><span class="p">(</span><span class="n">connections</span><span class="p">:</span><span class="w"> </span><span class="nc">Seq</span><span class="p">[</span><span class="nc">Connection</span><span class="p">])</span>
+<span class="k">case</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">Connection</span><span class="p">(</span>
+<span class="w">  </span><span class="n">departureStation</span><span class="p">:</span><span class="w"> </span><span class="nc">Int</span><span class="p">,</span>
+<span class="w">  </span><span class="n">arrivalStation</span><span class="p">:</span><span class="w"> </span><span class="nc">Int</span><span class="p">,</span>
+<span class="w">  </span><span class="n">departureTimestamp</span><span class="p">:</span><span class="w"> </span><span class="nc">Int</span><span class="p">,</span>
+<span class="w">  </span><span class="n">arrivalTimestamp</span><span class="p">:</span><span class="w"> </span><span class="nc">Int</span>
+<span class="p">)</span>
 </code></pre></div>
-
 
 <p>Sa construction se fait en deux étapes :</p>
 <ol>
@@ -367,55 +351,52 @@ $ grep <span class="m">1364288</span> routes.txt
 </ol>
 <h4>Connexions issues des courses</h4>
 <p>On ingère les horaires des courses en les groupant par... course et en prenant soin de ne pas « mélanger » les horaires de deux courses. Prenons l'exemple ci-dessous : les ceux courses fréquentent la même ligne mais ne s'arrêtent pas aux mêmes arrêts. Il n'y a pas de correspondance entre les deux.</p>
-<div class="highlight"><pre><span></span><code><span class="err"> Course I : A (t1) --------------------&gt; B (t3)</span>
-<span class="err">Course II :               C (t2) --------------------&gt; D (t4)</span>
+<div class="highlight"><pre><span></span><code><span class="w"> </span><span class="n">Course</span><span class="w"> </span><span class="n">I</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">A</span><span class="w"> </span><span class="p">(</span><span class="n">t1</span><span class="p">)</span><span class="w"> </span><span class="o">--------------------&gt;</span><span class="w"> </span><span class="n">B</span><span class="w"> </span><span class="p">(</span><span class="n">t3</span><span class="p">)</span>
+<span class="n">Course</span><span class="w"> </span><span class="n">II</span><span class="w"> </span><span class="o">:</span><span class="w">               </span><span class="n">C</span><span class="w"> </span><span class="p">(</span><span class="n">t2</span><span class="p">)</span><span class="w"> </span><span class="o">--------------------&gt;</span><span class="w"> </span><span class="n">D</span><span class="w"> </span><span class="p">(</span><span class="n">t4</span><span class="p">)</span>
 </code></pre></div>
-
 
 <p>Le fichier <code>stop_times.txt</code> ressemblerait à :</p>
-<div class="highlight"><pre><span></span><code><span class="err">trip_id,arrival_time,departure_time,stop_id,stop_sequence,stop_headsign,shape_dist_traveled</span>
-<span class="err">I, t1, t1, A, 1, ,</span>
-<span class="err">II, t2, t2, C, 1, ,</span>
-<span class="err">I, t3, t3, B, 1, ,</span>
-<span class="err">II, t4, t4, D, 1, ,</span>
+<div class="highlight"><pre><span></span><code>trip_id,arrival_time,departure_time,stop_id,stop_sequence,stop_headsign,shape_dist_traveled
+I, t1, t1, A, 1, ,
+II, t2, t2, C, 1, ,
+I, t3, t3, B, 1, ,
+II, t4, t4, D, 1, ,
 </code></pre></div>
-
 
 <p>Une lecture indépendante de l'identifiant de course (<code>trip_id</code>) amalgamerait donc ces deux courses et induirait de fausses correspondances.</p>
 <p>La création de la table horaire se fait en groupant deux à deux les horaires d'arrêt au sein d'une même course. Pour chaque élément à l'indice <code>i</code>, on créera une connexion partant de l'arrêt à cet indice et arrivant à l'arrêt de l'indice <code>i+1</code>. On implémente cette construction avec une fonction récursive qui dépile un à un les horaires de course.</p>
 <p>On utilise ici une fonction <em>tail recursive</em> (<a href="https://fr.wikipedia.org/wiki/R%C3%A9cursion_terminale">récursion terminale</a> en français), annotée <code>@tailrec</code>. Une telle fonction a la particularité de voir son appel récursif comme la dernière instruction à être évaluée. Son avantage est de pouvoir être « optimisée » par le compilateur en une itération (« boucle <code>for</code> »), nous libérant du risque de dépassement de capacité de la pile inhérent aux récursions.</p>
-<div class="highlight"><pre><span></span><code><span class="k">val</span> <span class="n">connectionsFromStopTimes</span> <span class="k">=</span> <span class="n">gtfsData</span><span class="o">.</span>
-  <span class="n">stopTimesByTripId</span><span class="o">.</span>
-  <span class="n">values</span><span class="o">.</span>
-  <span class="n">flatMap</span><span class="o">(</span><span class="n">stopTimesToConnections</span><span class="o">)</span>
+<div class="highlight"><pre><span></span><code><span class="kd">val</span><span class="w"> </span><span class="n">connectionsFromStopTimes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">gtfsData</span><span class="p">.</span>
+<span class="w">  </span><span class="n">stopTimesByTripId</span><span class="p">.</span>
+<span class="w">  </span><span class="n">values</span><span class="p">.</span>
+<span class="w">  </span><span class="n">flatMap</span><span class="p">(</span><span class="n">stopTimesToConnections</span><span class="p">)</span>
 
-<span class="k">def</span> <span class="n">stopTimesToConnections</span><span class="o">(</span><span class="n">stopTimes</span><span class="k">:</span> <span class="kt">Iterable</span><span class="o">[</span><span class="kt">StopTime</span><span class="o">])</span><span class="k">:</span> <span class="kt">Iterable</span><span class="o">[</span><span class="kt">Connection</span><span class="o">]</span> <span class="k">=</span> <span class="o">{</span>
-  <span class="nd">@tailrec</span>
-  <span class="k">def</span> <span class="n">inner</span><span class="o">(</span><span class="n">stopTimes</span><span class="k">:</span> <span class="kt">List</span><span class="o">[</span><span class="kt">StopTime</span><span class="o">],</span> <span class="n">connections</span><span class="k">:</span> <span class="kt">List</span><span class="o">[</span><span class="kt">Connection</span><span class="o">])</span><span class="k">:</span> <span class="kt">List</span><span class="o">[</span><span class="kt">Connection</span><span class="o">]</span> <span class="k">=</span> <span class="o">{</span>
-    <span class="n">stopTimes</span> <span class="k">match</span> <span class="o">{</span>
-      <span class="c1">// Aucun horaire (n&#39;arrive que si la collection initiale est vide).</span>
-      <span class="c1">// On n&#39;a rien à faire de plus, on retourne les connexions (vides).</span>
-      <span class="k">case</span> <span class="nc">Nil</span> <span class="k">=&gt;</span> <span class="n">connections</span>
-      <span class="c1">// Dernier horaire : il est connecté au précédent et n&#39;ira pas plus loin.</span>
-      <span class="c1">// On en a terminé et on retourne les connexions.</span>
-      <span class="k">case</span> <span class="n">head</span> <span class="o">::</span> <span class="nc">Nil</span> <span class="k">=&gt;</span> <span class="n">connections</span>
-      <span class="c1">// Cas général : il reste des stations après la première de la collection.</span>
-      <span class="c1">// On créé une connexion entre celle-ci et la première des suivantes.</span>
-      <span class="k">case</span> <span class="n">head</span> <span class="o">::</span> <span class="n">tail</span> <span class="k">=&gt;</span>
-        <span class="k">val</span> <span class="n">departureStop</span> <span class="k">=</span> <span class="n">head</span><span class="o">.</span><span class="n">stopId</span><span class="o">.</span><span class="n">toInt</span>
-        <span class="k">val</span> <span class="n">arrivalStop</span> <span class="k">=</span> <span class="n">tail</span><span class="o">.</span><span class="n">head</span><span class="o">.</span><span class="n">stopId</span><span class="o">.</span><span class="n">toInt</span>
-        <span class="k">val</span> <span class="n">departureTime</span> <span class="k">=</span> <span class="n">durationToTimestamp</span><span class="o">(</span><span class="n">head</span><span class="o">.</span><span class="n">departureTime</span><span class="o">)</span>
-        <span class="k">val</span> <span class="n">arrivalTime</span> <span class="k">=</span> <span class="n">durationToTimestamp</span><span class="o">(</span><span class="n">tail</span><span class="o">.</span><span class="n">head</span><span class="o">.</span><span class="n">departureTime</span><span class="o">)</span>
-        <span class="k">val</span> <span class="n">connection</span> <span class="k">=</span> <span class="nc">Connection</span><span class="o">(</span><span class="n">departureStop</span><span class="o">,</span> <span class="n">arrivalStop</span><span class="o">,</span> <span class="n">departureTime</span><span class="o">,</span> <span class="n">arrivalTime</span><span class="o">)</span>
-        <span class="c1">// Étape suivante de la récursion</span>
-        <span class="n">inner</span><span class="o">(</span><span class="n">tail</span><span class="o">,</span> <span class="n">connections</span> <span class="o">:+</span> <span class="n">connection</span><span class="o">)</span>
-    <span class="o">}</span>
-  <span class="o">}</span>
-  <span class="c1">// Initialisation de la récursion</span>
-  <span class="n">inner</span><span class="o">(</span><span class="n">stopTimes</span><span class="o">.</span><span class="n">toList</span><span class="o">,</span> <span class="nc">List</span><span class="o">())</span>
-<span class="o">}</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">stopTimesToConnections</span><span class="p">(</span><span class="n">stopTimes</span><span class="p">:</span><span class="w"> </span><span class="nc">Iterable</span><span class="p">[</span><span class="nc">StopTime</span><span class="p">]):</span><span class="w"> </span><span class="nc">Iterable</span><span class="p">[</span><span class="nc">Connection</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nd">@tailrec</span>
+<span class="w">  </span><span class="k">def</span><span class="w"> </span><span class="nf">inner</span><span class="p">(</span><span class="n">stopTimes</span><span class="p">:</span><span class="w"> </span><span class="nc">List</span><span class="p">[</span><span class="nc">StopTime</span><span class="p">],</span><span class="w"> </span><span class="n">connections</span><span class="p">:</span><span class="w"> </span><span class="nc">List</span><span class="p">[</span><span class="nc">Connection</span><span class="p">]):</span><span class="w"> </span><span class="nc">List</span><span class="p">[</span><span class="nc">Connection</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">stopTimes</span><span class="w"> </span><span class="k">match</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="c1">// Aucun horaire (n&#39;arrive que si la collection initiale est vide).</span>
+<span class="w">      </span><span class="c1">// On n&#39;a rien à faire de plus, on retourne les connexions (vides).</span>
+<span class="w">      </span><span class="k">case</span><span class="w"> </span><span class="nc">Nil</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">connections</span>
+<span class="w">      </span><span class="c1">// Dernier horaire : il est connecté au précédent et n&#39;ira pas plus loin.</span>
+<span class="w">      </span><span class="c1">// On en a terminé et on retourne les connexions.</span>
+<span class="w">      </span><span class="k">case</span><span class="w"> </span><span class="n">head</span><span class="w"> </span><span class="o">::</span><span class="w"> </span><span class="nc">Nil</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">connections</span>
+<span class="w">      </span><span class="c1">// Cas général : il reste des stations après la première de la collection.</span>
+<span class="w">      </span><span class="c1">// On créé une connexion entre celle-ci et la première des suivantes.</span>
+<span class="w">      </span><span class="k">case</span><span class="w"> </span><span class="n">head</span><span class="w"> </span><span class="o">::</span><span class="w"> </span><span class="n">tail</span><span class="w"> </span><span class="o">=&gt;</span>
+<span class="w">        </span><span class="kd">val</span><span class="w"> </span><span class="n">departureStop</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">head</span><span class="p">.</span><span class="n">stopId</span><span class="p">.</span><span class="n">toInt</span>
+<span class="w">        </span><span class="kd">val</span><span class="w"> </span><span class="n">arrivalStop</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">tail</span><span class="p">.</span><span class="n">head</span><span class="p">.</span><span class="n">stopId</span><span class="p">.</span><span class="n">toInt</span>
+<span class="w">        </span><span class="kd">val</span><span class="w"> </span><span class="n">departureTime</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">durationToTimestamp</span><span class="p">(</span><span class="n">head</span><span class="p">.</span><span class="n">departureTime</span><span class="p">)</span>
+<span class="w">        </span><span class="kd">val</span><span class="w"> </span><span class="n">arrivalTime</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">durationToTimestamp</span><span class="p">(</span><span class="n">tail</span><span class="p">.</span><span class="n">head</span><span class="p">.</span><span class="n">departureTime</span><span class="p">)</span>
+<span class="w">        </span><span class="kd">val</span><span class="w"> </span><span class="n">connection</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">Connection</span><span class="p">(</span><span class="n">departureStop</span><span class="p">,</span><span class="w"> </span><span class="n">arrivalStop</span><span class="p">,</span><span class="w"> </span><span class="n">departureTime</span><span class="p">,</span><span class="w"> </span><span class="n">arrivalTime</span><span class="p">)</span>
+<span class="w">        </span><span class="c1">// Étape suivante de la récursion</span>
+<span class="w">        </span><span class="n">inner</span><span class="p">(</span><span class="n">tail</span><span class="p">,</span><span class="w"> </span><span class="n">connections</span><span class="w"> </span><span class="o">:+</span><span class="w"> </span><span class="n">connection</span><span class="p">)</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="c1">// Initialisation de la récursion</span>
+<span class="w">  </span><span class="n">inner</span><span class="p">(</span><span class="n">stopTimes</span><span class="p">.</span><span class="n">toList</span><span class="p">,</span><span class="w"> </span><span class="nc">List</span><span class="p">())</span>
+<span class="p">}</span>
 </code></pre></div>
-
 
 <p>Dans cet exemple de code, la fonction <code>durationToTimestamp</code> retourne un timestamp correspondant à l'heure effective pour la journée en cours à partir de l'heure seule fournie dans les données. Par exemple, le 01/01/2016, la durée <code>19h32min27s</code> permettra d'obtenir le timestamp équivalent à <code>2016-01-01T19:32:27.0Z</code>.</p>
 <h4>Connexions issues des correspondances</h4>
@@ -425,53 +406,51 @@ $ grep <span class="m">1364288</span> routes.txt
 <li>de créer toutes les entrées de la table horaire correspondant à cette correspondance.</li>
 </ul>
 <p>Le filtrage des correspondances est aisé avec notre structure de données. Nous disposons déjà de l'ensemble des stations du réseau. Il nous suffit de vérifier que ces correspondances ont lieu entre deux stations du réseau.</p>
-<div class="highlight"><pre><span></span><code><span class="k">case</span> <span class="k">class</span> <span class="nc">GtfsData</span><span class="o">(...)</span> <span class="o">{</span>
-  <span class="c1">// Indexation des stations du réseau</span>
-  <span class="k">val</span> <span class="n">stopsByStopId</span><span class="k">:</span> <span class="kt">Map</span><span class="o">[</span><span class="kt">Long</span><span class="p">,</span> <span class="kt">Stop</span><span class="o">]</span> <span class="k">=</span> <span class="n">stops</span><span class="o">.</span><span class="n">map</span><span class="o">(</span><span class="n">stop</span> <span class="k">=&gt;</span> <span class="n">stop</span><span class="o">.</span><span class="n">stopId</span> <span class="o">-&gt;</span> <span class="n">stop</span><span class="o">)(</span><span class="n">collection</span><span class="o">.</span><span class="n">breakOut</span><span class="o">)</span>
-<span class="o">}</span>
+<div class="highlight"><pre><span></span><code><span class="k">case</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">GtfsData</span><span class="p">(...)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="c1">// Indexation des stations du réseau</span>
+<span class="w">  </span><span class="kd">val</span><span class="w"> </span><span class="n">stopsByStopId</span><span class="p">:</span><span class="w"> </span><span class="nc">Map</span><span class="p">[</span><span class="nc">Long</span><span class="p">,</span><span class="w"> </span><span class="nc">Stop</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">stops</span><span class="p">.</span><span class="n">map</span><span class="p">(</span><span class="n">stop</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">stop</span><span class="p">.</span><span class="n">stopId</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">stop</span><span class="p">)(</span><span class="n">collection</span><span class="p">.</span><span class="n">breakOut</span><span class="p">)</span>
+<span class="p">}</span>
 
-<span class="k">val</span> <span class="n">filteredTransfers</span><span class="k">:</span> <span class="kt">Iterable</span><span class="o">[</span><span class="kt">Transfer</span><span class="o">]</span> <span class="k">=</span> <span class="n">gtfsData</span><span class="o">.</span><span class="n">transfers</span><span class="o">.</span><span class="n">filter</span><span class="o">(</span><span class="n">transfer</span> <span class="k">=&gt;</span>
-  <span class="c1">// Filtrage des correspondances avec des stations hors du réseau</span>
-  <span class="n">gtfsData</span><span class="o">.</span><span class="n">stopsByStopId</span><span class="o">.</span><span class="n">contains</span><span class="o">(</span><span class="n">transfer</span><span class="o">.</span><span class="n">fromStopId</span><span class="o">)</span> <span class="o">&amp;&amp;</span>
-    <span class="n">gtfsData</span><span class="o">.</span><span class="n">stopsByStopId</span><span class="o">.</span><span class="n">contains</span><span class="o">(</span><span class="n">transfer</span><span class="o">.</span><span class="n">toStopId</span><span class="o">)</span>
-<span class="o">)</span>
+<span class="kd">val</span><span class="w"> </span><span class="n">filteredTransfers</span><span class="p">:</span><span class="w"> </span><span class="nc">Iterable</span><span class="p">[</span><span class="nc">Transfer</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">gtfsData</span><span class="p">.</span><span class="n">transfers</span><span class="p">.</span><span class="n">filter</span><span class="p">(</span><span class="n">transfer</span><span class="w"> </span><span class="o">=&gt;</span>
+<span class="w">  </span><span class="c1">// Filtrage des correspondances avec des stations hors du réseau</span>
+<span class="w">  </span><span class="n">gtfsData</span><span class="p">.</span><span class="n">stopsByStopId</span><span class="p">.</span><span class="n">contains</span><span class="p">(</span><span class="n">transfer</span><span class="p">.</span><span class="n">fromStopId</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span>
+<span class="w">    </span><span class="n">gtfsData</span><span class="p">.</span><span class="n">stopsByStopId</span><span class="p">.</span><span class="n">contains</span><span class="p">(</span><span class="n">transfer</span><span class="p">.</span><span class="n">toStopId</span><span class="p">)</span>
+<span class="p">)</span>
 </code></pre></div>
-
 
 <p>Cela étant fait, pour chacune de ces correspondances, on créé dans la table horaire une connexion correspondant à chaque horaire de passage à cette station. On utilisera pour cela les données issues de <code>stop_times.txt</code>. Cette fonction est très similaire dans son fonctionnement à <code>stopTimesToConnections</code>.</p>
-<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="n">transfersToConnections</span><span class="o">(</span><span class="n">filteredTransfers</span><span class="k">:</span> <span class="kt">Iterable</span><span class="o">[</span><span class="kt">Transfer</span><span class="o">])</span><span class="k">:</span> <span class="kt">Iterable</span><span class="o">[</span><span class="kt">Connection</span><span class="o">]</span> <span class="k">=</span> <span class="o">{</span>
-  <span class="nd">@tailrec</span>
-  <span class="k">def</span> <span class="n">inner</span><span class="o">(</span><span class="n">transfers</span><span class="k">:</span> <span class="kt">Iterable</span><span class="o">[</span><span class="kt">Transfer</span><span class="o">],</span> <span class="n">connections</span><span class="k">:</span> <span class="kt">List</span><span class="o">[</span><span class="kt">Connection</span><span class="o">])</span><span class="k">:</span> <span class="kt">List</span><span class="o">[</span><span class="kt">Connection</span><span class="o">]</span> <span class="k">=</span> <span class="o">{</span>
-    <span class="n">transfers</span> <span class="k">match</span> <span class="o">{</span>
-      <span class="c1">// Aucune correspondance à traiter. On en a terminé et on sort avec</span>
-      <span class="c1">// la liste construite jusqu&#39;ici.</span>
-      <span class="k">case</span> <span class="nc">Nil</span> <span class="k">=&gt;</span> <span class="n">connections</span>
-      <span class="c1">// Il reste au moins une correspondance à traiter (tail peut être Nil).</span>
-      <span class="k">case</span> <span class="n">head</span> <span class="o">::</span> <span class="n">tail</span> <span class="k">=&gt;</span>
-        <span class="k">val</span> <span class="n">departureStop</span> <span class="k">=</span> <span class="n">head</span><span class="o">.</span><span class="n">fromStopId</span>
-        <span class="k">val</span> <span class="n">arrivalStop</span> <span class="k">=</span> <span class="n">head</span><span class="o">.</span><span class="n">toStopId</span>
-        <span class="c1">// Pour chaque horaire de train à cette station, on créé</span>
-        <span class="c1">// une entrée dans la table horaire.</span>
-        <span class="k">val</span> <span class="n">transferConnections</span><span class="k">:</span> <span class="kt">List</span><span class="o">[</span><span class="kt">Connection</span><span class="o">]</span> <span class="k">=</span> <span class="n">gtfsData</span><span class="o">.</span>
-          <span class="n">stopTimesByStopId</span><span class="o">(</span><span class="n">departureStop</span><span class="o">).</span>
-          <span class="n">map</span><span class="o">(</span><span class="n">stopTime</span> <span class="k">=&gt;</span> <span class="o">{</span>
-            <span class="k">val</span> <span class="n">connectionDepartureTime</span> <span class="k">=</span> <span class="n">durationToTimestamp</span><span class="o">(</span><span class="n">stopTime</span><span class="o">.</span><span class="n">arrivalTime</span><span class="o">)</span>
-            <span class="nc">Connection</span><span class="o">(</span>
-              <span class="n">departureStop</span><span class="o">,</span>
-              <span class="n">arrivalStop</span><span class="o">,</span>
-              <span class="n">connectionDepartureTime</span><span class="o">,</span>
-              <span class="n">connectionDepartureTime</span> <span class="o">+</span> <span class="n">head</span><span class="o">.</span><span class="n">minTransferTime</span>
-            <span class="o">)</span>
-          <span class="o">})</span>
-        <span class="c1">// Étape suivante de la récursion.</span>
-        <span class="n">inner</span><span class="o">(</span><span class="n">tail</span><span class="o">,</span> <span class="n">connections</span> <span class="o">++</span> <span class="n">transferConnections</span><span class="o">)</span>
-    <span class="o">}</span>
-  <span class="o">}</span>
-  <span class="c1">// Initialisation de la récursion.</span>
-  <span class="n">inner</span><span class="o">(</span><span class="n">filteredTransfers</span><span class="o">.</span><span class="n">toList</span><span class="o">,</span> <span class="nc">List</span><span class="o">())</span>
-<span class="o">}</span>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">transfersToConnections</span><span class="p">(</span><span class="n">filteredTransfers</span><span class="p">:</span><span class="w"> </span><span class="nc">Iterable</span><span class="p">[</span><span class="nc">Transfer</span><span class="p">]):</span><span class="w"> </span><span class="nc">Iterable</span><span class="p">[</span><span class="nc">Connection</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nd">@tailrec</span>
+<span class="w">  </span><span class="k">def</span><span class="w"> </span><span class="nf">inner</span><span class="p">(</span><span class="n">transfers</span><span class="p">:</span><span class="w"> </span><span class="nc">Iterable</span><span class="p">[</span><span class="nc">Transfer</span><span class="p">],</span><span class="w"> </span><span class="n">connections</span><span class="p">:</span><span class="w"> </span><span class="nc">List</span><span class="p">[</span><span class="nc">Connection</span><span class="p">]):</span><span class="w"> </span><span class="nc">List</span><span class="p">[</span><span class="nc">Connection</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">transfers</span><span class="w"> </span><span class="k">match</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="c1">// Aucune correspondance à traiter. On en a terminé et on sort avec</span>
+<span class="w">      </span><span class="c1">// la liste construite jusqu&#39;ici.</span>
+<span class="w">      </span><span class="k">case</span><span class="w"> </span><span class="nc">Nil</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">connections</span>
+<span class="w">      </span><span class="c1">// Il reste au moins une correspondance à traiter (tail peut être Nil).</span>
+<span class="w">      </span><span class="k">case</span><span class="w"> </span><span class="n">head</span><span class="w"> </span><span class="o">::</span><span class="w"> </span><span class="n">tail</span><span class="w"> </span><span class="o">=&gt;</span>
+<span class="w">        </span><span class="kd">val</span><span class="w"> </span><span class="n">departureStop</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">head</span><span class="p">.</span><span class="n">fromStopId</span>
+<span class="w">        </span><span class="kd">val</span><span class="w"> </span><span class="n">arrivalStop</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">head</span><span class="p">.</span><span class="n">toStopId</span>
+<span class="w">        </span><span class="c1">// Pour chaque horaire de train à cette station, on créé</span>
+<span class="w">        </span><span class="c1">// une entrée dans la table horaire.</span>
+<span class="w">        </span><span class="kd">val</span><span class="w"> </span><span class="n">transferConnections</span><span class="p">:</span><span class="w"> </span><span class="nc">List</span><span class="p">[</span><span class="nc">Connection</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">gtfsData</span><span class="p">.</span>
+<span class="w">          </span><span class="n">stopTimesByStopId</span><span class="p">(</span><span class="n">departureStop</span><span class="p">).</span>
+<span class="w">          </span><span class="n">map</span><span class="p">(</span><span class="n">stopTime</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="kd">val</span><span class="w"> </span><span class="n">connectionDepartureTime</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">durationToTimestamp</span><span class="p">(</span><span class="n">stopTime</span><span class="p">.</span><span class="n">arrivalTime</span><span class="p">)</span>
+<span class="w">            </span><span class="nc">Connection</span><span class="p">(</span>
+<span class="w">              </span><span class="n">departureStop</span><span class="p">,</span>
+<span class="w">              </span><span class="n">arrivalStop</span><span class="p">,</span>
+<span class="w">              </span><span class="n">connectionDepartureTime</span><span class="p">,</span>
+<span class="w">              </span><span class="n">connectionDepartureTime</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">head</span><span class="p">.</span><span class="n">minTransferTime</span>
+<span class="w">            </span><span class="p">)</span>
+<span class="w">          </span><span class="p">})</span>
+<span class="w">        </span><span class="c1">// Étape suivante de la récursion.</span>
+<span class="w">        </span><span class="n">inner</span><span class="p">(</span><span class="n">tail</span><span class="p">,</span><span class="w"> </span><span class="n">connections</span><span class="w"> </span><span class="o">++</span><span class="w"> </span><span class="n">transferConnections</span><span class="p">)</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="c1">// Initialisation de la récursion.</span>
+<span class="w">  </span><span class="n">inner</span><span class="p">(</span><span class="n">filteredTransfers</span><span class="p">.</span><span class="n">toList</span><span class="p">,</span><span class="w"> </span><span class="nc">List</span><span class="p">())</span>
+<span class="p">}</span>
 </code></pre></div>
-
 
 <h4>Fusion des deux tables horaires</h4>
 <p>On a construit jusqu'ici deux tables horaires :</p>
@@ -480,17 +459,16 @@ $ grep <span class="m">1364288</span> routes.txt
 <li>l'autre issue des correspondances entre les trains.</li>
 </ul>
 <p>Reste maintenant à fusionner les deux. N'oublions pas que cette table doit être triée par heure de départ croissante. À ce détail près, cette étape est immédiate.</p>
-<div class="highlight"><pre><span></span><code><span class="k">val</span> <span class="n">connectionsFromStopTimes</span> <span class="k">=</span> <span class="n">gtfsData</span><span class="o">.</span>
-  <span class="n">stopTimesByTripId</span><span class="o">.</span>
-  <span class="n">values</span><span class="o">.</span>
-  <span class="n">flatMap</span><span class="o">(</span><span class="n">stopTimesToConnections</span><span class="o">)</span>
-<span class="k">val</span> <span class="n">connectionsFromTransfers</span> <span class="k">=</span> <span class="n">transfersToConnections</span><span class="o">(</span><span class="n">gtfsData</span><span class="o">)</span>
+<div class="highlight"><pre><span></span><code><span class="kd">val</span><span class="w"> </span><span class="n">connectionsFromStopTimes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">gtfsData</span><span class="p">.</span>
+<span class="w">  </span><span class="n">stopTimesByTripId</span><span class="p">.</span>
+<span class="w">  </span><span class="n">values</span><span class="p">.</span>
+<span class="w">  </span><span class="n">flatMap</span><span class="p">(</span><span class="n">stopTimesToConnections</span><span class="p">)</span>
+<span class="kd">val</span><span class="w"> </span><span class="n">connectionsFromTransfers</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">transfersToConnections</span><span class="p">(</span><span class="n">gtfsData</span><span class="p">)</span>
 
-<span class="k">val</span> <span class="n">connections</span> <span class="k">=</span> <span class="o">(</span><span class="n">connectionsFromStopTimes</span> <span class="o">++</span> <span class="n">connectionsFromTransfers</span><span class="o">).</span>
-  <span class="n">toList</span><span class="o">.</span>
-  <span class="n">sortBy</span><span class="o">(</span><span class="k">_</span><span class="o">.</span><span class="n">departureTimestamp</span><span class="o">)</span>
+<span class="kd">val</span><span class="w"> </span><span class="n">connections</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">connectionsFromStopTimes</span><span class="w"> </span><span class="o">++</span><span class="w"> </span><span class="n">connectionsFromTransfers</span><span class="p">).</span>
+<span class="w">  </span><span class="n">toList</span><span class="p">.</span>
+<span class="w">  </span><span class="n">sortBy</span><span class="p">(</span><span class="n">_</span><span class="p">.</span><span class="n">departureTimestamp</span><span class="p">)</span>
 </code></pre></div>
-
 
 <h2>Implémentation de l'algorithme</h2>
 <p>Je propose ici une implémentation en Scala qui pourrait probablement être (largement, rien que par sa mutabilité) améliorée. Partons toujours de là.</p>
@@ -507,23 +485,21 @@ $ grep <span class="m">1364288</span> routes.txt
 <li>une heure de départ.</li>
 </ul>
 <p>Il retourne la liste des connexions optimales pour effectuer ce trajet.</p>
-<div class="highlight"><pre><span></span><code><span class="k">class</span> <span class="nc">CSA</span><span class="o">(</span><span class="n">timetable</span><span class="k">:</span> <span class="kt">Timetable</span><span class="o">,</span> <span class="n">stopsByStopId</span><span class="k">:</span> <span class="kt">Map</span><span class="o">[</span><span class="kt">Int</span><span class="p">,</span> <span class="kt">Stop</span><span class="o">])</span> <span class="o">{</span>
-  <span class="k">def</span> <span class="n">compute</span><span class="o">(</span><span class="n">departureStation</span><span class="k">:</span> <span class="kt">Int</span><span class="o">,</span> <span class="n">arrivalStation</span><span class="k">:</span> <span class="kt">Int</span><span class="o">,</span> <span class="n">departureTime</span><span class="k">:</span> <span class="kt">Int</span><span class="o">)</span><span class="k">:</span> <span class="kt">Seq</span><span class="o">[</span><span class="kt">Connection</span><span class="o">]</span> <span class="k">=</span> <span class="o">???</span>
-<span class="o">}</span>
+<div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">CSA</span><span class="p">(</span><span class="n">timetable</span><span class="p">:</span><span class="w"> </span><span class="nc">Timetable</span><span class="p">,</span><span class="w"> </span><span class="n">stopsByStopId</span><span class="p">:</span><span class="w"> </span><span class="nc">Map</span><span class="p">[</span><span class="nc">Int</span><span class="p">,</span><span class="w"> </span><span class="nc">Stop</span><span class="p">])</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">def</span><span class="w"> </span><span class="nf">compute</span><span class="p">(</span><span class="n">departureStation</span><span class="p">:</span><span class="w"> </span><span class="nc">Int</span><span class="p">,</span><span class="w"> </span><span class="n">arrivalStation</span><span class="p">:</span><span class="w"> </span><span class="nc">Int</span><span class="p">,</span><span class="w"> </span><span class="n">departureTime</span><span class="p">:</span><span class="w"> </span><span class="nc">Int</span><span class="p">):</span><span class="w"> </span><span class="nc">Seq</span><span class="p">[</span><span class="nc">Connection</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">???</span>
+<span class="p">}</span>
 </code></pre></div>
-
 
 <h3>Initialisation</h3>
 <p>On initialise les tableaux avec une valeur « virtuellement infinie » (valeur maximale qu'un entier peut représenter) à l'exception de l'heure d'arrivée optimale à la station de départ... puisque cette valeur est connue.</p>
-<div class="highlight"><pre><span></span><code><span class="k">val</span> <span class="n">inConnection</span> <span class="k">=</span> <span class="nc">Array</span><span class="o">.</span><span class="n">fill</span><span class="o">[</span><span class="kt">Int</span><span class="o">](</span><span class="nc">CSA</span><span class="o">.</span><span class="nc">MaxStations</span><span class="o">)(</span><span class="nc">Int</span><span class="o">.</span><span class="nc">MaxValue</span><span class="o">)</span>
-<span class="k">val</span> <span class="n">earliestArrival</span> <span class="k">=</span> <span class="nc">Array</span><span class="o">.</span><span class="n">fill</span><span class="o">[</span><span class="kt">Int</span><span class="o">](</span><span class="nc">CSA</span><span class="o">.</span><span class="nc">MaxStations</span><span class="o">)(</span><span class="nc">Int</span><span class="o">.</span><span class="nc">MaxValue</span><span class="o">)</span>
+<div class="highlight"><pre><span></span><code><span class="kd">val</span><span class="w"> </span><span class="n">inConnection</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">Array</span><span class="p">.</span><span class="n">fill</span><span class="p">[</span><span class="nc">Int</span><span class="p">](</span><span class="nc">CSA</span><span class="p">.</span><span class="nc">MaxStations</span><span class="p">)(</span><span class="nc">Int</span><span class="p">.</span><span class="nc">MaxValue</span><span class="p">)</span>
+<span class="kd">val</span><span class="w"> </span><span class="n">earliestArrival</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">Array</span><span class="p">.</span><span class="n">fill</span><span class="p">[</span><span class="nc">Int</span><span class="p">](</span><span class="nc">CSA</span><span class="p">.</span><span class="nc">MaxStations</span><span class="p">)(</span><span class="nc">Int</span><span class="p">.</span><span class="nc">MaxValue</span><span class="p">)</span>
 
-<span class="k">def</span> <span class="n">compute</span><span class="o">(</span><span class="n">departureStation</span><span class="k">:</span> <span class="kt">Int</span><span class="o">,</span> <span class="n">arrivalStation</span><span class="k">:</span> <span class="kt">Int</span><span class="o">,</span> <span class="n">departureTime</span><span class="k">:</span> <span class="kt">Int</span><span class="o">)</span><span class="k">:</span> <span class="kt">Seq</span><span class="o">[</span><span class="kt">Connection</span><span class="o">]</span> <span class="k">=</span> <span class="o">{</span>
-  <span class="n">earliestArrival</span><span class="o">(</span><span class="n">departureStation</span><span class="o">)</span> <span class="k">=</span> <span class="n">departureTime</span>
-  <span class="c1">// [...]</span>
-<span class="o">}</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">compute</span><span class="p">(</span><span class="n">departureStation</span><span class="p">:</span><span class="w"> </span><span class="nc">Int</span><span class="p">,</span><span class="w"> </span><span class="n">arrivalStation</span><span class="p">:</span><span class="w"> </span><span class="nc">Int</span><span class="p">,</span><span class="w"> </span><span class="n">departureTime</span><span class="p">:</span><span class="w"> </span><span class="nc">Int</span><span class="p">):</span><span class="w"> </span><span class="nc">Seq</span><span class="p">[</span><span class="nc">Connection</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="n">earliestArrival</span><span class="p">(</span><span class="n">departureStation</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">departureTime</span>
+<span class="w">  </span><span class="c1">// [...]</span>
+<span class="p">}</span>
 </code></pre></div>
-
 
 <h3>Calcul du trajet</h3>
 <h4>Vue macroscopique</h4>
@@ -532,113 +508,108 @@ $ grep <span class="m">1364288</span> routes.txt
 <li>la première qui parcourt les connexions et détermine l'heure d'arrivée optimale pour chaque station (<code>scanTimetable</code>) ;</li>
 <li>la seconde qui, à partir de cette table des connexions optimales, reconstruit le trajet (<code>computeRoute</code>).</li>
 </ul>
-<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="n">compute</span><span class="o">(</span><span class="n">departureStation</span><span class="k">:</span> <span class="kt">Int</span><span class="o">,</span> <span class="n">arrivalStation</span><span class="k">:</span> <span class="kt">Int</span><span class="o">,</span> <span class="n">departureTime</span><span class="k">:</span> <span class="kt">Int</span><span class="o">)</span><span class="k">:</span> <span class="kt">Seq</span><span class="o">[</span><span class="kt">Connection</span><span class="o">]</span> <span class="k">=</span> <span class="o">{</span>
-  <span class="n">earliestArrival</span><span class="o">(</span><span class="n">departureStation</span><span class="o">)</span> <span class="k">=</span> <span class="n">departureTime</span>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">compute</span><span class="p">(</span><span class="n">departureStation</span><span class="p">:</span><span class="w"> </span><span class="nc">Int</span><span class="p">,</span><span class="w"> </span><span class="n">arrivalStation</span><span class="p">:</span><span class="w"> </span><span class="nc">Int</span><span class="p">,</span><span class="w"> </span><span class="n">departureTime</span><span class="p">:</span><span class="w"> </span><span class="nc">Int</span><span class="p">):</span><span class="w"> </span><span class="nc">Seq</span><span class="p">[</span><span class="nc">Connection</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="n">earliestArrival</span><span class="p">(</span><span class="n">departureStation</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">departureTime</span>
 
-  <span class="k">if</span> <span class="o">(</span><span class="n">departureStation</span> <span class="o">&lt;=</span> <span class="nc">CSA</span><span class="o">.</span><span class="nc">MaxStations</span> <span class="o">&amp;&amp;</span> <span class="n">arrivalStation</span> <span class="o">&lt;=</span> <span class="nc">CSA</span><span class="o">.</span><span class="nc">MaxStations</span><span class="o">)</span> <span class="o">{</span>
-    <span class="n">scanTimetable</span><span class="o">(</span><span class="n">arrivalStation</span><span class="o">)</span>
-  <span class="o">}</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">departureStation</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="nc">CSA</span><span class="p">.</span><span class="nc">MaxStations</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">arrivalStation</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="nc">CSA</span><span class="p">.</span><span class="nc">MaxStations</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">scanTimetable</span><span class="p">(</span><span class="n">arrivalStation</span><span class="p">)</span>
+<span class="w">  </span><span class="p">}</span>
 
-  <span class="n">computeRoute</span><span class="o">(</span><span class="n">arrivalStation</span><span class="o">)</span>
-<span class="o">}</span>
+<span class="w">  </span><span class="n">computeRoute</span><span class="p">(</span><span class="n">arrivalStation</span><span class="p">)</span>
+<span class="p">}</span>
 </code></pre></div>
-
 
 <h4>Parcours de la table horaire</h4>
 <p>On utilise une fois de plus une récursion terminale.</p>
-<div class="highlight"><pre><span></span><code><span class="k">private</span> <span class="k">def</span> <span class="n">scanTimetable</span><span class="o">(</span><span class="n">arrivalStation</span><span class="k">:</span> <span class="kt">Int</span><span class="o">)</span><span class="k">:</span> <span class="kt">Unit</span> <span class="o">=</span> <span class="o">{</span>
-  <span class="nd">@tailrec</span>
-  <span class="k">def</span> <span class="n">inner</span><span class="o">(</span><span class="n">conns</span><span class="k">:</span> <span class="kt">Seq</span><span class="o">[(</span><span class="kt">Connection</span><span class="p">,</span> <span class="kt">Int</span><span class="o">)],</span> <span class="n">earliest</span><span class="k">:</span> <span class="kt">Int</span><span class="o">)</span><span class="k">:</span> <span class="kt">Unit</span> <span class="o">=</span> <span class="o">{</span>
-    <span class="k">var</span> <span class="n">newEarliest</span> <span class="k">=</span> <span class="n">earliest</span>
-    <span class="n">conns</span> <span class="k">match</span> <span class="o">{</span>
-      <span class="k">case</span> <span class="nc">Seq</span><span class="o">()</span> <span class="k">=&gt;</span>
-        <span class="c1">// Aucune connexion dans la table horaire.</span>
-        <span class="c1">// Ce n&#39;est pas le cas le plus intéressant mais il n&#39;y a rien à faire.</span>
-        <span class="o">()</span>
-      <span class="k">case</span> <span class="o">(</span><span class="n">connection</span><span class="o">,</span> <span class="n">index</span><span class="o">)</span> <span class="o">+:</span> <span class="k">_</span> <span class="k">if</span> <span class="n">connection</span><span class="o">.</span><span class="n">arrivalTimestamp</span> <span class="o">&gt;</span> <span class="n">earliest</span> <span class="k">=&gt;</span>
-        <span class="c1">// L&#39;heure d&#39;arrivée de la connexion dépasse l&#39;heure d&#39;arrivée « optimale » actuelle.</span>
-        <span class="c1">// On ne fait rien.</span>
-        <span class="o">()</span>
-      <span class="k">case</span> <span class="o">(</span><span class="n">connection</span><span class="o">,</span> <span class="n">index</span><span class="o">)</span> <span class="o">+:</span> <span class="n">tail</span> <span class="k">=&gt;</span>
-        <span class="c1">// La connexion optimise les horaires déjà calculés. On met à jour les horaires.</span>
-        <span class="k">if</span> <span class="o">(</span><span class="n">leavesAfterArrival</span><span class="o">(</span><span class="n">connection</span><span class="o">)</span> <span class="o">&amp;&amp;</span> <span class="n">optimizesArrivalTime</span><span class="o">(</span><span class="n">connection</span><span class="o">))</span> <span class="o">{</span>
-          <span class="n">earliestArrival</span><span class="o">(</span><span class="n">connection</span><span class="o">.</span><span class="n">arrivalStation</span><span class="o">)</span> <span class="k">=</span> <span class="n">connection</span><span class="o">.</span><span class="n">arrivalTimestamp</span>
-          <span class="n">inConnection</span><span class="o">(</span><span class="n">connection</span><span class="o">.</span><span class="n">arrivalStation</span><span class="o">)</span> <span class="k">=</span> <span class="n">index</span>
-          <span class="k">if</span> <span class="o">(</span><span class="n">connection</span><span class="o">.</span><span class="n">arrivalStation</span> <span class="o">==</span> <span class="n">arrivalStation</span><span class="o">)</span> <span class="o">{</span>
-            <span class="n">newEarliest</span> <span class="k">=</span> <span class="nc">Math</span><span class="o">.</span><span class="n">min</span><span class="o">(</span><span class="n">earliest</span><span class="o">,</span> <span class="n">connection</span><span class="o">.</span><span class="n">arrivalTimestamp</span><span class="o">)</span>
-          <span class="o">}</span>
-        <span class="o">}</span>
-        <span class="n">inner</span><span class="o">(</span><span class="n">tail</span><span class="o">,</span> <span class="n">newEarliest</span><span class="o">)</span>
-    <span class="o">}</span>
-  <span class="o">}</span>
-  <span class="n">inner</span><span class="o">(</span><span class="n">timetable</span><span class="o">.</span><span class="n">connections</span><span class="o">.</span><span class="n">zipWithIndex</span><span class="o">,</span> <span class="nc">Int</span><span class="o">.</span><span class="nc">MaxValue</span><span class="o">)</span>
-<span class="o">}</span>
+<div class="highlight"><pre><span></span><code><span class="k">private</span><span class="w"> </span><span class="k">def</span><span class="w"> </span><span class="nf">scanTimetable</span><span class="p">(</span><span class="n">arrivalStation</span><span class="p">:</span><span class="w"> </span><span class="nc">Int</span><span class="p">):</span><span class="w"> </span><span class="nc">Unit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nd">@tailrec</span>
+<span class="w">  </span><span class="k">def</span><span class="w"> </span><span class="nf">inner</span><span class="p">(</span><span class="n">conns</span><span class="p">:</span><span class="w"> </span><span class="nc">Seq</span><span class="p">[(</span><span class="nc">Connection</span><span class="p">,</span><span class="w"> </span><span class="nc">Int</span><span class="p">)],</span><span class="w"> </span><span class="n">earliest</span><span class="p">:</span><span class="w"> </span><span class="nc">Int</span><span class="p">):</span><span class="w"> </span><span class="nc">Unit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">var</span><span class="w"> </span><span class="n">newEarliest</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">earliest</span>
+<span class="w">    </span><span class="n">conns</span><span class="w"> </span><span class="k">match</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="k">case</span><span class="w"> </span><span class="nc">Seq</span><span class="p">()</span><span class="w"> </span><span class="o">=&gt;</span>
+<span class="w">        </span><span class="c1">// Aucune connexion dans la table horaire.</span>
+<span class="w">        </span><span class="c1">// Ce n&#39;est pas le cas le plus intéressant mais il n&#39;y a rien à faire.</span>
+<span class="w">        </span><span class="p">()</span>
+<span class="w">      </span><span class="k">case</span><span class="w"> </span><span class="p">(</span><span class="n">connection</span><span class="p">,</span><span class="w"> </span><span class="n">index</span><span class="p">)</span><span class="w"> </span><span class="o">+:</span><span class="w"> </span><span class="n">_</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">connection</span><span class="p">.</span><span class="n">arrivalTimestamp</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">earliest</span><span class="w"> </span><span class="o">=&gt;</span>
+<span class="w">        </span><span class="c1">// L&#39;heure d&#39;arrivée de la connexion dépasse l&#39;heure d&#39;arrivée « optimale » actuelle.</span>
+<span class="w">        </span><span class="c1">// On ne fait rien.</span>
+<span class="w">        </span><span class="p">()</span>
+<span class="w">      </span><span class="k">case</span><span class="w"> </span><span class="p">(</span><span class="n">connection</span><span class="p">,</span><span class="w"> </span><span class="n">index</span><span class="p">)</span><span class="w"> </span><span class="o">+:</span><span class="w"> </span><span class="n">tail</span><span class="w"> </span><span class="o">=&gt;</span>
+<span class="w">        </span><span class="c1">// La connexion optimise les horaires déjà calculés. On met à jour les horaires.</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">leavesAfterArrival</span><span class="p">(</span><span class="n">connection</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">optimizesArrivalTime</span><span class="p">(</span><span class="n">connection</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="n">earliestArrival</span><span class="p">(</span><span class="n">connection</span><span class="p">.</span><span class="n">arrivalStation</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">connection</span><span class="p">.</span><span class="n">arrivalTimestamp</span>
+<span class="w">          </span><span class="n">inConnection</span><span class="p">(</span><span class="n">connection</span><span class="p">.</span><span class="n">arrivalStation</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">index</span>
+<span class="w">          </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">connection</span><span class="p">.</span><span class="n">arrivalStation</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">arrivalStation</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">newEarliest</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">Math</span><span class="p">.</span><span class="n">min</span><span class="p">(</span><span class="n">earliest</span><span class="p">,</span><span class="w"> </span><span class="n">connection</span><span class="p">.</span><span class="n">arrivalTimestamp</span><span class="p">)</span>
+<span class="w">          </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="n">inner</span><span class="p">(</span><span class="n">tail</span><span class="p">,</span><span class="w"> </span><span class="n">newEarliest</span><span class="p">)</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="n">inner</span><span class="p">(</span><span class="n">timetable</span><span class="p">.</span><span class="n">connections</span><span class="p">.</span><span class="n">zipWithIndex</span><span class="p">,</span><span class="w"> </span><span class="nc">Int</span><span class="p">.</span><span class="nc">MaxValue</span><span class="p">)</span>
+<span class="p">}</span>
 
-<span class="k">private</span> <span class="k">def</span> <span class="n">leavesAfterArrival</span><span class="o">(</span><span class="n">connection</span><span class="k">:</span> <span class="kt">Connection</span><span class="o">)</span><span class="k">:</span> <span class="kt">Boolean</span> <span class="o">=</span> <span class="o">{</span>
-  <span class="n">connection</span><span class="o">.</span><span class="n">departureTimestamp</span> <span class="o">&gt;=</span> <span class="n">earliestArrival</span><span class="o">(</span><span class="n">connection</span><span class="o">.</span><span class="n">departureStation</span><span class="o">)</span>
-<span class="o">}</span>
+<span class="k">private</span><span class="w"> </span><span class="k">def</span><span class="w"> </span><span class="nf">leavesAfterArrival</span><span class="p">(</span><span class="n">connection</span><span class="p">:</span><span class="w"> </span><span class="nc">Connection</span><span class="p">):</span><span class="w"> </span><span class="nc">Boolean</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="n">connection</span><span class="p">.</span><span class="n">departureTimestamp</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">earliestArrival</span><span class="p">(</span><span class="n">connection</span><span class="p">.</span><span class="n">departureStation</span><span class="p">)</span>
+<span class="p">}</span>
 
-<span class="k">private</span> <span class="k">def</span> <span class="n">optimizesArrivalTime</span><span class="o">(</span><span class="n">connection</span><span class="k">:</span> <span class="kt">Connection</span><span class="o">)</span><span class="k">:</span> <span class="kt">Boolean</span> <span class="o">=</span> <span class="o">{</span>
-  <span class="n">connection</span><span class="o">.</span><span class="n">arrivalTimestamp</span> <span class="o">&lt;</span> <span class="n">earliestArrival</span><span class="o">(</span><span class="n">connection</span><span class="o">.</span><span class="n">arrivalStation</span><span class="o">)</span>
-<span class="o">}</span>
+<span class="k">private</span><span class="w"> </span><span class="k">def</span><span class="w"> </span><span class="nf">optimizesArrivalTime</span><span class="p">(</span><span class="n">connection</span><span class="p">:</span><span class="w"> </span><span class="nc">Connection</span><span class="p">):</span><span class="w"> </span><span class="nc">Boolean</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="n">connection</span><span class="p">.</span><span class="n">arrivalTimestamp</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">earliestArrival</span><span class="p">(</span><span class="n">connection</span><span class="p">.</span><span class="n">arrivalStation</span><span class="p">)</span>
+<span class="p">}</span>
 </code></pre></div>
-
 
 <h4>Construction de l'itinéraire à partir de la table horaire</h4>
 <p>Une fois la table horaire <code>inConnection</code> calculée, on reconstitue l'itinéraire inversé en partant de la station d'arrivée et en remontant jusqu'à la station de départ.</p>
-<div class="highlight"><pre><span></span><code><span class="k">private</span> <span class="k">def</span> <span class="n">computeRoute</span><span class="o">(</span><span class="n">arrivalStation</span><span class="k">:</span> <span class="kt">Int</span><span class="o">)</span><span class="k">:</span> <span class="kt">Seq</span><span class="o">[</span><span class="kt">Connection</span><span class="o">]</span> <span class="k">=</span> <span class="o">{</span>
-  <span class="n">inConnection</span><span class="o">(</span><span class="n">arrivalStation</span><span class="o">)</span> <span class="k">match</span> <span class="o">{</span>
-    <span class="k">case</span> <span class="nc">Int</span><span class="o">.</span><span class="nc">MaxValue</span> <span class="k">=&gt;</span>
-      <span class="nc">Seq</span><span class="o">()</span> <span class="c1">// Pas de solution</span>
-    <span class="k">case</span> <span class="k">_</span> <span class="k">=&gt;</span> <span class="o">{</span>
-      <span class="k">var</span> <span class="n">route</span> <span class="k">=</span> <span class="nc">Array</span><span class="o">[</span><span class="kt">Connection</span><span class="o">]()</span>
-      <span class="k">var</span> <span class="n">lastConnectionIndex</span> <span class="k">=</span> <span class="n">inConnection</span><span class="o">(</span><span class="n">arrivalStation</span><span class="o">)</span>
-      <span class="k">while</span> <span class="o">(</span><span class="n">lastConnectionIndex</span> <span class="o">!=</span> <span class="nc">Int</span><span class="o">.</span><span class="nc">MaxValue</span><span class="o">)</span> <span class="o">{</span>
-        <span class="k">val</span> <span class="n">connection</span><span class="k">:</span> <span class="kt">Connection</span> <span class="o">=</span> <span class="n">timetable</span><span class="o">.</span><span class="n">connections</span><span class="o">(</span><span class="n">lastConnectionIndex</span><span class="o">)</span>
-        <span class="n">route</span> <span class="k">=</span> <span class="n">route</span> <span class="o">:+</span> <span class="n">connection</span>
-        <span class="n">lastConnectionIndex</span> <span class="k">=</span> <span class="n">inConnection</span><span class="o">(</span><span class="n">connection</span><span class="o">.</span><span class="n">departureStation</span><span class="o">)</span>
-      <span class="o">}</span>
-      <span class="n">route</span><span class="o">.</span><span class="n">reverse</span>
-    <span class="o">}</span>
-  <span class="o">}</span>
-<span class="o">}</span>
+<div class="highlight"><pre><span></span><code><span class="k">private</span><span class="w"> </span><span class="k">def</span><span class="w"> </span><span class="nf">computeRoute</span><span class="p">(</span><span class="n">arrivalStation</span><span class="p">:</span><span class="w"> </span><span class="nc">Int</span><span class="p">):</span><span class="w"> </span><span class="nc">Seq</span><span class="p">[</span><span class="nc">Connection</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="n">inConnection</span><span class="p">(</span><span class="n">arrivalStation</span><span class="p">)</span><span class="w"> </span><span class="k">match</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="nc">Int</span><span class="p">.</span><span class="nc">MaxValue</span><span class="w"> </span><span class="o">=&gt;</span>
+<span class="w">      </span><span class="nc">Seq</span><span class="p">()</span><span class="w"> </span><span class="c1">// Pas de solution</span>
+<span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="n">_</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="kd">var</span><span class="w"> </span><span class="n">route</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">Array</span><span class="p">[</span><span class="nc">Connection</span><span class="p">]()</span>
+<span class="w">      </span><span class="kd">var</span><span class="w"> </span><span class="n">lastConnectionIndex</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">inConnection</span><span class="p">(</span><span class="n">arrivalStation</span><span class="p">)</span>
+<span class="w">      </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">lastConnectionIndex</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="nc">Int</span><span class="p">.</span><span class="nc">MaxValue</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kd">val</span><span class="w"> </span><span class="n">connection</span><span class="p">:</span><span class="w"> </span><span class="nc">Connection</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">timetable</span><span class="p">.</span><span class="n">connections</span><span class="p">(</span><span class="n">lastConnectionIndex</span><span class="p">)</span>
+<span class="w">        </span><span class="n">route</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">route</span><span class="w"> </span><span class="o">:+</span><span class="w"> </span><span class="n">connection</span>
+<span class="w">        </span><span class="n">lastConnectionIndex</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">inConnection</span><span class="p">(</span><span class="n">connection</span><span class="p">.</span><span class="n">departureStation</span><span class="p">)</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">      </span><span class="n">route</span><span class="p">.</span><span class="n">reverse</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
 </code></pre></div>
-
 
 <p>Ce cas est volontairement écrit en « Java++ » plutôt qu'en « bon Scala » par simplicité de lecture. Saurez-vous écrire le cas général en une ligne (ou deux) ?</p>
 <h3>Exemple</h3>
 <p>Partons d'un trajet entre Maubert-Mutualité et Voltaire en partant à 18h.</p>
-<div class="highlight"><pre><span></span><code><span class="k">val</span> <span class="n">maubert</span> <span class="k">=</span> <span class="mi">2350</span>
-<span class="k">val</span> <span class="n">voltaireLeonBlum</span> <span class="k">=</span> <span class="mi">1633</span>
+<div class="highlight"><pre><span></span><code><span class="kd">val</span><span class="w"> </span><span class="n">maubert</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2350</span>
+<span class="kd">val</span><span class="w"> </span><span class="n">voltaireLeonBlum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1633</span>
 
-<span class="n">csa</span><span class="o">.</span><span class="n">compute</span><span class="o">(</span>
-  <span class="n">maubert</span><span class="o">,</span>
-  <span class="n">voltaireLeonBlum</span><span class="o">,</span>
-  <span class="n">durationToTimestamp</span><span class="o">(</span><span class="nc">Duration</span><span class="o">.</span><span class="n">ofHours</span><span class="o">(</span><span class="mi">18</span><span class="o">))</span>
-<span class="o">)</span>
+<span class="n">csa</span><span class="p">.</span><span class="n">compute</span><span class="p">(</span>
+<span class="w">  </span><span class="n">maubert</span><span class="p">,</span>
+<span class="w">  </span><span class="n">voltaireLeonBlum</span><span class="p">,</span>
+<span class="w">  </span><span class="n">durationToTimestamp</span><span class="p">(</span><span class="nc">Duration</span><span class="p">.</span><span class="n">ofHours</span><span class="p">(</span><span class="mi">18</span><span class="p">))</span>
+<span class="p">)</span>
 </code></pre></div>
-
 
 <p>On obtient le trajet (notez la présence des connexions de correspondance à Odéon et Strasbourg-Saint-Denis) :</p>
-<div class="highlight"><pre><span></span><code><span class="err">Solution found with 15 connections</span>
-<span class="err">  Maubert-Mutualité -&gt; Cluny-La Sorbonne</span>
-<span class="err">  Cluny-La Sorbonne -&gt; Odéon</span>
-<span class="err">  Odéon -&gt; Odéon</span>
-<span class="err">  Odéon -&gt; Saint-Michel</span>
-<span class="err">  Saint-Michel -&gt; Cité</span>
-<span class="err">  Cité -&gt; Châtelet</span>
-<span class="err">  Châtelet -&gt; Les Halles</span>
-<span class="err">  Les Halles -&gt; Etienne Marcel</span>
-<span class="err">  Etienne Marcel -&gt; Réaumur-Sébastopol</span>
-<span class="err">  Réaumur-Sébastopol -&gt; Strasbourg-Saint-Denis</span>
-<span class="err">  Strasbourg-Saint-Denis -&gt; Strasbourg-Saint-Denis</span>
-<span class="err">  Strasbourg-Saint-Denis -&gt; République</span>
-<span class="err">  République -&gt; Oberkampf</span>
-<span class="err">  Oberkampf -&gt; Saint-Ambroise</span>
-<span class="err">  Saint-Ambroise -&gt; Voltaire (Léon Blum)</span>
-<span class="err">Total transit time: 21 minutes</span>
+<div class="highlight"><pre><span></span><code><span class="n">Solution</span><span class="w"> </span><span class="n">found</span><span class="w"> </span><span class="n">with</span><span class="w"> </span><span class="mi">15</span><span class="w"> </span><span class="n">connections</span>
+<span class="w">  </span><span class="n">Maubert</span><span class="o">-</span><span class="n">Mutualité</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">Cluny</span><span class="o">-</span><span class="n">La</span><span class="w"> </span><span class="n">Sorbonne</span>
+<span class="w">  </span><span class="n">Cluny</span><span class="o">-</span><span class="n">La</span><span class="w"> </span><span class="n">Sorbonne</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">Odéon</span>
+<span class="w">  </span><span class="n">Odéon</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">Odéon</span>
+<span class="w">  </span><span class="n">Odéon</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">Saint</span><span class="o">-</span><span class="n">Michel</span>
+<span class="w">  </span><span class="n">Saint</span><span class="o">-</span><span class="n">Michel</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">Cité</span>
+<span class="w">  </span><span class="n">Cité</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">Châtelet</span>
+<span class="w">  </span><span class="n">Châtelet</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">Les</span><span class="w"> </span><span class="n">Halles</span>
+<span class="w">  </span><span class="n">Les</span><span class="w"> </span><span class="n">Halles</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">Etienne</span><span class="w"> </span><span class="n">Marcel</span>
+<span class="w">  </span><span class="n">Etienne</span><span class="w"> </span><span class="n">Marcel</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">Réaumur</span><span class="o">-</span><span class="n">Sébastopol</span>
+<span class="w">  </span><span class="n">Réaumur</span><span class="o">-</span><span class="n">Sébastopol</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">Strasbourg</span><span class="o">-</span><span class="n">Saint</span><span class="o">-</span><span class="n">Denis</span>
+<span class="w">  </span><span class="n">Strasbourg</span><span class="o">-</span><span class="n">Saint</span><span class="o">-</span><span class="n">Denis</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">Strasbourg</span><span class="o">-</span><span class="n">Saint</span><span class="o">-</span><span class="n">Denis</span>
+<span class="w">  </span><span class="n">Strasbourg</span><span class="o">-</span><span class="n">Saint</span><span class="o">-</span><span class="n">Denis</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">République</span>
+<span class="w">  </span><span class="n">République</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">Oberkampf</span>
+<span class="w">  </span><span class="n">Oberkampf</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">Saint</span><span class="o">-</span><span class="n">Ambroise</span>
+<span class="w">  </span><span class="n">Saint</span><span class="o">-</span><span class="n">Ambroise</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">Voltaire</span><span class="w"> </span><span class="p">(</span><span class="n">Léon</span><span class="w"> </span><span class="n">Blum</span><span class="p">)</span>
+<span class="n">Total</span><span class="w"> </span><span class="n">transit</span><span class="w"> </span><span class="n">time</span><span class="o">:</span><span class="w"> </span><span class="mi">21</span><span class="w"> </span><span class="n">minutes</span>
 </code></pre></div>
-
 
 <h2>Conclusion</h2>
 <p>En comparaison, l'<a href="https://fr.wikipedia.org/wiki/Algorithme_de_Dijkstra">algorithme de plus court chemin de Dijkstra</a> présente une complexité proportionnelle à <em>C.log(N)</em> où <em>N</em> est le nombre de stations et <em>C</em> le nombre de correspondances entre deux stations, soit environ <em>N.log(N)</em> dans notre évaluation, tout en occupant un espace mémoire de taille proportionnelle à <em>N</em>.</p>

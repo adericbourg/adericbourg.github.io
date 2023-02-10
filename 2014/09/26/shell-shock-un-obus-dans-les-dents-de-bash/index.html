@@ -50,16 +50,14 @@
 <p>Par ailleurs, si les systèmes « évidents » seront patchés (un serveur web par exemple), certaines machines plus obscures ne le seront pas : pensez par exemple à des périphériques tels que les caméras connectées (ou plus largement tout ce que vous pouvez trouver sur l'Internet des objets). Rien n'exclut qu'elles exposent des services basés sur des scripts shell et si ce shell est bash, le périphérique devient vulnérable. Comme il y a fort à parier qu'aucune procédure de mise à jour de ces périphériques n'ait été définie, ces périphérques resteront vulnérables ad vitam aeternam.</p>
 <h2>J'exige des explications</h2>
 <p>Bash permet d'exporter des variables mais aussi des fonctions à destination d'autres instances de bash. L'export de fonction utilise une variable d'environnement portant le nom de la-dite fonction dont la valeur commence par <code>() {</code> :</p>
-<div class="highlight"><pre><span></span><code><span class="nv">foo</span><span class="o">=()</span> <span class="o">{</span>
-    du code
+<div class="highlight"><pre><span></span><code><span class="nv">foo</span><span class="o">=()</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span>du<span class="w"> </span>code
 <span class="o">}</span>
 </code></pre></div>
 
-
 <p>À l'import, il se contente aveuglément d'interpréter cela en remplaçant le signe « = » par une espace. C'est ainsi que bash ne se limite pas à interpréter le corps de la fonction mais qu'il poursuit le parsing et exécute les commandes qui suivent la définition de la fonction. Par exemple, définir une variable d'environnement de cette sorte :</p>
-<div class="highlight"><pre><span></span><code><span class="nv">FOO</span><span class="o">=()</span> <span class="o">{</span> ignored<span class="p">;</span> <span class="o">}</span><span class="p">;</span> /bin/yolo
+<div class="highlight"><pre><span></span><code><span class="nv">FOO</span><span class="o">=()</span><span class="w"> </span><span class="o">{</span><span class="w"> </span>ignored<span class="p">;</span><span class="w"> </span><span class="o">}</span><span class="p">;</span><span class="w"> </span>/bin/yolo
 </code></pre></div>
-
 
 <p>exécutera <code>/bin/yolo</code> quand l'environnement sera importé par bash.</p>
 <p>Ainsi, tout système utilisant bash est vulnérable, mais il est particulièrement vulnérable :</p>
@@ -69,24 +67,21 @@
 <li>et que ce service lance bash pour un traitement quelconque.</li>
 </ul>
 <p>Pour savoir si votre machine est vulnérable, vous pouvez lancer :</p>
-<div class="highlight"><pre><span></span><code>env <span class="nv">VAR</span><span class="o">=</span><span class="s1">&#39;() { 0; }; echo danger&#39;</span> bash -c <span class="s2">&quot;echo bonjour&quot;</span>
+<div class="highlight"><pre><span></span><code>env<span class="w"> </span><span class="nv">VAR</span><span class="o">=</span><span class="s1">&#39;() { 0; }; echo danger&#39;</span><span class="w"> </span>bash<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;echo bonjour&quot;</span>
 </code></pre></div>
 
-
 <p>Si tout va bien, vous devriez observer ceci :</p>
-<div class="highlight"><pre><span></span><code>$ env <span class="nv">VAR</span><span class="o">=</span><span class="s1">&#39;() { 0; }; echo danger&#39;</span> bash -c <span class="s2">&quot;echo bonjour&quot;</span>
-bash: warning: VAR: ignoring <span class="k">function</span> definition attempt
-bash: error importing <span class="k">function</span> definition <span class="k">for</span> <span class="sb">`</span>VAR<span class="err">&#39;</span>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>env<span class="w"> </span><span class="nv">VAR</span><span class="o">=</span><span class="s1">&#39;() { 0; }; echo danger&#39;</span><span class="w"> </span>bash<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;echo bonjour&quot;</span>
+bash:<span class="w"> </span>warning:<span class="w"> </span>VAR:<span class="w"> </span>ignoring<span class="w"> </span><span class="k">function</span><span class="w"> </span>definition<span class="w"> </span>attempt
+bash:<span class="w"> </span>error<span class="w"> </span>importing<span class="w"> </span><span class="k">function</span><span class="w"> </span>definition<span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="sb">`</span>VAR<span class="err">&#39;</span>
 bonjour
 </code></pre></div>
 
-
 <p>Si tout ne va pas bien, vous observerez :</p>
-<div class="highlight"><pre><span></span><code>$ env <span class="nv">VAR</span><span class="o">=</span><span class="s1">&#39;() { 0; }; echo danger&#39;</span> bash -c <span class="s2">&quot;echo bonjour&quot;</span>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>env<span class="w"> </span><span class="nv">VAR</span><span class="o">=</span><span class="s1">&#39;() { 0; }; echo danger&#39;</span><span class="w"> </span>bash<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;echo bonjour&quot;</span>
 danger
 bonjour
 </code></pre></div>
-
 
 <p>À noter que Linux n'est pas le seul système touché. Tous les systèmes Unix (ce qui inclut Mac OS) sont concernés.</p>
 <h2>M'enfin, qui serait assez bête pour exposer un machin bash sur Internet ?</h2>
@@ -97,9 +92,8 @@ bonjour
 Il ne peut plus rien nous arriver d'affreux maintenant</p>
 <p>Une fois le patch passé, vous devriez déjà être plus sereins. Néanmoins, <a href="https://securityblog.redhat.com/2014/09/24/bash-specially-crafted-environment-variables-code-injection-attack/">comme l'indique RedHat</a>, le patch fourni laisse quelques trous dans la raquette. Il est notamment possible, sous certaines conditions, d'exécuter du code contenu dans des variables d'environnement (CVE-2014-7169). Reste à attendre le patch du patch.</p>
 <p>Pour tester votre vulnérabilité à <a href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2014-7169">CVE-2014-7169</a>, vous pouvez lancer :</p>
-<div class="highlight"><pre><span></span><code>env <span class="nv">X</span><span class="o">=</span><span class="s1">&#39;() { (a)=&gt;\&#39;</span> sh -c <span class="s2">&quot;echo date&quot;</span><span class="p">;</span> cat <span class="nb">echo</span>
+<div class="highlight"><pre><span></span><code>env<span class="w"> </span><span class="nv">X</span><span class="o">=</span><span class="s1">&#39;() { (a)=&gt;\&#39;</span><span class="w"> </span>sh<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;echo date&quot;</span><span class="p">;</span><span class="w"> </span>cat<span class="w"> </span><span class="nb">echo</span>
 </code></pre></div>
-
 
 <p>Si vous obtenez la date, votre système est vulnérable.</p>
 <p>À suivre, donc.</p>

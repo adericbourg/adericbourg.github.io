@@ -46,14 +46,13 @@
         <p>L'ajout d'un cache sur un DAO est une opération courante et la bibliothèque Guava, très répandue, a par ailleurs énormément simplifié sa mise en œuvre. Néanmoins, il reste encore extrêmement facile de se tromper avec cette bibliothèque et... de réaliser un cache qui ne fonctionne pas.</p>
 <h2>Contexte</h2>
 <p>Partons d'une interface de DAO « classique » permettant de réaliser les opérations <em>CRUD</em>. On y ajoute une méthode <code>getAll</code> qui retourne l'intégralité des objets (vous allez voir, c'est pour votre bien).</p>
-<div class="highlight"><pre><span></span><code><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">Dao</span> <span class="p">{</span>
-  <span class="n">Optional</span><span class="o">&lt;</span><span class="n">MyObject</span><span class="o">&gt;</span> <span class="nf">get</span><span class="p">(</span><span class="n">String</span> <span class="n">id</span><span class="p">);</span>
-  <span class="n">Iterable</span><span class="o">&lt;</span><span class="n">MyObject</span><span class="o">&gt;</span> <span class="nf">getAll</span><span class="p">();</span>
-  <span class="kt">void</span> <span class="nf">save</span><span class="p">(</span><span class="n">MyObject</span> <span class="n">myObject</span><span class="p">);</span>
-  <span class="kt">void</span> <span class="nf">delete</span><span class="p">(</span><span class="n">String</span> <span class="n">id</span><span class="p">);</span>
+<div class="highlight"><pre><span></span><code><span class="kd">public</span><span class="w"> </span><span class="kd">interface</span> <span class="nc">Dao</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="n">Optional</span><span class="o">&lt;</span><span class="n">MyObject</span><span class="o">&gt;</span><span class="w"> </span><span class="nf">get</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">id</span><span class="p">);</span>
+<span class="w">  </span><span class="n">Iterable</span><span class="o">&lt;</span><span class="n">MyObject</span><span class="o">&gt;</span><span class="w"> </span><span class="nf">getAll</span><span class="p">();</span>
+<span class="w">  </span><span class="kt">void</span><span class="w"> </span><span class="nf">save</span><span class="p">(</span><span class="n">MyObject</span><span class="w"> </span><span class="n">myObject</span><span class="p">);</span>
+<span class="w">  </span><span class="kt">void</span><span class="w"> </span><span class="nf">delete</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">id</span><span class="p">);</span>
 <span class="p">}</span>
 </code></pre></div>
-
 
 <p>Sans accorder d'importance à l'implémentation du DAO accédant effectivement aux données persistées, contentons-nous de supposer que ses performances ne sont pas suffisantes pour répondre aux sollicitations auxquelles est soumise notre application.</p>
 <h2>Cache des données</h2>
@@ -64,69 +63,67 @@
 <li>on peut également choisir de placer une sentinelle dans le cache (en l'occurrence, l'instance « absente » d'<code>Optional</code>).</li>
 </ul>
 <p>Les deux approches ont leur avantages et leurs inconvénients et leur utilisation dépend de votre application et de vos besoins.</p>
-<div class="highlight"><pre><span></span><code><span class="n">LoadingCache</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span> <span class="n">MyObject</span><span class="o">&gt;</span> <span class="n">cache</span> <span class="o">=</span> <span class="n">CacheBuilder</span><span class="p">.</span><span class="na">newBuilder</span><span class="p">()</span>
-    <span class="p">.</span><span class="na">build</span><span class="p">(</span><span class="k">new</span> <span class="n">CacheLoader</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span> <span class="n">Optional</span><span class="o">&lt;</span><span class="n">MyObject</span><span class="o">&gt;&gt;</span><span class="p">()</span> <span class="p">{</span>
-      <span class="nd">@Override</span>
-      <span class="kd">public</span> <span class="n">Optional</span><span class="o">&lt;</span><span class="n">MyObject</span><span class="o">&gt;</span> <span class="nf">load</span><span class="p">(</span><span class="n">String</span> <span class="n">key</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="p">{</span>
-        <span class="k">return</span> <span class="n">dbDao</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">key</span><span class="p">);</span>
-      <span class="p">}</span>
-    <span class="p">});</span>
+<div class="highlight"><pre><span></span><code><span class="n">LoadingCache</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span><span class="w"> </span><span class="n">MyObject</span><span class="o">&gt;</span><span class="w"> </span><span class="n">cache</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">CacheBuilder</span><span class="p">.</span><span class="na">newBuilder</span><span class="p">()</span>
+<span class="w">    </span><span class="p">.</span><span class="na">build</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">CacheLoader</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span><span class="w"> </span><span class="n">Optional</span><span class="o">&lt;</span><span class="n">MyObject</span><span class="o">&gt;&gt;</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nd">@Override</span>
+<span class="w">      </span><span class="kd">public</span><span class="w"> </span><span class="n">Optional</span><span class="o">&lt;</span><span class="n">MyObject</span><span class="o">&gt;</span><span class="w"> </span><span class="nf">load</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">key</span><span class="p">)</span><span class="w"> </span><span class="kd">throws</span><span class="w"> </span><span class="n">Exception</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">dbDao</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">key</span><span class="p">);</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">});</span>
 </code></pre></div>
-
 
 <h2>Implémentation naïve (et fausse)</h2>
 <p>En première approche, on peut supposer qu'il « suffit » de mettre à jour le cache pour chaque opération d'écriture sur la base de données. Une implémentation dans cette optique ressemblerait à ceci.</p>
-<div class="highlight"><pre><span></span><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">CachedDao</span> <span class="kd">implements</span> <span class="n">Dao</span> <span class="p">{</span>
+<div class="highlight"><pre><span></span><code><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">CachedDao</span><span class="w"> </span><span class="kd">implements</span><span class="w"> </span><span class="n">Dao</span><span class="w"> </span><span class="p">{</span>
 
-  <span class="c1">// DAO accédant aux données persistées.</span>
-  <span class="c1">// Dans la vraie vie, vous l&#39;auriez injecté, hein ?</span>
-  <span class="kd">private</span> <span class="kd">final</span> <span class="n">DbDao</span> <span class="n">dbDao</span><span class="p">;</span>
+<span class="w">  </span><span class="c1">// DAO accédant aux données persistées.</span>
+<span class="w">  </span><span class="c1">// Dans la vraie vie, vous l&#39;auriez injecté, hein ?</span>
+<span class="w">  </span><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">DbDao</span><span class="w"> </span><span class="n">dbDao</span><span class="p">;</span>
 
-  <span class="kd">private</span> <span class="kd">final</span> <span class="n">LoadingCache</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span> <span class="n">MyObject</span><span class="o">&gt;</span> <span class="n">cache</span> <span class="o">=</span> <span class="n">createCache</span><span class="p">();</span>
+<span class="w">  </span><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">LoadingCache</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span><span class="w"> </span><span class="n">MyObject</span><span class="o">&gt;</span><span class="w"> </span><span class="n">cache</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">createCache</span><span class="p">();</span>
 
-  <span class="kd">public</span> <span class="nf">CachedDao</span><span class="p">()</span> <span class="p">{</span>
-    <span class="k">this</span><span class="p">.</span><span class="na">dbDao</span> <span class="o">=</span> <span class="k">new</span> <span class="n">DbDao</span><span class="p">();</span>
-    <span class="c1">// Initialisation du cache : nécessaire pour utiliser le cache sur getAll.</span>
-    <span class="n">initCache</span><span class="p">();</span>
-  <span class="p">}</span>
+<span class="w">  </span><span class="kd">public</span><span class="w"> </span><span class="nf">CachedDao</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="na">dbDao</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">DbDao</span><span class="p">();</span>
+<span class="w">    </span><span class="c1">// Initialisation du cache : nécessaire pour utiliser le cache sur getAll.</span>
+<span class="w">    </span><span class="n">initCache</span><span class="p">();</span>
+<span class="w">  </span><span class="p">}</span>
 
-  <span class="kd">public</span> <span class="n">Optional</span><span class="o">&lt;</span><span class="n">MyObject</span><span class="o">&gt;</span> <span class="nf">get</span><span class="p">(</span><span class="n">String</span> <span class="n">id</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">return</span> <span class="n">cache</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">id</span><span class="p">);</span>
-  <span class="p">}</span>
+<span class="w">  </span><span class="kd">public</span><span class="w"> </span><span class="n">Optional</span><span class="o">&lt;</span><span class="n">MyObject</span><span class="o">&gt;</span><span class="w"> </span><span class="nf">get</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">id</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">cache</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">id</span><span class="p">);</span>
+<span class="w">  </span><span class="p">}</span>
 
-  <span class="kd">public</span> <span class="n">Iterable</span><span class="o">&lt;</span><span class="n">MyObject</span><span class="o">&gt;</span> <span class="nf">getAll</span><span class="p">()</span> <span class="p">{</span>
-    <span class="k">return</span> <span class="n">cache</span><span class="p">.</span><span class="na">asMap</span><span class="p">()</span>
-                <span class="p">.</span><span class="na">values</span><span class="p">()</span>
-                <span class="p">.</span><span class="na">stream</span><span class="p">()</span>
-                <span class="p">.</span><span class="na">filter</span><span class="p">(</span><span class="n">Optional</span><span class="p">::</span><span class="n">isPresent</span><span class="p">)</span>
-                <span class="p">.</span><span class="na">map</span><span class="p">(</span><span class="n">Optional</span><span class="p">::</span><span class="n">get</span><span class="p">)</span>
-                <span class="p">.</span><span class="na">collect</span><span class="p">(</span><span class="n">Collectors</span><span class="p">.</span><span class="na">toList</span><span class="p">());</span>
-  <span class="p">}</span>
+<span class="w">  </span><span class="kd">public</span><span class="w"> </span><span class="n">Iterable</span><span class="o">&lt;</span><span class="n">MyObject</span><span class="o">&gt;</span><span class="w"> </span><span class="nf">getAll</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">cache</span><span class="p">.</span><span class="na">asMap</span><span class="p">()</span>
+<span class="w">                </span><span class="p">.</span><span class="na">values</span><span class="p">()</span>
+<span class="w">                </span><span class="p">.</span><span class="na">stream</span><span class="p">()</span>
+<span class="w">                </span><span class="p">.</span><span class="na">filter</span><span class="p">(</span><span class="n">Optional</span><span class="p">::</span><span class="n">isPresent</span><span class="p">)</span>
+<span class="w">                </span><span class="p">.</span><span class="na">map</span><span class="p">(</span><span class="n">Optional</span><span class="p">::</span><span class="n">get</span><span class="p">)</span>
+<span class="w">                </span><span class="p">.</span><span class="na">collect</span><span class="p">(</span><span class="n">Collectors</span><span class="p">.</span><span class="na">toList</span><span class="p">());</span>
+<span class="w">  </span><span class="p">}</span>
 
-  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">save</span><span class="p">(</span><span class="n">MyObject</span> <span class="n">myObject</span><span class="p">)</span> <span class="p">{</span>
-    <span class="n">dbDao</span><span class="p">.</span><span class="na">save</span><span class="p">(</span><span class="n">myObject</span><span class="p">);</span>
-    <span class="n">cache</span><span class="p">.</span><span class="na">refresh</span><span class="p">(</span><span class="n">myObject</span><span class="p">.</span><span class="na">getId</span><span class="p">());</span>
-  <span class="p">}</span>
+<span class="w">  </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">save</span><span class="p">(</span><span class="n">MyObject</span><span class="w"> </span><span class="n">myObject</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">dbDao</span><span class="p">.</span><span class="na">save</span><span class="p">(</span><span class="n">myObject</span><span class="p">);</span>
+<span class="w">    </span><span class="n">cache</span><span class="p">.</span><span class="na">refresh</span><span class="p">(</span><span class="n">myObject</span><span class="p">.</span><span class="na">getId</span><span class="p">());</span>
+<span class="w">  </span><span class="p">}</span>
 
-  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">delete</span><span class="p">(</span><span class="n">String</span> <span class="n">id</span><span class="p">)</span> <span class="p">{</span>
-    <span class="n">dbDao</span><span class="p">.</span><span class="na">delete</span><span class="p">(</span><span class="n">id</span><span class="p">);</span>
-    <span class="n">cache</span><span class="p">.</span><span class="na">refresh</span><span class="p">(</span><span class="n">id</span><span class="p">);</span>
-  <span class="p">}</span>
+<span class="w">  </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">delete</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">id</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">dbDao</span><span class="p">.</span><span class="na">delete</span><span class="p">(</span><span class="n">id</span><span class="p">);</span>
+<span class="w">    </span><span class="n">cache</span><span class="p">.</span><span class="na">refresh</span><span class="p">(</span><span class="n">id</span><span class="p">);</span>
+<span class="w">  </span><span class="p">}</span>
 
-  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">refresh</span><span class="p">()</span> <span class="p">{</span>
-    <span class="c1">// Vidage intégral du cache puis rechargement.</span>
-    <span class="n">cache</span><span class="p">.</span><span class="na">invalidateAll</span><span class="p">();</span>
-    <span class="n">initCache</span><span class="p">();</span>
-  <span class="p">}</span>
+<span class="w">  </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">refresh</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// Vidage intégral du cache puis rechargement.</span>
+<span class="w">    </span><span class="n">cache</span><span class="p">.</span><span class="na">invalidateAll</span><span class="p">();</span>
+<span class="w">    </span><span class="n">initCache</span><span class="p">();</span>
+<span class="w">  </span><span class="p">}</span>
 
-  <span class="kd">private</span> <span class="kt">void</span> <span class="nf">initCache</span><span class="p">()</span> <span class="p">{</span>
-    <span class="k">for</span> <span class="p">(</span><span class="n">MyObject</span> <span class="n">myObject</span> <span class="p">:</span> <span class="n">dbDao</span><span class="p">.</span><span class="na">getAll</span><span class="p">())</span> <span class="p">{</span>
-      <span class="n">cache</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="n">myObject</span><span class="p">.</span><span class="na">getId</span><span class="p">(),</span> <span class="n">Optional</span><span class="p">.</span><span class="na">of</span><span class="p">(</span><span class="n">myObject</span><span class="p">));</span>
-    <span class="p">}</span>
-  <span class="p">}</span>
+<span class="w">  </span><span class="kd">private</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">initCache</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">MyObject</span><span class="w"> </span><span class="n">myObject</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">dbDao</span><span class="p">.</span><span class="na">getAll</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="n">cache</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="n">myObject</span><span class="p">.</span><span class="na">getId</span><span class="p">(),</span><span class="w"> </span><span class="n">Optional</span><span class="p">.</span><span class="na">of</span><span class="p">(</span><span class="n">myObject</span><span class="p">));</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
-
 
 <p>Pourquoi cette implémentation ne fonctionne pas ?</p>
 <p>Dans le cas de multiples appels concurrents, des interruptions peuvent avoir lieu à tout moment. L'appel à <code>delete</code> peut être interrompu entre la mise à jour de la base (<code>dbDao.delete(id)</code>) et le rafraîchissement du cache (<code>cache.refresh(id)</code>). Si cette interruption se fait à la faveur d'une lecture (<code>get</code>), cette dernière se fera sur un cache qui n'est pas encore mise à jour et donc renverra une donnée « périmée ». Rien ne dit qu'il est impératif de récupérer la dernière version de la donnée : suivant votre application, cela peut être acceptable.</p>
@@ -145,44 +142,43 @@
 <li>Le dernier lecteur à sortir débloque le sémaphore <code>db</code> et autorise alors un rédacteur en attente, s'il y en a un, à entrer.</li>
 </ol>
 <p>Sur notre exemple de DAO, la modification se ferait de la sorte (ce qui n'est pas explicitement redéfini n'a pas changé) :</p>
-<div class="highlight"><pre><span></span><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">CachedDao</span> <span class="kd">implements</span> <span class="n">Dao</span> <span class="p">{</span>
+<div class="highlight"><pre><span></span><code><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">CachedDao</span><span class="w"> </span><span class="kd">implements</span><span class="w"> </span><span class="n">Dao</span><span class="w"> </span><span class="p">{</span>
 
-  <span class="kd">private</span> <span class="kd">final</span> <span class="n">Semaphore</span> <span class="n">lock</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Semaphore</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
-  <span class="kd">private</span> <span class="kd">final</span> <span class="n">AtomicLong</span> <span class="n">concurrentAccess</span> <span class="o">=</span> <span class="k">new</span> <span class="n">AtomicLong</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+<span class="w">  </span><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">Semaphore</span><span class="w"> </span><span class="n">lock</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Semaphore</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+<span class="w">  </span><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">AtomicLong</span><span class="w"> </span><span class="n">concurrentAccess</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">AtomicLong</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
 
-  <span class="kd">public</span> <span class="n">Optional</span><span class="o">&lt;</span><span class="n">MyObject</span><span class="o">&gt;</span> <span class="nf">get</span><span class="p">(</span><span class="n">String</span> <span class="n">id</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">InterruptedException</span> <span class="p">{</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">concurrentAccess</span><span class="p">.</span><span class="na">incrementAndGet</span><span class="p">()</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
-      <span class="c1">// Premier lecteur à entrer</span>
-      <span class="n">lock</span><span class="p">.</span><span class="na">acquire</span><span class="p">();</span>
-    <span class="p">}</span>
+<span class="w">  </span><span class="kd">public</span><span class="w"> </span><span class="n">Optional</span><span class="o">&lt;</span><span class="n">MyObject</span><span class="o">&gt;</span><span class="w"> </span><span class="nf">get</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">id</span><span class="p">)</span><span class="w"> </span><span class="kd">throws</span><span class="w"> </span><span class="n">InterruptedException</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">concurrentAccess</span><span class="p">.</span><span class="na">incrementAndGet</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="c1">// Premier lecteur à entrer</span>
+<span class="w">      </span><span class="n">lock</span><span class="p">.</span><span class="na">acquire</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
 
-    <span class="n">Optional</span><span class="o">&lt;</span><span class="n">MyObject</span><span class="o">&gt;</span> <span class="n">returnValue</span> <span class="o">=</span> <span class="n">Optional</span><span class="p">.</span><span class="na">ofNullable</span><span class="p">(</span><span class="n">cache</span><span class="p">.</span><span class="na">getIfPresent</span><span class="p">(</span><span class="n">id</span><span class="p">));</span>
+<span class="w">    </span><span class="n">Optional</span><span class="o">&lt;</span><span class="n">MyObject</span><span class="o">&gt;</span><span class="w"> </span><span class="n">returnValue</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Optional</span><span class="p">.</span><span class="na">ofNullable</span><span class="p">(</span><span class="n">cache</span><span class="p">.</span><span class="na">getIfPresent</span><span class="p">(</span><span class="n">id</span><span class="p">));</span>
 
-    <span class="k">if</span> <span class="p">(</span><span class="n">concurrentAccess</span><span class="p">.</span><span class="na">decrementAndGet</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
-      <span class="c1">// Dernier lecteur à sortir</span>
-      <span class="n">lock</span><span class="p">.</span><span class="na">release</span><span class="p">();</span>
-    <span class="p">}</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">concurrentAccess</span><span class="p">.</span><span class="na">decrementAndGet</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="c1">// Dernier lecteur à sortir</span>
+<span class="w">      </span><span class="n">lock</span><span class="p">.</span><span class="na">release</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
 
-    <span class="k">return</span> <span class="n">returnValue</span><span class="p">;</span>
-  <span class="p">}</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">returnValue</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
 
-  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">save</span><span class="p">(</span><span class="n">MyObject</span> <span class="n">myObject</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">InterruptedException</span> <span class="p">{</span>
-    <span class="c1">// Attente que le dernier utilisateur sorte</span>
-    <span class="n">lock</span><span class="p">.</span><span class="na">acquire</span><span class="p">();</span>
+<span class="w">  </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">save</span><span class="p">(</span><span class="n">MyObject</span><span class="w"> </span><span class="n">myObject</span><span class="p">)</span><span class="w"> </span><span class="kd">throws</span><span class="w"> </span><span class="n">InterruptedException</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// Attente que le dernier utilisateur sorte</span>
+<span class="w">    </span><span class="n">lock</span><span class="p">.</span><span class="na">acquire</span><span class="p">();</span>
 
-    <span class="n">dbDao</span><span class="p">.</span><span class="na">save</span><span class="p">(</span><span class="n">myObject</span><span class="p">);</span>
-    <span class="n">cache</span><span class="p">.</span><span class="na">refresh</span><span class="p">(</span><span class="n">myObject</span><span class="p">.</span><span class="na">getId</span><span class="p">());</span>
+<span class="w">    </span><span class="n">dbDao</span><span class="p">.</span><span class="na">save</span><span class="p">(</span><span class="n">myObject</span><span class="p">);</span>
+<span class="w">    </span><span class="n">cache</span><span class="p">.</span><span class="na">refresh</span><span class="p">(</span><span class="n">myObject</span><span class="p">.</span><span class="na">getId</span><span class="p">());</span>
 
-    <span class="c1">// Libération pour qu&#39;un utilisateur puisse revenir</span>
-    <span class="n">lock</span><span class="p">.</span><span class="na">release</span><span class="p">();</span>
-  <span class="p">}</span>
+<span class="w">    </span><span class="c1">// Libération pour qu&#39;un utilisateur puisse revenir</span>
+<span class="w">    </span><span class="n">lock</span><span class="p">.</span><span class="na">release</span><span class="p">();</span>
+<span class="w">  </span><span class="p">}</span>
 
-  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">delete</span><span class="p">(</span><span class="n">String</span> <span class="n">id</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">InterruptedException</span> <span class="p">{</span>
-    <span class="c1">// Idem.</span>
-  <span class="p">}</span>
+<span class="w">  </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">delete</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">id</span><span class="p">)</span><span class="w"> </span><span class="kd">throws</span><span class="w"> </span><span class="n">InterruptedException</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// Idem.</span>
+<span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
-
 
 <p>Mais s'il rentre un lecteur toutes les deux millisecondes et qu'il faut cinq millisecondes à chaque lecteur pour terminer sa consultation, il y aura toujours des lecteurs présents et le rédacteur ne pourra jamais entrer.</p>
 <p>Pour éviter cela, il faut que lorsqu'un rédacteur est en attente, tout lecteur qui se présente reste « derrière » le rédacteur et attende qu'il ait terminé.</p>
@@ -192,28 +188,26 @@
 <li>un verrou en écriture que tous les rédacteurs peuvent « passer » tant qu'aucun verrou en lecture ou en écriture n'a été posé.</li>
 </ul>
 <p>Exemple en lecture :</p>
-<div class="highlight"><pre><span></span><code><span class="n">ReadWriteLock</span> <span class="n">readWriteLock</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ReentrantReadWriteLock</span><span class="p">();</span>
+<div class="highlight"><pre><span></span><code><span class="n">ReadWriteLock</span><span class="w"> </span><span class="n">readWriteLock</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ReentrantReadWriteLock</span><span class="p">();</span>
 
 <span class="n">readWriteLock</span><span class="p">.</span><span class="na">readLock</span><span class="p">().</span><span class="na">lock</span><span class="p">();</span>
 
-  <span class="c1">// Cette section est accessible par plusieurs lecteurs simultanément</span>
-  <span class="c1">// si aucun verrou en écriture n&#39;a été acquis.</span>
+<span class="w">  </span><span class="c1">// Cette section est accessible par plusieurs lecteurs simultanément</span>
+<span class="w">  </span><span class="c1">// si aucun verrou en écriture n&#39;a été acquis.</span>
 
 <span class="n">readWriteLock</span><span class="p">.</span><span class="na">readLock</span><span class="p">().</span><span class="na">unlock</span><span class="p">();</span>
 </code></pre></div>
 
-
 <p>Exemple en écriture :</p>
-<div class="highlight"><pre><span></span><code><span class="n">ReadWriteLock</span> <span class="n">readWriteLock</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ReentrantReadWriteLock</span><span class="p">();</span>
+<div class="highlight"><pre><span></span><code><span class="n">ReadWriteLock</span><span class="w"> </span><span class="n">readWriteLock</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ReentrantReadWriteLock</span><span class="p">();</span>
 
 <span class="n">readWriteLock</span><span class="p">.</span><span class="na">writeLock</span><span class="p">().</span><span class="na">lock</span><span class="p">();</span>
 
-  <span class="c1">// Cette section est accessible par un seul rédacteur à la fois</span>
-  <span class="c1">// si aucun verrou n&#39;est acquis (en lecture ou en écriture).</span>
+<span class="w">  </span><span class="c1">// Cette section est accessible par un seul rédacteur à la fois</span>
+<span class="w">  </span><span class="c1">// si aucun verrou n&#39;est acquis (en lecture ou en écriture).</span>
 
 <span class="n">readWriteLock</span><span class="p">.</span><span class="na">writeLock</span><span class="p">().</span><span class="na">unlock</span><span class="p">();</span>
 </code></pre></div>
-
 
 <h2>Implémentation « sûre »</h2>
 <p>Nous pouvons réutiliser notre implémentation naïve : si elle n'était pas sûre, son intention restait valable. Pour l'adapter, on ajoute :</p>
@@ -224,91 +218,90 @@
 </ul>
 <p>Il est en revanche nécessaire de « protéger » la libération des verrous. Si un traitement se passe mal — si par exemple si une exception est lancée — le verrou doit malgré tout être libéré. On encapsulera donc tout le code des sections critiques dans un bloc <code>try</code> / <code>finally</code>.</p>
 <p>Le code n'ayant pas changé par rapport à la première version n'est pas représenté.</p>
-<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">java.util.concurrent.locks.ReadWriteLock</span><span class="p">;</span>
-<span class="kn">import</span> <span class="nn">java.util.concurrent.locks.ReentrantReadWriteLock</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">java.util.concurrent.locks.ReadWriteLock</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.util.concurrent.locks.ReentrantReadWriteLock</span><span class="p">;</span>
 
-<span class="kd">public</span> <span class="kd">class</span> <span class="nc">CachedDao</span> <span class="kd">implements</span> <span class="n">Dao</span> <span class="p">{</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">CachedDao</span><span class="w"> </span><span class="kd">implements</span><span class="w"> </span><span class="n">Dao</span><span class="w"> </span><span class="p">{</span>
 
-  <span class="kd">private</span> <span class="kd">final</span> <span class="n">ReadWriteLock</span> <span class="n">rwLock</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ReentrantReadWriteLock</span><span class="p">();</span>
+<span class="w">  </span><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">ReadWriteLock</span><span class="w"> </span><span class="n">rwLock</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ReentrantReadWriteLock</span><span class="p">();</span>
 
-  <span class="kd">public</span> <span class="n">Optional</span><span class="o">&lt;</span><span class="n">MyObject</span><span class="o">&gt;</span> <span class="nf">get</span><span class="p">(</span><span class="n">String</span> <span class="n">id</span><span class="p">)</span> <span class="p">{</span>
-    <span class="n">rwLock</span><span class="p">.</span><span class="na">readLock</span><span class="p">().</span><span class="na">lock</span><span class="p">();</span>
-    <span class="k">try</span> <span class="p">{</span>
-      <span class="k">return</span> <span class="n">unsafeGet</span><span class="p">(</span><span class="n">id</span><span class="p">);</span>
-    <span class="p">}</span> <span class="k">finally</span> <span class="p">{</span>
-      <span class="n">rwLock</span><span class="p">.</span><span class="na">readLock</span><span class="p">().</span><span class="na">unlock</span><span class="p">();</span>
-    <span class="p">}</span>
-  <span class="p">}</span>
+<span class="w">  </span><span class="kd">public</span><span class="w"> </span><span class="n">Optional</span><span class="o">&lt;</span><span class="n">MyObject</span><span class="o">&gt;</span><span class="w"> </span><span class="nf">get</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">id</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">rwLock</span><span class="p">.</span><span class="na">readLock</span><span class="p">().</span><span class="na">lock</span><span class="p">();</span>
+<span class="w">    </span><span class="k">try</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="n">unsafeGet</span><span class="p">(</span><span class="n">id</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">finally</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="n">rwLock</span><span class="p">.</span><span class="na">readLock</span><span class="p">().</span><span class="na">unlock</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
 
-  <span class="kd">public</span> <span class="n">Iterable</span><span class="o">&lt;</span><span class="n">MyObject</span><span class="o">&gt;</span> <span class="nf">getAll</span><span class="p">()</span> <span class="p">{</span>
-    <span class="n">rwLock</span><span class="p">.</span><span class="na">readLock</span><span class="p">().</span><span class="na">lock</span><span class="p">();</span>
-    <span class="k">try</span> <span class="p">{</span>
-      <span class="k">return</span> <span class="n">cache</span><span class="p">.</span><span class="na">asMap</span><span class="p">()</span>
-                  <span class="p">.</span><span class="na">values</span><span class="p">()</span>
-                  <span class="p">.</span><span class="na">stream</span><span class="p">()</span>
-                  <span class="p">.</span><span class="na">filter</span><span class="p">(</span><span class="n">Optional</span><span class="p">::</span><span class="n">isPresent</span><span class="p">)</span>
-                  <span class="p">.</span><span class="na">map</span><span class="p">(</span><span class="n">Optional</span><span class="p">::</span><span class="n">get</span><span class="p">)</span>
-                  <span class="p">.</span><span class="na">collect</span><span class="p">(</span><span class="n">Collectors</span><span class="p">.</span><span class="na">toList</span><span class="p">());</span>
-    <span class="p">}</span> <span class="k">finally</span> <span class="p">{</span>
-      <span class="n">rwLock</span><span class="p">.</span><span class="na">readLock</span><span class="p">().</span><span class="na">unlock</span><span class="p">();</span>
-    <span class="p">}</span>
-  <span class="p">}</span>
+<span class="w">  </span><span class="kd">public</span><span class="w"> </span><span class="n">Iterable</span><span class="o">&lt;</span><span class="n">MyObject</span><span class="o">&gt;</span><span class="w"> </span><span class="nf">getAll</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">rwLock</span><span class="p">.</span><span class="na">readLock</span><span class="p">().</span><span class="na">lock</span><span class="p">();</span>
+<span class="w">    </span><span class="k">try</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="n">cache</span><span class="p">.</span><span class="na">asMap</span><span class="p">()</span>
+<span class="w">                  </span><span class="p">.</span><span class="na">values</span><span class="p">()</span>
+<span class="w">                  </span><span class="p">.</span><span class="na">stream</span><span class="p">()</span>
+<span class="w">                  </span><span class="p">.</span><span class="na">filter</span><span class="p">(</span><span class="n">Optional</span><span class="p">::</span><span class="n">isPresent</span><span class="p">)</span>
+<span class="w">                  </span><span class="p">.</span><span class="na">map</span><span class="p">(</span><span class="n">Optional</span><span class="p">::</span><span class="n">get</span><span class="p">)</span>
+<span class="w">                  </span><span class="p">.</span><span class="na">collect</span><span class="p">(</span><span class="n">Collectors</span><span class="p">.</span><span class="na">toList</span><span class="p">());</span>
+<span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">finally</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="n">rwLock</span><span class="p">.</span><span class="na">readLock</span><span class="p">().</span><span class="na">unlock</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
 
-  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">save</span><span class="p">(</span><span class="n">MyObject</span> <span class="n">myObject</span><span class="p">)</span> <span class="p">{</span>
-    <span class="n">rwLock</span><span class="p">.</span><span class="na">writeLock</span><span class="p">().</span><span class="na">lock</span><span class="p">();</span>
-    <span class="k">try</span> <span class="p">{</span>
-      <span class="n">unsafeSave</span><span class="p">(</span><span class="n">myObject</span><span class="p">);</span>
-    <span class="p">}</span> <span class="k">finally</span> <span class="p">{</span>
-      <span class="n">rwLock</span><span class="p">.</span><span class="na">writeLock</span><span class="p">().</span><span class="na">unlock</span><span class="p">();</span>
-    <span class="p">}</span>
-  <span class="p">}</span>
+<span class="w">  </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">save</span><span class="p">(</span><span class="n">MyObject</span><span class="w"> </span><span class="n">myObject</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">rwLock</span><span class="p">.</span><span class="na">writeLock</span><span class="p">().</span><span class="na">lock</span><span class="p">();</span>
+<span class="w">    </span><span class="k">try</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="n">unsafeSave</span><span class="p">(</span><span class="n">myObject</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">finally</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="n">rwLock</span><span class="p">.</span><span class="na">writeLock</span><span class="p">().</span><span class="na">unlock</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
 
-  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">delete</span><span class="p">(</span><span class="n">String</span> <span class="n">id</span><span class="p">)</span> <span class="p">{</span>
-    <span class="n">rwLock</span><span class="p">.</span><span class="na">writeLock</span><span class="p">().</span><span class="na">lock</span><span class="p">();</span>
-    <span class="k">try</span> <span class="p">{</span>
-      <span class="n">unsafeDelete</span><span class="p">(</span><span class="n">id</span><span class="p">);</span>
-    <span class="p">}</span> <span class="k">finally</span> <span class="p">{</span>
-      <span class="n">rwLock</span><span class="p">.</span><span class="na">writeLock</span><span class="p">().</span><span class="na">unlock</span><span class="p">();</span>
-    <span class="p">}</span>
-  <span class="p">}</span>
+<span class="w">  </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">delete</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">id</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">rwLock</span><span class="p">.</span><span class="na">writeLock</span><span class="p">().</span><span class="na">lock</span><span class="p">();</span>
+<span class="w">    </span><span class="k">try</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="n">unsafeDelete</span><span class="p">(</span><span class="n">id</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">finally</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="n">rwLock</span><span class="p">.</span><span class="na">writeLock</span><span class="p">().</span><span class="na">unlock</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
 
-  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">refresh</span><span class="p">()</span> <span class="p">{</span>
-    <span class="n">rwLock</span><span class="p">.</span><span class="na">writeLock</span><span class="p">().</span><span class="na">lock</span><span class="p">();</span>
-    <span class="k">try</span> <span class="p">{</span>
-      <span class="n">unsafeRefresh</span><span class="p">();</span>
-    <span class="p">}</span> <span class="k">finally</span> <span class="p">{</span>
-      <span class="n">rwLock</span><span class="p">.</span><span class="na">writeLock</span><span class="p">().</span><span class="na">unlock</span><span class="p">();</span>
-    <span class="p">}</span>
-  <span class="p">}</span>
+<span class="w">  </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">refresh</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">rwLock</span><span class="p">.</span><span class="na">writeLock</span><span class="p">().</span><span class="na">lock</span><span class="p">();</span>
+<span class="w">    </span><span class="k">try</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="n">unsafeRefresh</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">finally</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="n">rwLock</span><span class="p">.</span><span class="na">writeLock</span><span class="p">().</span><span class="na">unlock</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
 
-  <span class="kd">private</span> <span class="n">Optional</span><span class="o">&lt;</span><span class="n">MyObject</span><span class="o">&gt;</span> <span class="nf">unsafeGet</span><span class="p">(</span><span class="n">String</span> <span class="n">id</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">return</span> <span class="n">Optional</span><span class="p">.</span><span class="na">ofNullable</span><span class="p">(</span><span class="n">cache</span><span class="p">.</span><span class="na">getIfPresent</span><span class="p">(</span><span class="n">id</span><span class="p">));</span>
-  <span class="p">}</span>
+<span class="w">  </span><span class="kd">private</span><span class="w"> </span><span class="n">Optional</span><span class="o">&lt;</span><span class="n">MyObject</span><span class="o">&gt;</span><span class="w"> </span><span class="nf">unsafeGet</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">id</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">Optional</span><span class="p">.</span><span class="na">ofNullable</span><span class="p">(</span><span class="n">cache</span><span class="p">.</span><span class="na">getIfPresent</span><span class="p">(</span><span class="n">id</span><span class="p">));</span>
+<span class="w">  </span><span class="p">}</span>
 
-  <span class="kd">private</span> <span class="kt">void</span> <span class="nf">unsafeSave</span><span class="p">(</span><span class="n">MyObject</span> <span class="n">myObject</span><span class="p">)</span> <span class="p">{</span>
-    <span class="n">dbDao</span><span class="p">.</span><span class="na">save</span><span class="p">(</span><span class="n">myObject</span><span class="p">);</span>
-    <span class="n">cache</span><span class="p">.</span><span class="na">refresh</span><span class="p">(</span><span class="n">myObject</span><span class="p">.</span><span class="na">getId</span><span class="p">());</span>
-  <span class="p">}</span>
+<span class="w">  </span><span class="kd">private</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">unsafeSave</span><span class="p">(</span><span class="n">MyObject</span><span class="w"> </span><span class="n">myObject</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">dbDao</span><span class="p">.</span><span class="na">save</span><span class="p">(</span><span class="n">myObject</span><span class="p">);</span>
+<span class="w">    </span><span class="n">cache</span><span class="p">.</span><span class="na">refresh</span><span class="p">(</span><span class="n">myObject</span><span class="p">.</span><span class="na">getId</span><span class="p">());</span>
+<span class="w">  </span><span class="p">}</span>
 
-  <span class="kd">private</span> <span class="kt">void</span> <span class="nf">unsafeDelete</span><span class="p">(</span><span class="n">String</span> <span class="n">id</span><span class="p">)</span> <span class="p">{</span>
-    <span class="n">dbDao</span><span class="p">.</span><span class="na">delete</span><span class="p">(</span><span class="n">id</span><span class="p">);</span>
-    <span class="n">cache</span><span class="p">.</span><span class="na">refresh</span><span class="p">(</span><span class="n">id</span><span class="p">);</span>
-  <span class="p">}</span>
+<span class="w">  </span><span class="kd">private</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">unsafeDelete</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">id</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">dbDao</span><span class="p">.</span><span class="na">delete</span><span class="p">(</span><span class="n">id</span><span class="p">);</span>
+<span class="w">    </span><span class="n">cache</span><span class="p">.</span><span class="na">refresh</span><span class="p">(</span><span class="n">id</span><span class="p">);</span>
+<span class="w">  </span><span class="p">}</span>
 
-  <span class="kd">private</span> <span class="kt">void</span> <span class="nf">unsafeRefresh</span><span class="p">()</span> <span class="p">{</span>
-    <span class="c1">// Vidage intégral du cache puis rechargement.</span>
-    <span class="n">cache</span><span class="p">.</span><span class="na">invalidateAll</span><span class="p">();</span>
-    <span class="n">initCache</span><span class="p">();</span>
-  <span class="p">}</span>
+<span class="w">  </span><span class="kd">private</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">unsafeRefresh</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// Vidage intégral du cache puis rechargement.</span>
+<span class="w">    </span><span class="n">cache</span><span class="p">.</span><span class="na">invalidateAll</span><span class="p">();</span>
+<span class="w">    </span><span class="n">initCache</span><span class="p">();</span>
+<span class="w">  </span><span class="p">}</span>
 
-  <span class="kd">private</span> <span class="kt">void</span> <span class="nf">initCache</span><span class="p">()</span> <span class="p">{</span>
-    <span class="k">for</span> <span class="p">(</span><span class="n">MyObject</span> <span class="n">myObject</span> <span class="p">:</span> <span class="n">dbDao</span><span class="p">.</span><span class="na">getAll</span><span class="p">())</span> <span class="p">{</span>
-      <span class="n">cache</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="n">myObject</span><span class="p">.</span><span class="na">getId</span><span class="p">(),</span> <span class="n">Optional</span><span class="p">.</span><span class="na">of</span><span class="p">(</span><span class="n">myObject</span><span class="p">));</span>
-    <span class="p">}</span>
-  <span class="p">}</span>
+<span class="w">  </span><span class="kd">private</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">initCache</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">MyObject</span><span class="w"> </span><span class="n">myObject</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">dbDao</span><span class="p">.</span><span class="na">getAll</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="n">cache</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="n">myObject</span><span class="p">.</span><span class="na">getId</span><span class="p">(),</span><span class="w"> </span><span class="n">Optional</span><span class="p">.</span><span class="na">of</span><span class="p">(</span><span class="n">myObject</span><span class="p">));</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
-
 
 <h2>Pour aller plus loin</h2>
 <p>Le DAO présenté ici est « sûr » dans la mesure où il garantit la cohérence avec la base des données retournées. En revanche, pour cela, un compromis sur les performances a du être fait. En effet, cette implémentation ne permet pas d'écritures simultanées : la modification de deux objets distincts n'est pas possible.</p>
